@@ -1,0 +1,20 @@
+{
+  "version": "0.1.0-preview.1",
+  "source_commit": "0891965eed72e18dcbc76dee0fa55934541c9952",
+  "deployed_at_utc": "2026-11-03T17:28:20.2595029Z",
+  "installation": "portable ZIP extracted to isolated staging directory",
+  "staging_path": "D:\\work\\backleaf\\.local\\staging\\0.1.0-preview.1-0891965e",
+  "artifact_path": "D:\\work\\backleaf\\.local\\artifacts\\Backleaf-0.1.0-preview.1-candidate-0891965e-win-x64.zip",
+  "artifact_sha256": "49700625af96408b2de35acf2dbc101f6a62113d4a6aeaf5470637355c13c63f",
+  "exe_sha256": "0a0bc382dc71057fed55694ca7295b1714a8da45337413ce41b975676cacf232",
+  "installed_hash_matches": true,
+  "uploaded_download_hash_matches": true,
+  "cli_smoke_passed": true,
+  "interactive_smoke_passed": false,
+  "session": { "locked": true, "error": null },
+  "release_url": "https://github.com/simiooo/backleaf/releases/tag/untagged-ea8759d95ba0f06dcff6",
+  "release_tag": "native-v0.1.0-preview.1-20261104",
+  "release_is_draft": true,
+  "interactive_launch_automatic_review": "rejected: blocked by policy",
+  "resume_condition": "User unlocks Windows; obtain fresh Computer Use binding, then run final visible performance and installed-window smoke."
+}

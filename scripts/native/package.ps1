@@ -9,6 +9,7 @@ $artifact=Join-Path $projectRoot ".local/artifacts/Backleaf-$version-candidate-$
 $staging=Join-Path $projectRoot ".local/staging/$version-$short"
 if (Test-Path -LiteralPath $bundle) {throw 'Candidate bundle already exists; use a new source commit'}
 New-Item -ItemType Directory -Path $bundle -Force | Out-Null
+New-Item -ItemType Directory -Path (Split-Path -Parent $artifact) -Force | Out-Null
 Copy-Item -LiteralPath (Join-Path $projectRoot 'target/release/backleaf.exe') -Destination (Join-Path $bundle 'Backleaf.exe')
 Copy-Item -LiteralPath (Join-Path $projectRoot 'docs/native-preview-readme.txt') -Destination (Join-Path $bundle 'README.txt')
 Copy-Item -LiteralPath (Join-Path $projectRoot 'LICENSE') -Destination (Join-Path $bundle 'LICENSE')
