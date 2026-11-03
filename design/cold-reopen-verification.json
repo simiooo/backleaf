@@ -1,0 +1,188 @@
+{
+  "tool": "OpenPencil 0.17.0-beta.1",
+  "verifiedAt": "2026-11-03T14:47:00.441Z",
+  "method": "independent process import and re-render; no text edits",
+  "pages": [
+    {
+      "page": "01 · Home / 紧凑中性",
+      "nodes": 142,
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "page": "02 · 当前文件夹搜索",
+      "nodes": 82,
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "page": "03 · 统一快捷访问",
+      "nodes": 177,
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "page": "04 · 多选与上下文菜单",
+      "nodes": 201,
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "page": "05 · 不可用路径恢复",
+      "nodes": 44,
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "page": "06 · 重命名 / 保留错误输入",
+      "nodes": 182,
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "page": "07 · 560 px / 5 列网格",
+      "nodes": 178,
+      "changedPixels": 0,
+      "totalPixels": 403200
+    },
+    {
+      "page": "08 · 深色模式",
+      "nodes": 142,
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "page": "09 · 多文件详情",
+      "nodes": 208,
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "page": "10 · 失败集中呈现",
+      "nodes": 207,
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "page": "11 · 紧凑组件与状态",
+      "nodes": 92,
+      "changedPixels": 0,
+      "totalPixels": 582400
+    },
+    {
+      "page": "12 · 紧凑窗口栏",
+      "nodes": 140,
+      "changedPixels": 0,
+      "totalPixels": 480000
+    },
+    {
+      "page": "13 · 需要确认时 / 批量回收站删除",
+      "nodes": 189,
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "page": "14 · 删除进行中 / 逐项进度",
+      "nodes": 178,
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "page": "15 · 多文件已剪切 / 等待粘贴",
+      "nodes": 196,
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "page": "16 · 复制进行中",
+      "nodes": 96,
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "page": "17 · 剪切后粘贴 / 移动进行中",
+      "nodes": 96,
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "page": "18 · 正在取消 / 等待真实终止结果",
+      "nodes": 96,
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "page": "19 · 取消后保留已完成项",
+      "nodes": 90,
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "page": "20 · 部分失败 / 剪切源状态",
+      "nodes": 96,
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "page": "21 · 重命名提交中",
+      "nodes": 183,
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "page": "22 · 完成与可用撤销",
+      "nodes": 110,
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "page": "23 · 文件操作状态契约",
+      "nodes": 33,
+      "changedPixels": 0,
+      "totalPixels": 560000
+    },
+    {
+      "page": "24 · 重命名完成 / 焦点跟随文件",
+      "nodes": 178,
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "page": "25 · 多操作同时处理 / 共享面板",
+      "nodes": 124,
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "page": "26 · 多文件批次 / 展开逐项结果",
+      "nodes": 155,
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "page": "27 · 多文件冲突 / 本次应用范围",
+      "nodes": 99,
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "page": "28 · 窄窗多文件操作",
+      "nodes": 227,
+      "changedPixels": 0,
+      "totalPixels": 403200
+    },
+    {
+      "page": "29 · 准备中 / 总量未知",
+      "nodes": 198,
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "page": "30 · 无选中 / 新建与粘贴",
+      "nodes": 151,
+      "changedPixels": 0,
+      "totalPixels": 806400
+    }
+  ],
+  "result": "passed"
+}

@@ -1,0 +1,12 @@
+{
+  "name": "backleaf-design",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "bun build.mjs",
+    "verify": "bun verify.mjs"
+  },
+  "dependencies": {
+    "@open-pencil/cli": "0.17.0-beta.1"
+  }
+}

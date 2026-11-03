@@ -1,0 +1,15 @@
+{
+  "label": 2,
+  "identity": 4,
+  "inline": 6,
+  "collection": 6,
+  "section": 8,
+  "actions": 10,
+  "panel/x": 8,
+  "panel/y": 8,
+  "menu/x": 8,
+  "menu/y": 2,
+  "content/x": 8,
+  "content/y": 8,
+  "target/icon": 28
+}
