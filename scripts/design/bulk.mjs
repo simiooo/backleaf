@@ -1,96 +1,46 @@
-// Scale states use a small, editable viewport sample, never a million scene nodes.
-export function createBulkScreens(ui) {
-  const {T,I,B,A,F,S,C,app,status,regular,tile}=ui;
-  const count=1_000_000;
-  const files=Array.from({length:66},(_,i)=>({
-    name:`归档${String(42101+i).padStart(6,'0')}.${['pdf','jpg','txt','docx'][i%4]}`,
-    type:'file'
-  }));
-  const jobs=Array.from({length:24},(_,i)=>({
-    id:`bulk-${i}`,title:i===0?'复制 100,000 项 → 文档':i===1?'移至回收站 28,600 项':`移动 ${8200+i*20} 项 → 备份`,
-    count:i===0?'42,108 项':i===1?'6,200 项':'',
-    detail:i===0?'归档_042109.pdf · 正在复制':i===1?'正在处理：照片_006201.jpg':'等待目标设备空闲',
-    progress:i===0?.42108:.21678,state:i<2?'active':'waiting'
-  }));
-
-  function directory({width=1120,selected=false,loading=false,excludeOne=false}={}) {
-    const columns=width<700?5:11;
-    const shown=files.slice(0,width<700?30:66);
-    const gridWidth=width-24;
-    return `<Frame name="Virtual directory viewport / ${count} total" w="fill" grow={1} flex="col" overflow="hidden">
-      <Frame name="Visible grid rows only / 100px pitch" position="absolute" x={8} y={8} w={${gridWidth}} grid columns="repeat(${columns}, 1fr)" columnGap={6} rowGap={12}>${shown.map((f,i)=>tile({...f,selected:selected&&(!excludeOne||i!==4),focus:selected&&i===0})).join('')}</Frame>
-      <Frame name="Directory scrollbar / independent of task list" position="absolute" x={${width-8}} y={8} w={4} h={630} bg="#F0F2F4" rounded={2}><Rectangle name="Proportional thumb / minimum visible size" x={0} y={${loading?0:86}} w={4} h={24} bg="#BBC3CA" rounded={2}/></Frame>
-    </Frame>`;
-  }
-
-  function panel(contents,{width=1120,name='Bulk operation detail / bounded viewport'}={}) {
-    return `<Frame name="${name}" position="absolute" x={${Math.max(8,width-544)}} y={44} w={400} maxH={380} flex="col" p={6} gap={4} bg="${C.bg}" stroke="${C.line}" strokeWidth={1} rounded={6} shadow="0 3 10 #18222B18">${contents}</Frame>`;
-  }
-
-  function heading(title,{cancel=false,back=true}={}) {
-    return `<Frame name="Task detail heading / back to shared queue" w="fill" h={26} flex="row" gap={4} items="center">${back?B('back','Back to all operations',24):''}${T(title,12)}${F}${cancel?A('取消'):''}${B('close','Close details / operations keep running',24)}</Frame>`;
-  }
-
-  function filter(label,active=false) {
-    return `<Frame name="Status filter / ${label}" h={26} flex="col" px={4} justify="center">${T(label,11,active?C.ink:C.muted)}${active?'<Rectangle name="Active filter underline" w={24} h={1} bg="#697E8D"/>':''}</Frame>`;
-  }
-
-  function itemRow(name,state,{failed=false,current=false}={}) {
-    return `<Frame name="Virtual result row / ${name}" w="fill" h={24} flex="row" gap={6} items="center">${I(failed?'warn':current?'pending':state==='等待'?'clock':'check',failed?C.error:C.muted,12)}
-      <Frame name="Item identity / full path on focus or tooltip" grow={1} h={16} flex="row">${T(name,11,C.ink,'w="fill" h={16} maxLines={1}')}</Frame>
-      <Frame name="Result status" w={72} h={16} flex="row" justify="end">${T(state,11,failed?C.error:C.muted)}</Frame>
-    </Frame>`;
-  }
-
-  function detail({width=1120,cancelling=false}={}) {
-    return panel(heading(cancelling?'正在取消复制…':'复制 100,000 项 → 文档',{cancel:!cancelling})+
-      `<Frame name="Durable outcome summary" w="fill" h={18} flex="row" px={2} items="center">${T('42,108 项已完成 · 12 项失败',11)}${F}${cancelling?I('pending',C.muted,12):''}</Frame>
-      <Frame name="Completed-item progress / known total" w="fill" h={2} bg="#E5E8EB"><Rectangle name="Completed items only" w={163} h={2} bg="${C.progress}"/></Frame>
-      <Frame name="Status filters / one result collection" w="fill" flex="row" gap={4}>${filter('全部',true)}${filter('处理中')}${filter('失败 12')}${F}${B('search','Find a file in this operation',24)}</Frame>
-      <Frame name="Virtual results viewport / 8 visible rows of 100000" w="fill" flex="col" gap={0}>${Array.from({length:8},(_,i)=>itemRow(`归档_${42109+i}.pdf`,i===0?(cancelling?'正在停止…':'正在复制'):i===3?'无权访问':'等待',{current:i===0,failed:i===3})).join('')}</Frame>
-      <Frame name="Result cursor / stable while progress updates" w="fill" h={24} flex="row" px={2} items="center">${T('42,109–42,116 / 100,000',10,C.muted)}${F}${T(cancelling?'已完成的文件保留':'定位当前文件',11,C.muted)}</Frame>`,{width});
-  }
-
-  function failures(width=1120) {
-    return panel(heading('复制结束 · 10,000 项未完成')+
-      `<Frame name="Partial completion summary" w="fill" h={18} flex="row" px={2} items="center">${T('90,000 项已完成',11)}${F}${T('仅重试未完成项',11,C.muted)}</Frame>
-      <Frame name="Failure reason filters / no per-file dialogs" w="fill" flex="col" gap={0}>
-        ${[['无权访问','6,200'],['同名冲突','2,800'],['位置不可用','1,000']].map(([label,n])=>`<Frame name="Reason filter / ${label}" w="fill" h={22} flex="row" px={2} items="center">${T(label,11)}${F}${T(`${n} 项`,11,C.muted)}${I('down',C.muted,10)}</Frame>`).join('')}
-      </Frame>
-      <Frame name="Filter selection" w="fill" h={26} flex="row">${filter('全部未完成',true)}${F}${B('search','Find an incomplete file',24)}</Frame>
-      <Frame name="Paged failures / only three visible of ten thousand" w="fill" flex="col">${itemRow('归档_000097.pdf','无权访问',{failed:true})}${itemRow('归档_000194.jpg','同名冲突',{failed:true})}${itemRow('归档_000291.txt','位置不可用',{failed:true})}</Frame>
-      <Frame name="Failure actions" w="fill" h={28} flex="row" px={2} items="center" gap={6}>${T('1–3 / 10,000',10,C.muted)}${F}${A('重试未完成项',{strong:true})}</Frame>`,{width,name:'Large failure collection / bounded and filterable'});
-  }
-
-  function bulkPage(name,{width=1120,selected=false,loading=false,excludeOne=false,footer='1,000,000 项',overlay='',totalJobs=0}={}) {
-    return app(name,directory({width,selected,loading,excludeOne}),{width,title:'Simo / 归档',jobs:totalJobs,footer:status(footer),overlay});
-  }
-
-  const prep=panel(heading('正在准备剪贴板…',{cancel:true,back:false})+
-    `<Frame name="Clipboard preparation count" w="fill" h={22} flex="row" px={2} items="center">${T('184,320 / 1,000,000 项',12)}${F}${I('pending',C.muted,12)}</Frame>
-     <Frame name="Preparation progress" w="fill" h={2} bg="#E5E8EB"><Rectangle name="Prepared selections" w={71} h={2} bg="${C.progress}"/></Frame>
-     <Frame name="Clipboard ownership changes only after success" w="fill" h={18} flex="row" px={2}>${T('完成后可粘贴',11,C.muted)}</Frame>`);
-
-  const scaleSheet=`<Frame name="38 · 大规模处理与性能验收" w={1120} h={500} flex="col" p={8} gap={10} bg="#F4F6F7">${T('大规模文件操作 · UI 与性能基线',16)}
-    ${[
-      ['规模','1万 / 10万 / 100万条目；24项操作；大量失败与长文件名。'],
-      ['显示','固定行高虚拟网格；任务面板只渲染可见行；明细按页读取。'],
-      ['操作','应用队列有界；按设备协调I/O；未知总量不显示伪百分比。'],
-      ['反馈','进度合并到每秒10次；结果不丢；取消通过独立控制通道。'],
-      ['验收','滚动帧时间、输入延迟、内存、队列深度、首屏、取消响应分别测量。'],
-      ['边界','Shell进度点不等于字节；剪贴板完整路径数组另计内存。']
-    ].map(([title,body])=>`<Frame name="Scale contract / ${title}" w="fill" flex="row" gap={8}><Frame name="Contract label" w={56} h={20}>${T(title,12)}</Frame><Frame name="Contract value" grow={1} h={20} flex="row">${T(body,12,C.muted,'w="fill"')}</Frame></Frame>`).join('')}
-    ${T('数值为本轮工程初始目标；隔离模型验证不等于真实文件吞吐、GPUI帧率或系统验收。',12,C.muted)}
-  </Frame>`;
-
-  return {
-    '31-million-directory':bulkPage('31 · 百万目录 / 全选与排除',{selected:true,excludeOne:true,footer:'已选择 999,999 / 1,000,000 项'}),
-    '32-large-queue':regular({name:'32 · 24项任务 / 有界面板',title:'Simo / 归档',items:files.slice(0,33),jobs,footer:'2 项进行中 · 22 项等待'}),
-    '33-large-task-detail':bulkPage('33 · 十万文件 / 按需展开结果',{totalJobs:24,overlay:detail(),footer:'2 项进行中 · 22 项等待'}),
-    '34-large-failures':bulkPage('34 · 一万失败 / 筛选和重试',{totalJobs:1,overlay:failures(),footer:'90,000 项已完成 · 10,000 项未完成'}),
-    '35-large-cancelling':bulkPage('35 · 大批次取消 / 等待后端停止',{totalJobs:24,overlay:detail({cancelling:true}),footer:'正在取消此任务 · 其他任务继续'}),
-    '36-narrow-large-queue':regular({name:'36 · 窄窗 / 24项任务排队',title:'Simo / 归档',width:560,items:files.slice(0,30),jobs,footer:'2 项进行中 · 22 项等待'}),
-    '37-large-clipboard':bulkPage('37 · 百万选择 / 剪贴板准备',{selected:true,overlay:prep,totalJobs:1,footer:'已选择 1,000,000 项 · 正在准备剪贴板'}),
-    '38-scale-contract':scaleSheet
-  };
+import {createTaskPresentation,taskColors} from './task-panel.mjs';
+const escape=value=>String(value).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('"','&quot;');
+export function createBulkScreens(ui){
+ const {T,I,B,A,F,S,C,app,grid,status,tile}=ui;
+ const view=createTaskPresentation(ui);
+ const million=1_000_000;
+ const longName='2026年跨区域项目合作资料与验收记录_第三轮修改后保留完整附件说明_最终确认版本_请在审阅前核对所有修改意见和文件来源_20261103.pdf';
+ const fullPath='C:\\Users\\Simo\\Documents\\项目资料\\跨区域合作\\2026年度归档\\第三阶段\\'+longName;
+ const files=Array.from({length:66},(_,i)=>({name:`归档${String(42101+i).padStart(6,'0')}.${['pdf','jpg','txt','docx'][i%4]}`,type:'file'}));
+ const active={target:'文档',countText:'42,108 / 100,000 项',sizeText:'9.8 GB / 20.0 GB',progress:.49,state:'active'};
+ const jobs=Array.from({length:24},(_,i)=>i===0?active:i===1?{target:'回收站',countText:'6,200 / 28,600 项',sizeText:'1.8 GB / 6.4 GB',progress:.28125,state:'active'}:{target:`备份 / 项目${i+1}`,countText:`0 / ${8200+i*20} 项`,sizeText:'0 B / 4.2 GB',progress:0,state:'waiting'});
+ const longRows=[{name:longName,state:'active'},{name:'AnnualReport_'+('Q4_0123456789'.repeat(8))+'.xlsx',state:'waiting'},{name:'项目合同与附件汇总_第二轮审阅意见_全部合并版本_待签署副本.docx',state:'failed'},...view.samples.slice(3)];
+ function directory({width=1120,selected=false,excludeOne=false,items=files}={}){
+  const columns=width<700?5:11,shown=items.slice(0,width<700?30:66);
+  return `<Frame name="Virtual directory viewport / ${million} total" w="fill" grow={1} flex="col" overflow="hidden"><Frame name="Scrollable directory clip / balanced vertical margins" position="absolute" x={12} y={16} w={${width-24}} h={616} overflow="hidden"><Frame name="Visible rows only / stable 116px pitch" position="absolute" x={0} y={0} w={${width-24}} grid columns="repeat(${columns}, 1fr)" columnGap={8} rowGap={16}>${shown.map((f,i)=>tile({...f,selected:selected&&(!excludeOne||i!==4),focus:selected&&i===0})).join('')}</Frame></Frame><Frame name="Directory scroll track" position="absolute" x={${width-8}} y={16} w={4} h={616} bg="#F0F2F4" rounded={2}><Rectangle name="Thumb / minimum visible size" x={0} y={86} w={4} h={24} bg="#BBC3CA" rounded={2}/></Frame></Frame>`;
+ }
+ function page(name,{width=1120,selected=false,excludeOne=false,items=files,overlay='',totalJobs=0,footer='1,000,000 项'}={}){
+  return app(name,directory({width,selected,excludeOne,items}),{width,title:'Simo / 归档',jobs:totalJobs,footer:status(footer),overlay});
+ }
+ function tip(name,state,{x=592,y=178,width=360}={}){
+  return `<Frame name="Filename tooltip / full value and state / stable item identity" position="absolute" x={${x}} y={${y}} w={${width}} maxH={224} flex="col" px={8} py={12} gap={6} bg="#30373D" rounded={4} shadow="0 2 8 #18222B24"><Text name="Full tooltip filename" font="Noto Sans SC" size={12} lineHeight={18} color="#FFFFFF" w="fill" textAutoResize="height">${escape(name)}</Text>${T(state,11,'#D3D9DE','w="fill" h={16}')}</Frame>`;
+ }
+ function fullDetails(){
+  const field=(label,value)=>`<Frame name="Full details field / ${label}" w="fill" flex="col" gap={6}><Frame name="Field heading" w="fill" h={28} flex="row" items="center">${T(label,11,C.muted)}${F}${['文件名','位置'].includes(label)?B('copy','Copy full '+label,28):''}</Frame><Text name="Full detail value / no ellipsis" font="Noto Sans SC" size={12} lineHeight={18} color="${C.ink}" w="fill" textAutoResize="height">${escape(value)}</Text></Frame>`;
+  return app('41 · 长文件名与路径 / 详情完整展示',`<Frame name="Directory and full details" w="fill" grow={1} flex="row"><Frame name="File area" grow={1} h="fill" flex="col">${grid([{name:longName,type:'file',selected:true},...files.slice(0,9)],{width:800})}</Frame><Frame name="Full details / selectable wrapped values" w={320} h="fill" flex="col" px={12} py={16} gap={16} bg="#FAFBFC"><Frame name="Details heading" w="fill" h={24} flex="row" items="center">${T('详情',13)}${F}${B('close','Close file details',24)}</Frame>${field('文件名',longName)}${field('位置',fullPath)}${field('状态','无权访问')}${field('大小','1.8 GB')}</Frame></Frame>`,{title:'Simo / 归档',footer:status('已选 1 项')});
+ }
+ const motionSheet=`<Frame name="42 · 文件名状态与流光 / 可编辑关键帧" w={1120} h={480} flex="col" px={12} py={16} gap={16} bg="#F4F6F7">${T('文件名状态与流光',16)}${[[.12,'0 ms'],[.5,'600 ms'],[.88,'1,200 ms']].map(([phase,label])=>`<Frame name="Flow phase / ${label}" w={600} h={28} flex="row" gap={12} items="center"><Frame name="Phase label" w={88} h={16}>${T(label,11,C.muted)}</Frame><Frame name="Editable gradient filename" grow={1} h={18} flex="row">${view.filename('归档_042109_跨区域合作项目验收记录.pdf',{state:'active',phase,layer:'Flow keyframe'})}</Frame></Frame>`).join('')}<Frame name="Reduced motion" w={600} h={28} flex="row" gap={12} items="center"><Frame name="Reduced motion label" w={88} h={16}>${T('减少动态效果',11,C.muted)}</Frame><Frame name="Static filename" grow={1} h={18} flex="row">${view.filename('归档_042109_跨区域合作项目验收记录.pdf',{state:'active',motion:false})}</Frame></Frame>${T('1,800 ms 循环；只对可见活动项绘制；共用时钟，离屏与隐藏时停止。',12,C.muted)}<Frame name="State variants / spec only" w={600} flex="col" gap={4}>${['done','waiting','failed'].map((state,i)=>`<Frame name="${state}" w="fill" h={24} flex="row"><Frame name="State label" w={88} h={16}>${T(['已完成','等待','失败'][i],11,C.muted)}</Frame><Frame name="Name" grow={1} h={18} flex="row">${view.filename('项目资料_最终签署版本.pdf',{state})}</Frame></Frame>`).join('')}</Frame></Frame>`;
+ const scaleSheet=`<Frame name="38 · 大规模渲染约束" w={1120} h={500} flex="col" px={12} py={16} gap={16} bg="#F4F6F7">${T('可见渲染与交互预算',16)}${[['网格','只创建视口与前后2行；按行高计算范围，不能遍历百万文件。'],['文字','仅测量可见项；布局缓存有界；省略展示，tooltip与详情读取原值。'],['流光','单个时钟，只对可见活动项更新；隐藏/减少动态效果时停止。'],['复用','稳定文件身份与视图代次；滚动后旧tooltip和旧异步结果失效。'],['指标','真实GPUI帧时间、输入延迟和GPU占用仍需SIM-935实机验收。']].map(([label,value])=>`<Frame name="Rendering rule / ${label}" w="fill" flex="row" gap={12}><Frame name="Rule label" w={56} h={20}>${T(label,12)}</Frame><Frame name="Rule value" grow={1} h={20} flex="row">${T(value,12,C.muted,'w="fill"')}</Frame></Frame>`).join('')}</Frame>`;
+ const failures=[{name:'归档_000097_合作协议扫描件.pdf',state:'failed'},{name:'归档_000194_合同附件最终版.jpg',state:'failed'},{name:'归档_000291_年度资料汇总说明.txt',state:'failed'}];
+ return {
+  '31-million-directory':page('31 · 百万目录 / 全选与排除',{selected:true,excludeOne:true,footer:'已选择 999,999 / 1,000,000 项'}),
+  '32-large-queue':page('32 · 总览 / 仅目标进度个数与大小',{totalJobs:24,overlay:view.panel(jobs)}),
+  '33-large-task-detail':page('33 · 文件名明细 / 统一左轴与颜色流光',{totalJobs:24,overlay:view.panel([active],{expanded:true})}),
+  '34-large-failures':page('34 · 未完成文件 / 颜色与按需详情',{totalJobs:1,overlay:view.panel([{...active,countText:'90,000 / 100,000 项',sizeText:'18.0 GB / 20.0 GB',progress:.9,state:'error'}],{expanded:true,rows:failures})}),
+  '35-large-cancelling':page('35 · 取消中 / 保留实际完成数据',{totalJobs:24,overlay:view.panel([{...active,state:'cancelling'}],{expanded:true,rows:view.samples.map(x=>({...x,state:x.state==='active'?'cancelled':x.state})),motion:false})}),
+  '36-narrow-large-queue':page('36 · 窄窗总览 / 限高与省略',{width:560,totalJobs:24,overlay:view.panel(jobs,{width:560})}),
+  '37-large-clipboard':page('37 · 剪贴板准备 / 仅真实数据',{selected:true,totalJobs:1,overlay:view.panel([{target:'系统剪贴板',countText:'184,320 / 1,000,000 项',sizeText:'2.8 GB / 20.0 GB',progress:.18432,state:'active'}]),footer:'已选择 1,000,000 项'}),
+  '38-scale-contract':scaleSheet,
+  '39-long-grid-tooltip':page('39 · 长文件名网格 / 省略与tooltip',{items:[{name:longName,type:'file'},{name:'AnnualReport_'+('0123456789'.repeat(12))+'.xlsx',type:'file'},...files.slice(0,31)],overlay:tip(longName,'PDF 文档',{x:16,y:166})}),
+  '40-long-task-tooltip':page('40 · 长文件名任务列表 / 省略与tooltip',{totalJobs:24,overlay:view.panel([{...active,target:'文档 / 跨区域项目合作资料与完整验收文档归档目录'}],{expanded:true,rows:longRows})+tip(longName,'正在复制',{x:592,y:178})}),
+  '41-full-details':fullDetails(),
+  '42-text-motion':motionSheet,
+  '43-unknown-size':page('43 · 总量未知 / 不伪造大小与百分比',{totalJobs:1,overlay:view.panel([{target:'文档',countText:'18,432 / — 项',sizeText:'9.8 GB / —',state:'preparing'}])}),
+  '44-narrow-long-text':page('44 · 窄窗长文本 / 保持统一左轴',{width:560,totalJobs:24,items:[{name:longName,type:'file'},...files.slice(0,29)],overlay:view.panel([{...active,target:'文档 / 跨区域项目合作资料与完整验收文档归档目录'}],{width:560,expanded:true,rows:longRows})})
+ };
 }

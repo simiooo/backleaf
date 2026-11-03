@@ -1,6 +1,7 @@
 {
   "tool": "OpenPencil 0.17.0-beta.1",
-  "verifiedAt": "2026-11-03T15:19:42.239Z",
+  "masterSha256": "505c56ce3c827f128bc75bbc85cf131826acf56a3f5614e67b5b86feb47c3d4a",
+  "verifiedAt": "2026-11-03T16:06:41.063Z",
   "method": "independent process import and re-render; no text edits",
   "pages": [
     {
@@ -59,7 +60,7 @@
     },
     {
       "page": "10 · 失败集中呈现",
-      "nodes": 208,
+      "nodes": 210,
       "changedPixels": 0,
       "totalPixels": 806400
     },
@@ -83,7 +84,7 @@
     },
     {
       "page": "14 · 删除进行中 / 逐项进度",
-      "nodes": 179,
+      "nodes": 175,
       "changedPixels": 0,
       "totalPixels": 806400
     },
@@ -95,25 +96,25 @@
     },
     {
       "page": "16 · 复制进行中",
-      "nodes": 97,
+      "nodes": 93,
       "changedPixels": 0,
       "totalPixels": 806400
     },
     {
       "page": "17 · 剪切后粘贴 / 移动进行中",
-      "nodes": 97,
+      "nodes": 93,
       "changedPixels": 0,
       "totalPixels": 806400
     },
     {
       "page": "18 · 正在取消 / 等待真实终止结果",
-      "nodes": 97,
+      "nodes": 93,
       "changedPixels": 0,
       "totalPixels": 806400
     },
     {
       "page": "19 · 取消后保留已完成项",
-      "nodes": 91,
+      "nodes": 88,
       "changedPixels": 0,
       "totalPixels": 806400
     },
@@ -144,18 +145,18 @@
     {
       "page": "24 · 重命名完成 / 焦点跟随文件",
       "nodes": 178,
-      "changedPixels": 6,
+      "changedPixels": 0,
       "totalPixels": 806400
     },
     {
       "page": "25 · 多操作同时处理 / 共享面板",
-      "nodes": 125,
+      "nodes": 120,
       "changedPixels": 0,
       "totalPixels": 806400
     },
     {
       "page": "26 · 多文件批次 / 展开逐项结果",
-      "nodes": 156,
+      "nodes": 117,
       "changedPixels": 0,
       "totalPixels": 806400
     },
@@ -167,13 +168,13 @@
     },
     {
       "page": "28 · 窄窗多文件操作",
-      "nodes": 228,
+      "nodes": 223,
       "changedPixels": 0,
       "totalPixels": 403200
     },
     {
       "page": "29 · 准备中 / 总量未知",
-      "nodes": 199,
+      "nodes": 196,
       "changedPixels": 0,
       "totalPixels": 806400
     },
@@ -185,51 +186,87 @@
     },
     {
       "page": "31 · 百万目录 / 全选与排除",
-      "nodes": 830,
+      "nodes": 831,
       "changedPixels": 0,
       "totalPixels": 806400
     },
     {
-      "page": "32 · 24项任务 / 有界面板",
-      "nodes": 499,
+      "page": "32 · 总览 / 仅目标进度个数与大小",
+      "nodes": 891,
       "changedPixels": 0,
       "totalPixels": 806400
     },
     {
-      "page": "33 · 十万文件 / 按需展开结果",
-      "nodes": 924,
+      "page": "33 · 文件名明细 / 统一左轴与颜色流光",
+      "nodes": 873,
       "changedPixels": 0,
       "totalPixels": 806400
     },
     {
-      "page": "34 · 一万失败 / 筛选和重试",
-      "nodes": 901,
+      "page": "34 · 未完成文件 / 颜色与按需详情",
+      "nodes": 862,
       "changedPixels": 0,
       "totalPixels": 806400
     },
     {
-      "page": "35 · 大批次取消 / 等待后端停止",
-      "nodes": 924,
+      "page": "35 · 取消中 / 保留实际完成数据",
+      "nodes": 873,
       "changedPixels": 0,
       "totalPixels": 806400
     },
     {
-      "page": "36 · 窄窗 / 24项任务排队",
-      "nodes": 463,
+      "page": "36 · 窄窗总览 / 限高与省略",
+      "nodes": 459,
       "changedPixels": 0,
       "totalPixels": 403200
     },
     {
-      "page": "37 · 百万选择 / 剪贴板准备",
-      "nodes": 851,
+      "page": "37 · 剪贴板准备 / 仅真实数据",
+      "nodes": 849,
       "changedPixels": 0,
       "totalPixels": 806400
     },
     {
-      "page": "38 · 大规模处理与性能验收",
-      "nodes": 33,
+      "page": "38 · 大规模渲染约束",
+      "nodes": 27,
       "changedPixels": 0,
       "totalPixels": 560000
+    },
+    {
+      "page": "39 · 长文件名网格 / 省略与tooltip",
+      "nodes": 438,
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "page": "40 · 长文件名任务列表 / 省略与tooltip",
+      "nodes": 876,
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "page": "41 · 长文件名与路径 / 详情完整展示",
+      "nodes": 191,
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "page": "42 · 文件名状态与流光 / 可编辑关键帧",
+      "nodes": 39,
+      "changedPixels": 0,
+      "totalPixels": 537600
+    },
+    {
+      "page": "43 · 总量未知 / 不伪造大小与百分比",
+      "nodes": 849,
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "page": "44 · 窄窗长文本 / 保持统一左轴",
+      "nodes": 441,
+      "changedPixels": 0,
+      "totalPixels": 403200
     }
   ],
   "result": "passed"

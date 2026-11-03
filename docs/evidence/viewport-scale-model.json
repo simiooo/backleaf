@@ -1,0 +1,22 @@
+{
+  "scope": "Isolated Rust viewport, cache, hover identity and animation-clock model; not GPUI rendering",
+  "scenarios": 16384,
+  "max_materialised_cells": 897,
+  "max_cached_short_names": 1922,
+  "max_shared_clocks": 1,
+  "max_animated_visible_names": 8,
+  "stale_hover_results_rejected": 16384,
+  "hidden_and_reduced_motion_clocks": 0,
+  "example_1120x616_materialised_cells": 121,
+  "range_calculations": 1000000,
+  "range_calculation_ms": 9.8803,
+  "not_measured": [
+    "GPUI frame time",
+    "GPU usage",
+    "real glyph layout",
+    "real accessibility providers"
+  ],
+  "verified_at": "2026-11-03T15:52:07.757481+00:00",
+  "rustc": "rustc 1.99.1 (58cf8f9c3 2026-10-13)",
+  "source_sha256": "3b42ce2e7e6af74b264eecea62b936734ce31cd168bfd40625e29f3917826084"
+}

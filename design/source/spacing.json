@@ -1,15 +1,15 @@
 {
-  "label": 2,
-  "identity": 4,
-  "inline": 6,
-  "collection": 6,
-  "section": 8,
-  "actions": 10,
-  "panel/x": 8,
-  "panel/y": 8,
-  "menu/x": 8,
-  "menu/y": 2,
-  "content/x": 8,
-  "content/y": 8,
-  "target/icon": 28
+  "label": 4,
+  "identity": 6,
+  "inline": 8,
+  "collection": 8,
+  "section": 16,
+  "actions": 16,
+  "panel/x": 12,
+  "panel/y": 16,
+  "menu/x": 6,
+  "menu/y": 8,
+  "content/x": 12,
+  "content/y": 16,
+  "target/icon": 32
 }

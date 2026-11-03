@@ -1,0 +1,12 @@
+{
+  "background": "#FFFFFF",
+  "minimum": 4.5,
+  "ratios": {
+    "done": 12.602,
+    "waiting": 4.537,
+    "active": 7.803,
+    "sweep": 5.421,
+    "failed": 6.934
+  },
+  "scope": "Solid endpoints; gradient channels stay between the active and sweep endpoints"
+}

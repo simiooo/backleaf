@@ -27,3 +27,7 @@ Windows staging means a private downloadable desktop build installed into an iso
 - [Shell clipboard formats](https://learn.microsoft.com/en-us/windows/win32/shell/clipboard#cf_hdrop) 要求 CF_HDROP 完整路径数组，不能将应用虚拟选择宣传为系统剪贴板恒定内存。
 - 针对当前固定上游版本，已读本地 gpui/src/elements/uniform_list.rs：只为可见范围调用 render_items。网格按行虚拟化，实际 UIA 与焦点另验。
 - [GNOME progress](https://developer.gnome.org/hig/patterns/feedback/progress-bars.html) 支持按任务单位反馈和合理合并子任务；采用统一队列和按需明细，具体密度与上限是本产品选择。
+
+## v6 文本与可见渲染
+
+[GNOME tooltips](https://developer.gnome.org/hig/patterns/feedback/tooltips.html) 提供内容补充信息的参考。按用户偏好，任务列表隐藏常驻状态标签；完整名称/状态同时保留在详情与可访问信息，不只依赖悬停。已核对本地固定GPUI源码的 uniform_list、ShapedLine 与 shape_line 接口，可见范围和少量缓存绘制是实现候选；没有据此声称已完成GPU或UIA实机验证。

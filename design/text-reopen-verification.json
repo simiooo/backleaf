@@ -1,7 +1,7 @@
 {
   "tool": "OpenPencil 0.17.0-beta.1",
-  "masterSha256": "a0939f5f950c0633b3083538acbf23de17476f4b068524eea09e354a03dd5c6e",
-  "verifiedAt": "2026-11-03T15:21:11.346Z",
+  "masterSha256": "505c56ce3c827f128bc75bbc85cf131826acf56a3f5614e67b5b86feb47c3d4a",
+  "verifiedAt": "2026-11-03T16:08:18.607Z",
   "method": "independent import; exact text and node-count comparison",
   "pages": [
     {
@@ -51,8 +51,8 @@
     },
     {
       "page": "10 · 失败集中呈现",
-      "nodes": 208,
-      "textCount": 22
+      "nodes": 210,
+      "textCount": 23
     },
     {
       "page": "11 · 紧凑组件与状态",
@@ -71,7 +71,7 @@
     },
     {
       "page": "14 · 删除进行中 / 逐项进度",
-      "nodes": 179,
+      "nodes": 175,
       "textCount": 16
     },
     {
@@ -81,22 +81,22 @@
     },
     {
       "page": "16 · 复制进行中",
-      "nodes": 97,
+      "nodes": 93,
       "textCount": 9
     },
     {
       "page": "17 · 剪切后粘贴 / 移动进行中",
-      "nodes": 97,
+      "nodes": 93,
       "textCount": 9
     },
     {
       "page": "18 · 正在取消 / 等待真实终止结果",
-      "nodes": 97,
-      "textCount": 9
+      "nodes": 93,
+      "textCount": 8
     },
     {
       "page": "19 · 取消后保留已完成项",
-      "nodes": 91,
+      "nodes": 88,
       "textCount": 8
     },
     {
@@ -126,13 +126,13 @@
     },
     {
       "page": "25 · 多操作同时处理 / 共享面板",
-      "nodes": 125,
-      "textCount": 15
+      "nodes": 120,
+      "textCount": 18
     },
     {
       "page": "26 · 多文件批次 / 展开逐项结果",
-      "nodes": 156,
-      "textCount": 26
+      "nodes": 117,
+      "textCount": 18
     },
     {
       "page": "27 · 多文件冲突 / 本次应用范围",
@@ -141,13 +141,13 @@
     },
     {
       "page": "28 · 窄窗多文件操作",
-      "nodes": 228,
-      "textCount": 24
+      "nodes": 223,
+      "textCount": 27
     },
     {
       "page": "29 · 准备中 / 总量未知",
-      "nodes": 199,
-      "textCount": 17
+      "nodes": 196,
+      "textCount": 18
     },
     {
       "page": "30 · 无选中 / 新建与粘贴",
@@ -156,43 +156,73 @@
     },
     {
       "page": "31 · 百万目录 / 全选与排除",
-      "nodes": 830,
+      "nodes": 831,
       "textCount": 68
     },
     {
-      "page": "32 · 24项任务 / 有界面板",
-      "nodes": 499,
-      "textCount": 48
+      "page": "32 · 总览 / 仅目标进度个数与大小",
+      "nodes": 891,
+      "textCount": 85
     },
     {
-      "page": "33 · 十万文件 / 按需展开结果",
-      "nodes": 924,
-      "textCount": 93
+      "page": "33 · 文件名明细 / 统一左轴与颜色流光",
+      "nodes": 873,
+      "textCount": 81
     },
     {
-      "page": "34 · 一万失败 / 筛选和重试",
-      "nodes": 901,
-      "textCount": 86
+      "page": "34 · 未完成文件 / 颜色与按需详情",
+      "nodes": 862,
+      "textCount": 75
     },
     {
-      "page": "35 · 大批次取消 / 等待后端停止",
-      "nodes": 924,
-      "textCount": 92
+      "page": "35 · 取消中 / 保留实际完成数据",
+      "nodes": 873,
+      "textCount": 80
     },
     {
-      "page": "36 · 窄窗 / 24项任务排队",
-      "nodes": 463,
-      "textCount": 45
+      "page": "36 · 窄窗总览 / 限高与省略",
+      "nodes": 459,
+      "textCount": 49
     },
     {
-      "page": "37 · 百万选择 / 剪贴板准备",
-      "nodes": 851,
+      "page": "37 · 剪贴板准备 / 仅真实数据",
+      "nodes": 849,
       "textCount": 72
     },
     {
-      "page": "38 · 大规模处理与性能验收",
-      "nodes": 33,
-      "textCount": 14
+      "page": "38 · 大规模渲染约束",
+      "nodes": 27,
+      "textCount": 11
+    },
+    {
+      "page": "39 · 长文件名网格 / 省略与tooltip",
+      "nodes": 438,
+      "textCount": 37
+    },
+    {
+      "page": "40 · 长文件名任务列表 / 省略与tooltip",
+      "nodes": 876,
+      "textCount": 83
+    },
+    {
+      "page": "41 · 长文件名与路径 / 详情完整展示",
+      "nodes": 191,
+      "textCount": 21
+    },
+    {
+      "page": "42 · 文件名状态与流光 / 可编辑关键帧",
+      "nodes": 39,
+      "textCount": 16
+    },
+    {
+      "page": "43 · 总量未知 / 不伪造大小与百分比",
+      "nodes": 849,
+      "textCount": 72
+    },
+    {
+      "page": "44 · 窄窗长文本 / 保持统一左轴",
+      "nodes": 441,
+      "textCount": 45
     }
   ],
   "result": "passed"

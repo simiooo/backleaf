@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="64" viewBox="0 0 400 64" role="img" aria-label="进行中的文件名字体流光预览">
+<title>活动文件名 · 1800ms 共用光带</title>
+<style>.static{display:none}@media(prefers-reduced-motion:reduce){.moving{display:none}.static{display:inline}}</style>
+<defs><linearGradient id="flow" gradientUnits="userSpaceOnUse" x1="-100" x2="100"><stop offset="0" stop-color="#31566F"/><stop offset=".35" stop-color="#31566F"/><stop offset=".5" stop-color="#4B6E86"/><stop offset=".65" stop-color="#31566F"/><stop offset="1" stop-color="#31566F"/><animateTransform attributeName="gradientTransform" type="translate" from="-120 0" to="400 0" dur="1.8s" repeatCount="indefinite"/></linearGradient></defs>
+<rect x=".5" y=".5" width="399" height="63" fill="#FFFFFF" stroke="#DDE1E5" rx="6"/>
+<g font-family="Noto Sans SC,Microsoft YaHei,sans-serif" font-size="12"><text class="moving" x="12" y="37" fill="url(#flow)">归档_042109_跨区域合作项目验收记录.pdf</text><text class="static" x="12" y="37" fill="#31566F">归档_042109_跨区域合作项目验收记录.pdf</text></g>
+<script><![CDATA[const s=document.documentElement,m=matchMedia('(prefers-reduced-motion:reduce)');function sync(){if(m.matches||document.hidden)s.pauseAnimations();else s.unpauseAnimations()}m.addEventListener('change',sync);document.addEventListener('visibilitychange',sync);sync();]]></script>
+</svg>
