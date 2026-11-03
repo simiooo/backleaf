@@ -16,7 +16,7 @@ const requested=process.env.BACKLEAF_DESIGN_PAGES?.split(',');
 if(requested&&!previewOnly)throw new Error('Page filtering requires --preview-only; partial masters are forbidden');
 const entries=Object.entries(screens).filter(([key])=>!requested||requested.includes(key));
 if(!entries.length)throw new Error('No requested design pages');
-const output=join(project,previewOnly?'.local/design-preview-v5':'design/v5');
+const output=join(project,previewOnly?'.local/design-preview-v5':'design/v5.1');
 await mkdir(output,{recursive:true});
 const graph=new SceneGraph(),figma=new FigmaAPI(graph),io=new IORegistry(BUILTIN_IO_FORMATS);
 const collection=figma.variables.createVariableCollection('Backleaf spacing');
@@ -83,6 +83,6 @@ for(let i=0;i<pages.length;i++){
  const roots=reopened.getChildren(pages[i].id);
  if(roots.length!==1||reopened.countDescendants(roots[0].id)+1!==records[i].nodes)throw new Error('Lost nodes '+pages[i].name);
 }
-await writeFile(join(project,'design/recovery-verification.json'),JSON.stringify({tool:'OpenPencil 0.17.0-beta.1',version:'design-v5-bulk-scale',previews:'v5',verifiedAt:new Date().toISOString(),master:'Backleaf.fig',spacingVariables:Object.keys(spacing).length,pages:records,roundtrip:'all pages and content nodes preserved'},null,2));
+await writeFile(join(project,'design/recovery-verification.json'),JSON.stringify({tool:'OpenPencil 0.17.0-beta.1',version:'design-v5.1-bulk-scale',previews:'v5.1',verifiedAt:new Date().toISOString(),master:'Backleaf.fig',spacingVariables:Object.keys(spacing).length,pages:records,roundtrip:'all pages and content nodes preserved'},null,2));
 console.log(JSON.stringify({stage:'saved-and-reopened',file,pages:pages.length,nodes:records.reduce((a,r)=>a+r.nodes,0),fileMetrics:fileMetrics.length,titlebars:titlebars.length,overflows:0}));
 process.exit(0);

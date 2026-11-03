@@ -1,21 +1,28 @@
 import { readFile,writeFile,mkdir } from 'node:fs/promises';
 import {join,dirname,resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
+import {createHash} from 'node:crypto';
 import { BUILTIN_IO_FORMATS,IORegistry } from '@open-pencil/core/io';
 import { populateAllFigPages } from '@open-pencil/core/io/formats/fig';
 import { headlessRenderNodes,initCanvasKit,createCanvasKitRasterCodec,comparePNGs } from '@open-pencil/core/io/formats/raster';
 const project=resolve(dirname(fileURLToPath(import.meta.url)),'../..'),file=join(project,'design/Backleaf.fig');
 const io=new IORegistry(BUILTIN_IO_FORMATS);
-const {graph}=await io.readDocument({name:file,data:new Uint8Array(await readFile(file))});
+const fileBytes=new Uint8Array(await readFile(file));
+const masterSha256=createHash('sha256').update(fileBytes).digest('hex');
+const textOnly=process.argv.includes('--text-only');
+const {graph}=await io.readDocument({name:file,data:fileBytes});
 populateAllFigPages(graph);
 const manifest=JSON.parse(await readFile(join(project,'design/recovery-verification.json'),'utf8'));
 if(graph.getPages().length!==manifest.pages.length)throw new Error('Page count changed');
-const codec=createCanvasKitRasterCodec(await initCanvasKit());
+const codec=textOnly?null:createCanvasKitRasterCodec(await initCanvasKit());
 const records=[];
 await mkdir(join(project,'.local/design-reopened-'+manifest.previews),{recursive:true});
 for(const [i,page] of graph.getPages().entries()){
  const root=graph.getChildren(page.id)[0], expected=manifest.pages[i];
  if(!root||graph.countDescendants(root.id)+1!==expected.nodes)throw new Error('Missing content '+page.name);
+ const texts=[];const walk=n=>{if(n.type==='TEXT')texts.push(n.text);for(const child of graph.getChildren(n.id))walk(child)};walk(root);
+ if(expected.texts&&JSON.stringify(texts)!==JSON.stringify(expected.texts))throw new Error('Saved text changed '+page.name);
+ if(textOnly){records.push({page:page.name,nodes:expected.nodes,textCount:texts.length});continue;}
  const image=await headlessRenderNodes(graph,page.id,[root.id],{format:'PNG',scale:1});
  if(!image)throw new Error('No image '+page.name);
  await writeFile(join(project,'.local/design-reopened-'+manifest.previews,expected.key+'.png'),image);
@@ -25,8 +32,12 @@ for(const [i,page] of graph.getPages().entries()){
  const record={page:page.name,nodes:expected.nodes,changedPixels:diff.changedPixels,totalPixels:diff.totalPixels};
  records.push(record);console.log(JSON.stringify(record));
 }
+if(textOnly){
+ await writeFile(join(project,'design/text-reopen-verification.json'),JSON.stringify({tool:'OpenPencil 0.17.0-beta.1',masterSha256,verifiedAt:new Date().toISOString(),method:'independent import; exact text and node-count comparison',pages:records,result:'passed'},null,2));
+ console.log(JSON.stringify({stage:'saved-text-verified',pages:records.length,texts:records.reduce((n,r)=>n+r.textCount,0),masterSha256}));process.exit(0);
+}
 const bad=records.filter(r=>r.changedPixels/r.totalPixels>0.001);
-await writeFile(join(project,'design/cold-reopen-verification.json'),JSON.stringify({tool:'OpenPencil 0.17.0-beta.1',verifiedAt:new Date().toISOString(),method:'independent process import and re-render; no text edits',pages:records,result:bad.length?'needs review':'passed'},null,2));
+await writeFile(join(project,'design/cold-reopen-verification.json'),JSON.stringify({tool:'OpenPencil 0.17.0-beta.1',masterSha256,verifiedAt:new Date().toISOString(),method:'independent process import and re-render; no text edits',pages:records,result:bad.length?'needs review':'passed'},null,2));
 if(bad.length)throw new Error('Visual round-trip mismatch: '+bad.map(r=>r.page).join(', '));
 console.log(`PASS: all ${records.length} saved pages reopened and visually matched in a fresh process`);
 process.exit(0);

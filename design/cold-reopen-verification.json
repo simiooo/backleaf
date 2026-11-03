@@ -1,6 +1,6 @@
 {
   "tool": "OpenPencil 0.17.0-beta.1",
-  "verifiedAt": "2026-11-03T15:09:39.252Z",
+  "verifiedAt": "2026-11-03T15:19:42.239Z",
   "method": "independent process import and re-render; no text edits",
   "pages": [
     {
@@ -144,7 +144,7 @@
     {
       "page": "24 · 重命名完成 / 焦点跟随文件",
       "nodes": 178,
-      "changedPixels": 0,
+      "changedPixels": 6,
       "totalPixels": 806400
     },
     {
@@ -197,7 +197,7 @@
     },
     {
       "page": "33 · 十万文件 / 按需展开结果",
-      "nodes": 922,
+      "nodes": 924,
       "changedPixels": 0,
       "totalPixels": 806400
     },
@@ -221,7 +221,7 @@
     },
     {
       "page": "37 · 百万选择 / 剪贴板准备",
-      "nodes": 846,
+      "nodes": 851,
       "changedPixels": 0,
       "totalPixels": 806400
     },

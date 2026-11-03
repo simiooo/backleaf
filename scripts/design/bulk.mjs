@@ -28,7 +28,7 @@ export function createBulkScreens(ui) {
   }
 
   function heading(title,{cancel=false,back=true}={}) {
-    return `<Frame name="Task detail heading / back to shared queue" w="fill" h={26} flex="row" gap={4} items="center">${back?B('back','Back to all operations',24):''}${T(title,12)}${F}${cancel?B('close','Cancel this batch',24):B('close','Close details / operations keep running',24)}</Frame>`;
+    return `<Frame name="Task detail heading / back to shared queue" w="fill" h={26} flex="row" gap={4} items="center">${back?B('back','Back to all operations',24):''}${T(title,12)}${F}${cancel?A('取消'):''}${B('close','Close details / operations keep running',24)}</Frame>`;
   }
 
   function filter(label,active=false) {
@@ -90,7 +90,7 @@ export function createBulkScreens(ui) {
     '34-large-failures':bulkPage('34 · 一万失败 / 筛选和重试',{totalJobs:1,overlay:failures(),footer:'90,000 项已完成 · 10,000 项未完成'}),
     '35-large-cancelling':bulkPage('35 · 大批次取消 / 等待后端停止',{totalJobs:24,overlay:detail({cancelling:true}),footer:'正在取消此任务 · 其他任务继续'}),
     '36-narrow-large-queue':regular({name:'36 · 窄窗 / 24项任务排队',title:'Simo / 归档',width:560,items:files.slice(0,30),jobs,footer:'2 项进行中 · 22 项等待'}),
-    '37-large-clipboard':bulkPage('37 · 百万选择 / 剪贴板准备',{selected:true,overlay:prep,footer:'已选择 1,000,000 项 · 正在准备剪贴板'}),
+    '37-large-clipboard':bulkPage('37 · 百万选择 / 剪贴板准备',{selected:true,overlay:prep,totalJobs:1,footer:'已选择 1,000,000 项 · 正在准备剪贴板'}),
     '38-scale-contract':scaleSheet
   };
 }
