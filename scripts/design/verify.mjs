@@ -12,13 +12,13 @@ const manifest=JSON.parse(await readFile(join(project,'design/recovery-verificat
 if(graph.getPages().length!==manifest.pages.length)throw new Error('Page count changed');
 const codec=createCanvasKitRasterCodec(await initCanvasKit());
 const records=[];
-await mkdir(join(project,'.local/design-reopened-v4'),{recursive:true});
+await mkdir(join(project,'.local/design-reopened-'+manifest.previews),{recursive:true});
 for(const [i,page] of graph.getPages().entries()){
  const root=graph.getChildren(page.id)[0], expected=manifest.pages[i];
  if(!root||graph.countDescendants(root.id)+1!==expected.nodes)throw new Error('Missing content '+page.name);
  const image=await headlessRenderNodes(graph,page.id,[root.id],{format:'PNG',scale:1});
  if(!image)throw new Error('No image '+page.name);
- await writeFile(join(project,'.local/design-reopened-v4',expected.key+'.png'),image);
+ await writeFile(join(project,'.local/design-reopened-'+manifest.previews,expected.key+'.png'),image);
  const before=new Uint8Array(await readFile(join(project,'design/'+manifest.previews,expected.key+'.png')));
  const diff=comparePNGs(codec,before,image,{threshold:0.05});
  if(!diff)throw new Error('Image dimensions changed '+page.name);

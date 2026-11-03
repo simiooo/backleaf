@@ -19,3 +19,11 @@ Only first-party technical documentation informs the baseline. This is engineeri
 | [Finder organization](https://support.apple.com/guide/mac-help/organize-your-files-in-the-finder-mchle9f0a1b2/mac) and [drag and drop](https://support.apple.com/guide/mac-help/drag-and-drop-items-mh35852/mac) | Behavioral and hierarchy reference while retaining Windows shortcuts and Shell semantics. Center icon-grid identities as explicitly requested by the user. |
 
 Windows staging means a private downloadable desktop build installed into an isolated staging directory and launched on Windows. A webpage screenshot or source push alone does not count as application deployment. Signed production distribution and default Shell takeover are outside this staging authorization.
+
+## 大规模处理补充 · 2026-11-03
+
+- [IFileOperation UpdateProgress](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifileoperationprogresssink-updateprogress) 是无指定单位的工作量估计点，不是字节；修正 v4 示例的 MB 表示。
+- [CopyItems](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifileoperation-copyitems) 可接受 Shell 数组/数据对象/枚举器，但声明工作不等于执行。限制应用持有对象数量，Shell 递归内存仍须实测。
+- [Shell clipboard formats](https://learn.microsoft.com/en-us/windows/win32/shell/clipboard#cf_hdrop) 要求 CF_HDROP 完整路径数组，不能将应用虚拟选择宣传为系统剪贴板恒定内存。
+- 针对当前固定上游版本，已读本地 gpui/src/elements/uniform_list.rs：只为可见范围调用 render_items。网格按行虚拟化，实际 UIA 与焦点另验。
+- [GNOME progress](https://developer.gnome.org/hig/patterns/feedback/progress-bars.html) 支持按任务单位反馈和合理合并子任务；采用统一队列和按需明细，具体密度与上限是本产品选择。

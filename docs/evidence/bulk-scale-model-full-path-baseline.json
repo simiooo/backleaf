@@ -1,0 +1,133 @@
+{
+  "verified_at": "2026-11-03T15:03:22.873857+00:00",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "python": "3.12.10",
+  "scope": "Isolated metadata/queue model, not Shell or GPUI",
+  "limits": {
+    "batch_records": 256,
+    "batch_payload_bytes": 262144,
+    "queued_batches": 8,
+    "visible_records": 96
+  },
+  "controls": {
+    "cancel_with_full_queue_ms": 0.1062,
+    "device_scheduler_peak_active": 2,
+    "scheduled_jobs_completed": 24,
+    "selection_exclusions_stored": 1
+  },
+  "cases": [
+    {
+      "records": 100000,
+      "long_utf16_paths": false,
+      "logical_jobs": 24,
+      "producer_threads": 2,
+      "sqlite_version": "3.49.1",
+      "journal_mode": "WAL",
+      "synchronous": "FULL",
+      "sqlite_page_cache_mib": 8,
+      "spool_seconds": 1.653,
+      "database_mib": 9.97,
+      "terminal_rows_preserved": 100000,
+      "failures_preserved": 1030,
+      "max_queue_batches": 8,
+      "max_queue_payload_bytes": 233472,
+      "max_batch_records": 256,
+      "max_batch_payload_bytes": 29184,
+      "progress_updates": 100000,
+      "ui_snapshots": 15,
+      "max_pending_ui_wakes": 1,
+      "max_live_job_snapshots": 24,
+      "page_limit": 96,
+      "warm_keyset_page": {
+        "p50_ms": 0.1283,
+        "p95_ms": 0.2612,
+        "max_ms": 0.4904
+      },
+      "warm_failure_page": {
+        "p50_ms": 0.0566,
+        "p95_ms": 0.2167,
+        "max_ms": 0.4879
+      },
+      "peak_working_set_mb": 35.28,
+      "private_bytes_mb": 13.95
+    },
+    {
+      "records": 1000000,
+      "long_utf16_paths": false,
+      "logical_jobs": 24,
+      "producer_threads": 2,
+      "sqlite_version": "3.49.1",
+      "journal_mode": "WAL",
+      "synchronous": "FULL",
+      "sqlite_page_cache_mib": 8,
+      "spool_seconds": 18.378,
+      "database_mib": 100.1,
+      "terminal_rows_preserved": 1000000,
+      "failures_preserved": 10309,
+      "max_queue_batches": 8,
+      "max_queue_payload_bytes": 233472,
+      "max_batch_records": 256,
+      "max_batch_payload_bytes": 29184,
+      "progress_updates": 1000000,
+      "ui_snapshots": 168,
+      "max_pending_ui_wakes": 1,
+      "max_live_job_snapshots": 24,
+      "page_limit": 96,
+      "warm_keyset_page": {
+        "p50_ms": 0.1409,
+        "p95_ms": 0.3531,
+        "max_ms": 1.2799
+      },
+      "warm_failure_page": {
+        "p50_ms": 0.9316,
+        "p95_ms": 1.6372,
+        "max_ms": 4.4524
+      },
+      "peak_working_set_mb": 39.81,
+      "private_bytes_mb": 15.47
+    },
+    {
+      "records": 1024,
+      "long_utf16_paths": true,
+      "logical_jobs": 24,
+      "producer_threads": 2,
+      "sqlite_version": "3.49.1",
+      "journal_mode": "WAL",
+      "synchronous": "FULL",
+      "sqlite_page_cache_mib": 8,
+      "spool_seconds": 1.222,
+      "database_mib": 64.04,
+      "terminal_rows_preserved": 1024,
+      "failures_preserved": 10,
+      "max_queue_batches": 8,
+      "max_queue_payload_bytes": 2045248,
+      "max_batch_records": 4,
+      "max_batch_payload_bytes": 255656,
+      "progress_updates": 1024,
+      "ui_snapshots": 11,
+      "max_pending_ui_wakes": 1,
+      "max_live_job_snapshots": 24,
+      "page_limit": 96,
+      "warm_keyset_page": {
+        "p50_ms": 18.1231,
+        "p95_ms": 25.1349,
+        "max_ms": 37.4342
+      },
+      "warm_failure_page": {
+        "p50_ms": 0.1414,
+        "p95_ms": 0.4106,
+        "max_ms": 0.8169
+      },
+      "peak_working_set_mb": 48.63,
+      "private_bytes_mb": 25.97
+    }
+  ],
+  "not_measured": [
+    "Real file copy/move/recycle throughput",
+    "GPUI frame times and input latency",
+    "Shell/OLE memory and cancellation latency",
+    "Physical disk contention",
+    "Crash/power-loss durability",
+    "Cold directory enumeration/sorting"
+  ]
+}

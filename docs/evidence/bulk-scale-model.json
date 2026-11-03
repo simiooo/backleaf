@@ -1,0 +1,151 @@
+{
+  "verified_at": "2026-11-03T15:05:47.930375+00:00",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "python": "3.12.10",
+  "scope": "Isolated metadata/queue model, not Shell or GPUI",
+  "limits": {
+    "batch_records": 256,
+    "batch_payload_bytes": 262144,
+    "queued_batches": 8,
+    "visible_records": 96
+  },
+  "controls": {
+    "cancel_with_full_queue_ms": 0.0899,
+    "device_scheduler_peak_active": 2,
+    "scheduled_jobs_completed": 24,
+    "selection_exclusions_stored": 1
+  },
+  "cases": [
+    {
+      "records": 100000,
+      "long_utf16_paths": false,
+      "logical_jobs": 24,
+      "producer_threads": 2,
+      "sqlite_version": "3.49.1",
+      "journal_mode": "WAL",
+      "synchronous": "FULL",
+      "sqlite_page_cache_mib": 8,
+      "spool_seconds": 2.121,
+      "database_mib": 18.26,
+      "terminal_rows_preserved": 100000,
+      "failures_preserved": 1030,
+      "max_queue_batches": 8,
+      "max_queue_payload_bytes": 233472,
+      "max_batch_records": 256,
+      "max_batch_payload_bytes": 29184,
+      "progress_updates": 100000,
+      "ui_snapshots": 20,
+      "max_pending_ui_wakes": 1,
+      "max_live_job_snapshots": 24,
+      "page_limit": 96,
+      "warm_keyset_page": {
+        "p50_ms": 0.0838,
+        "p95_ms": 0.1599,
+        "max_ms": 0.3686
+      },
+      "warm_failure_page": {
+        "p50_ms": 0.0292,
+        "p95_ms": 0.0812,
+        "max_ms": 0.2359
+      },
+      "on_demand_full_path": {
+        "p50_ms": 0.0237,
+        "p95_ms": 0.0556,
+        "max_ms": 0.1707
+      },
+      "page_projection": "ordinal + display, covering index; full path on demand",
+      "peak_working_set_mb": 35.65,
+      "private_bytes_mb": 14.28
+    },
+    {
+      "records": 1000000,
+      "long_utf16_paths": false,
+      "logical_jobs": 24,
+      "producer_threads": 2,
+      "sqlite_version": "3.49.1",
+      "journal_mode": "WAL",
+      "synchronous": "FULL",
+      "sqlite_page_cache_mib": 8,
+      "spool_seconds": 27.72,
+      "database_mib": 183.85,
+      "terminal_rows_preserved": 1000000,
+      "failures_preserved": 10309,
+      "max_queue_batches": 8,
+      "max_queue_payload_bytes": 233472,
+      "max_batch_records": 256,
+      "max_batch_payload_bytes": 29184,
+      "progress_updates": 1000000,
+      "ui_snapshots": 251,
+      "max_pending_ui_wakes": 1,
+      "max_live_job_snapshots": 24,
+      "page_limit": 96,
+      "warm_keyset_page": {
+        "p50_ms": 0.1005,
+        "p95_ms": 0.2011,
+        "max_ms": 0.5436
+      },
+      "warm_failure_page": {
+        "p50_ms": 0.0771,
+        "p95_ms": 0.1547,
+        "max_ms": 0.4927
+      },
+      "on_demand_full_path": {
+        "p50_ms": 0.025,
+        "p95_ms": 0.0736,
+        "max_ms": 0.1883
+      },
+      "page_projection": "ordinal + display, covering index; full path on demand",
+      "peak_working_set_mb": 39.82,
+      "private_bytes_mb": 15.25
+    },
+    {
+      "records": 1024,
+      "long_utf16_paths": true,
+      "logical_jobs": 24,
+      "producer_threads": 2,
+      "sqlite_version": "3.49.1",
+      "journal_mode": "WAL",
+      "synchronous": "FULL",
+      "sqlite_page_cache_mib": 8,
+      "spool_seconds": 1.436,
+      "database_mib": 64.1,
+      "terminal_rows_preserved": 1024,
+      "failures_preserved": 10,
+      "max_queue_batches": 8,
+      "max_queue_payload_bytes": 2045248,
+      "max_batch_records": 4,
+      "max_batch_payload_bytes": 255656,
+      "progress_updates": 1024,
+      "ui_snapshots": 13,
+      "max_pending_ui_wakes": 1,
+      "max_live_job_snapshots": 24,
+      "page_limit": 96,
+      "warm_keyset_page": {
+        "p50_ms": 0.0577,
+        "p95_ms": 0.1403,
+        "max_ms": 0.2611
+      },
+      "warm_failure_page": {
+        "p50_ms": 0.0137,
+        "p95_ms": 0.0394,
+        "max_ms": 0.099
+      },
+      "on_demand_full_path": {
+        "p50_ms": 0.1319,
+        "p95_ms": 0.3133,
+        "max_ms": 0.652
+      },
+      "page_projection": "ordinal + display, covering index; full path on demand",
+      "peak_working_set_mb": 33.17,
+      "private_bytes_mb": 13.98
+    }
+  ],
+  "not_measured": [
+    "Real file copy/move/recycle throughput",
+    "GPUI frame times and input latency",
+    "Shell/OLE memory and cancellation latency",
+    "Physical disk contention",
+    "Crash/power-loss durability",
+    "Cold directory enumeration/sorting"
+  ]
+}

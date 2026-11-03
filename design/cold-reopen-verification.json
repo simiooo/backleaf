@@ -1,6 +1,6 @@
 {
   "tool": "OpenPencil 0.17.0-beta.1",
-  "verifiedAt": "2026-11-03T14:47:00.441Z",
+  "verifiedAt": "2026-11-03T15:09:39.252Z",
   "method": "independent process import and re-render; no text edits",
   "pages": [
     {
@@ -59,7 +59,7 @@
     },
     {
       "page": "10 · 失败集中呈现",
-      "nodes": 207,
+      "nodes": 208,
       "changedPixels": 0,
       "totalPixels": 806400
     },
@@ -83,7 +83,7 @@
     },
     {
       "page": "14 · 删除进行中 / 逐项进度",
-      "nodes": 178,
+      "nodes": 179,
       "changedPixels": 0,
       "totalPixels": 806400
     },
@@ -95,31 +95,31 @@
     },
     {
       "page": "16 · 复制进行中",
-      "nodes": 96,
+      "nodes": 97,
       "changedPixels": 0,
       "totalPixels": 806400
     },
     {
       "page": "17 · 剪切后粘贴 / 移动进行中",
-      "nodes": 96,
+      "nodes": 97,
       "changedPixels": 0,
       "totalPixels": 806400
     },
     {
       "page": "18 · 正在取消 / 等待真实终止结果",
-      "nodes": 96,
+      "nodes": 97,
       "changedPixels": 0,
       "totalPixels": 806400
     },
     {
       "page": "19 · 取消后保留已完成项",
-      "nodes": 90,
+      "nodes": 91,
       "changedPixels": 0,
       "totalPixels": 806400
     },
     {
       "page": "20 · 部分失败 / 剪切源状态",
-      "nodes": 96,
+      "nodes": 97,
       "changedPixels": 0,
       "totalPixels": 806400
     },
@@ -149,13 +149,13 @@
     },
     {
       "page": "25 · 多操作同时处理 / 共享面板",
-      "nodes": 124,
+      "nodes": 125,
       "changedPixels": 0,
       "totalPixels": 806400
     },
     {
       "page": "26 · 多文件批次 / 展开逐项结果",
-      "nodes": 155,
+      "nodes": 156,
       "changedPixels": 0,
       "totalPixels": 806400
     },
@@ -167,13 +167,13 @@
     },
     {
       "page": "28 · 窄窗多文件操作",
-      "nodes": 227,
+      "nodes": 228,
       "changedPixels": 0,
       "totalPixels": 403200
     },
     {
       "page": "29 · 准备中 / 总量未知",
-      "nodes": 198,
+      "nodes": 199,
       "changedPixels": 0,
       "totalPixels": 806400
     },
@@ -182,6 +182,54 @@
       "nodes": 151,
       "changedPixels": 0,
       "totalPixels": 806400
+    },
+    {
+      "page": "31 · 百万目录 / 全选与排除",
+      "nodes": 830,
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "page": "32 · 24项任务 / 有界面板",
+      "nodes": 499,
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "page": "33 · 十万文件 / 按需展开结果",
+      "nodes": 922,
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "page": "34 · 一万失败 / 筛选和重试",
+      "nodes": 901,
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "page": "35 · 大批次取消 / 等待后端停止",
+      "nodes": 924,
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "page": "36 · 窄窗 / 24项任务排队",
+      "nodes": 463,
+      "changedPixels": 0,
+      "totalPixels": 403200
+    },
+    {
+      "page": "37 · 百万选择 / 剪贴板准备",
+      "nodes": 846,
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "page": "38 · 大规模处理与性能验收",
+      "nodes": 33,
+      "changedPixels": 0,
+      "totalPixels": 560000
     }
   ],
   "result": "passed"
