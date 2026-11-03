@@ -797,6 +797,7 @@ impl Backleaf {
                     .gap(px(16.))
                     .child(
                         div()
+                            .id("detail-name-field")
                             .flex()
                             .flex_col()
                             .gap(px(8.))
@@ -822,6 +823,7 @@ impl Backleaf {
                     )
                     .child(
                         div()
+                            .id("detail-path-field")
                             .flex()
                             .flex_col()
                             .gap(px(8.))

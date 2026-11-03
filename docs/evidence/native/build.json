@@ -1,6 +1,6 @@
 {
   "version": "0.1.0-preview.1",
-  "source_tree_sha256": "569c6df51251312df5029491b183edf04f33c6a0940576ff17163858a409f08f",
+  "source_tree_sha256": "a5a546997a1dbd7e3dc78424daf06aed7d5577a58511857538c8e1664bb20d4b",
   "source_tree_files": [
     ".cargo/config.toml",
     "Cargo.lock",
@@ -14,7 +14,7 @@
     "src/session.rs",
     "src/task_panel.rs"
   ],
-  "exe_sha256": "0a0bc382dc71057fed55694ca7295b1714a8da45337413ce41b975676cacf232",
+  "exe_sha256": "94153f49ea1ac742569e5c11f54a386ffb41206fe01855c5a51152656f185da4",
   "gpui_revision": "d36a70661471ec64dce230798121d554930d5c60",
   "checks": [
     "cargo fmt -p backleaf --check",
@@ -22,5 +22,6 @@
     "cargo test --release --locked (4 passed)",
     "cargo build --release --locked"
   ],
-  "visible_acceptance": "pending desktop unlock"
+  "visible_acceptance": "pending desktop unlock",
+  "last_change": "Separate detail-name and detail-path element scopes so copy controls cannot collide."
 }

@@ -1,16 +1,16 @@
     Checking backleaf v0.1.0-preview.1 (D:\work\backleaf)
-    Finished `dev` profile [unoptimized] target(s) in 2.59s
+    Finished `dev` profile [unoptimized] target(s) in 2.50s
    Compiling backleaf v0.1.0-preview.1 (D:\work\backleaf)
-    Finished `release` profile [optimized] target(s) in 4.25s
+    Finished `release` profile [optimized] target(s) in 4.54s
      Running unittests src\main.rs (target\release\deps\backleaf-eadd4ce785f0c4f0.exe)
 
 running 4 tests
-test model::tests::utf16_name_roundtrip_does_not_replace_unpaired_surrogates ... ok
 test model::tests::million_selection_is_constant_space_and_toggle_preserves_count ... ok
+test model::tests::utf16_name_roundtrip_does_not_replace_unpaired_surrogates ... ok
 test model::tests::truncation_keeps_graphemes_and_raw_value ... ok
 test model::tests::directory_snapshot_pages_and_details_keep_real_identity ... ok
 
-test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.05s
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.24s
 
    Compiling backleaf v0.1.0-preview.1 (D:\work\backleaf)
-    Finished `release` profile [optimized] target(s) in 6.43s
+    Finished `release` profile [optimized] target(s) in 7.14s

@@ -1,0 +1,5 @@
+{
+  "source_commit": "0891965eed72e18dcbc76dee0fa55934541c9952",
+  "exe_sha256": "0a0bc382dc71057fed55694ca7295b1714a8da45337413ce41b975676cacf232",
+  "note": "Locked guard test predates the later UI element-scope fix. No desktop UI retries were made after automatic review rejected the persistent staging launch; final installed-window validation remains pending."
+}
