@@ -1,0 +1,5 @@
+{
+  "binary_sha256": "846960e5aadf236ec44c15001acde7b2256ba56ee35f6c2fe7514731f989da7f",
+  "status": "diagnostic: desktop session state unrecorded; not final visible acceptance",
+  "dataset_note": "real-100k-scroll has 100001 actual NTFS entries including marker; other cardinalities are generated metadata"
+}

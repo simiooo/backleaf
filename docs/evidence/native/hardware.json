@@ -1,0 +1,32 @@
+{
+  "OS": {
+    "Caption": "Microsoft Windows 11 家庭版 中文版",
+    "Version": "10.0.26200",
+    "BuildNumber": "26200",
+    "OSArchitecture": "64 位"
+  },
+  "CPU": {
+    "Name": "AMD Ryzen 7 8745H w/ Radeon 780M Graphics",
+    "NumberOfCores": 8,
+    "NumberOfLogicalProcessors": 16
+  },
+  "MemoryBytes": 21270220800,
+  "GPU": [
+    {
+      "Name": "GameViewer Virtual Display Adapter",
+      "DriverVersion": "15.6.5.199",
+      "CurrentHorizontalResolution": null,
+      "CurrentVerticalResolution": null,
+      "CurrentRefreshRate": null
+    },
+    {
+      "Name": "AMD Radeon 780M Graphics",
+      "DriverVersion": "32.0.13032.11",
+      "CurrentHorizontalResolution": 2880,
+      "CurrentVerticalResolution": 1800,
+      "CurrentRefreshRate": 120
+    }
+  ],
+  "Rust": "rustc 1.99.1 (58cf8f9c3 2026-10-13)",
+  "UTC": "2026-11-03T17:03:32.8169647Z"
+}

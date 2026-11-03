@@ -1,0 +1,5 @@
+{
+  "taffy-0.15.0": "https://raw.githubusercontent.com/DioxusLabs/taffy/eb6450694f33e2b7413e40677f230ff63f0fc194/LICENSE",
+  "pulp-wasm-simd-flag-0.1.1": "https://raw.githubusercontent.com/sarah-quinones/pulp/5eb07fd7b68edf0a5e19f71737d315f72a510295/LICENSE",
+  "seahash-4.1.0": "https://metadata.ftp-master.debian.org/changelogs/main/r/rust-seahash/rust-seahash_4.1.0-1_copyright"
+}
