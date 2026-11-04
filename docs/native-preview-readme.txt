@@ -1,4 +1,4 @@
-拾径 / Backleaf 0.1.0-preview.2
+拾径 / Backleaf 0.1.0-preview.3
 
 双击 Backleaf.exe，进入当前 Windows 用户 Home。
 单击选择；Ctrl/Shift 多选；Ctrl+A 选择当前快照；方向键、Home/End、PageUp/PageDown 导航。
@@ -17,3 +17,5 @@ F6 打开/关闭样本面板。减少动画分支：追加 --reduced-motion。
 搜索、快捷访问、复制/剪切/删除/重命名、常驻索引、恢复与完整系统集成仍在后续研发范围。
 正常目录中不会出现虚构的任务进度。目录快照暂不自动刷新，重新进入目录会重新枚举。
 第三方许可位于 licenses。性能方法、原始证据和已测范围见仓库 docs/native-render-validation.md。
+
+Logo 测试版：新图标已嵌入 EXE/窗口/任务栏，由 GitHub Actions 构建。功能基于 preview.2。

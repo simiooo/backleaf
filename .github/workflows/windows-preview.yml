@@ -1,0 +1,54 @@
+name: Windows test package
+on:
+  push:
+    branches: ['test/logo-preview.3']
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: windows-preview-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  package:
+    runs-on: windows-2025
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+          fetch-depth: 1
+      - uses: ilammy/msvc-dev-cmd@v1
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: '1.99.1'
+          components: rustfmt, clippy
+      - uses: Swatinem/rust-cache@v2
+      - name: Check and build
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force .local/ci | Out-Null
+          cargo fmt -p backleaf --check *> .local/ci/fmt.log
+          if ($LASTEXITCODE) { Get-Content .local/ci/fmt.log; throw 'Format failed' }
+          cargo clippy --release --locked -p backleaf --no-deps -- -D warnings *> .local/ci/clippy.log
+          if ($LASTEXITCODE) { Get-Content .local/ci/clippy.log; throw 'Clippy failed' }
+          cargo test --release --locked *> .local/ci/tests.log
+          if ($LASTEXITCODE) { Get-Content .local/ci/tests.log; throw 'Tests failed' }
+          cargo build --release --locked *> .local/ci/build.log
+          if ($LASTEXITCODE) { Get-Content .local/ci/build.log; throw 'Build failed' }
+      - name: Package and smoke
+        shell: pwsh
+        run: ./scripts/native/ci-package.ps1
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: windows-build-evidence
+          path: .local/ci
+          retention-days: 30
+      - name: Publish prerelease
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $metadata = Get-Content .local/ci/release.json -Raw | ConvertFrom-Json
+          gh release create $metadata.tag --target $env:GITHUB_SHA --prerelease --title $metadata.title --notes-file docs/logo-test-release.md .local/ci/*.zip .local/ci/SHA256SUMS.txt .local/ci/build.json
+          if ($LASTEXITCODE) { throw 'Release publication failed' }
