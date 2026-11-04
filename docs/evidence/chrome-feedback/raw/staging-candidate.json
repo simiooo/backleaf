@@ -1,0 +1,11 @@
+{
+  "sha256": "cdbf640ed77759011d1fff6d61669ccead6495d328379dcccc9721ff83cd4580",
+  "deployed_at": "2026-11-04T22:28:27.0428487+08:00",
+  "session": {
+    "locked": false,
+    "error": null
+  },
+  "exe": "D:\\work\\backleaf\\.local\\staging\\chrome-close-preview.7\\Backleaf.exe",
+  "pid": 23796,
+  "fixture": "D:\\work\\backleaf\\.local\\chrome-fixture"
+}

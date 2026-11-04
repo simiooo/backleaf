@@ -1,0 +1,39 @@
+{
+  "masterSha256": "e8ced7039d4bc93b2cbb9d66c743e84c732bdb492b6cfd111487d0bebc112ecb",
+  "retainedPages": 106,
+  "pages": 112,
+  "result": "passed",
+  "results": [
+    {
+      "key": "107-ai-icons-light",
+      "changedPixels": 0,
+      "totalPixels": 940800
+    },
+    {
+      "key": "108-ai-icons-dark",
+      "changedPixels": 0,
+      "totalPixels": 940800
+    },
+    {
+      "key": "109-ai-grid-light",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "110-ai-grid-dark",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "111-ai-states",
+      "changedPixels": 0,
+      "totalPixels": 940800
+    },
+    {
+      "key": "112-exe-states",
+      "changedPixels": 76,
+      "totalPixels": 537600
+    }
+  ],
+  "verifiedAt": "2026-11-04T13:29:16.807Z"
+}

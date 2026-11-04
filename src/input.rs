@@ -30,6 +30,7 @@ actions!(
 pub struct TextInput {
     pub colors: &'static Palette,
     pub enabled: bool,
+    pub embedded: bool,
     max_utf16: usize,
     label: SharedString,
     scroll: Pixels,
@@ -801,18 +802,20 @@ impl Render for TextInput {
             .w_full()
             .min_w_0()
             .h(px(32.))
-            .px(px(4.))
+            .px(px(if self.embedded { 0. } else { 4. }))
             .flex()
             .items_center()
             .overflow_hidden()
-            .bg(colors.color(if active {
-                ColorRole::InputActive
-            } else {
-                ColorRole::InputRest
-            }))
-            .border_1()
-            .border_color(colors.color(ColorRole::Border))
-            .when(active, |d| d.shadow(colors.input_shadows()))
+            .when(!self.embedded, |d| {
+                d.bg(colors.color(if active {
+                    ColorRole::InputActive
+                } else {
+                    ColorRole::InputRest
+                }))
+                .border_1()
+                .border_color(colors.color(ColorRole::Border))
+                .when(active, |d| d.shadow(colors.input_shadows()))
+            })
             .rounded(px(8.))
             .text_size(px(13.))
             .line_height(px(20.))
@@ -893,6 +896,7 @@ impl TextInput {
         Self {
             colors,
             enabled: true,
+            embedded: false,
             max_utf16,
             label: label.into(),
             scroll: px(0.),

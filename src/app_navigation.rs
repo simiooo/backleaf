@@ -156,13 +156,6 @@ impl Backleaf {
             .aria_label("快捷访问")
             .child(
                 div()
-                    .text_size(px(12.))
-                    .text_color(colors.color(ColorRole::Secondary))
-                    .mb(px(16.))
-                    .child("快捷访问"),
-            )
-            .child(
-                div()
                     .id("quick-access-scroll")
                     .h_full()
                     .overflow_y_scroll()
@@ -182,6 +175,8 @@ impl Backleaf {
                                     .mb(px(4.))
                                     .px(px(8.))
                                     .rounded(px(8.))
+                                    .border_1()
+                                    .border_color(transparent_black())
                                     .flex()
                                     .items_center()
                                     .gap(px(8.))
@@ -197,8 +192,28 @@ impl Backleaf {
                                         d.bg(colors.color(ColorRole::Selected))
                                             .text_color(colors.color(ColorRole::OnSelected))
                                     })
-                                    .hover(move |d| d.bg(colors.color(ColorRole::Hover)))
-                                    .focus_visible(move |d| d.shadow(vec![colors.focus_ring()]))
+                                    .hover(move |d| {
+                                        d.bg(colors.color(if selected {
+                                            ColorRole::Selected
+                                        } else {
+                                            ColorRole::Floating
+                                        }))
+                                        .shadow(colors.control_shadows(false))
+                                    })
+                                    .focus_visible(move |d| {
+                                        d.bg(colors.color(if selected {
+                                            ColorRole::Selected
+                                        } else {
+                                            ColorRole::Floating
+                                        }))
+                                        .text_color(colors.color(if selected {
+                                            ColorRole::OnSelected
+                                        } else {
+                                            ColorRole::Primary
+                                        }))
+                                        .border_color(colors.color(ColorRole::Border))
+                                        .shadow(colors.control_shadows(true))
+                                    })
                                     .on_click(cx.listener({
                                         let path = path.clone();
                                         move |this, _, window, cx| {
@@ -221,12 +236,29 @@ impl Backleaf {
                                             }
                                         },
                                     ))
-                                    .child(icon("location", colors))
+                                    .child(
+                                        img(crate::file_icons::FileIcon::Folder.asset(colors.dark))
+                                            .size(px(18.))
+                                            .flex_none(),
+                                    )
                                     .child(div().flex_1().min_w_0().truncate().child(label))
                             }),
                     ),
             )
             .into_any_element()
+    }
+    pub fn path_available(&self, window: &Window, cx: &App) -> f32 {
+        let search = if self.options.fixture.is_none() {
+            self.search_width(window, cx)
+        } else {
+            0.
+        };
+        let operations = if self.files.hub.views().is_empty() {
+            0.
+        } else {
+            64.
+        };
+        (f32::from(window.viewport_size().width) - 264. - search - operations).clamp(80., 600.)
     }
     pub fn path_control(
         &self,
@@ -247,26 +279,7 @@ impl Backleaf {
                 .child(div().truncate().child(title))
                 .into_any_element();
         }
-        let available = (f32::from(window.viewport_size().width)
-            - 8.
-            - 64.
-            - 138.
-            - if self.options.fixture.is_none() {
-                if f32::from(window.viewport_size().width) < 900. {
-                    48.
-                } else {
-                    120.
-                }
-            } else {
-                0.
-            }
-            - 32.
-            - if self.files.hub.views().is_empty() {
-                0.
-            } else {
-                64.
-            })
-        .clamp(120., 600.);
+        let available = self.path_available(window, cx);
         let measure = |text: &str| {
             let shared: SharedString = text.to_owned().into();
             f32::from(
@@ -286,7 +299,11 @@ impl Backleaf {
                     .width(),
             )
         };
-        let parts = crate::navigation::breadcrumbs(&self.path, available, measure);
+        let parts = if available < 140. {
+            vec![Some(self.path.clone())]
+        } else {
+            crate::navigation::breadcrumbs(&self.path, available, measure)
+        };
         let total = parts.len();
         let fixed = parts
             .iter()
@@ -297,25 +314,22 @@ impl Backleaf {
                     .unwrap_or(32.)
             })
             .sum::<f32>()
-            + (total.saturating_sub(1) * 16) as f32
+            + (total.saturating_sub(1) * 12) as f32
             + 32.;
-        let current_width = (available - fixed).max(48.);
+        let current_width = (available - fixed).max(24.);
         div()
             .id("path")
             .min_w_0()
             .max_w(px(available))
-            .h(px(36.))
+            .h(px(layout::CHROME.path_height))
             .px(px(4.))
             .py(px(4.))
-            .bg(colors.color(ColorRole::Canvas))
+            .bg(colors.color(ColorRole::InputRest))
             .flex()
             .items_center()
             .rounded(px(10.))
             .role(Role::Navigation)
             .aria_label(format!("当前位置 {path}"))
-            .when(self.navigation.open, |d| {
-                d.shadow(vec![colors.inline_shadow()])
-            })
             .on_click(cx.listener(|this, event: &ClickEvent, window, cx| {
                 if event.click_count() == 2 {
                     this.close_path_tree();
@@ -329,9 +343,9 @@ impl Backleaf {
                 if i > 0 {
                     elements.push(
                         div()
-                            .w(px(16.))
+                            .w(px(12.))
                             .flex_none()
-                            .h(px(28.))
+                            .h(px(layout::CHROME.crumb_height))
                             .flex()
                             .items_center()
                             .justify_center()
@@ -349,12 +363,31 @@ impl Backleaf {
                                 .id("current-directory-crumb")
                                 .max_w(px(current_width))
                                 .min_w_0()
-                                .h(px(28.))
+                                .h(px(layout::CHROME.crumb_height))
                                 .px(px(4.))
                                 .flex()
                                 .items_center()
-                                .role(Role::Label)
-                                .aria_label(format!("当前位置 {full}"))
+                                .rounded(px(8.))
+                                .focusable()
+                                .tab_stop(true)
+                                .hover(move |d| {
+                                    d.bg(colors.color(ColorRole::Floating))
+                                        .shadow(colors.control_shadows(false))
+                                })
+                                .focus(move |d| {
+                                    d.bg(colors.color(ColorRole::Floating))
+                                        .shadow(colors.control_shadows(true))
+                                })
+                                .on_key_down(cx.listener(
+                                    |this, event: &KeyDownEvent, window, cx| {
+                                        if paint::activation_key(event) {
+                                            this.edit_path(window, cx);
+                                            cx.stop_propagation();
+                                        }
+                                    },
+                                ))
+                                .role(Role::Button)
+                                .aria_label(format!("编辑当前位置 {full}"))
                                 .aria_value(full.clone())
                                 .text_color(colors.color(ColorRole::Primary))
                                 .child(div().truncate().child(label))
@@ -364,7 +397,7 @@ impl Backleaf {
                         elements.push(
                             div()
                                 .id(("ancestor-crumb", i))
-                                .h(px(28.))
+                                .h(px(layout::CHROME.crumb_height))
                                 .max_w(px(120.))
                                 .min_w_0()
                                 .px(px(4.))
@@ -377,10 +410,14 @@ impl Backleaf {
                                 .tab_stop(true)
                                 .text_color(colors.color(ColorRole::Secondary))
                                 .hover(move |d| {
-                                    d.bg(colors.color(ColorRole::Hover))
+                                    d.bg(colors.color(ColorRole::Floating))
+                                        .shadow(colors.control_shadows(false))
                                         .text_color(colors.color(ColorRole::Primary))
                                 })
-                                .focus_visible(move |d| d.shadow(vec![colors.focus_ring()]))
+                                .focus(move |d| {
+                                    d.bg(colors.color(ColorRole::Floating))
+                                        .shadow(colors.control_shadows(true))
+                                })
                                 .on_click(cx.listener({
                                     let path = path.clone();
                                     move |this, _, window, cx| {
@@ -412,8 +449,8 @@ impl Backleaf {
                     elements.push(
                         div()
                             .id("crumb-overflow")
-                            .w(px(28.))
-                            .h(px(28.))
+                            .w(px(24.))
+                            .h(px(layout::CHROME.crumb_height))
                             .flex_none()
                             .rounded(px(8.))
                             .flex()
@@ -424,8 +461,14 @@ impl Backleaf {
                             .aria_expanded(self.navigation.open)
                             .focusable()
                             .tab_stop(true)
-                            .hover(move |d| d.bg(colors.color(ColorRole::Hover)))
-                            .focus_visible(move |d| d.shadow(vec![colors.focus_ring()]))
+                            .hover(move |d| {
+                                d.bg(colors.color(ColorRole::Floating))
+                                    .shadow(colors.control_shadows(false))
+                            })
+                            .focus(move |d| {
+                                d.bg(colors.color(ColorRole::Floating))
+                                    .shadow(colors.control_shadows(true))
+                            })
                             .on_click(cx.listener(|this, _, window, cx| {
                                 this.show_ancestor_menu(window, cx);
                                 cx.stop_propagation();
@@ -445,8 +488,8 @@ impl Backleaf {
             .child(
                 div()
                     .id("path-dropdown-arrow")
-                    .w(px(28.))
-                    .h(px(28.))
+                    .w(px(24.))
+                    .h(px(layout::CHROME.crumb_height))
                     .flex_none()
                     .flex()
                     .items_center()
@@ -457,8 +500,11 @@ impl Backleaf {
                     .aria_expanded(self.navigation.open)
                     .focusable()
                     .tab_stop(true)
-                    .hover(move |d| d.bg(colors.color(ColorRole::Hover)))
-                    .focus_visible(move |d| {
+                    .hover(move |d| {
+                        d.bg(colors.color(ColorRole::Floating))
+                            .shadow(colors.control_shadows(false))
+                    })
+                    .focus(move |d| {
                         d.bg(colors.color(ColorRole::InputActive))
                             .shadow(colors.input_shadows())
                     })
@@ -523,7 +569,7 @@ impl Backleaf {
             .id("path-tree-navigation")
             .absolute()
             .left(px(80.))
-            .top(px(42.))
+            .top(px(layout::CHROME.bar_height))
             .w(px(360.))
             .max_w(px((f32::from(window.viewport_size().width) - 96.).max(100.)))
             .max_h(px(
@@ -542,7 +588,9 @@ impl Backleaf {
             .aria_label("当前位置导航")
             .on_mouse_down(MouseButton::Left, |_, _, cx| cx.stop_propagation())
             .on_mouse_down_out(cx.listener(|this, event: &MouseDownEvent, _, cx| {
-                if event.button == MouseButton::Left && f32::from(event.position.y) > 44. {
+                if event.button == MouseButton::Left
+                    && f32::from(event.position.y) > layout::CHROME.bar_height
+                {
                     this.close_path_tree();
                     cx.notify();
                 }

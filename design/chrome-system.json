@@ -1,0 +1,28 @@
+{
+  "barHeight": 48,
+  "controlSize": 32,
+  "controlGap": 8,
+  "verticalInset": 8,
+  "pathHeight": 32,
+  "crumbHeight": 24,
+  "captionWidth": 40,
+  "captionGap": 4,
+  "minimumDragWidth": 16,
+  "searchWidth": 320,
+  "searchMinimumWidth": 144,
+  "searchDurationMs": 240,
+  "searchEase": "ease-out cubic: 1-(1-t)^3",
+  "controlRadius": 8,
+  "paperOutlineWidth": 0.8,
+  "hoverShadowOpacity": [
+    0.035,
+    0.045
+  ],
+  "focusShadowOpacity": [
+    0.055,
+    0.065
+  ],
+  "searchCloseDurationMs": 200,
+  "searchCloseEase": "ease-out cubic; interpolate from current width; cancel search immediately",
+  "searchReverseFromCurrent": true
+}

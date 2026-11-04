@@ -2,15 +2,18 @@
 mod app_navigation;
 mod app_operations;
 mod app_search;
+mod file_icons;
 mod input;
 mod layout;
 mod menu;
 mod metrics;
 mod model;
+mod native_icons;
 mod navigation;
 mod operations;
 mod paint;
 mod search;
+mod search_motion;
 mod selectable;
 mod selection;
 mod selection_smoke;
@@ -39,6 +42,7 @@ use task_panel::{ClosePanel, TaskPanel};
 use theme::{Palette, Role as ColorRole};
 
 struct Backleaf {
+    application_icons: native_icons::Cache,
     search: app_search::SearchUi,
     navigation: app_navigation::NavigationUi,
     files: app_operations::FileOperations,
@@ -130,6 +134,7 @@ impl Backleaf {
         let (tx, rx) = async_channel::bounded(8);
         let navigation = app_navigation::NavigationUi::new(navigation::Worker::new(tx.clone()), cx);
         let search = app_search::SearchUi::new(search::Worker::new(tx.clone()));
+        let application_icons = native_icons::Cache::new(tx.clone());
         let (operation_tx, operation_rx) = async_channel::bounded(1);
         let hub = operations::service::Hub::new(options.state_dir.clone(), operation_tx);
         cx.spawn(async move |this, cx| {
@@ -296,6 +301,7 @@ impl Backleaf {
             selection_smoke::schedule(window, cx);
         }
         Self {
+            application_icons,
             search,
             navigation,
             files: app_operations::FileOperations::new(hub),
@@ -359,6 +365,7 @@ impl Backleaf {
                 self.selection.mask.bitmap_serialized_bytes();
             report.selection_pending = self.selection_busy();
             report.theme_dark = self.colors.dark;
+            report.application_icons = self.application_icons.stats();
             if let Ok(json) = serde_json::to_vec_pretty(&report) {
                 let _ = std::fs::write(path, json);
             }
@@ -371,6 +378,7 @@ impl Backleaf {
         match event {
             Event::Search(notice) => self.accept_search(notice, cx),
             Event::Navigation(notice) => self.accept_navigation(notice, cx),
+            Event::ApplicationIconsChanged => cx.notify(),
             Event::Session { locked } => {
                 if locked {
                     self.finish_marquee(cx);
@@ -556,7 +564,7 @@ impl Backleaf {
         (
             f32::from(p.x) as f64 - 12. - self.sidebar_width() as f64,
             self.origin_row as f64 * layout::row_step() as f64 + offset + f32::from(p.y) as f64
-                - 60.,
+                - f64::from(layout::content_top()),
         )
     }
     fn hit_file(&self, p: Point<Pixels>, window: &Window) -> Option<usize> {
@@ -564,7 +572,7 @@ impl Backleaf {
         if x < 0.
             || y < 0.
             || f32::from(p.x) >= self.sidebar_width() + self.grid_width(window) - 12.
-            || f32::from(p.y) < 60.
+            || f32::from(p.y) < layout::content_top()
             || f32::from(p.y) > f32::from(window.viewport_size().height) - 16.
         {
             return None;
@@ -660,9 +668,10 @@ impl Backleaf {
                 px(self.sidebar_width()),
                 px(self.sidebar_width() + self.grid_width(window)),
             ),
-            m.pointer
-                .y
-                .clamp(px(44.), window.viewport_size().height - px(16.)),
+            m.pointer.y.clamp(
+                px(layout::CHROME.bar_height),
+                window.viewport_size().height - px(16.),
+            ),
         );
         let band = GridBand::from_rect(
             self.columns,
@@ -723,8 +732,11 @@ impl Backleaf {
         if !m.active || !m.held || !window.is_window_active() {
             return 0.;
         }
-        let top = self.global_point(point(px(12.), px(60.))).1;
-        let visible = (f32::from(window.viewport_size().height) - 76.).max(1.);
+        let top = self
+            .global_point(point(px(12.), px(layout::content_top())))
+            .1;
+        let visible =
+            (f32::from(window.viewport_size().height) - layout::grid_reserved_height()).max(1.);
         let maximum = (self.source.count().div_ceil(self.columns) as f64
             * layout::row_step() as f64
             - visible as f64)
@@ -753,8 +765,8 @@ impl Backleaf {
             let handle = &state.base_handle;
             let maximum = (self.source.count().div_ceil(self.columns).min(4096) as f32
                 * layout::row_step()
-                - (f32::from(window.viewport_size().height) - 76.))
-                .max(0.);
+                - (f32::from(window.viewport_size().height) - layout::grid_reserved_height()))
+            .max(0.);
             let y = (f32::from(handle.offset().y) - speed * delta).clamp(-maximum, 0.);
             handle.set_offset(point(px(0.), px(y)));
         }
@@ -874,9 +886,10 @@ impl Backleaf {
         }
         let columns = self.columns;
         let page = columns
-            * ((f32::from(window.viewport_size().height) - 76.) / layout::row_step())
-                .floor()
-                .max(1.) as usize;
+            * ((f32::from(window.viewport_size().height) - layout::grid_reserved_height())
+                / layout::row_step())
+            .floor()
+            .max(1.) as usize;
         let next = match key {
             "right" => Some(current.saturating_add(1)),
             "left" => Some(current.saturating_sub(1)),
@@ -920,9 +933,20 @@ impl Backleaf {
                 .into_any_element();
         }
         let item = self.cache.get(&id).cloned();
+        let icon_kind = item.as_ref().map_or(file_icons::FileIcon::Generic, |i| {
+            file_icons::FileIcon::for_name(&i.os_name, i.directory)
+        });
+        let native_image =
+            if self.options.fixture.is_none() && icon_kind == file_icons::FileIcon::Application {
+                item.as_ref()
+                    .and_then(|i| self.application_icons.image(self.path.join(&i.os_name)))
+            } else {
+                None
+            };
+        let outlined = native_image.is_none() && icon_kind != file_icons::FileIcon::Folder;
+        let artwork = native_image.unwrap_or_else(|| icon_kind.asset(self.colors.dark).into());
         let name = item.as_ref().map(|x| x.name.clone()).unwrap_or_default();
         let label = item.as_ref().map(|x| x.label.clone()).unwrap_or_default();
-        let folder = item.as_ref().is_some_and(|x| x.directory);
         let active = window.is_window_active();
         let focused = self.selection.focus == Some(id);
         let grid_focused = self.focus.is_focused(window);
@@ -1022,16 +1046,9 @@ impl Backleaf {
                 ))
             })
             .child(
-                img(match (folder, colors.dark) {
-                    (true, false) => "folder.svg",
-                    (true, true) => "folder-dark.svg",
-                    (false, false) => "file.svg",
-                    (false, true) => "file-dark.svg",
-                })
-                .size(px(l.grid.icon_size))
-                .flex_none()
-                .when(item.as_ref().is_some_and(|i| i.cut), |s| s.opacity(0.42))
-                .when(item.is_none(), |s| s.opacity(0.2)),
+                paint::file_artwork(artwork, l.grid.icon_size, outlined, colors)
+                    .when(item.as_ref().is_some_and(|i| i.cut), |s| s.opacity(0.42))
+                    .when(item.is_none(), |s| s.opacity(0.2)),
             )
             .child(
                 div()
@@ -1045,6 +1062,7 @@ impl Backleaf {
                     )
                     .when_some(editor.clone(), |d, input| {
                         d.flex()
+                            .items_center()
                             .justify_center()
                             .child(div().w(px(96.)).max_w_full().child(input))
                     })
@@ -1065,22 +1083,28 @@ impl Backleaf {
         let keyboard = action.clone();
         div()
             .id(id)
-            .size(px(layout::LAYOUT.control.hit_size))
+            .size(px(layout::CHROME.control_size))
             .flex_none()
             .flex()
             .items_center()
             .justify_center()
-            .rounded(px(layout::LAYOUT.control.radius))
-            .border_2()
+            .rounded(px(layout::CHROME.control_radius))
+            .border_1()
             .border_color(transparent_black())
             .role(Role::Button)
             .aria_label(label)
             .focusable()
             .tab_stop(true)
             .tooltip(tooltip(label.to_owned(), colors))
-            .hover(move |d| d.bg(colors.color(ColorRole::Hover)))
+            .hover(move |d| {
+                d.bg(colors.color(ColorRole::Floating))
+                    .shadow(colors.control_shadows(false))
+            })
             .active(move |d| d.bg(colors.color(ColorRole::Pressed)))
-            .focus_visible(move |d| d.border_color(colors.color(ColorRole::Focus)))
+            .focus(move |d| {
+                d.bg(colors.color(ColorRole::Floating))
+                    .shadow(colors.control_shadows(true))
+            })
             .on_key_down(move |event, window, cx| {
                 if paint::activation_key(event) {
                     cx.stop_propagation();
@@ -1102,36 +1126,40 @@ impl Backleaf {
                 .into_owned()
         };
         div()
-            .h(px(44.))
+            .h(px(layout::CHROME.bar_height))
             .w_full()
             .flex_none()
             .flex()
             .items_center()
             .bg(colors.color(ColorRole::Chrome))
+            .px(px(8.))
+            .py(px(layout::CHROME.vertical_inset))
+            .gap(px(layout::CHROME.control_gap))
             .child(
                 div()
-                    .w(px(8.))
-                    .h_full()
-                    .window_control_area(WindowControlArea::Drag),
+                    .flex()
+                    .flex_none()
+                    .items_center()
+                    .gap(px(layout::CHROME.control_gap))
+                    .child(self.button(
+                        "back",
+                        "后退",
+                        cx.listener(|this, _, _, cx| {
+                            if let Some(path) = this.history.pop() {
+                                this.navigate(path, false, cx);
+                            }
+                        }),
+                    ))
+                    .child(self.button(
+                        "up",
+                        "上一级",
+                        cx.listener(|this, _, _, cx| {
+                            if let Some(path) = this.path.parent() {
+                                this.navigate(path.to_owned(), true, cx);
+                            }
+                        }),
+                    )),
             )
-            .child(self.button(
-                "back",
-                "后退",
-                cx.listener(|this, _, _, cx| {
-                    if let Some(path) = this.history.pop() {
-                        this.navigate(path, false, cx);
-                    }
-                }),
-            ))
-            .child(self.button(
-                "up",
-                "上一级",
-                cx.listener(|this, _, _, cx| {
-                    if let Some(path) = this.path.parent() {
-                        this.navigate(path.to_owned(), true, cx);
-                    }
-                }),
-            ))
             .child(
                 if let Some(editor) = self
                     .files
@@ -1140,9 +1168,9 @@ impl Backleaf {
                     .filter(|e| matches!(e.kind, app_operations::EditKind::Path))
                 {
                     div()
-                        .w(px(620.))
+                        .w(px(self.path_available(window, cx)))
                         .min_w_0()
-                        .max_w(px(620.))
+                        .max_w(px(self.path_available(window, cx)))
                         .child(editor.input.clone())
                         .into_any_element()
                 } else {
@@ -1152,6 +1180,7 @@ impl Backleaf {
             .child(
                 div()
                     .flex_1()
+                    .min_w(px(layout::CHROME.minimum_drag_width))
                     .h_full()
                     .window_control_area(WindowControlArea::Drag),
             )
@@ -1161,34 +1190,67 @@ impl Backleaf {
             .when(self.options.fixture.is_none(), |d| {
                 d.child(self.search_entry(window, cx))
             })
-            .children(
-                [
-                    ("min", "最小化", WindowControlArea::Min),
-                    ("max", "最大化或还原", WindowControlArea::Max),
-                    ("close", "关闭", WindowControlArea::Close),
-                ]
-                .into_iter()
-                .map(|(name, label, area)| {
-                    div()
-                        .id(name)
-                        .w(px(46.))
-                        .h_full()
-                        .flex_none()
-                        .flex()
-                        .items_center()
-                        .justify_center()
-                        .role(Role::Button)
-                        .aria_label(label)
-                        .window_control_area(area)
-                        .hover(move |d| d.bg(colors.color(ColorRole::Hover)))
-                        .on_click(cx.listener(move |this, _, window, cx| match area {
-                            WindowControlArea::Min => window.minimize_window(),
-                            WindowControlArea::Max => window.zoom_window(),
-                            WindowControlArea::Close => this.request_close(window, cx),
-                            _ => {}
-                        }))
-                        .child(icon(name, colors))
-                }),
+            .child(
+                div()
+                    .flex()
+                    .flex_none()
+                    .items_center()
+                    .gap(px(layout::CHROME.caption_gap))
+                    .children(
+                        [
+                            ("min", "最小化", WindowControlArea::Min),
+                            ("max", "最大化或还原", WindowControlArea::Max),
+                            ("close", "关闭", WindowControlArea::Close),
+                        ]
+                        .into_iter()
+                        .map(|(name, label, area)| {
+                            div()
+                                .id(name)
+                                .w(px(layout::CHROME.caption_width))
+                                .h(px(layout::CHROME.control_size))
+                                .rounded(px(layout::CHROME.control_radius))
+                                .flex_none()
+                                .flex()
+                                .items_center()
+                                .justify_center()
+                                .role(Role::Button)
+                                .aria_label(label)
+                                .tooltip(tooltip(label.to_owned(), colors))
+                                .focusable()
+                                .tab_stop(true)
+                                .focus(move |d| {
+                                    d.bg(colors.color(ColorRole::Floating))
+                                        .shadow(colors.control_shadows(true))
+                                })
+                                .on_key_down(cx.listener(
+                                    move |this, event: &KeyDownEvent, window, cx| {
+                                        if paint::activation_key(event) {
+                                            cx.stop_propagation();
+                                            match area {
+                                                WindowControlArea::Min => window.minimize_window(),
+                                                WindowControlArea::Max => window.zoom_window(),
+                                                WindowControlArea::Close => {
+                                                    this.request_close(window, cx)
+                                                }
+                                                _ => {}
+                                            }
+                                        }
+                                    },
+                                ))
+                                .window_control_area(area)
+                                .hover(move |d| {
+                                    d.bg(colors.color(ColorRole::Floating))
+                                        .shadow(colors.control_shadows(false))
+                                })
+                                .on_click(cx.listener(move |this, _, window, cx| match area {
+                                    WindowControlArea::Min => window.minimize_window(),
+                                    WindowControlArea::Max => window.zoom_window(),
+                                    WindowControlArea::Close => this.request_close(window, cx),
+                                    _ => {}
+                                }))
+                                .child(icon(name, colors))
+                        }),
+                    ),
             )
             .into_any_element()
     }
@@ -1209,7 +1271,8 @@ impl Backleaf {
     fn arm_clock(&mut self, window: &Window, cx: &mut Context<Self>) {
         let animate = !self.session_locked
             && ((self.panel && self.task.read(cx).expanded && self.options.flow > 0)
-                || self.files.animating())
+                || self.files.animating()
+                || self.search.animating())
             && !self.options.reduced_motion
             && !cx.reduce_motion()
             && window.is_visible();
@@ -1232,6 +1295,7 @@ impl Backleaf {
                 m.hidden_requests += 1;
             }
         }
+        let search_frame = self.search.animating();
         let this = cx.entity().downgrade();
         window.on_next_frame(move |window, cx| {
             let _ = this.update(cx, |this, cx| {
@@ -1251,6 +1315,9 @@ impl Backleaf {
                     if motion && motion_frame != this.last_motion_frame {
                         this.last_motion_frame = motion_frame;
                         this.task.update(cx, |_, cx| cx.notify());
+                    }
+                    if search_frame {
+                        cx.notify();
                     }
                     if this.files.animating() && !this.options.reduced_motion && !cx.reduce_motion()
                     {
@@ -1332,7 +1399,8 @@ impl Backleaf {
             }
         }
         let origin = self.origin_row;
-        let visible_height = f32::from(window.viewport_size().height) - 76.;
+        let visible_height =
+            f32::from(window.viewport_size().height) - layout::grid_reserved_height();
         div()
             .id("file-viewport")
             .role(Role::ListBox)
@@ -1374,6 +1442,7 @@ impl Backleaf {
                                     .h(px(layout::row_step()))
                                     .w_full()
                                     .flex()
+                                    .items_baseline()
                                     .gap(px(layout::LAYOUT.grid.column_gap))
                                     .children(
                                         (row * columns..((row + 1) * columns).min(count))
@@ -1506,6 +1575,11 @@ impl Backleaf {
 impl Render for Backleaf {
     fn render(&mut self, window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
         self.sync_operation_focus(window, cx);
+        self.application_icons.sync(
+            self.generation,
+            !self.session_locked && window.is_visible(),
+            window,
+        );
         let colors = self.colors;
         let viewport = window.viewport_size();
         let width = f32::from(viewport.width);
@@ -1546,10 +1620,12 @@ impl Render for Backleaf {
             .as_ref()
             .filter(|m| m.active && m.held)
             .map(|m| {
-                let top = self.global_point(point(px(12.), px(60.))).1;
+                let top = self
+                    .global_point(point(px(12.), px(layout::content_top())))
+                    .1;
                 let a = point(
                     px((m.anchor.0 + 12. + self.sidebar_width() as f64) as f32),
-                    px((m.anchor.1 - top + 60.) as f32),
+                    px((m.anchor.1 - top + f64::from(layout::content_top())) as f32),
                 );
                 let left = f32::from(a.x.min(m.pointer.x)).clamp(
                     self.sidebar_width(),
@@ -1559,8 +1635,10 @@ impl Render for Backleaf {
                     self.sidebar_width(),
                     self.sidebar_width() + self.grid_width(window),
                 );
-                let top = f32::from(a.y.min(m.pointer.y)).clamp(44., height - 16.);
-                let bottom = f32::from(a.y.max(m.pointer.y)).clamp(44., height - 16.);
+                let top =
+                    f32::from(a.y.min(m.pointer.y)).clamp(layout::CHROME.bar_height, height - 16.);
+                let bottom =
+                    f32::from(a.y.max(m.pointer.y)).clamp(layout::CHROME.bar_height, height - 16.);
                 Bounds::new(
                     point(px(left), px(top)),
                     size(px(right - left), px(bottom - top)),
@@ -1598,7 +1676,7 @@ impl Render for Backleaf {
                     .child(if window.is_a11y_active() {
                         div()
                             .w(px(self.grid_width(window)))
-                            .h(px((height - 44.).max(0.)))
+                            .h(px((height - layout::CHROME.bar_height).max(0.)))
                             .child(self.grid.clone())
                             .into_any_element()
                     } else {
@@ -1607,7 +1685,7 @@ impl Render for Backleaf {
                             .cached(
                                 StyleRefinement::default()
                                     .w(px(self.grid_width(window)))
-                                    .h(px((height - 44.).max(0.))),
+                                    .h(px((height - layout::CHROME.bar_height).max(0.))),
                             )
                             .into_any_element()
                     })
@@ -1655,7 +1733,7 @@ impl Render for Backleaf {
                         div()
                             .absolute()
                             .right_0()
-                            .top(px(44.))
+                            .top(px(layout::CHROME.bar_height))
                             .bottom_0()
                             .bg(colors.color(ColorRole::Floating))
                             .shadow(vec![colors.shadow()])

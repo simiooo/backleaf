@@ -1,0 +1,33 @@
+{
+  "version": "v18-sidebar-keyboard-focus",
+  "retainedPages": 124,
+  "pages": [
+    {
+      "key": "125-sidebar-normal",
+      "name": "125 · v18 sidebar-normal",
+      "nodes": 347
+    },
+    {
+      "key": "126-sidebar-keyboard-focus",
+      "name": "126 · v18 sidebar-keyboard-focus",
+      "nodes": 347
+    },
+    {
+      "key": "127-sidebar-current-focus",
+      "name": "127 · v18 sidebar-current-focus",
+      "nodes": 347
+    },
+    {
+      "key": "128-sidebar-focus-dark",
+      "name": "128 · v18 sidebar-focus-dark",
+      "nodes": 347
+    },
+    {
+      "key": "129-sidebar-focus-narrow",
+      "name": "129 · v18 sidebar-focus-narrow",
+      "nodes": 347
+    }
+  ],
+  "tokens": "design/chrome-system.json",
+  "source": "scripts/design/chrome-v18.mjs"
+}

@@ -1,0 +1,750 @@
+{
+  "icons": [
+    {
+      "key": "folder",
+      "label": "文件夹",
+      "sample": "资料.png",
+      "extensions": [],
+      "color": "slate",
+      "glyph": "folder"
+    },
+    {
+      "key": "generic",
+      "label": "未知文件",
+      "sample": "未识别.custom",
+      "extensions": [],
+      "color": "slate",
+      "glyph": "generic"
+    },
+    {
+      "key": "word",
+      "label": "Word",
+      "sample": "报告.docx",
+      "extensions": [
+        "doc",
+        "docx",
+        "docm",
+        "dot",
+        "dotx",
+        "dotm",
+        "odt",
+        "rtf"
+      ],
+      "color": "blue",
+      "glyph": "W"
+    },
+    {
+      "key": "spreadsheet",
+      "label": "Excel",
+      "sample": "预算.xlsx",
+      "extensions": [
+        "xls",
+        "xlsx",
+        "xlsm",
+        "xlsb",
+        "xlt",
+        "xltx",
+        "xltm",
+        "xlam",
+        "xla",
+        "ods",
+        "csv",
+        "tsv"
+      ],
+      "color": "green",
+      "glyph": "X"
+    },
+    {
+      "key": "presentation",
+      "label": "PowerPoint",
+      "sample": "提案.pptx",
+      "extensions": [
+        "ppt",
+        "pptx",
+        "pptm",
+        "pps",
+        "ppsx",
+        "ppsm",
+        "pot",
+        "potx",
+        "potm",
+        "odp"
+      ],
+      "color": "orange",
+      "glyph": "P"
+    },
+    {
+      "key": "pdf",
+      "label": "PDF",
+      "sample": "合同.pdf",
+      "extensions": [
+        "pdf"
+      ],
+      "color": "red",
+      "glyph": "PDF"
+    },
+    {
+      "key": "application",
+      "label": "可执行应用",
+      "sample": "Backleaf.exe",
+      "extensions": [
+        "exe",
+        "com",
+        "scr",
+        "appimage"
+      ],
+      "color": "blue",
+      "glyph": "application"
+    },
+    {
+      "key": "installer",
+      "label": "安装包",
+      "sample": "应用.msix",
+      "extensions": [
+        "msi",
+        "msp",
+        "msix",
+        "msixbundle",
+        "appx",
+        "appxbundle",
+        "appinstaller",
+        "msixupload",
+        "appxupload",
+        "cab",
+        "dmg",
+        "pkg",
+        "deb",
+        "rpm",
+        "apk",
+        "aab",
+        "ipa"
+      ],
+      "color": "gold",
+      "glyph": "installer"
+    },
+    {
+      "key": "image",
+      "label": "图片",
+      "sample": "山川.heic",
+      "extensions": [
+        "jpg",
+        "jpeg",
+        "jpe",
+        "jfif",
+        "png",
+        "apng",
+        "gif",
+        "webp",
+        "bmp",
+        "dib",
+        "tif",
+        "tiff",
+        "svg",
+        "svgz",
+        "ico",
+        "icns",
+        "heic",
+        "heif",
+        "avif",
+        "jxl",
+        "raw",
+        "dng",
+        "cr2",
+        "cr3",
+        "nef",
+        "arw",
+        "psd",
+        "ai",
+        "eps"
+      ],
+      "color": "green",
+      "glyph": "image"
+    },
+    {
+      "key": "video",
+      "label": "视频",
+      "sample": "旅程.mp4",
+      "extensions": [
+        "mp4",
+        "m4v",
+        "mkv",
+        "mov",
+        "avi",
+        "wmv",
+        "webm",
+        "mpg",
+        "mpeg",
+        "mpe",
+        "m2v",
+        "m2ts",
+        "mts",
+        "vob",
+        "flv",
+        "ogv",
+        "3gp",
+        "3g2"
+      ],
+      "color": "purple",
+      "glyph": "video"
+    },
+    {
+      "key": "audio",
+      "label": "音乐",
+      "sample": "夜曲.flac",
+      "extensions": [
+        "mp3",
+        "wav",
+        "wave",
+        "flac",
+        "m4a",
+        "aac",
+        "ogg",
+        "oga",
+        "opus",
+        "wma",
+        "aiff",
+        "aif",
+        "alac",
+        "ape",
+        "mid",
+        "midi",
+        "amr"
+      ],
+      "color": "rose",
+      "glyph": "audio"
+    },
+    {
+      "key": "archive",
+      "label": "压缩包",
+      "sample": "资料.tar.gz",
+      "extensions": [
+        "zip",
+        "zipx",
+        "7z",
+        "rar",
+        "tar",
+        "gz",
+        "gzip",
+        "bz",
+        "bz2",
+        "bzip2",
+        "xz",
+        "lz",
+        "lzma",
+        "zst",
+        "zstd",
+        "tgz",
+        "tbz",
+        "tbz2",
+        "txz",
+        "tzst",
+        "iso",
+        "img"
+      ],
+      "color": "gold",
+      "glyph": "archive"
+    },
+    {
+      "key": "book",
+      "label": "电子书",
+      "sample": "山海经.epub",
+      "extensions": [
+        "epub",
+        "kepub",
+        "mobi",
+        "azw",
+        "azw3",
+        "azw4",
+        "kfx",
+        "fb2",
+        "fbz",
+        "djvu",
+        "djv",
+        "cbz",
+        "cbr",
+        "cb7",
+        "cbt",
+        "cba",
+        "chm",
+        "lit",
+        "lrf",
+        "prc",
+        "pdb"
+      ],
+      "color": "slate",
+      "glyph": "book"
+    },
+    {
+      "key": "font",
+      "label": "字体",
+      "sample": "思源宋体.otf",
+      "extensions": [
+        "ttf",
+        "ttc",
+        "otf",
+        "otc",
+        "woff",
+        "woff2",
+        "fnt",
+        "fon",
+        "pfb",
+        "pfm"
+      ],
+      "color": "slate",
+      "glyph": "font"
+    },
+    {
+      "key": "text",
+      "label": "文本",
+      "sample": "笔记.txt",
+      "extensions": [
+        "txt",
+        "log",
+        "nfo",
+        "text"
+      ],
+      "color": "slate",
+      "glyph": "generic"
+    },
+    {
+      "key": "code",
+      "label": "源码",
+      "sample": "示例.src",
+      "extensions": [
+        "src",
+        "inc",
+        "asm",
+        "s",
+        "r",
+        "pl",
+        "pm",
+        "ex",
+        "exs",
+        "erl",
+        "hrl",
+        "clj",
+        "cljs",
+        "cljc",
+        "hs",
+        "fs",
+        "fsx",
+        "fsi",
+        "vb",
+        "vbs",
+        "m",
+        "mm",
+        "matlab",
+        "pas",
+        "rkt",
+        "jl",
+        "nim",
+        "zig",
+        "sol",
+        "sc",
+        "scala"
+      ],
+      "color": "slate",
+      "glyph": "code"
+    },
+    {
+      "key": "javascript",
+      "label": "JavaScript",
+      "sample": "index.js",
+      "extensions": [
+        "js",
+        "mjs",
+        "cjs"
+      ],
+      "color": "gold",
+      "glyph": "JS"
+    },
+    {
+      "key": "typescript",
+      "label": "TypeScript",
+      "sample": "types.ts",
+      "extensions": [
+        "ts",
+        "mts",
+        "cts"
+      ],
+      "color": "blue",
+      "glyph": "TS"
+    },
+    {
+      "key": "react",
+      "label": "React",
+      "sample": "App.tsx",
+      "extensions": [
+        "jsx",
+        "tsx"
+      ],
+      "color": "teal",
+      "glyph": "react"
+    },
+    {
+      "key": "python",
+      "label": "Python",
+      "sample": "main.py",
+      "extensions": [
+        "py",
+        "pyi",
+        "pyw",
+        "ipynb"
+      ],
+      "color": "blue",
+      "glyph": "PY"
+    },
+    {
+      "key": "rust",
+      "label": "Rust",
+      "sample": "main.rs",
+      "extensions": [
+        "rs"
+      ],
+      "color": "orange",
+      "glyph": "RS"
+    },
+    {
+      "key": "go",
+      "label": "Go",
+      "sample": "main.go",
+      "extensions": [
+        "go"
+      ],
+      "color": "teal",
+      "glyph": "GO"
+    },
+    {
+      "key": "c",
+      "label": "C",
+      "sample": "main.c",
+      "extensions": [
+        "c",
+        "h"
+      ],
+      "color": "blue",
+      "glyph": "C"
+    },
+    {
+      "key": "cpp",
+      "label": "C++",
+      "sample": "main.cpp",
+      "extensions": [
+        "cpp",
+        "cxx",
+        "cc",
+        "c++",
+        "hpp",
+        "hxx",
+        "hh",
+        "h++"
+      ],
+      "color": "blue",
+      "glyph": "C++"
+    },
+    {
+      "key": "csharp",
+      "label": "C#",
+      "sample": "Program.cs",
+      "extensions": [
+        "cs",
+        "csx"
+      ],
+      "color": "purple",
+      "glyph": "C#"
+    },
+    {
+      "key": "java",
+      "label": "Java",
+      "sample": "Main.java",
+      "extensions": [
+        "java",
+        "class",
+        "jar"
+      ],
+      "color": "orange",
+      "glyph": "JAVA"
+    },
+    {
+      "key": "kotlin",
+      "label": "Kotlin",
+      "sample": "Main.kt",
+      "extensions": [
+        "kt",
+        "kts"
+      ],
+      "color": "purple",
+      "glyph": "KT"
+    },
+    {
+      "key": "swift",
+      "label": "Swift",
+      "sample": "Main.swift",
+      "extensions": [
+        "swift"
+      ],
+      "color": "orange",
+      "glyph": "SW"
+    },
+    {
+      "key": "dart",
+      "label": "Dart",
+      "sample": "main.dart",
+      "extensions": [
+        "dart"
+      ],
+      "color": "teal",
+      "glyph": "DART"
+    },
+    {
+      "key": "php",
+      "label": "PHP",
+      "sample": "index.php",
+      "extensions": [
+        "php",
+        "php3",
+        "php4",
+        "php5",
+        "php7",
+        "php8",
+        "phtml"
+      ],
+      "color": "purple",
+      "glyph": "PHP"
+    },
+    {
+      "key": "ruby",
+      "label": "Ruby",
+      "sample": "main.rb",
+      "extensions": [
+        "rb",
+        "erb",
+        "rake",
+        "gemspec"
+      ],
+      "color": "red",
+      "glyph": "RB"
+    },
+    {
+      "key": "lua",
+      "label": "Lua",
+      "sample": "main.lua",
+      "extensions": [
+        "lua"
+      ],
+      "color": "blue",
+      "glyph": "LUA"
+    },
+    {
+      "key": "html",
+      "label": "HTML",
+      "sample": "index.html",
+      "extensions": [
+        "html",
+        "htm",
+        "xhtml"
+      ],
+      "color": "orange",
+      "glyph": "HTML"
+    },
+    {
+      "key": "css",
+      "label": "CSS",
+      "sample": "style.css",
+      "extensions": [
+        "css",
+        "scss",
+        "sass",
+        "less"
+      ],
+      "color": "purple",
+      "glyph": "CSS"
+    },
+    {
+      "key": "vue",
+      "label": "Vue",
+      "sample": "App.vue",
+      "extensions": [
+        "vue"
+      ],
+      "color": "green",
+      "glyph": "VUE"
+    },
+    {
+      "key": "svelte",
+      "label": "Svelte",
+      "sample": "App.svelte",
+      "extensions": [
+        "svelte"
+      ],
+      "color": "orange",
+      "glyph": "SV"
+    },
+    {
+      "key": "shell",
+      "label": "Shell",
+      "sample": "build.sh",
+      "extensions": [
+        "sh",
+        "bash",
+        "zsh",
+        "fish",
+        "bat",
+        "cmd"
+      ],
+      "color": "slate",
+      "glyph": "shell"
+    },
+    {
+      "key": "powershell",
+      "label": "PowerShell",
+      "sample": "build.ps1",
+      "extensions": [
+        "ps1",
+        "psm1",
+        "psd1"
+      ],
+      "color": "blue",
+      "glyph": "PS"
+    },
+    {
+      "key": "sql",
+      "label": "SQL",
+      "sample": "schema.sql",
+      "extensions": [
+        "sql",
+        "sqlite",
+        "sqlite3",
+        "db"
+      ],
+      "color": "teal",
+      "glyph": "SQL"
+    },
+    {
+      "key": "json",
+      "label": "JSON",
+      "sample": "package.json",
+      "extensions": [
+        "json",
+        "jsonc",
+        "json5",
+        "jsonl",
+        "ndjson"
+      ],
+      "color": "gold",
+      "glyph": "json"
+    },
+    {
+      "key": "yaml",
+      "label": "YAML",
+      "sample": "config.yaml",
+      "extensions": [
+        "yaml",
+        "yml"
+      ],
+      "color": "rose",
+      "glyph": "YML"
+    },
+    {
+      "key": "toml",
+      "label": "TOML",
+      "sample": "Cargo.toml",
+      "extensions": [
+        "toml"
+      ],
+      "color": "orange",
+      "glyph": "TOML"
+    },
+    {
+      "key": "xml",
+      "label": "XML",
+      "sample": "app.xml",
+      "extensions": [
+        "xml",
+        "xsl",
+        "xslt",
+        "xsd",
+        "xaml",
+        "plist",
+        "resx",
+        "csproj",
+        "vbproj",
+        "fsproj",
+        "svgproj"
+      ],
+      "color": "orange",
+      "glyph": "XML"
+    },
+    {
+      "key": "markdown",
+      "label": "Markdown",
+      "sample": "README.md",
+      "extensions": [
+        "md",
+        "markdown",
+        "mdx",
+        "mdown",
+        "mkd"
+      ],
+      "color": "slate",
+      "glyph": "MD"
+    },
+    {
+      "key": "config",
+      "label": "配置",
+      "sample": "settings.ini",
+      "extensions": [
+        "ini",
+        "cfg",
+        "conf",
+        "config",
+        "properties",
+        "env",
+        "editorconfig",
+        "gitignore",
+        "gitattributes"
+      ],
+      "color": "slate",
+      "glyph": "config"
+    },
+    {
+      "key": "docker",
+      "label": "Docker",
+      "sample": "Dockerfile",
+      "extensions": [
+        "dockerfile",
+        "containerfile"
+      ],
+      "color": "blue",
+      "glyph": "docker"
+    },
+    {
+      "key": "makefile",
+      "label": "构建脚本",
+      "sample": "Makefile",
+      "extensions": [
+        "mk",
+        "make",
+        "cmake",
+        "gradle"
+      ],
+      "color": "slate",
+      "glyph": "MK"
+    }
+  ],
+  "filenames": {
+    "Dockerfile": "docker",
+    "Containerfile": "docker",
+    "Makefile": "makefile",
+    "GNUmakefile": "makefile",
+    "CMakeLists.txt": "makefile",
+    "Justfile": "makefile",
+    "Rakefile": "ruby",
+    "Gemfile": "ruby",
+    ".gitignore": "config",
+    ".gitattributes": "config",
+    ".editorconfig": "config",
+    ".env": "config"
+  },
+  "extensionCount": 310
+}

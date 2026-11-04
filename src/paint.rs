@@ -267,6 +267,22 @@ pub fn grid_name(
 pub struct Assets;
 impl AssetSource for Assets {
     fn load(&self, path: &str) -> anyhow::Result<Option<Cow<'static, [u8]>>> {
+        if let Some(bytes) = crate::file_icons::asset_bytes(path) {
+            return Ok(Some(Cow::Borrowed(bytes)));
+        }
+        match path {
+            "paper-contour.svg" => {
+                return Ok(Some(Cow::Borrowed(include_bytes!(
+                    "../assets/file-types-generated/paper-contour.svg"
+                ))));
+            }
+            "paper-contour-small.svg" => {
+                return Ok(Some(Cow::Borrowed(include_bytes!(
+                    "../assets/file-types-generated/paper-contour-small.svg"
+                ))));
+            }
+            _ => {}
+        }
         let key = path.strip_suffix(".svg").unwrap_or(path);
         if matches!(key, "folder" | "file" | "folder-dark" | "file-dark") {
             let colors = theme::palette(key.ends_with("-dark"));
@@ -325,6 +341,33 @@ impl AssetSource for Assets {
     fn list(&self, _: &str) -> anyhow::Result<Vec<SharedString>> {
         Ok(vec![])
     }
+}
+pub fn file_artwork(
+    source: ImageSource,
+    side: f32,
+    outlined: bool,
+    colors: &'static Palette,
+) -> Div {
+    div()
+        .relative()
+        .size(px(side))
+        .flex_none()
+        .child(img(source).size_full())
+        .when(outlined, |d| {
+            d.child(
+                svg()
+                    .path(if side < 32. {
+                        "paper-contour-small.svg"
+                    } else {
+                        "paper-contour.svg"
+                    })
+                    .absolute()
+                    .top_0()
+                    .left_0()
+                    .size(px(side))
+                    .text_color(colors.color(ColorRole::PaperContour)),
+            )
+        })
 }
 pub fn icon(name: &'static str, colors: &'static Palette) -> Svg {
     svg()

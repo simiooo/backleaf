@@ -1,0 +1,40 @@
+[
+  {
+    "report_sha256": "231093f5d3fd6ab129ff288d16ca6782c2be9c4464a5a19de18dc697611e591e",
+    "scene_p95_ms": 4.345199999999999,
+    "source_exe_sha256": "309717936f22bed5e0344904f74dc34fe87171c3d924c0f1cf7d77924e39572c",
+    "frame_callback_p95_ms": 10.6787,
+    "case": "1024-real-exe-scroll",
+    "started_at": "2026-11-04T22:45:15.7283082+08:00",
+    "visible_cells_peak": 40,
+    "working_set_peak_mib": 79.328125,
+    "application_icons": {
+      "cache_entries": 128,
+      "cache_peak": 128,
+      "queue_peak": 32,
+      "result_peak": 5,
+      "extracted": 1240,
+      "unavailable": 829
+    },
+    "cached_items_peak": 72
+  },
+  {
+    "report_sha256": "50eb712bd041a079345fadeb30f71547eb3591d5182a7264ac00e412d8cdd499",
+    "scene_p95_ms": 5.1122,
+    "source_exe_sha256": "309717936f22bed5e0344904f74dc34fe87171c3d924c0f1cf7d77924e39572c",
+    "frame_callback_p95_ms": 10.5291,
+    "case": "10m-scroll-flow8",
+    "started_at": "2026-11-04T22:45:28.4385058+08:00",
+    "visible_cells_peak": 50,
+    "working_set_peak_mib": 74.90234375,
+    "application_icons": {
+      "cache_entries": 0,
+      "cache_peak": 0,
+      "queue_peak": 0,
+      "result_peak": 0,
+      "extracted": 0,
+      "unavailable": 0
+    },
+    "cached_items_peak": 90
+  }
+]

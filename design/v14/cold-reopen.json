@@ -1,0 +1,34 @@
+{
+  "masterSha256": "181ec9ecd0aaf082b9c07640f2d1c84e7ca54aa11cc0b74c1aade6246f49c0f5",
+  "retainedPages": 101,
+  "pages": 106,
+  "result": "passed",
+  "results": [
+    {
+      "key": "102-icons-light",
+      "changedPixels": 373,
+      "totalPixels": 940800
+    },
+    {
+      "key": "103-icons-dark",
+      "changedPixels": 328,
+      "totalPixels": 940800
+    },
+    {
+      "key": "104-grid-light",
+      "changedPixels": 160,
+      "totalPixels": 806400
+    },
+    {
+      "key": "105-grid-dark",
+      "changedPixels": 138,
+      "totalPixels": 806400
+    },
+    {
+      "key": "106-icon-states",
+      "changedPixels": 285,
+      "totalPixels": 940800
+    }
+  ],
+  "verifiedAt": "2026-11-04T12:35:16.030Z"
+}

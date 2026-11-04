@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "openMs": 240,
+  "closeMs": 200,
+  "curve": "1-(1-t)^3",
+  "semantics": "Closing cancels work and removes editable focus immediately; a non-editable clipped label fades with width. Results close immediately.",
+  "interruption": "Start either direction from current interpolated fraction; repeated close does not restart.",
+  "reducedMotion": "Immediate endpoint; no animation clock.",
+  "geometry": "Right edge stays anchored, breadcrumb uses same interpolated width."
+}

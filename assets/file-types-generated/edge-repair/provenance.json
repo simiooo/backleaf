@@ -1,0 +1,16 @@
+{
+  "folder": {
+    "key": "folder",
+    "original": "C:\\Users\\qq651\\.codex\\generated_images\\01a1a19c-c330-7782-ac11-2bceb3aa5ca1\\exec-8537991e-0a65-4744-876f-8650300f2a85.png",
+    "prompt": "Use case: logo-brand. Asset type: ONE production folder icon for Backleaf, a calm modern desktop file manager. Design a beautifully simple front-facing file folder with a broad gently rounded body and ONE small softly raised rounded tab at upper left. Silhouette must be friendly, smooth and continuous: generous corner curves, a gradual curved transition into the tab instead of sharp beveled steps. Muted light powder-blue / blue-gray body, a slightly lighter rear lip, restrained soft material depth, no harsh dark outline. Clean nearly-flat product icon rendering, macOS quality with contemporary calm UI restraint. Broad simple planes, one subtle tonal edge only, recognizable at 18px sidebar size and 44px file-grid size. Shape approximately 5:4 width-to-height, centered on square canvas with 15% breathing room. Absolutely genuine transparent background with alpha. The complete folder is visible: clean fully opaque interior, crisp antialiased exterior, no white fringe, white blocks, clipped sides, holes, erased edges, stray pixels or background-removal artifacts. No separate rounded-square tile or container. No papers peeking out, no symbols, words, letters, logo, badge, long shadow, ground, backdrop, glow, gloss, heavy gradient, grain, metallic bevel or isometric perspective. One finished icon only."
+  },
+  "edgeRepairs": [
+    {
+      "key": "code",
+      "original": "C:\\Users\\qq651\\.codex\\generated_images\\01a1a19c-c330-7782-ac11-2bceb3aa5ca1\\exec-09670b4f-c829-48d1-876f-3fdf33ee5ea4.png",
+      "prompt": "Repair ONLY the transparency/matting defects of this exact icon. Preserve the white folded-paper silhouette, its size and position, the teal </> code glyph, all paper shading and the fold. The current output has ragged white fringe, little white rectangles and erased outline segments around the four sides; remove these defects. Deliver a clean continuous complete document boundary with one subtle light blue-gray edge all the way around, naturally rounded corners and a fully visible folded corner. The white paper itself must be fully opaque and intact, including near the edges. Outside the clean document silhouette must be perfectly transparent, with no white matte, white speckles, stray cyan or gray pixels, cutout halos, rectangular clipping, chips or holes. Clean smooth antialiased contour suitable for a 40px UI icon. No change to the glyph, no new text, no background tile, no extra border around the image canvas, no additional symbols, no re-layout. Exactly one icon, same artwork; genuine alpha outside."
+    }
+  ],
+  "normalization": "Original files retained; runtime export cleans disconnected matte artifacts and microscopic alpha chips before optical sizing.",
+  "selection": "code v2 used; code-v1.png preserves initial output"
+}

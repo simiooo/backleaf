@@ -16,7 +16,7 @@ fn begin(
     };
     this.begin_marquee(
         &MouseDownEvent {
-            position: point(px(6.), px(54.)),
+            position: point(px(6.), px(crate::layout::CHROME.bar_height + 10.)),
             button: MouseButton::Left,
             modifiers,
             click_count: 1,
@@ -38,13 +38,21 @@ fn begin(
 pub(super) fn schedule(window: &Window, cx: &mut Context<Backleaf>) {
     cx.spawn_in(window,async move|this,cx|{
         cx.background_executor().timer(Duration::from_millis(1500)).await;
+        // A background test cannot exercise edge auto-scroll: wait for actual activation.
+        let mut active=false;
+        for _ in 0..100 {
+            active=this.update_in(cx,|_,window,_|window.is_window_active()).unwrap_or(false);
+            if active { break; }
+            cx.background_executor().timer(Duration::from_millis(100)).await;
+        }
+        if !active { let _=this.update_in(cx,|this,_,_|this.metrics.borrow_mut().event("selection-smoke invalid=window-not-active"));return; }
         if this.update_in(cx,|this,window,cx|{
             this.panel=false;this.selection.select(3,false,false);
             window.focus(&this.focus,cx);
             this.key(&KeyDownEvent{keystroke:Keystroke::parse("alt-space").unwrap(),is_held:false,prefer_character_input:false},window,cx);
             let preserved=this.selection.count()==1&&this.selection.contains(3);
             this.metrics.borrow_mut().event(&format!("selection-smoke system-shortcut-pass={preserved}"));
-            this.scroll_global(3966,ScrollStrategy::Top,true);
+            this.scroll_global(3968,ScrollStrategy::Top,true);
             this.metrics.borrow_mut().event("selection-smoke scope=synthetic-controller-events-real-window-not-OS-input");
             cx.notify();
         }).is_err(){return;}
@@ -53,10 +61,16 @@ pub(super) fn schedule(window: &Window, cx: &mut Context<Backleaf>) {
             let bottom=f32::from(window.viewport_size().height)-30.;
             begin(this,window,cx,false,bottom);
         }).is_err(){return;}
-        cx.background_executor().timer(Duration::from_millis(850)).await;
+        // Start on the production boundary and wait for a real rebase, not an assumed frame rate.
+        for _ in 0..30 {
+            cx.background_executor().timer(Duration::from_millis(100)).await;
+            let Ok((active,rebased))=this.update_in(cx,|this,window,_|(window.is_window_active(),this.origin_row>0)) else{return;};
+            if !active { let _=this.update_in(cx,|this,_,_|this.metrics.borrow_mut().event("selection-smoke invalid=activation-lost"));return; }
+            if rebased { break; }
+        }
         if this.update_in(cx,|this,window,cx|{
             let offset=-f32::from(this.scroll.0.borrow().base_handle.offset().y);
-            let moved=this.global_point(point(px(12.),px(60.))).1>3966.*crate::layout::row_step() as f64+100.;
+            let moved=this.global_point(point(px(12.),px(crate::layout::content_top()))).1>3968.*crate::layout::row_step() as f64+100.;
             let rebased=this.origin_row>0;
             this.metrics.borrow_mut().event(&format!("selection-smoke edge-pass={moved} rebase-pass={rebased} offset={offset:.2} origin={}",this.origin_row));
             this.key(&KeyDownEvent{keystroke:Keystroke::parse("escape").unwrap(),is_held:false,prefer_character_input:false},window,cx);

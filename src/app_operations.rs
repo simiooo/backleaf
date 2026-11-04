@@ -55,6 +55,7 @@ enum AfterEdit {
     },
     Close,
     Search,
+    EditPath,
     PathTree(bool),
 }
 #[derive(Clone, Copy, PartialEq, Eq)]
@@ -573,6 +574,12 @@ impl Backleaf {
         cx.notify();
     }
     pub fn edit_path(&mut self, window: &mut Window, cx: &mut Context<Self>) {
+        if self.rename_editing() {
+            self.files.after_edit = Some(AfterEdit::EditPath);
+            self.commit_rename_blur(cx);
+            return;
+        }
+        self.close_search();
         self.close_path_tree();
         if self.options.fixture.is_some() {
             return;
@@ -829,12 +836,16 @@ impl Backleaf {
                 .map(|id| {
                     let col = id % self.columns;
                     let row = id / self.columns;
-                    let top = self.global_point(point(px(12.), px(60.))).1;
+                    let top = self
+                        .global_point(point(px(12.), px(layout::content_top())))
+                        .1;
                     point(
                         px(self.sidebar_width()
                             + 12.
                             + col as f32 * (self.cell_width + layout::LAYOUT.grid.column_gap)),
-                        px((60. + row as f64 * layout::row_step() as f64 - top
+                        px((f64::from(layout::content_top())
+                            + row as f64 * layout::row_step() as f64
+                            - top
                             + layout::LAYOUT.grid.cell_height as f64)
                             as f32),
                     )
@@ -900,6 +911,10 @@ impl Backleaf {
                 AfterEdit::Close => self.request_close(window, cx),
                 AfterEdit::Search => {
                     self.open_search(window, cx);
+                    return;
+                }
+                AfterEdit::EditPath => {
+                    self.edit_path(window, cx);
                     return;
                 }
                 AfterEdit::PathTree(ancestors) => {
@@ -1162,8 +1177,14 @@ impl Backleaf {
             .tooltip(tooltip(format!("文件操作 · {count} 项任务"), colors))
             .focusable()
             .tab_stop(true)
-            .hover(move |d| d.bg(colors.color(ColorRole::Hover)))
-            .focus_visible(move |d| d.shadow(vec![colors.focus_ring()]))
+            .hover(move |d| {
+                d.bg(colors.color(ColorRole::Floating))
+                    .shadow(colors.control_shadows(false))
+            })
+            .focus(move |d| {
+                d.bg(colors.color(ColorRole::Floating))
+                    .shadow(colors.control_shadows(true))
+            })
             .on_click(cx.listener(|this, _, _, cx| {
                 this.files.open = !this.files.open;
                 this.files.selected = None;
@@ -1206,15 +1227,19 @@ impl Backleaf {
             && let Some(error) = &editor.error
         {
             let (x, y) = match &editor.kind {
-                EditKind::Path => (80., 44.),
+                EditKind::Path => (80., layout::CHROME.bar_height),
                 EditKind::Rename(d) => {
-                    let top = self.global_point(point(px(12.), px(60.))).1;
+                    let top = self
+                        .global_point(point(px(12.), px(layout::content_top())))
+                        .1;
                     (
                         self.sidebar_width()
                             + 12.
                             + (d.id % self.columns) as f32
                                 * (self.cell_width + layout::LAYOUT.grid.column_gap),
-                        (60. + (d.id / self.columns) as f64 * layout::row_step() as f64 - top
+                        (f64::from(layout::content_top())
+                            + (d.id / self.columns) as f64 * layout::row_step() as f64
+                            - top
                             + 112.) as f32,
                     )
                 }
@@ -1227,8 +1252,9 @@ impl Backleaf {
                         (f32::from(window.viewport_size().width) - 288.).max(8.),
                     )))
                     .top(px(y.clamp(
-                        44.,
-                        (f32::from(window.viewport_size().height) - 60.).max(44.),
+                        layout::CHROME.bar_height,
+                        (f32::from(window.viewport_size().height) - 60.)
+                            .max(layout::CHROME.bar_height),
                     )))
                     .w(px(280.))
                     .px(px(8.))
@@ -1276,6 +1302,7 @@ impl Backleaf {
                                 div()
                                     .mt(px(24.))
                                     .flex()
+                                    .items_center()
                                     .gap(px(8.))
                                     .child(self.text_action(
                                         "continue-operations",
@@ -1388,6 +1415,7 @@ impl Backleaf {
                             .child(
                                 div()
                                     .flex()
+                                    .items_baseline()
                                     .mt(px(8.))
                                     .text_size(px(12.))
                                     .text_color(colors.color(ColorRole::Secondary))
@@ -1520,6 +1548,7 @@ impl Backleaf {
             .child(
                 div()
                     .flex()
+                    .items_baseline()
                     .mt(px(8.))
                     .text_size(px(12.))
                     .text_color(colors.color(ColorRole::Secondary))

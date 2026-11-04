@@ -100,6 +100,7 @@ fn distribution(values: &[f64]) -> Distribution {
 }
 #[derive(Serialize)]
 pub struct Report {
+    pub application_icons: crate::native_icons::Stats,
     pub session_initially_locked: Option<bool>,
     pub session_locked_at_end: bool,
     pub accessibility_active: bool,
@@ -242,6 +243,7 @@ impl Metrics {
         let (peak, private, cpu_seconds) = native_process_metrics();
         let duration = self.started.elapsed().as_secs_f64();
         Report {
+            application_icons: Default::default(),
             session_initially_locked: self.session_initially_locked,
             session_locked_at_end: self.session_locked,
             accessibility_active: self.accessibility_active,

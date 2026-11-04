@@ -1,0 +1,90 @@
+{
+  "tool": "built-in image_gen",
+  "reference": "source/word.png",
+  "background": "transparent",
+  "created_date": "2026-11-04",
+  "assets": [
+    {
+      "key": "word",
+      "prompt": "Use case: logo-brand. Asset type: ONE production desktop file-type icon for the Backleaf Windows file manager, word-processing documents (Word DOCX). Design one polished, quietly beautiful, macOS-quality document icon: a warm white upright sheet with a small folded upper-right corner and gently softened corners; one large clear deep muted-blue W in its lower-middle as the content cue, plus at most two very subtle short document lines. Front-facing, optically balanced, almost flat with a tiny amount of material depth from the folded corner only. Broad confident shapes, restrained color, sharp silhouette and crisp antialiased edges, readable at 24 and 44 px. The W must be centered, clearly legible, unbranded geometric lettering, not a pasted official app tile. Aesthetic: calm contemporary product iconography, coherent with a restrained white/blue-gray file manager. Genuine transparent background with alpha. Square canvas; paper occupies 72 percent of height, centered with equal optical breathing room. The entire sheet and fold fit inside the image. No rounded-square outer tile or background container, no separate colored rectangle behind the letter, no floor, no cast shadow beyond one subtle contact edge on the paper itself. No glow, gradient backdrop, long shadow, glossy 3D, textures, chrome, extra text, filename, watermark, border around the canvas, multiple icons, or presentation sheet. One finished icon only."
+    },
+    {
+      "key": "spreadsheet",
+      "prompt": "Edit this exact reference icon to make ONE companion production file-type icon. Replace the blue W with a large deep muted-green X and change the two light-gray lines into a tiny clean spreadsheet grid above it. Preserve the exact paper silhouette, folded corner, front-facing view, center position, proportions, white material, subtle fold depth and transparent background. Make the new cue simple and very clear at 24–44px. No other letters, no filename, no outer tile, no separate colored rectangle, no floor, no cast shadow, no glow, no extra decoration. Original unbranded file icon, not an official app logo.",
+      "original": "C:\\Users\\qq651\\.codex\\generated_images\\01a1a19c-c330-7782-ac11-2bceb3aa5ca1\\exec-8307aae9-b4d0-4dea-82c8-19641d8f0bc5.png"
+    },
+    {
+      "key": "presentation",
+      "prompt": "Edit this exact reference icon to make ONE companion production file-type icon. Replace the blue W with a large muted burnt-orange P and change the two gray lines into one very simple presentation slide/chart cue above it. Preserve the exact paper silhouette, folded corner, front-facing view, center position, proportions, white material, subtle fold depth and transparent background. Make the new cue simple and very clear at 24–44px. No other letters, no filename, no outer tile, no separate colored rectangle, no floor, no cast shadow, no glow, no extra decoration. Original unbranded file icon, not an official app logo.",
+      "original": "C:\\Users\\qq651\\.codex\\generated_images\\01a1a19c-c330-7782-ac11-2bceb3aa5ca1\\exec-429fe00e-ae6f-4f67-9752-6fe15b012957.png"
+    },
+    {
+      "key": "pdf",
+      "prompt": "Edit this exact reference icon to make ONE companion production file-type icon. Replace the blue W with the large, clearly readable text PDF in muted brick red; remove the two gray text lines. Use letters P D F exactly. Preserve the exact paper silhouette, folded corner, front-facing view, center position, proportions, white material, subtle fold depth and transparent background. Make the new cue simple and very clear at 24–44px. No other letters, no filename, no outer tile, no separate colored rectangle, no floor, no cast shadow, no glow, no extra decoration. Original unbranded file icon, not an official app logo.",
+      "original": "C:\\Users\\qq651\\.codex\\generated_images\\01a1a19c-c330-7782-ac11-2bceb3aa5ca1\\exec-e4f8f4ba-cd6a-42c7-bd23-515351cc31f4.png"
+    },
+    {
+      "key": "image",
+      "prompt": "Edit this exact reference icon to make ONE companion production file-type icon. Replace the W and the two gray lines completely with one clear large muted green landscape picture glyph: two simple mountains and a sun inside a minimal picture frame, centered on the middle of the sheet. No letters. Preserve the exact white paper silhouette, folded corner, front-facing view, center position, proportions, subtle fold depth and genuine transparent background. The cue must be simple and clearly distinguishable at 24–44px, occupying the sheet middle with generous breathing room. No ghost W, text, filename, outer tile, separate colored rectangle, floor, cast shadow, glow, extra decoration or watermark. One icon only.",
+      "original": "C:\\Users\\qq651\\.codex\\generated_images\\01a1a19c-c330-7782-ac11-2bceb3aa5ca1\\exec-01216a93-8f61-41b1-bf20-0ad520448ae2.png"
+    },
+    {
+      "key": "video",
+      "prompt": "Edit this exact reference icon to make ONE companion production file-type icon. Replace the W and gray lines completely with one large muted plum-purple video symbol: a simple film frame containing a solid play triangle, centered in the middle of the sheet. No letters. Preserve the exact white paper silhouette, folded corner, front-facing view, center position, proportions, subtle fold depth and genuine transparent background. The cue must be simple and clearly distinguishable at 24–44px, occupying the sheet middle with generous breathing room. No ghost W, text, filename, outer tile, separate colored rectangle, floor, cast shadow, glow, extra decoration or watermark. One icon only.",
+      "original": "C:\\Users\\qq651\\.codex\\generated_images\\01a1a19c-c330-7782-ac11-2bceb3aa5ca1\\exec-f1a10ed3-67da-4cf6-a28f-05391a24518a.png"
+    },
+    {
+      "key": "audio",
+      "prompt": "Edit this exact reference icon to make ONE companion production file-type icon. Replace the W and gray lines completely with one large muted rose music-note glyph with two connected notes, centered in the middle of the sheet. No letters. Preserve the exact white paper silhouette, folded corner, front-facing view, center position, proportions, subtle fold depth and genuine transparent background. The cue must be simple and clearly distinguishable at 24–44px, occupying the sheet middle with generous breathing room. No ghost W, text, filename, outer tile, separate colored rectangle, floor, cast shadow, glow, extra decoration or watermark. One icon only.",
+      "original": "C:\\Users\\qq651\\.codex\\generated_images\\01a1a19c-c330-7782-ac11-2bceb3aa5ca1\\exec-9d03f0b8-8ed1-4511-bf7b-03c56ef41451.png"
+    },
+    {
+      "key": "archive",
+      "prompt": "Edit this exact reference icon to make ONE companion production file-type icon. Replace the W and gray lines completely with one large muted warm-gold zipper glyph running vertically down the center of the sheet. Broad simple alternating zipper teeth and one small clear zipper pull near the bottom, unmistakable compressed archive icon at 24px. No letters. Preserve the exact white paper silhouette, folded corner, front-facing view, center position, proportions, subtle fold depth and genuine transparent background. The glyph must remain simple and clear at 24–44px. No ghost W, text, filename, outer tile, separate colored rectangle, floor, cast shadow, glow, extra decoration or watermark. One finished icon only.",
+      "original": "C:\\Users\\qq651\\.codex\\generated_images\\01a1a19c-c330-7782-ac11-2bceb3aa5ca1\\exec-c2c6f633-6498-4539-87f7-537cf804e091.png"
+    },
+    {
+      "key": "installer",
+      "prompt": "Edit this exact reference icon to make ONE companion production file-type icon. Replace the W and gray lines completely with one large simple muted warm-gold closed cardboard package/cube glyph with a lid seam, centered in the middle of the sheet. Unmistakable installation package. No letters, arrows, extra symbols or tiny details. Preserve the exact white paper silhouette, folded corner, front-facing view, center position, proportions, subtle fold depth and genuine transparent background. The glyph must remain simple and clear at 24–44px. No ghost W, text, filename, outer tile, separate colored rectangle, floor, cast shadow, glow, extra decoration or watermark. One finished icon only.",
+      "original": "C:\\Users\\qq651\\.codex\\generated_images\\01a1a19c-c330-7782-ac11-2bceb3aa5ca1\\exec-fa531213-6ae3-4a51-bb9c-52ef62f7a953.png"
+    },
+    {
+      "key": "book",
+      "prompt": "Edit this exact reference icon to make ONE companion production file-type icon. Replace the W and gray lines completely with one large muted slate-blue book glyph, a simple upright closed book with a visible spine and two short page edges, centered in the middle of the sheet. Distinguish the book glyph clearly from the outer paper silhouette. No letters. Preserve the exact white paper silhouette, folded corner, front-facing view, center position, proportions, subtle fold depth and genuine transparent background. The glyph must remain simple and clear at 24–44px. No ghost W, text, filename, outer tile, separate colored rectangle, floor, cast shadow, glow, extra decoration or watermark. One finished icon only.",
+      "original": "C:\\Users\\qq651\\.codex\\generated_images\\01a1a19c-c330-7782-ac11-2bceb3aa5ca1\\exec-cb2b97d8-7446-4d15-8b0d-b0122c32bae8.png"
+    },
+    {
+      "key": "font",
+      "prompt": "Edit this exact reference icon to make ONE companion production file-type icon. Replace the W and gray lines completely with large, elegant, clearly legible lettering Aa in muted dark slate-blue: one uppercase A and one lowercase a, showing typographic character. Center it in the middle of the sheet. Only text Aa, no other text. Preserve the exact white paper silhouette, folded corner, front-facing view, center position, proportions, subtle fold depth and genuine transparent background. The cue must be broad and clear at 24–44px. No ghost W, filename, outer tile, separate colored rectangle, floor, cast shadow, glow, extra decoration or watermark. One finished icon only.",
+      "original": "C:\\Users\\qq651\\.codex\\generated_images\\01a1a19c-c330-7782-ac11-2bceb3aa5ca1\\exec-392dfb65-1e6f-49ec-8d7f-bb084df63206.png"
+    },
+    {
+      "key": "application",
+      "prompt": "Edit this exact reference icon to make ONE companion production file-type icon. Replace the W and gray lines completely with a large simple muted blue-gray application-window glyph: a small title bar with two dots and a plain clean content area with a small central geometric diamond. Center it in the middle of the sheet. No letters, play triangles, arrows or extra windows. Preserve the exact white paper silhouette, folded corner, front-facing view, center position, proportions, subtle fold depth and genuine transparent background. The cue must be broad and clear at 24–44px. No ghost W, filename, outer tile, separate colored rectangle, floor, cast shadow, glow, extra decoration or watermark. One finished icon only.",
+      "original": "C:\\Users\\qq651\\.codex\\generated_images\\01a1a19c-c330-7782-ac11-2bceb3aa5ca1\\exec-e5ad7a74-749b-4585-b3ca-4788f82e9ac2.png"
+    },
+    {
+      "key": "code",
+      "prompt": "Edit this exact reference icon to make ONE companion production file-type icon. Replace the W and gray lines completely with a large clearly legible code glyph </> in muted deep teal, one left angle bracket, one forward slash and one right angle bracket. Center it in the middle of the sheet. Only this single broad code glyph, no lines or other text. Preserve the exact white paper silhouette, folded corner, front-facing view, center position, proportions, subtle fold depth and genuine transparent background. The cue must be broad and clear at 24–44px. No ghost W, filename, outer tile, separate colored rectangle, floor, cast shadow, glow, extra decoration or watermark. One finished icon only.",
+      "original": "C:\\Users\\qq651\\.codex\\generated_images\\01a1a19c-c330-7782-ac11-2bceb3aa5ca1\\exec-c3e5c8df-647f-4169-a9a0-7a557fb8d734.png"
+    },
+    {
+      "key": "generic",
+      "prompt": "Edit this exact reference into ONE generic document file icon, the fallback member of the same Backleaf production icon family. Remove the W completely. Replace all internal marks with exactly three simple horizontal light slate-gray document lines, centered in the middle of the paper, the bottom line shorter. No other letters or symbols. Preserve the exact warm-white upright paper silhouette, folded upper-right corner, proportions, position, front-facing view and subtle fold depth. Broad crisp shapes readable at 24–44px. Genuine transparent background with alpha. No outer tile, no separate colored background, no floor, cast shadow, glow, filename, watermark, extra decoration or duplicate icon. One finished icon only.",
+      "original": "C:\\Users\\qq651\\.codex\\generated_images\\01a1a19c-c330-7782-ac11-2bceb3aa5ca1\\exec-6a0016b3-5356-4d55-a7a8-988d29bd7c23.png"
+    },
+    {
+      "key": "folder",
+      "original": "C:\\Users\\qq651\\.codex\\generated_images\\01a1a19c-c330-7782-ac11-2bceb3aa5ca1\\exec-8537991e-0a65-4744-876f-8650300f2a85.png",
+      "prompt": "Use case: logo-brand. Asset type: ONE production folder icon for Backleaf, a calm modern desktop file manager. Design a beautifully simple front-facing file folder with a broad gently rounded body and ONE small softly raised rounded tab at upper left. Silhouette must be friendly, smooth and continuous: generous corner curves, a gradual curved transition into the tab instead of sharp beveled steps. Muted light powder-blue / blue-gray body, a slightly lighter rear lip, restrained soft material depth, no harsh dark outline. Clean nearly-flat product icon rendering, macOS quality with contemporary calm UI restraint. Broad simple planes, one subtle tonal edge only, recognizable at 18px sidebar size and 44px file-grid size. Shape approximately 5:4 width-to-height, centered on square canvas with 15% breathing room. Absolutely genuine transparent background with alpha. The complete folder is visible: clean fully opaque interior, crisp antialiased exterior, no white fringe, white blocks, clipped sides, holes, erased edges, stray pixels or background-removal artifacts. No separate rounded-square tile or container. No papers peeking out, no symbols, words, letters, logo, badge, long shadow, ground, backdrop, glow, gloss, heavy gradient, grain, metallic bevel or isometric perspective. One finished icon only."
+    }
+  ],
+  "edge_repairs": [
+    {
+      "key": "code",
+      "original": "C:\\Users\\qq651\\.codex\\generated_images\\01a1a19c-c330-7782-ac11-2bceb3aa5ca1\\exec-09670b4f-c829-48d1-876f-3fdf33ee5ea4.png",
+      "prompt": "Repair ONLY the transparency/matting defects of this exact icon. Preserve the white folded-paper silhouette, its size and position, the teal </> code glyph, all paper shading and the fold. The current output has ragged white fringe, little white rectangles and erased outline segments around the four sides; remove these defects. Deliver a clean continuous complete document boundary with one subtle light blue-gray edge all the way around, naturally rounded corners and a fully visible folded corner. The white paper itself must be fully opaque and intact, including near the edges. Outside the clean document silhouette must be perfectly transparent, with no white matte, white speckles, stray cyan or gray pixels, cutout halos, rectangular clipping, chips or holes. Clean smooth antialiased contour suitable for a 40px UI icon. No change to the glyph, no new text, no background tile, no extra border around the image canvas, no additional symbols, no re-layout. Exactly one icon, same artwork; genuine alpha outside."
+    }
+  ],
+  "runtime_preparation": "Optical sizing plus main-silhouette alpha matte cleanup; original files retained; source/code-v1.png preserves original code asset."
+}

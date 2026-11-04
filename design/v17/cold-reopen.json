@@ -1,0 +1,29 @@
+{
+  "masterSha256": "286def6cd1331a8714a555af1e71cbf0930a00c810827a1a36ac36fd5a90656c",
+  "retainedPages": 120,
+  "pages": 124,
+  "result": "passed",
+  "results": [
+    {
+      "key": "121-search-close-start",
+      "changedPixels": 139,
+      "totalPixels": 806400
+    },
+    {
+      "key": "122-search-close-quarter",
+      "changedPixels": 139,
+      "totalPixels": 806400
+    },
+    {
+      "key": "123-search-close-end",
+      "changedPixels": 83,
+      "totalPixels": 403200
+    },
+    {
+      "key": "124-search-closed",
+      "changedPixels": 130,
+      "totalPixels": 806400
+    }
+  ],
+  "verifiedAt": "2026-11-04T14:28:52.772Z"
+}

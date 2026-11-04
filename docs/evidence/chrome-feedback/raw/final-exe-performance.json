@@ -1,0 +1,71 @@
+{
+  "application_icons": {
+    "cache_entries": 128,
+    "cache_peak": 128,
+    "queue_peak": 32,
+    "result_peak": 5,
+    "extracted": 1240,
+    "unavailable": 829
+  },
+  "session_initially_locked": false,
+  "session_locked_at_end": false,
+  "accessibility_active": true,
+  "version": "0.1.0-preview.7",
+  "gpui_revision": "d36a70661471ec64dce230798121d554930d5c60",
+  "backend": "GPUI / Win32 / Direct3D 11 / DirectWrite",
+  "dataset": "real directory snapshot / SQLite worker",
+  "item_count": 1024,
+  "selected_count": 0,
+  "selection_bitmap_serialized_bytes": 8,
+  "selection_pending": false,
+  "theme_dark": false,
+  "scripted_scroll": true,
+  "synthetic_selection_script": false,
+  "flow_limit": 0,
+  "reduced_motion": false,
+  "logical_viewport": [
+    1120.0,
+    720.0
+  ],
+  "scale_factor": 1.25,
+  "duration_seconds": 12.0280839,
+  "scene_cpu": {
+    "samples": 1313,
+    "p50_ms": 3.1886,
+    "p95_ms": 4.345199999999999,
+    "p99_ms": 4.981400000000001,
+    "max_ms": 8.6899
+  },
+  "frame_callback_interval": {
+    "samples": 1313,
+    "p50_ms": 8.3689,
+    "p95_ms": 10.6787,
+    "p99_ms": 12.0133,
+    "max_ms": 16.118199999999998
+  },
+  "input_handler_to_scene": {
+    "samples": 0,
+    "p50_ms": 0.0,
+    "p95_ms": 0.0,
+    "p99_ms": 0.0,
+    "max_ms": 0.0
+  },
+  "frames": 1313,
+  "grid_builds": 1432,
+  "label_layout_builds": 18904,
+  "label_cache_peak": 56,
+  "visible_cells_peak": 40,
+  "cached_items_peak": 72,
+  "flow_layout_builds": 0,
+  "animation_requests": 1431,
+  "max_pending_frame_callbacks": 1,
+  "hidden_animation_requests": 0,
+  "peak_working_set_mib": 79.328125,
+  "private_bytes_mib": 94.546875,
+  "cpu_seconds": 17.921875,
+  "cpu_one_core_percent": 149.0002493248322,
+  "events": [
+    "0.011s session-unlocked requests=0 frames=0"
+  ],
+  "measurement_notes": "Native release executable, real GPUI layout/paint and D3D11 window. Scene CPU is render start through final canvas paint; callback intervals are not GPU fence/present latency. Input measurement starts in the native event handler. Fixtures are metadata, not real copied files. Warmup: 1 second; first initialization and memory remain in wall-time/peak."
+}

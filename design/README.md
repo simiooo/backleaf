@@ -1,3 +1,9 @@
+最新主稿：[Backleaf-v18.fig](Backleaf-v18.fig)，129页，保留此前124页并补齐侧栏normal、Tab焦点、当前目录+焦点、深色、窄窗5个状态。
+
+本轮主稿：[Backleaf-v17.fig](Backleaf-v17.fig)，124页。v14/v15图标探索与生图原稿、v16窗口栏8个状态、v17搜索收起4个关键状态均保留。收起过程见[v17](v17/manifest.json)，有限双向动效契约见[search-motion.json](search-motion.json)。
+
+当前文件类型图标基线：[Backleaf-v15.fig](Backleaf-v15.fig)，112 页。用户要求使用 image_gen 的 14 张透明原图，包含明暗、网格、小尺寸和 EXE 原生资源/回退状态；图案按可见范围归一到约 40 px，槽位仍为 44 px。容器与文字可编辑，图标是位图。v14 为保留的矢量探索，不作为本轮运行图标。详见 [图标规范](../docs/file-type-icons.md)。
+
 当前交互反馈基线：[Backleaf-v13.fig](Backleaf-v13.fig)，101 页，保留 v12 的 92 页，新增 9 个输入、重命名与面包屑状态。预览与冷重开记录见 v13/。
 
 当前搜索入口基线：[Backleaf-v12.fig](Backleaf-v12.fig)，92 页，保留 v11 的 84 页，新增 8 个搜索状态。预览与冷重开记录见 v12/。

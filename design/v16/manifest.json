@@ -1,0 +1,48 @@
+{
+  "version": "v16-chrome-and-small-icon-contours",
+  "retainedPages": 112,
+  "pages": [
+    {
+      "key": "113-chrome-normal",
+      "name": "113 · v16 chrome-normal",
+      "nodes": 341
+    },
+    {
+      "key": "114-chrome-hover",
+      "name": "114 · v16 chrome-hover",
+      "nodes": 341
+    },
+    {
+      "key": "115-chrome-focus",
+      "name": "115 · v16 chrome-focus",
+      "nodes": 341
+    },
+    {
+      "key": "116-search-expand-25",
+      "name": "116 · v16 search-expand-25",
+      "nodes": 342
+    },
+    {
+      "key": "117-search-expanded",
+      "name": "117 · v16 search-expanded",
+      "nodes": 342
+    },
+    {
+      "key": "118-chrome-dark",
+      "name": "118 · v16 chrome-dark",
+      "nodes": 341
+    },
+    {
+      "key": "119-narrow-search",
+      "name": "119 · v16 narrow-search",
+      "nodes": 332
+    },
+    {
+      "key": "120-icon-contours",
+      "name": "120 · v16 icon-contours",
+      "nodes": 341
+    }
+  ],
+  "tokens": "design/chrome-system.json",
+  "source": "scripts/design/chrome-v16.mjs"
+}

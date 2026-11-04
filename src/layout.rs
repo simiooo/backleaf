@@ -66,3 +66,34 @@ pub static LAYOUT: LazyLock<Layout> = LazyLock::new(|| {
 pub fn row_step() -> f32 {
     LAYOUT.grid.cell_height + LAYOUT.grid.row_gap
 }
+
+#[derive(Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct Chrome {
+    pub bar_height: f32,
+    pub control_size: f32,
+    pub control_gap: f32,
+    pub vertical_inset: f32,
+    pub path_height: f32,
+    pub crumb_height: f32,
+    pub caption_width: f32,
+    pub caption_gap: f32,
+    pub minimum_drag_width: f32,
+    pub search_width: f32,
+    pub search_minimum_width: f32,
+    pub search_duration_ms: u64,
+    pub search_close_duration_ms: u64,
+    pub control_radius: f32,
+    pub hover_shadow_opacity: [f32; 2],
+    pub focus_shadow_opacity: [f32; 2],
+}
+pub static CHROME: LazyLock<Chrome> = LazyLock::new(|| {
+    serde_json::from_str(include_str!("../design/chrome-system.json"))
+        .expect("editable chrome specification")
+});
+pub fn content_top() -> f32 {
+    CHROME.bar_height + 16.
+}
+pub fn grid_reserved_height() -> f32 {
+    CHROME.bar_height + 32.
+}

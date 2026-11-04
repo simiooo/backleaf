@@ -1,0 +1,81 @@
+Window: "拾径 · Backleaf", App: Backleaf.exe.
+	0 区域 拾径 · Backleaf Secondary Actions: Raise
+		1 标题栏 (settable, string) Value: 拾径 · Backleaf
+			2 菜单栏 系统 ID: MenuBar
+				3 菜单项 系统
+			4 按钮 最小化
+			5 按钮 最大化
+			6 按钮 关闭
+		7 应用程序 拾径 Backleaf
+			8 按钮 后退
+			9 按钮 上一级
+			10 导航 当前位置 D:\work\backleaf\.local\file-icon-fixture
+				11 链接 前往 D:\
+				12 按钮 显示折叠的上级路径
+				13 链接 前往 D:\work\backleaf\.local
+				14 文本 D:\work\backleaf\.local\file-icon-fixture
+				15 按钮 浏览当前目录层级
+			16 按钮 搜索文件名，Ctrl+F
+			17 按钮 最小化
+			18 按钮 最大化或还原
+			19 按钮 关闭
+			20 导航 快捷访问
+				21 按钮 个人文件夹，C:\Users\qq651
+				22 按钮 桌面，C:\Users\qq651\Desktop
+				23 按钮 下载，C:\Users\qq651\Downloads
+				24 按钮 文档，C:\Users\qq651\Documents
+				25 按钮 图片，C:\Users\qq651\Pictures
+				26 按钮 音乐，C:\Users\qq651\Music
+				27 按钮 视频，C:\Users\qq651\Videos
+			28 列表 文件
+				29 选项 (selectable) App.svelte
+				30 选项 (selectable) App.tsx
+				31 选项 (selectable) App.vue
+				32 选项 (selectable) app.xml
+				33 选项 (selectable) Backleaf.exe
+				34 选项 (selectable) build.ps1
+				35 选项 (selectable) build.sh
+				36 选项 (selectable) Cargo.toml
+				37 选项 (selectable) config.yaml
+				38 选项 (selectable) Dockerfile
+				39 选项 (selectable) index.html
+				40 选项 (selectable) index.js
+				41 选项 (selectable) index.php
+				42 选项 (selectable) main.c
+				43 选项 (selectable) main.cpp
+				44 选项 (selectable) main.dart
+				45 选项 (selectable) main.go
+				46 选项 (selectable) Main.java
+				47 选项 (selectable) Main.kt
+				48 选项 (selectable) main.lua
+				49 选项 (selectable) main.py
+				50 选项 (selectable) main.rb
+				51 选项 (selectable) main.rs
+				52 选项 (selectable) Main.swift
+				53 选项 (selectable) Makefile
+				54 选项 (selectable) package.json
+				55 选项 (selectable) Program.cs
+				56 选项 (selectable) README
+				57 选项 (selectable) README.md
+				58 选项 (selectable) schema.sql
+				59 选项 (selectable) settings.ini
+				60 选项 (selectable) style.css
+				61 选项 (selectable) types.ts
+				62 选项 (selectable) 合同.pdf
+				63 选项 (selectable) 夜曲.flac
+				64 选项 (selectable) 山川.heic
+				65 选项 (selectable) 山海经.epub
+				66 选项 (selectable) 应用.msix
+				67 选项 (selectable) 思源宋体.otf
+				68 选项 (selectable) 报告.docx
+				69 选项 (selectable) 提案.pptx
+				70 选项 (selectable) 旅程.mp4
+				71 选项 (selectable) 无图标.exe
+				72 选项 (selectable) 未识别.custom
+				73 选项 (selectable) 示例.src
+				74 选项 (selectable) 笔记.txt
+				75 选项 (selectable) 资料.png
+				76 选项 (selectable) 资料.tar.gz
+			77 文本 已选 1 项
+
+The focused UI element is 48 选项 (selectable) main.lua.

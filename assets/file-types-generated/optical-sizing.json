@@ -1,0 +1,335 @@
+{
+  "policy": "alpha-bound crop; preserve aspect ratio; visible artwork within 40px in the unchanged 44px slot; original files retained",
+  "icons": [
+    {
+      "key": "folder",
+      "matte": {
+        "components": 1,
+        "mainPixels": 770115,
+        "radius": 3
+      },
+      "sourceBounds": [
+        162,
+        175,
+        1241,
+        957
+      ],
+      "displayInkBox": [
+        39.99999999999999,
+        28.989805375347544
+      ],
+      "slot": 44,
+      "inkLimit": 40,
+      "sourceSha256": "e6931e6fceab7c771f207ed0497a5385df2b48c79bc881bac34de85020ca184e",
+      "runtimeSha256": "49efbb8d952e3b28f17283e5bdd1b16ec11e35170fe3a631241a93e9a783bc02"
+    },
+    {
+      "key": "word",
+      "matte": {
+        "components": 1,
+        "mainPixels": 506887,
+        "radius": 4
+      },
+      "sourceBounds": [
+        298,
+        225,
+        952,
+        1039
+      ],
+      "displayInkBox": [
+        32.13759213759214,
+        39.99999999999999
+      ],
+      "slot": 44,
+      "inkLimit": 40,
+      "sourceSha256": "c7b47e7b1c9da843d9dc348b844b893b74473936758b76d546b2f116c10f235f",
+      "runtimeSha256": "0d745d4349f2259f521a655d2cd3ebdd971f6277b5d053cc0fe1ef502a371d97"
+    },
+    {
+      "key": "spreadsheet",
+      "matte": {
+        "components": 1,
+        "mainPixels": 509160,
+        "radius": 4
+      },
+      "sourceBounds": [
+        298,
+        224,
+        954,
+        1040
+      ],
+      "displayInkBox": [
+        32.15686274509804,
+        39.99999999999999
+      ],
+      "slot": 44,
+      "inkLimit": 40,
+      "sourceSha256": "53cfb3c890be1edce05f5a5c7333ba2f092fd6efe23b132e77b19f216c211dbf",
+      "runtimeSha256": "b450e7f59d4e0b3e9fa35eefcfbd24fce388616f9198023b29dbc7090bd9662c"
+    },
+    {
+      "key": "presentation",
+      "matte": {
+        "components": 1,
+        "mainPixels": 509235,
+        "radius": 4
+      },
+      "sourceBounds": [
+        298,
+        224,
+        954,
+        1040
+      ],
+      "displayInkBox": [
+        32.15686274509804,
+        39.99999999999999
+      ],
+      "slot": 44,
+      "inkLimit": 40,
+      "sourceSha256": "fdb7a47aec3ae4e117a3fdaa9230fac9b755c267ad87d18b4b0c6f4870c3162a",
+      "runtimeSha256": "4383ce66450cc2399461fcfdfd06d9630d6fb025ea70f5b0599920b682556055"
+    },
+    {
+      "key": "pdf",
+      "matte": {
+        "components": 1,
+        "mainPixels": 510286,
+        "radius": 4
+      },
+      "sourceBounds": [
+        297,
+        224,
+        954,
+        1040
+      ],
+      "displayInkBox": [
+        32.205882352941174,
+        39.99999999999999
+      ],
+      "slot": 44,
+      "inkLimit": 40,
+      "sourceSha256": "35be1782745d8dad8fd40798eb4193fb7c52d34145b11eb6401fd10507569d9d",
+      "runtimeSha256": "b8fb74dff7de351dc2b6cb8bb5f97fad3b8438fb9fc103e84aa5f97f50cdad34"
+    },
+    {
+      "key": "application",
+      "matte": {
+        "components": 1,
+        "mainPixels": 510660,
+        "radius": 4
+      },
+      "sourceBounds": [
+        297,
+        224,
+        955,
+        1040
+      ],
+      "displayInkBox": [
+        32.254901960784316,
+        39.99999999999999
+      ],
+      "slot": 44,
+      "inkLimit": 40,
+      "sourceSha256": "209b82463e53a034331bb9c285b74560d3b878b06d6805e33275cd08966bd7a1",
+      "runtimeSha256": "1db0ada76513e85dbe5667a059887f95f3762258f3197207e7179e4e1b0d8edb"
+    },
+    {
+      "key": "installer",
+      "matte": {
+        "components": 1,
+        "mainPixels": 508042,
+        "radius": 4
+      },
+      "sourceBounds": [
+        297,
+        224,
+        953,
+        1040
+      ],
+      "displayInkBox": [
+        32.15686274509804,
+        39.99999999999999
+      ],
+      "slot": 44,
+      "inkLimit": 40,
+      "sourceSha256": "7ca77f28cff40935196679d0c2b39e92c3f690f98fd59d7277c7d7ac783df788",
+      "runtimeSha256": "028f2b987d27d532a96b02a0bf6e12fb6903302e8e3ab925633a1f4113fcefa3"
+    },
+    {
+      "key": "image",
+      "matte": {
+        "components": 1,
+        "mainPixels": 510919,
+        "radius": 4
+      },
+      "sourceBounds": [
+        296,
+        224,
+        954,
+        1040
+      ],
+      "displayInkBox": [
+        32.254901960784316,
+        39.99999999999999
+      ],
+      "slot": 44,
+      "inkLimit": 40,
+      "sourceSha256": "c5f6e7c8f1b2b1b878eaeb296ecff7bfbd6e370abeab5e76dacaef7c2979cab6",
+      "runtimeSha256": "00231e418e29f0716fdc7a987e801c23721ab7833e737f421b2c8c5f74b3caa8"
+    },
+    {
+      "key": "video",
+      "matte": {
+        "components": 1,
+        "mainPixels": 509726,
+        "radius": 4
+      },
+      "sourceBounds": [
+        298,
+        224,
+        954,
+        1041
+      ],
+      "displayInkBox": [
+        32.11750305997551,
+        39.99999999999999
+      ],
+      "slot": 44,
+      "inkLimit": 40,
+      "sourceSha256": "a9a19f88a05391aa11b42e572d82a28cc6b492e11c359bf3ad7e0134082d2f72",
+      "runtimeSha256": "3840804f4ab95d2e2f7d61b95ace4474cc11e0c3a8ff87e7ed7f6d19d35c85b9"
+    },
+    {
+      "key": "audio",
+      "matte": {
+        "components": 1,
+        "mainPixels": 510662,
+        "radius": 4
+      },
+      "sourceBounds": [
+        297,
+        223,
+        954,
+        1041
+      ],
+      "displayInkBox": [
+        32.127139364303176,
+        39.99999999999999
+      ],
+      "slot": 44,
+      "inkLimit": 40,
+      "sourceSha256": "dfaba5369ccdc37a9d75a64975aa7c1d21bceb86cf3ab22c445cb25b3382d5e7",
+      "runtimeSha256": "fd8fc3c2e30b23f99cec8a5ce4ec4834451c86ae73ad7bd8e9aafb88c8c4b60c"
+    },
+    {
+      "key": "archive",
+      "matte": {
+        "components": 1,
+        "mainPixels": 509793,
+        "radius": 4
+      },
+      "sourceBounds": [
+        297,
+        224,
+        954,
+        1040
+      ],
+      "displayInkBox": [
+        32.205882352941174,
+        39.99999999999999
+      ],
+      "slot": 44,
+      "inkLimit": 40,
+      "sourceSha256": "f31c81289008cab4a1b391dc54f65642bbd40f7fc5ab8a5e02245f1db7cfaf3f",
+      "runtimeSha256": "d54965d01c30b638aed79275fa271731b200e91e6574c1c470838bdd5f89da46"
+    },
+    {
+      "key": "book",
+      "matte": {
+        "components": 1,
+        "mainPixels": 507591,
+        "radius": 4
+      },
+      "sourceBounds": [
+        298,
+        225,
+        953,
+        1039
+      ],
+      "displayInkBox": [
+        32.186732186732186,
+        39.99999999999999
+      ],
+      "slot": 44,
+      "inkLimit": 40,
+      "sourceSha256": "2515321ac44d9d14ab76cf6602e7c644d63bbf5e855ffc6818c87c8c705e9198",
+      "runtimeSha256": "7ecd4f7c23bf00b500068b80c572f9671c35fc58e5afa370d1cab76593aba554"
+    },
+    {
+      "key": "font",
+      "matte": {
+        "components": 1,
+        "mainPixels": 509101,
+        "radius": 4
+      },
+      "sourceBounds": [
+        298,
+        225,
+        955,
+        1040
+      ],
+      "displayInkBox": [
+        32.24539877300613,
+        39.99999999999999
+      ],
+      "slot": 44,
+      "inkLimit": 40,
+      "sourceSha256": "18972e5265872bce7c492895e23b8f6d1dcecd3c2ca023417fda305369a04fa1",
+      "runtimeSha256": "8fa4171f32914663b782a0a1ebf13c92085b6e0252df216dd1c7a96c452eca8d"
+    },
+    {
+      "key": "code",
+      "matte": {
+        "components": 1,
+        "mainPixels": 514692,
+        "radius": 4
+      },
+      "sourceBounds": [
+        295,
+        222,
+        956,
+        1041
+      ],
+      "displayInkBox": [
+        32.28327228327228,
+        39.99999999999999
+      ],
+      "slot": 44,
+      "inkLimit": 40,
+      "sourceSha256": "2c5486e8a59d45148300a5c5f220fc1b6b758ec5a2167c03363e416b1aead762",
+      "runtimeSha256": "26b2cb90f2e5b5c65db2ee168c0ff124453b7643b1e1705de4d6c06c49d713c2"
+    },
+    {
+      "key": "generic",
+      "matte": {
+        "components": 1,
+        "mainPixels": 508976,
+        "radius": 4
+      },
+      "sourceBounds": [
+        298,
+        224,
+        954,
+        1040
+      ],
+      "displayInkBox": [
+        32.15686274509804,
+        39.99999999999999
+      ],
+      "slot": 44,
+      "inkLimit": 40,
+      "sourceSha256": "4bc23df0b5c185a7fcd9b214670b0055903a6313a711e47930f6e6623bba8f00",
+      "runtimeSha256": "e6133b87a5b43e0f195ca6c7a513d92f1ee0cb9e75492b660a548c356af6e53d"
+    }
+  ]
+}

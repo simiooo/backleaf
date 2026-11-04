@@ -32,6 +32,7 @@ pub struct Detail {
     pub identity: Option<[u8; 33]>,
 }
 pub enum Event {
+    ApplicationIconsChanged,
     Search(crate::search::Notice),
     Navigation(crate::navigation::Notice),
     Located {

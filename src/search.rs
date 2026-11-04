@@ -17,6 +17,7 @@ pub struct Row {
     pub name: String,
     pub path: PathBuf,
     pub parent: String,
+    pub directory: bool,
 }
 pub enum Notice {
     Progress {
@@ -164,7 +165,7 @@ fn scan(
         r.token
     )));
     let mut db = Connection::open(&file.0)?;
-    db.execute_batch("PRAGMA journal_mode=MEMORY; PRAGMA synchronous=OFF; PRAGMA cache_size=-512; CREATE TABLE frontier(id INTEGER PRIMARY KEY,path BLOB NOT NULL); CREATE TABLE results(id INTEGER PRIMARY KEY,name TEXT NOT NULL,path BLOB NOT NULL);")?;
+    db.execute_batch("PRAGMA journal_mode=MEMORY; PRAGMA synchronous=OFF; PRAGMA cache_size=-512; CREATE TABLE frontier(id INTEGER PRIMARY KEY,path BLOB NOT NULL); CREATE TABLE results(id INTEGER PRIMARY KEY,name TEXT NOT NULL,path BLOB NOT NULL,directory INTEGER NOT NULL);")?;
     // Root may itself be a Known Folder redirection; never recurse through child reparse points.
     let root = r.root.canonicalize()?;
     let mut entries = Some(std::fs::read_dir(&root)?);
@@ -188,14 +189,20 @@ fn scan(
                         scanned += 1;
                         let name = entry.file_name().to_string_lossy().into_owned();
                         let path = entry.path();
+                        let kind = entry.file_type();
                         if matches(&name, &query) {
                             batch.execute(
-                                "INSERT INTO results VALUES(?1,?2,?3)",
-                                params![count as i64, name, encode(&path)],
+                                "INSERT INTO results VALUES(?1,?2,?3,?4)",
+                                params![
+                                    count as i64,
+                                    name,
+                                    encode(&path),
+                                    kind.as_ref().is_ok_and(|k| k.is_dir())
+                                ],
                             )?;
                             count += 1;
                         }
-                        match entry.file_type() {
+                        match kind {
                             Ok(kind) if kind.is_dir() => {
                                 use std::os::windows::fs::MetadataExt;
                                 match entry.metadata() {
@@ -249,7 +256,7 @@ fn scan(
             && token == r.token
         {
             let mut statement = db.prepare_cached(
-                "SELECT id,name,path FROM results WHERE id>=?1 AND id<?2 ORDER BY id LIMIT 32",
+                "SELECT id,name,path,directory FROM results WHERE id>=?1 AND id<?2 ORDER BY id LIMIT 32",
             )?;
             let mut rows = Vec::new();
             for row in
@@ -266,6 +273,7 @@ fn scan(
                         name: row.get(1)?,
                         path,
                         parent,
+                        directory: row.get(3)?,
                     })
                 })?
             {
@@ -332,6 +340,7 @@ mod tests {
             .unwrap();
         }
         std::fs::write(root.join("unmatched.txt"), b"keep").unwrap();
+        std::fs::create_dir(root.join("报告_目录.PDF")).unwrap();
         let (tx, rx) = async_channel::bounded(8);
         let worker = Worker::new(tx);
         worker.search(1, root.clone(), "unmatched".into());
@@ -349,7 +358,7 @@ mod tests {
                         unavailable,
                         ..
                     }) => {
-                        assert_eq!(count, 140);
+                        assert_eq!(count, 141);
                         assert_eq!(unavailable, 0);
                         done = true;
                         worker.page(2, 3, 90..140);
@@ -361,10 +370,19 @@ mod tests {
                     }) => {
                         assert_eq!(rows.len(), 32);
                         assert_eq!(rows[0].id, 90);
-                        assert!(
-                            rows.iter()
-                                .all(|r| r.path.exists() && r.name.starts_with("报告"))
-                        );
+                        assert!(rows.iter().all(|r| r.path.exists()
+                            && r.name.starts_with("报告")
+                            && !r.directory));
+                        worker.page(2, 4, 0..32);
+                    }
+                    Event::Search(Notice::Page {
+                        token: 2,
+                        serial: 4,
+                        rows,
+                    }) => {
+                        assert_eq!(rows.len(), 32);
+                        assert_eq!(rows[0].name, "报告_目录.PDF");
+                        assert!(rows[0].directory);
                         page = true;
                         break;
                     }

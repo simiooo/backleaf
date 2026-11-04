@@ -1,0 +1,49 @@
+{
+  "masterSha256": "cee611fe34eb99ec75b4fae15eb1f9f91a52276fee765e11f41ee536789a16df",
+  "retainedPages": 112,
+  "pages": 120,
+  "result": "passed",
+  "results": [
+    {
+      "key": "113-chrome-normal",
+      "changedPixels": 130,
+      "totalPixels": 806400
+    },
+    {
+      "key": "114-chrome-hover",
+      "changedPixels": 130,
+      "totalPixels": 806400
+    },
+    {
+      "key": "115-chrome-focus",
+      "changedPixels": 130,
+      "totalPixels": 806400
+    },
+    {
+      "key": "116-search-expand-25",
+      "changedPixels": 133,
+      "totalPixels": 806400
+    },
+    {
+      "key": "117-search-expanded",
+      "changedPixels": 132,
+      "totalPixels": 806400
+    },
+    {
+      "key": "118-chrome-dark",
+      "changedPixels": 98,
+      "totalPixels": 806400
+    },
+    {
+      "key": "119-narrow-search",
+      "changedPixels": 85,
+      "totalPixels": 403200
+    },
+    {
+      "key": "120-icon-contours",
+      "changedPixels": 130,
+      "totalPixels": 806400
+    }
+  ],
+  "verifiedAt": "2026-11-04T14:17:18.543Z"
+}

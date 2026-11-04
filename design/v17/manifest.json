@@ -1,0 +1,28 @@
+{
+  "version": "v17-search-close",
+  "retainedPages": 120,
+  "pages": [
+    {
+      "key": "121-search-close-start",
+      "name": "121 · v17 search-close-start",
+      "nodes": 343
+    },
+    {
+      "key": "122-search-close-quarter",
+      "name": "122 · v17 search-close-quarter",
+      "nodes": 343
+    },
+    {
+      "key": "123-search-close-end",
+      "name": "123 · v17 search-close-end",
+      "nodes": 333
+    },
+    {
+      "key": "124-search-closed",
+      "name": "124 · v17 search-closed",
+      "nodes": 341
+    }
+  ],
+  "tokens": "design/chrome-system.json",
+  "source": "scripts/design/chrome-v17.mjs"
+}

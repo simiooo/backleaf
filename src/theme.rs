@@ -28,10 +28,11 @@ pub enum Role {
     FolderFill,
     FolderStroke,
     PaperFill,
+    PaperContour,
     Negative,
     Positive,
 }
-const ROLES: [(Role, &str); 25] = [
+const ROLES: [(Role, &str); 26] = [
     (Role::Canvas, "surface/canvas"),
     (Role::Chrome, "surface/chrome"),
     (Role::Floating, "surface/floating"),
@@ -55,12 +56,13 @@ const ROLES: [(Role, &str); 25] = [
     (Role::FolderFill, "icon/folder-fill"),
     (Role::FolderStroke, "icon/folder-stroke"),
     (Role::PaperFill, "icon/paper-fill"),
+    (Role::PaperContour, "icon/paper-contour"),
     (Role::Negative, "status/negative"),
     (Role::Positive, "status/positive"),
 ];
 pub struct Palette {
     pub dark: bool,
-    values: [u32; 25],
+    values: [u32; 26],
 }
 impl Palette {
     fn load(dark: bool) -> Self {
@@ -68,7 +70,7 @@ impl Palette {
             serde_json::from_str(include_str!("../design/color-system.json"))
                 .expect("design color system");
         let mode = &source["modes"][if dark { "Dark" } else { "Light" }];
-        let mut values = [0; 25];
+        let mut values = [0; 26];
         for (role, key) in ROLES {
             let value = mode[key]
                 .as_str()
@@ -122,22 +124,29 @@ impl Palette {
         }
     }
     pub fn input_shadows(&self) -> Vec<BoxShadow> {
-        vec![
-            BoxShadow {
-                color: self.color(Role::Shadow),
-                offset: point(px(0.), px(1.)),
-                blur_radius: px(2.),
-                spread_radius: px(1.),
-                inset: false,
-            },
-            BoxShadow {
-                color: self.color(Role::Shadow),
-                offset: point(px(0.), px(4.)),
-                blur_radius: px(12.),
-                spread_radius: px(0.),
-                inset: false,
-            },
-        ]
+        self.control_shadows(true)
+    }
+    pub fn control_shadows(&self, focused: bool) -> Vec<BoxShadow> {
+        let alpha = if focused {
+            crate::layout::CHROME.focus_shadow_opacity
+        } else {
+            crate::layout::CHROME.hover_shadow_opacity
+        };
+        [(1., 2.), (2., 6.)]
+            .into_iter()
+            .zip(alpha)
+            .map(|((y, blur), a)| {
+                let mut color = self.color(Role::Shadow);
+                color.a = a;
+                BoxShadow {
+                    color,
+                    offset: point(px(0.), px(y)),
+                    blur_radius: px(blur),
+                    spread_radius: px(0.),
+                    inset: false,
+                }
+            })
+            .collect()
     }
 }
 pub fn palette(dark: bool) -> &'static Palette {

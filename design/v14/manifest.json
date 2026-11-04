@@ -1,0 +1,38 @@
+{
+  "version": "v14-file-icons",
+  "retainedPages": 101,
+  "pages": [
+    {
+      "key": "102-icons-light",
+      "name": "102 · v14 文件类型图标 / 浅色",
+      "mode": "Light",
+      "nodes": 658
+    },
+    {
+      "key": "103-icons-dark",
+      "name": "103 · v14 文件类型图标 / 深色",
+      "mode": "Dark",
+      "nodes": 658
+    },
+    {
+      "key": "104-grid-light",
+      "name": "104 · v14 文件类型网格 / 浅色",
+      "mode": "Light",
+      "nodes": 342
+    },
+    {
+      "key": "105-grid-dark",
+      "name": "105 · v14 文件类型网格 / 深色",
+      "mode": "Dark",
+      "nodes": 342
+    },
+    {
+      "key": "106-icon-states",
+      "name": "106 · v14 图标状态与搜索小尺寸",
+      "mode": "Light",
+      "nodes": 180
+    }
+  ],
+  "types": 47,
+  "source": "scripts/design/file-icons-v14.mjs"
+}

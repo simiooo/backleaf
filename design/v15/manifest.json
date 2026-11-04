@@ -1,0 +1,54 @@
+{
+  "version": "v15-generated-file-icons",
+  "retainedPages": 106,
+  "pages": [
+    {
+      "key": "107-ai-icons-light",
+      "name": "107 · v15 生图文件图标 / 浅色",
+      "nodes": 378
+    },
+    {
+      "key": "108-ai-icons-dark",
+      "name": "108 · v15 生图文件图标 / 深色",
+      "nodes": 378
+    },
+    {
+      "key": "109-ai-grid-light",
+      "name": "109 · v15 生图文件网格 / 浅色",
+      "nodes": 230
+    },
+    {
+      "key": "110-ai-grid-dark",
+      "name": "110 · v15 生图文件网格 / 深色",
+      "nodes": 230
+    },
+    {
+      "key": "111-ai-states",
+      "name": "111 · v15 生图图标状态与小尺寸",
+      "nodes": 117
+    },
+    {
+      "key": "112-exe-states",
+      "name": "112 · v15 EXE 原生图标 / 读取前、成功、回退",
+      "nodes": 17
+    }
+  ],
+  "generatedAssets": [
+    "folder",
+    "word",
+    "spreadsheet",
+    "presentation",
+    "pdf",
+    "application",
+    "installer",
+    "image",
+    "video",
+    "audio",
+    "archive",
+    "book",
+    "font",
+    "code",
+    "generic"
+  ],
+  "source": "scripts/design/file-icons-v15.mjs"
+}
