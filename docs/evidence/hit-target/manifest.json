@@ -1,0 +1,29 @@
+{
+  "source_commit": "ffcabf19cf17f7df0311f39f6f5fcd2274f11de3",
+  "files": {
+    "10m-performance.json": "1264d5cbba961f0f473b608d65ca55bb2b551735c8a01a71874385cc36ab7180",
+    "blank-clears-selection.png": "a9572b5333ddd2b728048c15accd1c17b948c2a23a668730d7b49c297799fb39",
+    "blank-context-menu.png": "3a27a616fb331871fac421625c3437e28806035658c4da5ae7f5bcab3afdc3d6",
+    "blank-context-menu.uia.txt": "5737717434984a5a7605a777601dcf6ee76992150c764f98ef9c2d9963b8aa3b",
+    "blank-doubleclick.png": "811ae94e7ae74b6f0ee3f9bdfc1dd1a3055d1ffffc5bc38ac37279f6daaee4dd",
+    "blank-doubleclick.uia.txt": "885d1d88e0ed87a991273ddffa275b32e667841e3230017e16ae965c897aa339",
+    "blank-marquee.png": "9934bbb21d631c6ccdcd0bb0292234974cb0b1272948c9e4bfff6121b2facd8f",
+    "build.txt": "ee34f25964325e3f303310877e82551257b3cb9ba8ae36672a6b360a06439cc4",
+    "ci-build.json": "9d2b719dc8db04686c2532cfff9f629fe61a5c3afa2daba9136ae7fb19073204",
+    "ci-build.txt": "624c546ddcf088ed1d0434b8fa29eb87f08d1371c6deedc2ed684d04891cd9e1",
+    "ci-clippy.txt": "768723b6fce324d962e6b296b0e5c98c050f0cd2577a649f67b33183d7e61eeb",
+    "ci-SHA256SUMS.txt": "b50e1e35ebb0520121e2f4f524e5c3ffce591ca021229040fe1a93b82481192f",
+    "ci-tests.txt": "3e79cc41a6af3f3149cdf749ce229a085143551a1a951016fc188c710d141d30",
+    "clippy.txt": "e9d5b1f939e845ed798a5d004b2b377ba0388b651fdfacae0c12ff6828800dda",
+    "exe-performance.json": "89b14e9e4b00a6eb8912a4bd6815b86749e73d085cf541ad89aeb959df303580",
+    "icon-selected.png": "f89579b2622b3dce2108e0c8335ee59162156bff1c2a953a009ae2dd4fc78eed",
+    "local-build-inputs.json": "5d58992cd3f2a13bf9080ce903ac6ceb4e2d516e7dee0825692c2b50ec16fd1b",
+    "local-staging.json": "744f9beca3d529d0dfb2ae63144b84f33a6d9f2468d9f092dac42daa945cb4cb",
+    "performance-summary.json": "bec46ebe03edeafb2d261785797cd4dc9d97f0d87640b4fbba8187b1c9ec4c63",
+    "release-assets.json": "b3e462f39e1639a4e72db19edb5e5b219d700b50e3a8ab9920ef403e249d3cdb",
+    "rename-input-preserved.png": "ce7d9bbdf2537625dbc871a2c3040a0796d57f56a68c9a31092648784846d453",
+    "selection-controller-diagnostic.json": "1f92b8e893df5269609e16f36feef85060d03142e0a0a29c65a0123886d7f651",
+    "source-input-comparison.json": "de25759d92be40ec55526513964c6cefcf7cf2d1ba610470477db78c5d2eae17",
+    "tests.txt": "39afa9b826ea4ed2acb0e5fc0f03e76da68c272397cd397d33697def26b64310"
+  }
+}

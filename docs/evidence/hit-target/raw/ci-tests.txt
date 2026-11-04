@@ -1,0 +1,75 @@
+   Compiling ztracing v0.1.0 (D:\a\backleaf\backleaf\vendor\zed\crates\ztracing)
+   Compiling gpui_util v0.1.0 (D:\a\backleaf\backleaf\vendor\zed\crates\gpui_util)
+   Compiling scheduler v0.1.0 (D:\a\backleaf\backleaf\vendor\zed\crates\scheduler)
+   Compiling collections v0.1.0 (D:\a\backleaf\backleaf\vendor\zed\crates\collections)
+   Compiling refineable v0.1.0 (D:\a\backleaf\backleaf\vendor\zed\crates\refineable)
+   Compiling gpui_shared_string v0.1.0 (D:\a\backleaf\backleaf\vendor\zed\crates\gpui_shared_string)
+   Compiling http_client v0.1.0 (D:\a\backleaf\backleaf\vendor\zed\crates\http_client)
+   Compiling sum_tree v0.1.0 (D:\a\backleaf\backleaf\vendor\zed\crates\sum_tree)
+   Compiling backleaf v0.1.0-preview.9 (D:\a\backleaf\backleaf)
+   Compiling gpui v0.2.2 (D:\a\backleaf\backleaf\vendor\zed\crates\gpui)
+   Compiling gpui_windows v0.1.0 (D:\a\backleaf\backleaf\vendor\zed\crates\gpui_windows)
+warning: method `identity` is never used
+   --> src\operations\ledger.rs:217:12
+    |
+101 | impl Ledger {
+    | ----------- method in this implementation
+...
+217 |     pub fn identity(&self, key: u64) -> anyhow::Result<Option<shell::identity::Identity>> {
+    |            ^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `backleaf` (bin "backleaf" test) generated 1 warning
+    Finished `release` profile [optimized] target(s) in 2m 50s
+     Running unittests src\main.rs (target\release\deps\backleaf-4c1b087976092a05.exe)
+
+running 45 tests
+test app_operations::location_tests::refresh_matches_normal_and_shell_path_spellings ... ok
+test file_geometry::tests::long_two_line_names_keep_their_visible_edges_clickable ... ok
+test file_geometry::tests::short_identity_excludes_cell_whitespace_and_rounded_corners ... ok
+test file_geometry::tests::tooltip_region_is_caption_only_and_scales_with_measured_text ... ok
+test file_icons::tests::names_cover_requested_types_without_probing_or_misreading_directories ... ok
+test file_icons::tests::unpaired_windows_stem_does_not_destroy_a_valid_extension ... ok
+test file_icons::tests::embedded_artwork_has_clear_padding_and_full_sized_opaque_silhouettes ... ok
+test model::tests::million_selection_is_constant_space_and_toggle_preserves_count ... ok
+test model::tests::truncation_keeps_graphemes_and_raw_value ... ok
+test model::tests::utf16_name_roundtrip_does_not_replace_unpaired_surrogates ... ok
+test native_icons::tests::real_embedded_resource_raster_has_color_and_transparency ... ok
+test native_icons::tests::requests_are_bounded_deduplicated_and_generation_scoped ... ok
+test native_icons::tests::transparent_padding_does_not_shrink_the_visible_icon ... ok
+test navigation::tests::crumbs_preserve_unc_roots_unicode_and_exact_navigation_targets ... ok
+test navigation::tests::directory_popup_is_bounded_and_later_request_wins ... ok
+test navigation::tests::path_display_hides_internal_prefix_without_changing_navigation_targets ... ok
+test operations::clipboard::tests::hdrop_round_trip_keeps_unicode_and_has_a_bounded_double_null ... ok
+test operations::clipboard::tests::oversized_payload_fails_before_any_clipboard_publication ... ok
+test operations::ledger::tests::cancellation_does_not_erase_success_or_replay_unstarted_roots ... ok
+test operations::ledger::tests::directory_post_is_provisional_and_child_failure_stays_partial ... ok
+test operations::ledger::tests::failed_hresult_is_not_hidden_by_successful_perform_or_zero_queued ... ok
+test operations::ledger::tests::interrupted_dispatch_preserves_success_and_never_infers_rollback ... ok
+test operations::ledger::tests::result_pages_and_operation_batches_respect_utf16_byte_limits ... ok
+test operations::ledger::tests::utf16_round_trip_keeps_unpaired_surrogate_and_non_bmp ... ok
+test operations::prepare::tests::source_lease_survives_navigation_and_preparation_does_not_take_new_files ... ok
+test operations::service::service_tests::canceled_byte_delta_is_not_promoted_to_confirmed_data ... ok
+test model::tests::directory_snapshot_pages_and_details_keep_real_identity ... ok
+test operations::windows::names::tests::rejects_shell_aliases_and_keeps_unicode ... ok
+test operations::windows::names::tests::rename_stem_uses_utf8_boundaries ... ok
+test scrollbar::tests::hidden_when_content_fits_or_container_is_empty ... ok
+test scrollbar::tests::million_row_drag_uses_full_range_and_preserves_sub_row_position ... ok
+test scrollbar::tests::proportional_thumb_resizes_and_clamps_at_both_ends ... ok
+test scrollbar::tests::sidebar_hover_includes_its_overlay_and_excludes_other_panes ... ok
+test search::tests::literal_unicode_matching_does_not_treat_wildcards_as_operators ... ok
+test operations::service::service_tests::native_rename_completes_with_durable_result_and_preserved_bytes ... ok
+test search_motion::tests::interruption_keeps_the_current_width_and_repeated_close_does_not_restart ... ok
+test search_motion::tests::opening_and_closing_are_bounded_monotonic_and_finite ... ok
+test selection::tests::additive_band_preserves_all_exceptions_and_disjoint_items ... ok
+test selection::tests::all_and_exceptions_do_not_scale_with_ten_million_items ... ok
+test selection::tests::cancelled_bitmap_build_cannot_commit_a_partial_selection ... ok
+test selection::tests::control_shift_extends_without_losing_disjoint_selection ... ok
+test selection::tests::rectangle_matches_independent_item_truth_including_partial_last_row ... ok
+test search::tests::recursive_results_page_and_latest_request_are_real_and_bounded ... ok
+test selection::tests::worker_wakes_after_idle_and_delivers_the_latest_requested_band ... ok
+test selection::tests::ten_million_partial_column_selection_has_exact_count_and_bounded_encoding ... ok
+
+test result: ok. 45 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.01s
+

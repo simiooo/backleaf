@@ -1,0 +1,24 @@
+{
+  "source_commit": "ffcabf19cf17f7df0311f39f6f5fcd2274f11de3",
+  "verified_files": 85,
+  "line_ending_only": [
+    "assets/brand/generation.md",
+    "assets/file-types-generated/generation.json",
+    "assets/file-types-generated/README.md",
+    "assets/windows/backleaf.rc",
+    "build.rs",
+    "Cargo.lock",
+    "Cargo.toml",
+    "design/chrome-system.json",
+    "design/color-system.json",
+    "design/layout-system.json",
+    "design/scroll-system.json",
+    "src/app_navigation.rs",
+    "src/app_search.rs",
+    "src/selection.rs",
+    "src/selection_smoke.rs",
+    "src/session.rs",
+    "src/theme.rs"
+  ],
+  "other_differences": []
+}

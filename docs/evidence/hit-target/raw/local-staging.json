@@ -7,5 +7,11 @@
     "locked": false,
     "error": null
   },
-  "sha256": "976da26a3cf24031fb0a785bc28d5da2d8ca2c0c426d5987d53d7cf85916aa6d"
+  "sha256": "976da26a3cf24031fb0a785bc28d5da2d8ca2c0c426d5987d53d7cf85916aa6d",
+  "source_commit": "ffcabf19cf17f7df0311f39f6f5fcd2274f11de3",
+  "version": "0.1.0-preview.9",
+  "local_build": true,
+  "ci_run_url": "https://github.com/simiooo/backleaf/actions/runs/41863179295",
+  "gpui_revision": "d36a70661471ec64dce230798121d554930d5c60",
+  "design_sha256": "f739d30583052de7b9835ea137fb16bc2fae62533968984ec64b6d07fe7c119c"
 }

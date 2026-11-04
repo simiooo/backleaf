@@ -6,9 +6,10 @@ Scope: SIM-919. Constraints: SIM-934. One engineering unit is active at a time.
 | --- | --- | --- |
 | accepted | SIM-921 | User accepted v6 as the implementation baseline on 2026-11-04 |
 | accepted | SIM-948 | v6 feedback incorporated and accepted as baseline |
-| focus_issue | SIM-973 | Urgent file-cell hit-target correction, after completed preview.8 gate |
+| focus_issue | SIM-976 | Breadcrumb context, address editing/blur recovery and real Windows drives; v21 design, native implementation in progress |
+| review_queue | SIM-973 | Visible-identity hit regions; preview.9 published and downloaded verification passed |
 | review_queue | SIM-971 | Compact counter, adaptive scrollbars and stable sidebar hover; preview.8 published |
-| ready_queue | SIM-972 | Letter-key typeahead after hit-target fix |
+| ready_queue | SIM-972 | Letter-key typeahead after current navigation feedback, research checkpoint released |
 | ready_queue | SIM-974 | Internal file drag/move and directory cycle protection |
 | ready_queue | SIM-975 | Unified quick-access pin/reorder, real saved-view targets depend on SIM-920 |
 | review_queue | SIM-965 | v18 toolbar/sidebar focus and reversible search motion; preview.7 published |
@@ -42,3 +43,5 @@ Preview `0.1.0-preview.2`, source `d28e5af81f787fb8257cdce1d484caac667e30c9`, wa
 2026-11-04 22:52:59+08: preview.7 source `4dff861841899f63a6fdc234c021efc4147f77b5` published after CI41850944339 success and downloaded asset verification. Acceptance: [Windows test package](https://github.com/simiooo/backleaf/releases/tag/test-v0.1.0-preview.7-4dff8618). Local staging was deployed at22:42:14+08 with a separately identified local build. [Evidence](evidence/chrome-feedback/README.md). SIM-967 external directory synchronization remains ready, not implemented.
 
 2026-11-04 23:29:43+08: preview.8 source1a2d86c4 published and downloaded verification passed. [Acceptance](https://github.com/simiooo/backleaf/releases/tag/test-v0.1.0-preview.8-1a2d86c4). [Evidence](evidence/scroll-feedback/README.md). User confirmed file-area expansion and sidebar after flicker fix; unit remains in_review for remaining product acceptance. Hit-target error is prioritized before new typeahead/drag features.
+
+2026-11-05 00:05:36+08: preview.9 source `ffcabf19cf17f7df0311f39f6f5fcd2274f11de3` published after CI41863179295 passed 45 tests, lint/build and packaged CLI smoke. [Acceptance](https://github.com/simiooo/backleaf/releases/tag/test-v0.1.0-preview.9-ffcabf19). Downloaded release assets equal the CI artifact and GitHub server digests; ZIP assets and editable v20/143-page master verified. Local staging deployed 2026-11-04 23:49:13+08; actual OS mouse blank/icon/menu/marquee and rename-input protection smoke passed on the separately hashed trusted local build. [Evidence](evidence/hit-target/README.md) records boundaries. New breadcrumb/drive feedback is SIM-976 and is not included in preview.9.
