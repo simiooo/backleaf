@@ -22,4 +22,4 @@ Meta 的公开资料支持语义颜色、容器与内容配对、交互覆盖层
 
 可编辑文件：`design/Backleaf-v9.fig`。源脚本：`scripts/design/visual-v9.mjs`。共享规格：`design/color-system.json`、`design/layout-system.json`。渲染、对比度、冷重开和实际节点几何证据均在 `design/v9/`。菜单页是后续 SIM-954 的视觉样本，本身不表示原生命令已完成。
 
-原生交互交付还需完成构建、实机验证、源码推送和 staging 部署冒烟，记录于 SIM-953 后才可进入待验收队列。
+原生交互已完成构建、实机验证、源码推送和 staging 安装冒烟。正式发布与验收状态见 SIM-953 和原生选择验证文档；本稿没有被标作用户已完成审美验收。

@@ -1,0 +1,63 @@
+{
+  "session_initially_locked": false,
+  "session_locked_at_end": false,
+  "accessibility_active": false,
+  "version": "0.1.0-preview.2",
+  "gpui_revision": "d36a70661471ec64dce230798121d554930d5c60",
+  "backend": "GPUI / Win32 / Direct3D 11 / DirectWrite",
+  "dataset": "generated metadata fixture (same native grid)",
+  "item_count": 1000000,
+  "selected_count": 0,
+  "selection_bitmap_serialized_bytes": 8,
+  "selection_pending": false,
+  "theme_dark": false,
+  "scripted_scroll": true,
+  "synthetic_selection_script": false,
+  "flow_limit": 0,
+  "reduced_motion": false,
+  "logical_viewport": [
+    1120.0,
+    720.0
+  ],
+  "scale_factor": 1.25,
+  "duration_seconds": 10.0300724,
+  "scene_cpu": {
+    "samples": 1084,
+    "p50_ms": 2.4878,
+    "p95_ms": 3.6045000000000003,
+    "p99_ms": 4.165699999999999,
+    "max_ms": 5.2999
+  },
+  "frame_callback_interval": {
+    "samples": 1084,
+    "p50_ms": 8.288,
+    "p95_ms": 10.2072,
+    "p99_ms": 11.317,
+    "max_ms": 12.7952
+  },
+  "input_handler_to_scene": {
+    "samples": 0,
+    "p50_ms": 0.0,
+    "p95_ms": 0.0,
+    "p99_ms": 0.0,
+    "max_ms": 0.0
+  },
+  "frames": 1084,
+  "grid_builds": 1202,
+  "label_layout_builds": 29680,
+  "label_cache_peak": 70,
+  "visible_cells_peak": 50,
+  "cached_items_peak": 90,
+  "flow_layout_builds": 0,
+  "animation_requests": 1201,
+  "max_pending_frame_callbacks": 1,
+  "hidden_animation_requests": 0,
+  "peak_working_set_mib": 69.61328125,
+  "private_bytes_mib": 84.765625,
+  "cpu_seconds": 4.71875,
+  "cpu_one_core_percent": 47.04602132283711,
+  "events": [
+    "0.012s session-unlocked requests=0 frames=0"
+  ],
+  "measurement_notes": "Native release executable, real GPUI layout/paint and D3D11 window. Scene CPU is render start through final canvas paint; callback intervals are not GPU fence/present latency. Input measurement starts in the native event handler. Fixtures are metadata, not real copied files. Warmup: 1 second; first initialization and memory remain in wall-time/peak."
+}

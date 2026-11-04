@@ -1,0 +1,67 @@
+{
+  "session_initially_locked": false,
+  "session_locked_at_end": false,
+  "accessibility_active": true,
+  "version": "0.1.0-preview.2",
+  "gpui_revision": "d36a70661471ec64dce230798121d554930d5c60",
+  "backend": "GPUI / Win32 / Direct3D 11 / DirectWrite",
+  "dataset": "real directory snapshot / SQLite worker",
+  "item_count": 2,
+  "selected_count": 0,
+  "selection_bitmap_serialized_bytes": 8,
+  "selection_pending": false,
+  "theme_dark": false,
+  "scripted_scroll": false,
+  "synthetic_selection_script": false,
+  "flow_limit": 1,
+  "reduced_motion": false,
+  "logical_viewport": [
+    1120.0,
+    720.0
+  ],
+  "scale_factor": 1.25,
+  "duration_seconds": 300.0235967,
+  "scene_cpu": {
+    "samples": 366,
+    "p50_ms": 0.5527000000000001,
+    "p95_ms": 0.8165,
+    "p99_ms": 1.0460999999999998,
+    "max_ms": 2.6532
+  },
+  "frame_callback_interval": {
+    "samples": 366,
+    "p50_ms": 8.5525,
+    "p95_ms": 330.18039999999996,
+    "p99_ms": 18292.3192,
+    "max_ms": 72885.9326
+  },
+  "input_handler_to_scene": {
+    "samples": 4,
+    "p50_ms": 1.7065,
+    "p95_ms": 6.2946,
+    "p99_ms": 6.2946,
+    "max_ms": 6.2946
+  },
+  "frames": 366,
+  "grid_builds": 370,
+  "label_layout_builds": 3,
+  "label_cache_peak": 3,
+  "visible_cells_peak": 10,
+  "cached_items_peak": 2,
+  "flow_layout_builds": 0,
+  "animation_requests": 0,
+  "max_pending_frame_callbacks": 0,
+  "hidden_animation_requests": 0,
+  "peak_working_set_mib": 70.22265625,
+  "private_bytes_mib": 81.45703125,
+  "cpu_seconds": 10.15625,
+  "cpu_one_core_percent": 3.3851504054047625,
+  "events": [
+    "0.008s session-unlocked requests=0 frames=0",
+    "21.127s pointer-select",
+    "30.132s key",
+    "121.343s key",
+    "146.947s key"
+  ],
+  "measurement_notes": "Native release executable, real GPUI layout/paint and D3D11 window. Scene CPU is render start through final canvas paint; callback intervals are not GPU fence/present latency. Input measurement starts in the native event handler. Fixtures are metadata, not real copied files. Warmup: 1 second; first initialization and memory remain in wall-time/peak."
+}

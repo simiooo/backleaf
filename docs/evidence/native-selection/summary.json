@@ -1,0 +1,215 @@
+{
+  "source_commit": "d28e5af81f787fb8257cdce1d484caac667e30c9",
+  "rows": [
+    {
+      "case": "1k-scroll",
+      "items": 1000,
+      "viewport": [
+        1120.0,
+        720.0
+      ],
+      "scene_p95_ms": 3.6684,
+      "callback_p95_ms": 10.511700000000001,
+      "peak_mib": 69.73046875,
+      "cells": 50,
+      "cache": 90,
+      "flow_layouts": 0,
+      "a11y": false,
+      "samples": 1083
+    },
+    {
+      "case": "100k-scroll",
+      "items": 100000,
+      "viewport": [
+        1120.0,
+        720.0
+      ],
+      "scene_p95_ms": 3.7134,
+      "callback_p95_ms": 10.113900000000001,
+      "peak_mib": 70.234375,
+      "cells": 50,
+      "cache": 90,
+      "flow_layouts": 0,
+      "a11y": false,
+      "samples": 1082
+    },
+    {
+      "case": "1m-scroll",
+      "items": 1000000,
+      "viewport": [
+        1120.0,
+        720.0
+      ],
+      "scene_p95_ms": 3.6045000000000003,
+      "callback_p95_ms": 10.2072,
+      "peak_mib": 69.61328125,
+      "cells": 50,
+      "cache": 90,
+      "flow_layouts": 0,
+      "a11y": false,
+      "samples": 1084
+    },
+    {
+      "case": "10m-scroll",
+      "items": 10000000,
+      "viewport": [
+        1120.0,
+        720.0
+      ],
+      "scene_p95_ms": 3.6113,
+      "callback_p95_ms": 10.454099999999999,
+      "peak_mib": 69.796875,
+      "cells": 50,
+      "cache": 90,
+      "flow_layouts": 0,
+      "a11y": false,
+      "samples": 1083
+    },
+    {
+      "case": "1m-flow1",
+      "items": 1000000,
+      "viewport": [
+        1120.0,
+        720.0
+      ],
+      "scene_p95_ms": 1.3777,
+      "callback_p95_ms": 25.0376,
+      "peak_mib": 70.73046875,
+      "cells": 50,
+      "cache": 70,
+      "flow_layouts": 2,
+      "a11y": false,
+      "samples": 542
+    },
+    {
+      "case": "1m-flow8",
+      "items": 1000000,
+      "viewport": [
+        1120.0,
+        720.0
+      ],
+      "scene_p95_ms": 1.3617,
+      "callback_p95_ms": 22.0834,
+      "peak_mib": 69.9375,
+      "cells": 50,
+      "cache": 70,
+      "flow_layouts": 16,
+      "a11y": false,
+      "samples": 541
+    },
+    {
+      "case": "1m-scroll-flow8",
+      "items": 1000000,
+      "viewport": [
+        1120.0,
+        720.0
+      ],
+      "scene_p95_ms": 3.6272,
+      "callback_p95_ms": 10.0787,
+      "peak_mib": 70.03125,
+      "cells": 50,
+      "cache": 90,
+      "flow_layouts": 16,
+      "a11y": false,
+      "samples": 1081
+    },
+    {
+      "case": "1m-reduced",
+      "items": 1000000,
+      "viewport": [
+        1120.0,
+        720.0
+      ],
+      "scene_p95_ms": null,
+      "callback_p95_ms": null,
+      "peak_mib": 70.4609375,
+      "cells": 50,
+      "cache": 70,
+      "flow_layouts": 16,
+      "a11y": false,
+      "samples": 0
+    },
+    {
+      "case": "1m-idle",
+      "items": 1000000,
+      "viewport": [
+        1120.0,
+        720.0
+      ],
+      "scene_p95_ms": null,
+      "callback_p95_ms": null,
+      "peak_mib": 69.4375,
+      "cells": 50,
+      "cache": 70,
+      "flow_layouts": 0,
+      "a11y": false,
+      "samples": 0
+    },
+    {
+      "case": "1m-wide",
+      "items": 1000000,
+      "viewport": [
+        2048.0,
+        1104.0
+      ],
+      "scene_p95_ms": 8.5577,
+      "callback_p95_ms": 11.621599999999999,
+      "peak_mib": 84.3671875,
+      "cells": 144,
+      "cache": 216,
+      "flow_layouts": 16,
+      "a11y": false,
+      "samples": 1067
+    },
+    {
+      "case": "1m-narrow",
+      "items": 1000000,
+      "viewport": [
+        560.0,
+        440.0
+      ],
+      "scene_p95_ms": 2.1388000000000003,
+      "callback_p95_ms": 10.1732,
+      "peak_mib": 64.65625,
+      "cells": 15,
+      "cache": 35,
+      "flow_layouts": 16,
+      "a11y": false,
+      "samples": 1081
+    },
+    {
+      "case": "real-100k-scroll",
+      "items": 100001,
+      "viewport": [
+        1120.0,
+        720.0
+      ],
+      "scene_p95_ms": 3.0121,
+      "callback_p95_ms": 10.2247,
+      "peak_mib": 72.19921875,
+      "cells": 50,
+      "cache": 90,
+      "flow_layouts": 0,
+      "a11y": false,
+      "samples": 1082
+    },
+    {
+      "case": "selection-integration",
+      "items": 10000000,
+      "viewport": [
+        1120.0,
+        720.0
+      ],
+      "scene_p95_ms": 2.8005,
+      "callback_p95_ms": 11.8014,
+      "peak_mib": 70.81640625,
+      "cells": 60,
+      "cache": 100,
+      "flow_layouts": 0,
+      "a11y": false,
+      "samples": 106
+    }
+  ],
+  "status": "passed against predeclared rendering budgets",
+  "notes": "Scene CPU is not GPU presentation. Null timing means no post-warmup sample. Selection integration uses controller events in a real window, not OS pointer injection."
+}

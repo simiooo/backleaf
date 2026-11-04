@@ -6,7 +6,7 @@ Scope: SIM-919. Constraints: SIM-934. One engineering unit is active at a time.
 | --- | --- | --- |
 | accepted | SIM-921 | User accepted v6 as the implementation baseline on 2026-11-04 |
 | accepted | SIM-948 | v6 feedback incorporated and accepted as baseline |
-| focus_issue | SIM-953 | Selection/state redesign, rubber-band and keyboard selection; v9 OpenPencil verified, native implementation under validation |
+| focus_issue | SIM-953 | Selection/state redesign, rubber-band and keyboard selection; v9 OpenPencil verified, native implementation and installed-window smoke verified; staging prerelease publication in progress |
 | ready_queue | SIM-954 | Real file/blank-space menus, Shell file operations and common shortcuts after SIM-953 delivery |
 | review_queue | SIM-951 | Native GPUI preview deployed and published; unlocked performance and installed-window smoke passed |
 | review_queue | SIM-935 | Technical plan only; native rendering now progresses through SIM-951, broader Windows validation remains open |

@@ -1,0 +1,19 @@
+{
+  "version": "0.1.0-preview.2",
+  "source_commit": "d28e5af81f787fb8257cdce1d484caac667e30c9",
+  "deployed_at_utc": "2026-11-04T05:40:42.7713674Z",
+  "installation": "portable ZIP extracted to isolated staging directory",
+  "staging_path": "D:\\work\\backleaf\\.local\\staging\\0.1.0-preview.2-d28e5af8",
+  "artifact_path": "D:\\work\\backleaf\\.local\\artifacts\\Backleaf-0.1.0-preview.2-candidate-d28e5af8-win-x64.zip",
+  "artifact_sha256": "340269e668c51992c7e605b84c1c87847020f181a73b222406fb5b091e1b3afb",
+  "exe_sha256": "66056e377e68532ca80777b57c0fe957ca972f434b71446ff1b27e8bbb0d647f",
+  "installed_hash_matches": true,
+  "cli_smoke_passed": true,
+  "interactive_smoke_passed": true,
+  "session": {
+    "locked": false,
+    "error": null
+  },
+  "status": "verified candidate; publication metadata added separately",
+  "verified_at_utc": "2026-11-04T06:13:20.993277+00:00"
+}

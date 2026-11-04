@@ -1,0 +1,84 @@
+{
+  "source_commit": "d28e5af81f787fb8257cdce1d484caac667e30c9",
+  "scope": "Completed short-name/system-menu/Tab cases retained from before interruption; remaining final installed candidate paths completed after user resumed.",
+  "cases": [
+    {
+      "case": "content-fit-short-name",
+      "passed": true,
+      "status": "\t\t\t16 文本 已选 1 项",
+      "time": "2026-11-04T05:42:00.604Z"
+    },
+    {
+      "case": "Alt-Space-preserves-file-selection",
+      "passed": true,
+      "status": "\t\t\t16 文本 已选 1 项",
+      "time": "2026-11-04T05:42:09.672Z"
+    },
+    {
+      "case": "Escape-closes-system-menu-with-selection-retained",
+      "passed": true,
+      "status": "\t\t\t16 文本 已选 1 项",
+      "time": "2026-11-04T05:42:19.575Z"
+    },
+    {
+      "case": "Tab-from-focused-grid",
+      "passed": true,
+      "focus": "8 按钮 后退",
+      "note": "After system menu, first Tab reentered the grid; this Tab moved to toolbar",
+      "time": "2026-11-04T05:43:40.777Z"
+    },
+    {
+      "case": "Shift-Tab-to-grid",
+      "passed": true,
+      "focus": "15 选项 (selectable) 文档",
+      "time": "2026-11-04T05:44:06.440Z"
+    },
+    {
+      "case": "dark-surfaces-and-eight-flow-lanes",
+      "passed": true,
+      "time": "2026-11-04T06:10:15.143Z"
+    },
+    {
+      "case": "UIA-full-name-and-path",
+      "passed": true,
+      "name_units": 253,
+      "path_units": 472,
+      "time": "2026-11-04T06:10:50.328Z"
+    },
+    {
+      "case": "ten-million-select-all",
+      "passed": true,
+      "status": "\t\t\t64 文本 已选 10,000,000 项",
+      "time": "2026-11-04T06:11:36.125Z"
+    },
+    {
+      "case": "Ctrl-End-to-final-file",
+      "passed": true,
+      "focus": "144 选项 (selectable) 归档_09999999.pdf",
+      "time": "2026-11-04T06:11:48.527Z"
+    },
+    {
+      "case": "ten-million-sparse-exclusion",
+      "passed": true,
+      "status": "\t\t\t64 文本 已选 9,999,999 项",
+      "time": "2026-11-04T06:11:59.194Z"
+    },
+    {
+      "case": "Alt-Space-preserves-sparse-selection",
+      "passed": true,
+      "status": "\t\t\t64 文本 已选 9,999,999 项",
+      "time": "2026-11-04T06:12:23.056Z"
+    },
+    {
+      "case": "active-flow-minimize-restore",
+      "passed": true,
+      "minimized_at": "2026-11-04T06:12:33.380Z",
+      "restored_at": "2026-11-04T06:13:02.023Z",
+      "native_counter_verification": {
+        "hidden": "154.819s hidden requests=6597 frames=2942",
+        "visible": "183.320s visible requests=6597 frames=2944",
+        "unchanged": true
+      }
+    }
+  ]
+}

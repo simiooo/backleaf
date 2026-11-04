@@ -1,0 +1,95 @@
+{
+  "version": "0.1.0-preview.2",
+  "source_commit": "d28e5af81f787fb8257cdce1d484caac667e30c9",
+  "gpui_revision": "d36a70661471ec64dce230798121d554930d5c60",
+  "recorded_at_utc": "2026-11-04T05:40:34.319259+00:00",
+  "compiler": "rustc 1.99.1 (58cf8f9c3 2026-10-13)",
+  "profile": "release; --locked",
+  "exe_sha256": "66056e377e68532ca80777b57c0fe957ca972f434b71446ff1b27e8bbb0d647f",
+  "exe_bytes": 15118336,
+  "inputs": [
+    {
+      "path": "Cargo.lock",
+      "sha256": "fd2a4f30f19788de52b763bc2f3e1bfd1dd0a0e8a25d5965079ec891a0c969eb"
+    },
+    {
+      "path": "Cargo.toml",
+      "sha256": "c106c864a4d4a3086f6fc137b697d46b7b705f7c5b19ba42206518b66bbfbf5b"
+    },
+    {
+      "path": "design/color-system.json",
+      "sha256": "9f4a7f5cc629c810fdfdfd605e89883e9b76f4e51ba0d1defd3ca1869ce6a944"
+    },
+    {
+      "path": "design/layout-system.json",
+      "sha256": "ea828e0305fc87cdc1b9290b0dd403a867fcf1775188c2cb4783a7836be87daf"
+    },
+    {
+      "path": "rust-toolchain.toml",
+      "sha256": "d13306be0ecda81ce779baa290ffb417380d525928477f16200884b5169cca33"
+    },
+    {
+      "path": "src/layout.rs",
+      "sha256": "462902489aad6f3bca8e87b4d173d78ee85f92141400048a192a2cd840b0b517"
+    },
+    {
+      "path": "src/main.rs",
+      "sha256": "d27e6eb8b2eccb7acf8f119ca67a34e5a5ad0627d4162eaf007667b39dac81a8"
+    },
+    {
+      "path": "src/metrics.rs",
+      "sha256": "43742eb1316c8d8bcf6e5bebf3ca385b969180f6ab5cae377cfd20d3b397a55d"
+    },
+    {
+      "path": "src/model.rs",
+      "sha256": "e914ec09e0d0cb691ef528d39951688aa86d83b645fc47b163997ca2f3a083f8"
+    },
+    {
+      "path": "src/paint.rs",
+      "sha256": "af1cfdaff8dbc00643d3b86b21d07bbd6406aa47a2684bac60726ad9a7af6f6e"
+    },
+    {
+      "path": "src/selectable.rs",
+      "sha256": "fb993352f130e575313b05db58f9d132628efc6164bce9dba19fa0bd674dd786"
+    },
+    {
+      "path": "src/selection.rs",
+      "sha256": "fc4836a14f2e5d5045e061e318647dfb6601be05bf0d65a1fae0415c576e3560"
+    },
+    {
+      "path": "src/selection_smoke.rs",
+      "sha256": "919ddb111511ebf2897d93a7ae6f1acbc61690a5f2826d73d7e21662dd92c43c"
+    },
+    {
+      "path": "src/session.rs",
+      "sha256": "a23fd361753cf3a8a326e218d3885e85e16793aabc848892d4cf7cb3c1ab08d0"
+    },
+    {
+      "path": "src/task_panel.rs",
+      "sha256": "c7beebdf5b42600c56dd54ad3ebc7079a12d35920bb929a986d01b28a6a4f847"
+    },
+    {
+      "path": "src/theme.rs",
+      "sha256": "46d0db0649a1d6d40ca38359d13b0a214d00f838ec5e12002bd6492a5a9c112d"
+    }
+  ],
+  "check_logs": [
+    {
+      "path": "fmt.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "clippy.log",
+      "sha256": "be1bac58f1a7a1f18b160db2e6f259de568cd8df4002d860c16b7973a783f0e5"
+    },
+    {
+      "path": "tests.log",
+      "sha256": "721e42bade2eb284eabd8acd7f278ecfabbad01615df6680047286cdd84ae18c"
+    },
+    {
+      "path": "build.log",
+      "sha256": "33f6855a7c20292fc651fbac1b66869bf5b25e0826c6cf310a4c962bb5458632"
+    }
+  ],
+  "check_scope": "Source checks and CPU model tests only; visible native/staging acceptance is recorded separately."
+}
