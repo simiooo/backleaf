@@ -1,6 +1,6 @@
 # 集中实施批次验证
 
-本机：Windows x64、Rust 1.99.1，GPUI d36a70661471ec64dce230798121d554930d5c60。Release fmt/Clippy/tests/build通过，73项测试。日志和摘要见checks.json；215页v34主稿与v24–v34各版冷重开证明保留在design目录。
+本机：Windows x64、Rust 1.99.1，GPUI d36a70661471ec64dce230798121d554930d5c60。Release fmt/Clippy/tests/build通过，74项测试。日志和摘要见checks.json；215页v34主稿与v24–v34各版冷重开证明保留在design目录。
 
 实际文件测试包含：快照身份一致、同名替换拒绝、父子移动环、目标替换、外部目录通知、中文1/2字/trigram查询及索引改名删除、视图CAS和临时存储故障恢复、窗口revision与共享任务可见性、中文嵌套/空目录ZIP往返、归档不覆盖提交、穿越/ADS/设备名/大小写冲突/取消、7z/RAR4/RAR5语料内容、提交后崩溃身份核对。
 

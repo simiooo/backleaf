@@ -225,10 +225,9 @@ impl Source {
                     if let Some((token, text)) = prefix {
                         // Indexed full names, not the visible/truncated labels. The worker owns this
                         // connection and enumeration; a first match cannot be displaced by later IDs.
-                        let upper = crate::typeahead::successor(&text);
                         let shared=p.clone();let stopped=s.clone();
                         db.progress_handler(2048,Some(move || stopped.load(Ordering::Relaxed) || shared.lock().unwrap().prefix_latest != token))?;
-                        let result = db.query_row("SELECT min(id) FROM files INDEXED BY files_prefix WHERE folded>=?1 AND (?2 IS NULL OR folded<?2)",params![text,upper],|r|r.get::<_,Option<i64>>(0));
+                        let result = prefix_match(&db, &text);
                         db.progress_handler(0,None::<fn()->bool>)?;
                         if let Ok(id)=result {
                             let mut lock=p.lock().unwrap();
@@ -473,6 +472,21 @@ fn cut_matches(db: &Connection, path: &std::path::Path) -> bool {
         })
 }
 
+fn prefix_match(db: &Connection, text: &str) -> rusqlite::Result<Option<i64>> {
+    match crate::typeahead::successor(text) {
+        Some(upper) => db.query_row(
+            "SELECT min(id) FROM files INDEXED BY files_prefix WHERE folded>=?1 AND folded<?2",
+            params![text, upper],
+            |r| r.get(0),
+        ),
+        None => db.query_row(
+            "SELECT min(id) FROM files INDEXED BY files_prefix WHERE folded>=?1",
+            [text],
+            |r| r.get(0),
+        ),
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -583,5 +597,29 @@ mod tests {
                 .collect::<Vec<_>>(),
             units
         );
+    }
+}
+#[cfg(test)]
+mod prefix_tests {
+    use super::*;
+    #[test]
+    fn prefix_bounds_find_first_display_order_in_unsorted_unicode_names() {
+        let db = Connection::open_in_memory().unwrap();
+        db.execute_batch("CREATE TABLE files(id INTEGER PRIMARY KEY,folded TEXT NOT NULL);CREATE INDEX files_prefix ON files(folded,id);").unwrap();
+        for (id, name) in [
+            (0, "z-last.txt"),
+            (1, "alpha-z.txt"),
+            (2, "beta.txt"),
+            (3, "alpha-a.txt"),
+            (4, "文档.txt"),
+            (5, "文集.txt"),
+        ] {
+            db.execute("INSERT INTO files VALUES(?1,?2)", params![id, name])
+                .unwrap();
+        }
+        assert_eq!(prefix_match(&db, "alpha").unwrap(), Some(1));
+        assert_eq!(prefix_match(&db, "文").unwrap(), Some(4));
+        assert_eq!(prefix_match(&db, "文集").unwrap(), Some(5));
+        assert_eq!(prefix_match(&db, "absent").unwrap(), None);
     }
 }

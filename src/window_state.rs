@@ -89,7 +89,9 @@ fn open(directory: &Path) -> anyhow::Result<Connection> {
     Ok(db)
 }
 pub fn load(directory: &Path) -> anyhow::Result<Vec<Restored>> {
-    let db = open(directory)?;
+    let mut connection = open(directory)?;
+    // Claim the restore group before another process can read the same dead owner.
+    let db = connection.transaction_with_behavior(rusqlite::TransactionBehavior::Immediate)?;
     let mut q=db.prepare("SELECT id,instance,pid,created,revision,closed,state FROM windows ORDER BY updated DESC LIMIT 256")?;
     let rows = q
         .query_map([], |r| {
@@ -104,6 +106,7 @@ pub fn load(directory: &Path) -> anyhow::Result<Vec<Restored>> {
             ))
         })?
         .collect::<Result<Vec<_>, _>>()?;
+    drop(q);
     if rows
         .iter()
         .any(|(_, _, pid, created, _, closed, _)| !*closed && active(*pid, *created))
@@ -128,10 +131,19 @@ pub fn load(directory: &Path) -> anyhow::Result<Vec<Restored>> {
         anyhow::ensure!(state.bounds.iter().all(|v| v.is_finite()), "窗口位置无效");
         restored.push(Restored {
             id: id.clone(),
-            revision: *revision,
+            revision: revision
+                .checked_add(1)
+                .ok_or_else(|| anyhow::anyhow!("窗口版本超出范围"))?,
             state,
         });
     }
+    let pid = std::process::id();
+    let created = process_created(pid).ok_or_else(|| anyhow::anyhow!("无法核实启动进程身份"))?;
+    for window in &restored {
+        db.execute("UPDATE windows SET instance=?1,pid=?2,created=?3,revision=?4,closed=0,updated=(SELECT coalesce(max(updated),0)+1 FROM windows) WHERE id=?5",
+            params![instance(),pid,i64::try_from(created)?,i64::try_from(window.revision)?,window.id])?;
+    }
+    db.commit()?;
     Ok(restored)
 }
 struct Save {
@@ -244,7 +256,11 @@ mod tests {
         wait(1);
         let rows = load(&f.0).unwrap();
         assert_eq!(rows.len(), 1);
-        assert_eq!(rows[0].revision, 2);
+        assert_eq!(rows[0].revision, 3);
         assert_eq!(rows[0].state, state);
+        assert!(
+            load(&f.0).unwrap().is_empty(),
+            "a concurrent instance must not claim the same restored window"
+        );
     }
 }

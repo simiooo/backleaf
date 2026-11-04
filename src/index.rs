@@ -385,9 +385,10 @@ impl Service {
         std::thread::Builder::new().name("backleaf-index".into()).spawn(move||{
             let result=(||->anyhow::Result<()> {
                 let mut db=open(&directory)?;let _apartment=crate::operations::windows::Apartment::new()?;let directory=directory.canonicalize()?;let (changes,rx)=mpsc::sync_channel(128);
-                let mut owner=None;let mut watches=std::collections::BTreeMap::<i64,(PathBuf,crate::index_watch::Watch)>::new();let mut last=Instant::now()-Duration::from_secs(2);let mut sent=String::new();let mut last_reconcile=Instant::now();
+                let mut owner=None;let mut watches=std::collections::BTreeMap::<i64,(PathBuf,crate::index_watch::Watch)>::new();let mut last=Instant::now()-Duration::from_secs(2);let mut sent=String::new();let mut owner_attempt=Instant::now()-Duration::from_secs(2);let mut last_reconcile=Instant::now();
                 while !halted.load(Ordering::Acquire)&&!tx.is_closed(){
-                    if owner.is_none(){
+                    if owner.is_none() && owner_attempt.elapsed() >= Duration::from_secs(2) {
+                        owner_attempt=Instant::now();
                         use std::os::windows::ffi::OsStrExt;use windows::{core::PCWSTR,Win32::Storage::FileSystem::*};
                         let lock=directory.join("index-writer.lock").as_os_str().encode_wide().chain(Some(0)).collect::<Vec<_>>();
                         owner=unsafe{CreateFileW(PCWSTR(lock.as_ptr()),FILE_GENERIC_READ.0|FILE_GENERIC_WRITE.0,FILE_SHARE_MODE(0),None,OPEN_ALWAYS,FILE_ATTRIBUTE_NORMAL,None)}.ok().map(WriterLock);
@@ -414,7 +415,7 @@ impl Service {
                         for (id,(path,watch)) in &watches{if watch.overflow.swap(false,Ordering::AcqRel){enqueue(&db,*id,path,true)?;}}
                         let next=db.query_row("SELECT root,path,crawl FROM frontier ORDER BY crawl,root,path LIMIT 1",[],|r|Ok((r.get::<_,i64>(0)?,decode_path(&r.get::<_,Vec<u8>>(1)?),r.get::<_,bool>(2)?))).optional()?;
                         if let Some((root,path,crawl))=next{reconcile(&mut db,root,&path,crawl,&directory,&halted,&tx)?;last_reconcile=Instant::now();}
-                        db.execute("UPDATE roots SET building=EXISTS(SELECT 1 FROM frontier f WHERE f.root=roots.id)",[])?;
+                        db.execute("UPDATE roots SET building=EXISTS(SELECT 1 FROM frontier f WHERE f.root=roots.id) WHERE building<>EXISTS(SELECT 1 FROM frontier f WHERE f.root=roots.id)",[])?;
                         // Remote/unsupported notifications additionally reconcile after idle time.
                         if last_reconcile.elapsed()>Duration::from_secs(300){for(id,(path,_))in&watches{let text=path.to_string_lossy();if text.starts_with(r"\\?\UNC\"){enqueue(&db,*id,path,true)?;}}db.execute("DELETE FROM objects WHERE identity IN(SELECT identity FROM objects o WHERE NOT EXISTS(SELECT 1 FROM entries e WHERE e.identity=o.identity)LIMIT 4096)",[])?;let _=db.execute_batch("PRAGMA wal_checkpoint(PASSIVE);");last_reconcile=Instant::now();}
                     }

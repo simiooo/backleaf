@@ -4,11 +4,11 @@
     "bytes": 449
   },
   "batch-build.log": {
-    "sha256": "9632aa721f77cc7999cd9c980e36c42042d0d425cd1d66ff1ddfbb160ff8c13c",
+    "sha256": "d9eb1c5f5de64a2a9f9a1d55ab439e4d6a08aaa2041232d3e75a1d0bda0245e5",
     "bytes": 124
   },
   "batch-clippy.log": {
-    "sha256": "453f040de093da9ff40de6c35b9539894e377e71f44eb9bfb92007d48a204631",
+    "sha256": "993a461f764eaac4ec18a4f26f078356cf31cb791f4f6083cca29827eaeb58d7",
     "bytes": 123
   },
   "batch-fmt.log": {
@@ -20,8 +20,8 @@
     "bytes": 48
   },
   "batch-tests.log": {
-    "sha256": "acca8d527f3b218d94a1630ce286abaaabe4179212de1bda2c9f84496d2f86b0",
-    "bytes": 7383
+    "sha256": "ef6c19bba746097b2b50b34e0fd9d2ff8ff4dcaeae8347840b4d4b3125a3399a",
+    "bytes": 7482
   },
   "design": [
     {
@@ -442,8 +442,13 @@
       }
     }
   ],
-  "verified_at": "2026-11-04T19:42:42.523385+00:00",
+  "verified_at": "2026-11-04T19:54:50.660927+00:00",
   "visible_ui": "Blocked: Windows lock screen observed. Accessibility tree is not visual acceptance.",
   "performance": "Not measured on this batch. Previous release measurements are not reused.",
-  "test_scope": "73 local Release tests including real Win32 file identity, native archive subprocess and fixed upstream archive corpus; not NVDA/mixed-DPI/visible input validation."
+  "test_scope": "74 local Release tests including real Win32 file identity, native archive subprocess and fixed upstream archive corpus; not NVDA/mixed-DPI/visible input validation.",
+  "followup_fixes": [
+    "Prefix range upper bound no longer hidden behind an OR; first display-order Unicode prefix matching tested.",
+    "Idle index writes and writer lock retries reduced.",
+    "Restore group atomically claimed in an IMMEDIATE transaction before opening windows; duplicate instance cannot reuse claimed window IDs."
+  ]
 }
