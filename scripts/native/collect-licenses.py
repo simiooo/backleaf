@@ -2,7 +2,7 @@
 import argparse,json,pathlib,re,shutil,subprocess
 p=argparse.ArgumentParser();p.add_argument('output',type=pathlib.Path);a=p.parse_args()
 out=a.output.resolve();out.mkdir(parents=True,exist_ok=True)
-def cargo(*args):return subprocess.run(['cargo','+stable',*args],check=True,capture_output=True,encoding='utf-8').stdout
+def cargo(*args):return subprocess.run(['cargo',*args,'--locked'],check=True,capture_output=True,encoding='utf-8').stdout
 tree=cargo('tree','--target','x86_64-pc-windows-msvc','--edges','normal,build','--prefix','none','--format','{p}')
 used=set()
 for line in tree.splitlines():
