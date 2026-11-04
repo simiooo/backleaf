@@ -1,0 +1,1620 @@
+{
+  "version": "v8",
+  "method": "actual reopened OpenPencil node geometry, not JSX intentions",
+  "records": [
+    {
+      "page": "45 · v8 视觉系统 / 表面、语义与重复",
+      "name": "File state / 文档",
+      "role": "File state",
+      "width": 96,
+      "height": 100,
+      "padding": {
+        "top": 2,
+        "right": 6,
+        "bottom": 2,
+        "left": 6
+      },
+      "gap": 4,
+      "radius": 6,
+      "iconInset": {
+        "top": 8,
+        "left": 26
+      }
+    },
+    {
+      "page": "45 · v8 视觉系统 / 表面、语义与重复",
+      "name": "File state / 图片",
+      "role": "File state",
+      "width": 96,
+      "height": 100,
+      "padding": {
+        "top": 2,
+        "right": 6,
+        "bottom": 2,
+        "left": 6
+      },
+      "gap": 4,
+      "radius": 6,
+      "iconInset": {
+        "top": 8,
+        "left": 26
+      }
+    },
+    {
+      "page": "45 · v8 视觉系统 / 表面、语义与重复",
+      "name": "File state / 研究笔记.pdf",
+      "role": "File state",
+      "width": 96,
+      "height": 100,
+      "padding": {
+        "top": 2,
+        "right": 6,
+        "bottom": 2,
+        "left": 6
+      },
+      "gap": 4,
+      "radius": 6,
+      "iconInset": {
+        "top": 8,
+        "left": 26
+      }
+    },
+    {
+      "page": "45 · v8 视觉系统 / 表面、语义与重复",
+      "name": "Floating menu / visual-system specimen",
+      "role": "Floating menu",
+      "width": 248,
+      "height": 280,
+      "padding": {
+        "top": 8,
+        "right": 4,
+        "bottom": 8,
+        "left": 4
+      },
+      "gap": 0,
+      "radius": 6
+    },
+    {
+      "page": "45 · v8 视觉系统 / 表面、语义与重复",
+      "name": "Menu row",
+      "role": "Menu row",
+      "width": 240,
+      "height": 30,
+      "padding": {
+        "top": 0,
+        "right": 8,
+        "bottom": 0,
+        "left": 8
+      },
+      "gap": 0,
+      "radius": 4
+    },
+    {
+      "page": "45 · v8 视觉系统 / 表面、语义与重复",
+      "name": "Menu row",
+      "role": "Menu row",
+      "width": 240,
+      "height": 30,
+      "padding": {
+        "top": 0,
+        "right": 8,
+        "bottom": 0,
+        "left": 8
+      },
+      "gap": 0,
+      "radius": 4
+    },
+    {
+      "page": "45 · v8 视觉系统 / 表面、语义与重复",
+      "name": "Menu row",
+      "role": "Menu row",
+      "width": 240,
+      "height": 30,
+      "padding": {
+        "top": 0,
+        "right": 8,
+        "bottom": 0,
+        "left": 8
+      },
+      "gap": 0,
+      "radius": 4
+    },
+    {
+      "page": "45 · v8 视觉系统 / 表面、语义与重复",
+      "name": "Menu row",
+      "role": "Menu row",
+      "width": 240,
+      "height": 30,
+      "padding": {
+        "top": 0,
+        "right": 8,
+        "bottom": 0,
+        "left": 8
+      },
+      "gap": 0,
+      "radius": 4
+    },
+    {
+      "page": "45 · v8 视觉系统 / 表面、语义与重复",
+      "name": "Menu row",
+      "role": "Menu row",
+      "width": 240,
+      "height": 30,
+      "padding": {
+        "top": 0,
+        "right": 8,
+        "bottom": 0,
+        "left": 8
+      },
+      "gap": 0,
+      "radius": 4
+    },
+    {
+      "page": "45 · v8 视觉系统 / 表面、语义与重复",
+      "name": "Menu row",
+      "role": "Menu row",
+      "width": 240,
+      "height": 30,
+      "padding": {
+        "top": 0,
+        "right": 8,
+        "bottom": 0,
+        "left": 8
+      },
+      "gap": 0,
+      "radius": 4
+    },
+    {
+      "page": "45 · v8 视觉系统 / 表面、语义与重复",
+      "name": "Menu row",
+      "role": "Menu row",
+      "width": 240,
+      "height": 30,
+      "padding": {
+        "top": 0,
+        "right": 8,
+        "bottom": 0,
+        "left": 8
+      },
+      "gap": 0,
+      "radius": 4
+    },
+    {
+      "page": "45 · v8 视觉系统 / 表面、语义与重复",
+      "name": "Menu row",
+      "role": "Menu row",
+      "width": 240,
+      "height": 30,
+      "padding": {
+        "top": 0,
+        "right": 8,
+        "bottom": 0,
+        "left": 8
+      },
+      "gap": 0,
+      "radius": 4
+    },
+    {
+      "page": "46 · v8 状态矩阵 / 明色",
+      "name": "File state / 文档",
+      "role": "File state",
+      "width": 96,
+      "height": 100,
+      "padding": {
+        "top": 2,
+        "right": 6,
+        "bottom": 2,
+        "left": 6
+      },
+      "gap": 4,
+      "radius": 6,
+      "iconInset": {
+        "top": 8,
+        "left": 26
+      }
+    },
+    {
+      "page": "46 · v8 状态矩阵 / 明色",
+      "name": "File state / 文档",
+      "role": "File state",
+      "width": 96,
+      "height": 100,
+      "padding": {
+        "top": 2,
+        "right": 6,
+        "bottom": 2,
+        "left": 6
+      },
+      "gap": 4,
+      "radius": 6,
+      "iconInset": {
+        "top": 8,
+        "left": 26
+      }
+    },
+    {
+      "page": "46 · v8 状态矩阵 / 明色",
+      "name": "File state / 文档",
+      "role": "File state",
+      "width": 96,
+      "height": 100,
+      "padding": {
+        "top": 2,
+        "right": 6,
+        "bottom": 2,
+        "left": 6
+      },
+      "gap": 4,
+      "radius": 6,
+      "iconInset": {
+        "top": 8,
+        "left": 26
+      }
+    },
+    {
+      "page": "46 · v8 状态矩阵 / 明色",
+      "name": "File state / 文档",
+      "role": "File state",
+      "width": 96,
+      "height": 100,
+      "padding": {
+        "top": 2,
+        "right": 6,
+        "bottom": 2,
+        "left": 6
+      },
+      "gap": 4,
+      "radius": 6,
+      "iconInset": {
+        "top": 8,
+        "left": 26
+      }
+    },
+    {
+      "page": "46 · v8 状态矩阵 / 明色",
+      "name": "File state / 文档",
+      "role": "File state",
+      "width": 96,
+      "height": 100,
+      "padding": {
+        "top": 2,
+        "right": 6,
+        "bottom": 2,
+        "left": 6
+      },
+      "gap": 4,
+      "radius": 6,
+      "iconInset": {
+        "top": 8,
+        "left": 26
+      }
+    },
+    {
+      "page": "46 · v8 状态矩阵 / 明色",
+      "name": "File state / 文档",
+      "role": "File state",
+      "width": 96,
+      "height": 100,
+      "padding": {
+        "top": 2,
+        "right": 6,
+        "bottom": 2,
+        "left": 6
+      },
+      "gap": 4,
+      "radius": 6,
+      "iconInset": {
+        "top": 8,
+        "left": 26
+      }
+    },
+    {
+      "page": "46 · v8 状态矩阵 / 明色",
+      "name": "File state / 文档",
+      "role": "File state",
+      "width": 96,
+      "height": 100,
+      "padding": {
+        "top": 2,
+        "right": 6,
+        "bottom": 2,
+        "left": 6
+      },
+      "gap": 4,
+      "radius": 6,
+      "iconInset": {
+        "top": 8,
+        "left": 26
+      }
+    },
+    {
+      "page": "46 · v8 状态矩阵 / 明色",
+      "name": "File state / 文档",
+      "role": "File state",
+      "width": 96,
+      "height": 100,
+      "padding": {
+        "top": 2,
+        "right": 6,
+        "bottom": 2,
+        "left": 6
+      },
+      "gap": 4,
+      "radius": 6,
+      "iconInset": {
+        "top": 8,
+        "left": 26
+      }
+    },
+    {
+      "page": "46 · v8 状态矩阵 / 明色",
+      "name": "File state / 文档",
+      "role": "File state",
+      "width": 96,
+      "height": 100,
+      "padding": {
+        "top": 2,
+        "right": 6,
+        "bottom": 2,
+        "left": 6
+      },
+      "gap": 4,
+      "radius": 6,
+      "iconInset": {
+        "top": 8,
+        "left": 26
+      }
+    },
+    {
+      "page": "46 · v8 状态矩阵 / 明色",
+      "name": "Primary action",
+      "role": "Primary action",
+      "width": 57,
+      "height": 32,
+      "padding": {
+        "top": 0,
+        "right": 16,
+        "bottom": 0,
+        "left": 16
+      },
+      "gap": 0,
+      "radius": 4
+    },
+    {
+      "page": "46 · v8 状态矩阵 / 明色",
+      "name": "Hover action",
+      "role": "Hover action",
+      "width": 49,
+      "height": 32,
+      "padding": {
+        "top": 0,
+        "right": 12,
+        "bottom": 0,
+        "left": 12
+      },
+      "gap": 0,
+      "radius": 4
+    },
+    {
+      "page": "46 · v8 状态矩阵 / 明色",
+      "name": "Input focus",
+      "role": "Input focus",
+      "width": 220,
+      "height": 32,
+      "padding": {
+        "top": 0,
+        "right": 8,
+        "bottom": 0,
+        "left": 8
+      },
+      "gap": 0,
+      "radius": 4
+    },
+    {
+      "page": "47 · v8 状态矩阵 / 深色",
+      "name": "File state / 文档",
+      "role": "File state",
+      "width": 96,
+      "height": 100,
+      "padding": {
+        "top": 2,
+        "right": 6,
+        "bottom": 2,
+        "left": 6
+      },
+      "gap": 4,
+      "radius": 6,
+      "iconInset": {
+        "top": 8,
+        "left": 26
+      }
+    },
+    {
+      "page": "47 · v8 状态矩阵 / 深色",
+      "name": "File state / 文档",
+      "role": "File state",
+      "width": 96,
+      "height": 100,
+      "padding": {
+        "top": 2,
+        "right": 6,
+        "bottom": 2,
+        "left": 6
+      },
+      "gap": 4,
+      "radius": 6,
+      "iconInset": {
+        "top": 8,
+        "left": 26
+      }
+    },
+    {
+      "page": "47 · v8 状态矩阵 / 深色",
+      "name": "File state / 文档",
+      "role": "File state",
+      "width": 96,
+      "height": 100,
+      "padding": {
+        "top": 2,
+        "right": 6,
+        "bottom": 2,
+        "left": 6
+      },
+      "gap": 4,
+      "radius": 6,
+      "iconInset": {
+        "top": 8,
+        "left": 26
+      }
+    },
+    {
+      "page": "47 · v8 状态矩阵 / 深色",
+      "name": "File state / 文档",
+      "role": "File state",
+      "width": 96,
+      "height": 100,
+      "padding": {
+        "top": 2,
+        "right": 6,
+        "bottom": 2,
+        "left": 6
+      },
+      "gap": 4,
+      "radius": 6,
+      "iconInset": {
+        "top": 8,
+        "left": 26
+      }
+    },
+    {
+      "page": "47 · v8 状态矩阵 / 深色",
+      "name": "File state / 文档",
+      "role": "File state",
+      "width": 96,
+      "height": 100,
+      "padding": {
+        "top": 2,
+        "right": 6,
+        "bottom": 2,
+        "left": 6
+      },
+      "gap": 4,
+      "radius": 6,
+      "iconInset": {
+        "top": 8,
+        "left": 26
+      }
+    },
+    {
+      "page": "47 · v8 状态矩阵 / 深色",
+      "name": "File state / 文档",
+      "role": "File state",
+      "width": 96,
+      "height": 100,
+      "padding": {
+        "top": 2,
+        "right": 6,
+        "bottom": 2,
+        "left": 6
+      },
+      "gap": 4,
+      "radius": 6,
+      "iconInset": {
+        "top": 8,
+        "left": 26
+      }
+    },
+    {
+      "page": "47 · v8 状态矩阵 / 深色",
+      "name": "File state / 文档",
+      "role": "File state",
+      "width": 96,
+      "height": 100,
+      "padding": {
+        "top": 2,
+        "right": 6,
+        "bottom": 2,
+        "left": 6
+      },
+      "gap": 4,
+      "radius": 6,
+      "iconInset": {
+        "top": 8,
+        "left": 26
+      }
+    },
+    {
+      "page": "47 · v8 状态矩阵 / 深色",
+      "name": "File state / 文档",
+      "role": "File state",
+      "width": 96,
+      "height": 100,
+      "padding": {
+        "top": 2,
+        "right": 6,
+        "bottom": 2,
+        "left": 6
+      },
+      "gap": 4,
+      "radius": 6,
+      "iconInset": {
+        "top": 8,
+        "left": 26
+      }
+    },
+    {
+      "page": "47 · v8 状态矩阵 / 深色",
+      "name": "File state / 文档",
+      "role": "File state",
+      "width": 96,
+      "height": 100,
+      "padding": {
+        "top": 2,
+        "right": 6,
+        "bottom": 2,
+        "left": 6
+      },
+      "gap": 4,
+      "radius": 6,
+      "iconInset": {
+        "top": 8,
+        "left": 26
+      }
+    },
+    {
+      "page": "47 · v8 状态矩阵 / 深色",
+      "name": "Primary action",
+      "role": "Primary action",
+      "width": 57,
+      "height": 32,
+      "padding": {
+        "top": 0,
+        "right": 16,
+        "bottom": 0,
+        "left": 16
+      },
+      "gap": 0,
+      "radius": 4
+    },
+    {
+      "page": "47 · v8 状态矩阵 / 深色",
+      "name": "Hover action",
+      "role": "Hover action",
+      "width": 49,
+      "height": 32,
+      "padding": {
+        "top": 0,
+        "right": 12,
+        "bottom": 0,
+        "left": 12
+      },
+      "gap": 0,
+      "radius": 4
+    },
+    {
+      "page": "47 · v8 状态矩阵 / 深色",
+      "name": "Input focus",
+      "role": "Input focus",
+      "width": 220,
+      "height": 32,
+      "padding": {
+        "top": 0,
+        "right": 8,
+        "bottom": 0,
+        "left": 8
+      },
+      "gap": 0,
+      "radius": 4
+    },
+    {
+      "page": "48 · v8 文件选择 / 单一浅色状态层",
+      "name": "File state / 文档",
+      "role": "File state",
+      "width": 92.36363983154297,
+      "height": 100,
+      "padding": {
+        "top": 2,
+        "right": 6,
+        "bottom": 2,
+        "left": 6
+      },
+      "gap": 4,
+      "radius": 6,
+      "iconInset": {
+        "top": 8,
+        "left": 24.181819915771484
+      }
+    },
+    {
+      "page": "48 · v8 文件选择 / 单一浅色状态层",
+      "name": "File state / 图片",
+      "role": "File state",
+      "width": 92.36363983154297,
+      "height": 100,
+      "padding": {
+        "top": 2,
+        "right": 6,
+        "bottom": 2,
+        "left": 6
+      },
+      "gap": 4,
+      "radius": 6,
+      "iconInset": {
+        "top": 8,
+        "left": 24.181819915771484
+      }
+    },
+    {
+      "page": "48 · v8 文件选择 / 单一浅色状态层",
+      "name": "File state / 设计资料",
+      "role": "File state",
+      "width": 92.36363983154297,
+      "height": 100,
+      "padding": {
+        "top": 2,
+        "right": 6,
+        "bottom": 2,
+        "left": 6
+      },
+      "gap": 4,
+      "radius": 6,
+      "iconInset": {
+        "top": 8,
+        "left": 24.181819915771484
+      }
+    },
+    {
+      "page": "48 · v8 文件选择 / 单一浅色状态层",
+      "name": "File state / 研究笔记.pdf",
+      "role": "File state",
+      "width": 92.36363983154297,
+      "height": 100,
+      "padding": {
+        "top": 2,
+        "right": 6,
+        "bottom": 2,
+        "left": 6
+      },
+      "gap": 4,
+      "radius": 6,
+      "iconInset": {
+        "top": 8,
+        "left": 24.181819915771484
+      }
+    },
+    {
+      "page": "48 · v8 文件选择 / 单一浅色状态层",
+      "name": "File state / 项目研究记录_最终核对稿.pdf",
+      "role": "File state",
+      "width": 92.36363983154297,
+      "height": 100,
+      "padding": {
+        "top": 2,
+        "right": 6,
+        "bottom": 2,
+        "left": 6
+      },
+      "gap": 4,
+      "radius": 6,
+      "iconInset": {
+        "top": 8,
+        "left": 24.181819915771484
+      }
+    },
+    {
+      "page": "48 · v8 文件选择 / 单一浅色状态层",
+      "name": "File state / 预算.xlsx",
+      "role": "File state",
+      "width": 92.36363983154297,
+      "height": 100,
+      "padding": {
+        "top": 2,
+        "right": 6,
+        "bottom": 2,
+        "left": 6
+      },
+      "gap": 4,
+      "radius": 6,
+      "iconInset": {
+        "top": 8,
+        "left": 24.181819915771484
+      }
+    },
+    {
+      "page": "48 · v8 文件选择 / 单一浅色状态层",
+      "name": "File state / 归档",
+      "role": "File state",
+      "width": 92.36363983154297,
+      "height": 100,
+      "padding": {
+        "top": 2,
+        "right": 6,
+        "bottom": 2,
+        "left": 6
+      },
+      "gap": 4,
+      "radius": 6,
+      "iconInset": {
+        "top": 8,
+        "left": 24.181819915771484
+      }
+    },
+    {
+      "page": "48 · v8 文件选择 / 单一浅色状态层",
+      "name": "File state / 收据.pdf",
+      "role": "File state",
+      "width": 92.36363983154297,
+      "height": 100,
+      "padding": {
+        "top": 2,
+        "right": 6,
+        "bottom": 2,
+        "left": 6
+      },
+      "gap": 4,
+      "radius": 6,
+      "iconInset": {
+        "top": 8,
+        "left": 24.181819915771484
+      }
+    },
+    {
+      "page": "48 · v8 文件选择 / 单一浅色状态层",
+      "name": "File state / 旅行计划",
+      "role": "File state",
+      "width": 92.36363983154297,
+      "height": 100,
+      "padding": {
+        "top": 2,
+        "right": 6,
+        "bottom": 2,
+        "left": 6
+      },
+      "gap": 4,
+      "radius": 6,
+      "iconInset": {
+        "top": 8,
+        "left": 24.181819915771484
+      }
+    },
+    {
+      "page": "48 · v8 文件选择 / 单一浅色状态层",
+      "name": "File state / 个人资料",
+      "role": "File state",
+      "width": 92.36363983154297,
+      "height": 100,
+      "padding": {
+        "top": 2,
+        "right": 6,
+        "bottom": 2,
+        "left": 6
+      },
+      "gap": 4,
+      "radius": 6,
+      "iconInset": {
+        "top": 8,
+        "left": 24.181819915771484
+      }
+    },
+    {
+      "page": "48 · v8 文件选择 / 单一浅色状态层",
+      "name": "File state / 合同.pdf",
+      "role": "File state",
+      "width": 92.36363983154297,
+      "height": 100,
+      "padding": {
+        "top": 2,
+        "right": 6,
+        "bottom": 2,
+        "left": 6
+      },
+      "gap": 4,
+      "radius": 6,
+      "iconInset": {
+        "top": 8,
+        "left": 24.181819915771484
+      }
+    },
+    {
+      "page": "48 · v8 文件选择 / 单一浅色状态层",
+      "name": "File state / 参考资料",
+      "role": "File state",
+      "width": 92.36363983154297,
+      "height": 100,
+      "padding": {
+        "top": 2,
+        "right": 6,
+        "bottom": 2,
+        "left": 6
+      },
+      "gap": 4,
+      "radius": 6,
+      "iconInset": {
+        "top": 8,
+        "left": 24.181819915771484
+      }
+    },
+    {
+      "page": "48 · v8 文件选择 / 单一浅色状态层",
+      "name": "File state / 拍摄计划",
+      "role": "File state",
+      "width": 92.36363983154297,
+      "height": 100,
+      "padding": {
+        "top": 2,
+        "right": 6,
+        "bottom": 2,
+        "left": 6
+      },
+      "gap": 4,
+      "radius": 6,
+      "iconInset": {
+        "top": 8,
+        "left": 24.181819915771484
+      }
+    },
+    {
+      "page": "48 · v8 文件选择 / 单一浅色状态层",
+      "name": "File state / 会议记录.pdf",
+      "role": "File state",
+      "width": 92.36363983154297,
+      "height": 100,
+      "padding": {
+        "top": 2,
+        "right": 6,
+        "bottom": 2,
+        "left": 6
+      },
+      "gap": 4,
+      "radius": 6,
+      "iconInset": {
+        "top": 8,
+        "left": 24.181819915771484
+      }
+    },
+    {
+      "page": "48 · v8 文件选择 / 单一浅色状态层",
+      "name": "File state / 读书笔记",
+      "role": "File state",
+      "width": 92.36363983154297,
+      "height": 100,
+      "padding": {
+        "top": 2,
+        "right": 6,
+        "bottom": 2,
+        "left": 6
+      },
+      "gap": 4,
+      "radius": 6,
+      "iconInset": {
+        "top": 8,
+        "left": 24.181819915771484
+      }
+    },
+    {
+      "page": "49 · v8 浮层 / 与内容层区分",
+      "name": "File state / 文档",
+      "role": "File state",
+      "width": 92.36363983154297,
+      "height": 100,
+      "padding": {
+        "top": 2,
+        "right": 6,
+        "bottom": 2,
+        "left": 6
+      },
+      "gap": 4,
+      "radius": 6,
+      "iconInset": {
+        "top": 8,
+        "left": 24.181819915771484
+      }
+    },
+    {
+      "page": "49 · v8 浮层 / 与内容层区分",
+      "name": "File state / 图片",
+      "role": "File state",
+      "width": 92.36363983154297,
+      "height": 100,
+      "padding": {
+        "top": 2,
+        "right": 6,
+        "bottom": 2,
+        "left": 6
+      },
+      "gap": 4,
+      "radius": 6,
+      "iconInset": {
+        "top": 8,
+        "left": 24.181819915771484
+      }
+    },
+    {
+      "page": "49 · v8 浮层 / 与内容层区分",
+      "name": "File state / 设计资料",
+      "role": "File state",
+      "width": 92.36363983154297,
+      "height": 100,
+      "padding": {
+        "top": 2,
+        "right": 6,
+        "bottom": 2,
+        "left": 6
+      },
+      "gap": 4,
+      "radius": 6,
+      "iconInset": {
+        "top": 8,
+        "left": 24.181819915771484
+      }
+    },
+    {
+      "page": "49 · v8 浮层 / 与内容层区分",
+      "name": "File state / 研究笔记.pdf",
+      "role": "File state",
+      "width": 92.36363983154297,
+      "height": 100,
+      "padding": {
+        "top": 2,
+        "right": 6,
+        "bottom": 2,
+        "left": 6
+      },
+      "gap": 4,
+      "radius": 6,
+      "iconInset": {
+        "top": 8,
+        "left": 24.181819915771484
+      }
+    },
+    {
+      "page": "49 · v8 浮层 / 与内容层区分",
+      "name": "File state / 项目研究记录_最终核对稿.pdf",
+      "role": "File state",
+      "width": 92.36363983154297,
+      "height": 100,
+      "padding": {
+        "top": 2,
+        "right": 6,
+        "bottom": 2,
+        "left": 6
+      },
+      "gap": 4,
+      "radius": 6,
+      "iconInset": {
+        "top": 8,
+        "left": 24.181819915771484
+      }
+    },
+    {
+      "page": "49 · v8 浮层 / 与内容层区分",
+      "name": "File state / 预算.xlsx",
+      "role": "File state",
+      "width": 92.36363983154297,
+      "height": 100,
+      "padding": {
+        "top": 2,
+        "right": 6,
+        "bottom": 2,
+        "left": 6
+      },
+      "gap": 4,
+      "radius": 6,
+      "iconInset": {
+        "top": 8,
+        "left": 24.181819915771484
+      }
+    },
+    {
+      "page": "49 · v8 浮层 / 与内容层区分",
+      "name": "File state / 归档",
+      "role": "File state",
+      "width": 92.36363983154297,
+      "height": 100,
+      "padding": {
+        "top": 2,
+        "right": 6,
+        "bottom": 2,
+        "left": 6
+      },
+      "gap": 4,
+      "radius": 6,
+      "iconInset": {
+        "top": 8,
+        "left": 24.181819915771484
+      }
+    },
+    {
+      "page": "49 · v8 浮层 / 与内容层区分",
+      "name": "File state / 收据.pdf",
+      "role": "File state",
+      "width": 92.36363983154297,
+      "height": 100,
+      "padding": {
+        "top": 2,
+        "right": 6,
+        "bottom": 2,
+        "left": 6
+      },
+      "gap": 4,
+      "radius": 6,
+      "iconInset": {
+        "top": 8,
+        "left": 24.181819915771484
+      }
+    },
+    {
+      "page": "49 · v8 浮层 / 与内容层区分",
+      "name": "File state / 旅行计划",
+      "role": "File state",
+      "width": 92.36363983154297,
+      "height": 100,
+      "padding": {
+        "top": 2,
+        "right": 6,
+        "bottom": 2,
+        "left": 6
+      },
+      "gap": 4,
+      "radius": 6,
+      "iconInset": {
+        "top": 8,
+        "left": 24.181819915771484
+      }
+    },
+    {
+      "page": "49 · v8 浮层 / 与内容层区分",
+      "name": "File state / 个人资料",
+      "role": "File state",
+      "width": 92.36363983154297,
+      "height": 100,
+      "padding": {
+        "top": 2,
+        "right": 6,
+        "bottom": 2,
+        "left": 6
+      },
+      "gap": 4,
+      "radius": 6,
+      "iconInset": {
+        "top": 8,
+        "left": 24.181819915771484
+      }
+    },
+    {
+      "page": "49 · v8 浮层 / 与内容层区分",
+      "name": "File state / 合同.pdf",
+      "role": "File state",
+      "width": 92.36363983154297,
+      "height": 100,
+      "padding": {
+        "top": 2,
+        "right": 6,
+        "bottom": 2,
+        "left": 6
+      },
+      "gap": 4,
+      "radius": 6,
+      "iconInset": {
+        "top": 8,
+        "left": 24.181819915771484
+      }
+    },
+    {
+      "page": "49 · v8 浮层 / 与内容层区分",
+      "name": "File state / 参考资料",
+      "role": "File state",
+      "width": 92.36363983154297,
+      "height": 100,
+      "padding": {
+        "top": 2,
+        "right": 6,
+        "bottom": 2,
+        "left": 6
+      },
+      "gap": 4,
+      "radius": 6,
+      "iconInset": {
+        "top": 8,
+        "left": 24.181819915771484
+      }
+    },
+    {
+      "page": "49 · v8 浮层 / 与内容层区分",
+      "name": "File state / 拍摄计划",
+      "role": "File state",
+      "width": 92.36363983154297,
+      "height": 100,
+      "padding": {
+        "top": 2,
+        "right": 6,
+        "bottom": 2,
+        "left": 6
+      },
+      "gap": 4,
+      "radius": 6,
+      "iconInset": {
+        "top": 8,
+        "left": 24.181819915771484
+      }
+    },
+    {
+      "page": "49 · v8 浮层 / 与内容层区分",
+      "name": "File state / 会议记录.pdf",
+      "role": "File state",
+      "width": 92.36363983154297,
+      "height": 100,
+      "padding": {
+        "top": 2,
+        "right": 6,
+        "bottom": 2,
+        "left": 6
+      },
+      "gap": 4,
+      "radius": 6,
+      "iconInset": {
+        "top": 8,
+        "left": 24.181819915771484
+      }
+    },
+    {
+      "page": "49 · v8 浮层 / 与内容层区分",
+      "name": "File state / 读书笔记",
+      "role": "File state",
+      "width": 92.36363983154297,
+      "height": 100,
+      "padding": {
+        "top": 2,
+        "right": 6,
+        "bottom": 2,
+        "left": 6
+      },
+      "gap": 4,
+      "radius": 6,
+      "iconInset": {
+        "top": 8,
+        "left": 24.181819915771484
+      }
+    },
+    {
+      "page": "49 · v8 浮层 / 与内容层区分",
+      "name": "Floating menu / visual-system specimen",
+      "role": "Floating menu",
+      "width": 248,
+      "height": 280,
+      "padding": {
+        "top": 8,
+        "right": 4,
+        "bottom": 8,
+        "left": 4
+      },
+      "gap": 0,
+      "radius": 6
+    },
+    {
+      "page": "49 · v8 浮层 / 与内容层区分",
+      "name": "Menu row",
+      "role": "Menu row",
+      "width": 240,
+      "height": 30,
+      "padding": {
+        "top": 0,
+        "right": 8,
+        "bottom": 0,
+        "left": 8
+      },
+      "gap": 0,
+      "radius": 4
+    },
+    {
+      "page": "49 · v8 浮层 / 与内容层区分",
+      "name": "Menu row",
+      "role": "Menu row",
+      "width": 240,
+      "height": 30,
+      "padding": {
+        "top": 0,
+        "right": 8,
+        "bottom": 0,
+        "left": 8
+      },
+      "gap": 0,
+      "radius": 4
+    },
+    {
+      "page": "49 · v8 浮层 / 与内容层区分",
+      "name": "Menu row",
+      "role": "Menu row",
+      "width": 240,
+      "height": 30,
+      "padding": {
+        "top": 0,
+        "right": 8,
+        "bottom": 0,
+        "left": 8
+      },
+      "gap": 0,
+      "radius": 4
+    },
+    {
+      "page": "49 · v8 浮层 / 与内容层区分",
+      "name": "Menu row",
+      "role": "Menu row",
+      "width": 240,
+      "height": 30,
+      "padding": {
+        "top": 0,
+        "right": 8,
+        "bottom": 0,
+        "left": 8
+      },
+      "gap": 0,
+      "radius": 4
+    },
+    {
+      "page": "49 · v8 浮层 / 与内容层区分",
+      "name": "Menu row",
+      "role": "Menu row",
+      "width": 240,
+      "height": 30,
+      "padding": {
+        "top": 0,
+        "right": 8,
+        "bottom": 0,
+        "left": 8
+      },
+      "gap": 0,
+      "radius": 4
+    },
+    {
+      "page": "49 · v8 浮层 / 与内容层区分",
+      "name": "Menu row",
+      "role": "Menu row",
+      "width": 240,
+      "height": 30,
+      "padding": {
+        "top": 0,
+        "right": 8,
+        "bottom": 0,
+        "left": 8
+      },
+      "gap": 0,
+      "radius": 4
+    },
+    {
+      "page": "49 · v8 浮层 / 与内容层区分",
+      "name": "Menu row",
+      "role": "Menu row",
+      "width": 240,
+      "height": 30,
+      "padding": {
+        "top": 0,
+        "right": 8,
+        "bottom": 0,
+        "left": 8
+      },
+      "gap": 0,
+      "radius": 4
+    },
+    {
+      "page": "49 · v8 浮层 / 与内容层区分",
+      "name": "Menu row",
+      "role": "Menu row",
+      "width": 240,
+      "height": 30,
+      "padding": {
+        "top": 0,
+        "right": 8,
+        "bottom": 0,
+        "left": 8
+      },
+      "gap": 0,
+      "radius": 4
+    },
+    {
+      "page": "50 · v8 框选 / 同一状态语义",
+      "name": "File state / 文档",
+      "role": "File state",
+      "width": 92.36363983154297,
+      "height": 100,
+      "padding": {
+        "top": 2,
+        "right": 6,
+        "bottom": 2,
+        "left": 6
+      },
+      "gap": 4,
+      "radius": 6,
+      "iconInset": {
+        "top": 8,
+        "left": 24.181819915771484
+      }
+    },
+    {
+      "page": "50 · v8 框选 / 同一状态语义",
+      "name": "File state / 图片",
+      "role": "File state",
+      "width": 92.36363983154297,
+      "height": 100,
+      "padding": {
+        "top": 2,
+        "right": 6,
+        "bottom": 2,
+        "left": 6
+      },
+      "gap": 4,
+      "radius": 6,
+      "iconInset": {
+        "top": 8,
+        "left": 24.181819915771484
+      }
+    },
+    {
+      "page": "50 · v8 框选 / 同一状态语义",
+      "name": "File state / 设计资料",
+      "role": "File state",
+      "width": 92.36363983154297,
+      "height": 100,
+      "padding": {
+        "top": 2,
+        "right": 6,
+        "bottom": 2,
+        "left": 6
+      },
+      "gap": 4,
+      "radius": 6,
+      "iconInset": {
+        "top": 8,
+        "left": 24.181819915771484
+      }
+    },
+    {
+      "page": "50 · v8 框选 / 同一状态语义",
+      "name": "File state / 研究笔记.pdf",
+      "role": "File state",
+      "width": 92.36363983154297,
+      "height": 100,
+      "padding": {
+        "top": 2,
+        "right": 6,
+        "bottom": 2,
+        "left": 6
+      },
+      "gap": 4,
+      "radius": 6,
+      "iconInset": {
+        "top": 8,
+        "left": 24.181819915771484
+      }
+    },
+    {
+      "page": "50 · v8 框选 / 同一状态语义",
+      "name": "File state / 项目研究记录_最终核对稿.pdf",
+      "role": "File state",
+      "width": 92.36363983154297,
+      "height": 100,
+      "padding": {
+        "top": 2,
+        "right": 6,
+        "bottom": 2,
+        "left": 6
+      },
+      "gap": 4,
+      "radius": 6,
+      "iconInset": {
+        "top": 8,
+        "left": 24.181819915771484
+      }
+    },
+    {
+      "page": "50 · v8 框选 / 同一状态语义",
+      "name": "File state / 预算.xlsx",
+      "role": "File state",
+      "width": 92.36363983154297,
+      "height": 100,
+      "padding": {
+        "top": 2,
+        "right": 6,
+        "bottom": 2,
+        "left": 6
+      },
+      "gap": 4,
+      "radius": 6,
+      "iconInset": {
+        "top": 8,
+        "left": 24.181819915771484
+      }
+    },
+    {
+      "page": "50 · v8 框选 / 同一状态语义",
+      "name": "File state / 归档",
+      "role": "File state",
+      "width": 92.36363983154297,
+      "height": 100,
+      "padding": {
+        "top": 2,
+        "right": 6,
+        "bottom": 2,
+        "left": 6
+      },
+      "gap": 4,
+      "radius": 6,
+      "iconInset": {
+        "top": 8,
+        "left": 24.181819915771484
+      }
+    },
+    {
+      "page": "50 · v8 框选 / 同一状态语义",
+      "name": "File state / 收据.pdf",
+      "role": "File state",
+      "width": 92.36363983154297,
+      "height": 100,
+      "padding": {
+        "top": 2,
+        "right": 6,
+        "bottom": 2,
+        "left": 6
+      },
+      "gap": 4,
+      "radius": 6,
+      "iconInset": {
+        "top": 8,
+        "left": 24.181819915771484
+      }
+    },
+    {
+      "page": "50 · v8 框选 / 同一状态语义",
+      "name": "File state / 旅行计划",
+      "role": "File state",
+      "width": 92.36363983154297,
+      "height": 100,
+      "padding": {
+        "top": 2,
+        "right": 6,
+        "bottom": 2,
+        "left": 6
+      },
+      "gap": 4,
+      "radius": 6,
+      "iconInset": {
+        "top": 8,
+        "left": 24.181819915771484
+      }
+    },
+    {
+      "page": "50 · v8 框选 / 同一状态语义",
+      "name": "File state / 个人资料",
+      "role": "File state",
+      "width": 92.36363983154297,
+      "height": 100,
+      "padding": {
+        "top": 2,
+        "right": 6,
+        "bottom": 2,
+        "left": 6
+      },
+      "gap": 4,
+      "radius": 6,
+      "iconInset": {
+        "top": 8,
+        "left": 24.181819915771484
+      }
+    },
+    {
+      "page": "50 · v8 框选 / 同一状态语义",
+      "name": "File state / 合同.pdf",
+      "role": "File state",
+      "width": 92.36363983154297,
+      "height": 100,
+      "padding": {
+        "top": 2,
+        "right": 6,
+        "bottom": 2,
+        "left": 6
+      },
+      "gap": 4,
+      "radius": 6,
+      "iconInset": {
+        "top": 8,
+        "left": 24.181819915771484
+      }
+    },
+    {
+      "page": "50 · v8 框选 / 同一状态语义",
+      "name": "File state / 参考资料",
+      "role": "File state",
+      "width": 92.36363983154297,
+      "height": 100,
+      "padding": {
+        "top": 2,
+        "right": 6,
+        "bottom": 2,
+        "left": 6
+      },
+      "gap": 4,
+      "radius": 6,
+      "iconInset": {
+        "top": 8,
+        "left": 24.181819915771484
+      }
+    },
+    {
+      "page": "50 · v8 框选 / 同一状态语义",
+      "name": "File state / 拍摄计划",
+      "role": "File state",
+      "width": 92.36363983154297,
+      "height": 100,
+      "padding": {
+        "top": 2,
+        "right": 6,
+        "bottom": 2,
+        "left": 6
+      },
+      "gap": 4,
+      "radius": 6,
+      "iconInset": {
+        "top": 8,
+        "left": 24.181819915771484
+      }
+    },
+    {
+      "page": "50 · v8 框选 / 同一状态语义",
+      "name": "File state / 会议记录.pdf",
+      "role": "File state",
+      "width": 92.36363983154297,
+      "height": 100,
+      "padding": {
+        "top": 2,
+        "right": 6,
+        "bottom": 2,
+        "left": 6
+      },
+      "gap": 4,
+      "radius": 6,
+      "iconInset": {
+        "top": 8,
+        "left": 24.181819915771484
+      }
+    },
+    {
+      "page": "50 · v8 框选 / 同一状态语义",
+      "name": "File state / 读书笔记",
+      "role": "File state",
+      "width": 92.36363983154297,
+      "height": 100,
+      "padding": {
+        "top": 2,
+        "right": 6,
+        "bottom": 2,
+        "left": 6
+      },
+      "gap": 4,
+      "radius": 6,
+      "iconInset": {
+        "top": 8,
+        "left": 24.181819915771484
+      }
+    }
+  ]
+}

@@ -1,6 +1,6 @@
-# 当前设计稿 · v6
+# 当前修订稿 · v9
 
-在 OpenPencil 打开 **[Backleaf.fig](Backleaf.fig)**。这是唯一当前主稿，含 44 个可编辑页面；对应预览位于 [v6](v6/)。旧的独立 `.fig`、根目录 PNG、`v2`、`v3`、`v4`、`v5` 和 `v5.1` 是保留的历史稿，不是当前实施基线。
+在 OpenPencil 打开 **[Backleaf-v9.fig](Backleaf-v9.fig)**，共 52 个可编辑页面。前 44 页保留已接受的 v6 产品流程，45–52 页为本轮状态、颜色、间距和圆角修订：[明色状态](v9/46-light-states.png)、[深色状态](v9/47-dark-states.png)、[文件选择](v9/48-selection.png)、[浮层](v9/49-floating.png)、[任务面板](v9/51-task-light.png)。详见 [v9 规则](../docs/visual-system-v9.md)。原 [Backleaf.fig](Backleaf.fig) 是不变的 v6 存档，对应预览位于 [v6](v6/)。v7 已撤回，v8 是被 v9 替代的中间稿。旧的独立 `.fig`、根目录 PNG、`v2`、`v3`、`v4`、`v5` 和 `v5.1` 是保留的历史稿，不是当前实施基线。
 
 本轮放宽间距，容器上下大于左右；任务面板统一左轴并精简信息。文件图标与名称继续居中。
 
@@ -27,4 +27,4 @@
 
 尺寸与交互见 [设计契约](../docs/design-contract.md)。[布局审计](spacing-audit.json)、[保存结构检查](recovery-verification.json)、[独立重开视觉检查](cold-reopen-verification.json) 与 [精确文字检查](text-reopen-verification.json) 记录持久性和布局证据。文字逐项精确一致；视觉检查保留实际像素差及既定容差，不将细微栅格差异描述为内容丢失。
 
-源文件为 [layout.mjs](../scripts/design/layout.mjs)，大规模状态源为 [bulk.mjs](../scripts/design/bulk.mjs)，逐页 JSX 与变量位于 [source](source/)。重建说明见 [scripts/design](../scripts/design/README.md)。当前交付物是设计稿，应用开发和 staging 安装验证仍未完成。
+源文件为 [layout.mjs](../scripts/design/layout.mjs)，大规模状态源为 [bulk.mjs](../scripts/design/bulk.mjs)，逐页 JSX 与变量位于 [source](source/)。重建说明见 [scripts/design](../scripts/design/README.md)。原生 preview.1 已发布；v9 对应的 preview.2 正在实施和实机验证，尚未交付。

@@ -15,6 +15,7 @@ pub struct Options {
     pub reduced_motion: bool,
     pub width: f32,
     pub height: f32,
+    pub theme: Option<bool>,
 }
 impl Options {
     pub fn parse() -> Self {
@@ -28,6 +29,7 @@ impl Options {
             reduced_motion: false,
             width: 1120.,
             height: 720.,
+            theme: None,
         };
         let mut args = std::env::args().skip(1);
         while let Some(arg) = args.next() {
@@ -44,6 +46,13 @@ impl Options {
                 "--reduced-motion" => result.reduced_motion = true,
                 "--width" => result.width = args.next().unwrap().parse().unwrap(),
                 "--height" => result.height = args.next().unwrap().parse().unwrap(),
+                "--theme" => {
+                    result.theme = Some(match args.next().as_deref() {
+                        Some("light") => false,
+                        Some("dark") => true,
+                        _ => panic!("theme must be light or dark"),
+                    })
+                }
                 _ => panic!("unknown argument {arg}"),
             }
         }
@@ -82,6 +91,10 @@ pub struct Report {
     pub backend: &'static str,
     pub dataset: String,
     pub item_count: usize,
+    pub selected_count: usize,
+    pub selection_bitmap_serialized_bytes: usize,
+    pub selection_pending: bool,
+    pub theme_dark: bool,
     pub scripted_scroll: bool,
     pub flow_limit: usize,
     pub reduced_motion: bool,
@@ -223,6 +236,10 @@ impl Metrics {
                 "real directory snapshot / SQLite worker".into()
             },
             item_count: count,
+            selected_count: 0,
+            selection_bitmap_serialized_bytes: 0,
+            selection_pending: false,
+            theme_dark: false,
             scripted_scroll: options.scroll,
             flow_limit: options.flow,
             reduced_motion: options.reduced_motion,

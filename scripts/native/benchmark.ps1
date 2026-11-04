@@ -18,7 +18,7 @@ $cases = @(
 )
 foreach ($case in $cases) {
     $sessionPath=Join-Path $outputPath 'session-preflight.json'
-    Start-Process -FilePath $binaryPath -ArgumentList @('--session-status-file',('"'+$sessionPath+'"')) -Wait
+    Start-Process -FilePath $binaryPath -ArgumentList @('--session-status-file',('"'+$sessionPath+'"')) -Wait -WindowStyle Hidden
     $session=Get-Content -LiteralPath $sessionPath -Raw | ConvertFrom-Json
     if ($session.locked -or $session.error) {throw 'Unlock the Windows desktop before visible native benchmarks'}
     $report = Join-Path $outputPath "$($case.Name).json"

@@ -6,6 +6,8 @@ Scope: SIM-919. Constraints: SIM-934. One engineering unit is active at a time.
 | --- | --- | --- |
 | accepted | SIM-921 | User accepted v6 as the implementation baseline on 2026-11-04 |
 | accepted | SIM-948 | v6 feedback incorporated and accepted as baseline |
+| focus_issue | SIM-953 | Selection/state redesign, rubber-band and keyboard selection; v9 OpenPencil verified, native implementation under validation |
+| ready_queue | SIM-954 | Real file/blank-space menus, Shell file operations and common shortcuts after SIM-953 delivery |
 | review_queue | SIM-951 | Native GPUI preview deployed and published; unlocked performance and installed-window smoke passed |
 | review_queue | SIM-935 | Technical plan only; native rendering now progresses through SIM-951, broader Windows validation remains open |
 | candidate after dependencies | SIM-920 | Search semantics and one saved-search/folder quick access list |
@@ -15,7 +17,7 @@ Scope: SIM-919. Constraints: SIM-934. One engineering unit is active at a time.
 
 `in_review` means engineering evidence is ready for product acceptance. It does not imply that real users have validated usability or that untested hardware, IMEs or filesystems have passed.
 
-At this handoff, focus_issue and focus_operation are empty and SIM-951's claim is released for product acceptance. The desktop gate is resolved. ready_queue is empty until the next independent unit is explicitly qualified against its dependencies; the candidate sequence alone is not a readiness decision.
+Current focus_issue is SIM-953 and focus_operation is native selection/state implementation and verification. Only SIM-953 is claimed. SIM-954 is next ready; SIM-920 / SIM-922 / SIM-937 remain design/specification work awaiting implementation and dependency qualification. SIM-951 is in the product review queue. User feedback continues to refine the implementation baseline; v9 is recorded in visual-system-v9.md.
 
 2026-11-03: SIM-921 v5.1 adds eight scale states to the compact baseline, for a 38-page editable master. The design covers million-item selections, a bounded 24-task queue and ten thousand failures. The isolated metadata/queue probe verifies 100,000 and 1,000,000 records, UTF-16 long paths, retained results, bounded payloads and paged reads. See [performance contract and evidence](bulk-performance.md).
 

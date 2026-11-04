@@ -31,3 +31,20 @@ Windows staging means a private downloadable desktop build installed into an iso
 ## v6 文本与可见渲染
 
 [GNOME tooltips](https://developer.gnome.org/hig/patterns/feedback/tooltips.html) 提供内容补充信息的参考。按用户偏好，任务列表隐藏常驻状态标签；完整名称/状态同时保留在详情与可访问信息，不只依赖悬停。已核对本地固定GPUI源码的 uniform_list、ShapedLine 与 shape_line 接口，可见范围和少量缓存绘制是实现候选；没有据此声称已完成GPU或UIA实机验证。
+
+## Meta 颜色与状态系统调研 · 2026-11-04
+
+用户指出 v7 的灰色图标底板和独立蓝色名称底缺少统一层级，要求先调研 Meta，再按浮层层级、重复与节奏重做状态系统。v7 配色因此撤回，尚未发布。
+
+| 一手来源与适用范围 | 可核查结论 | 对 Backleaf 的设计推导 |
+| --- | --- | --- |
+| [WhatsApp 设计更新，2024-05-09](https://www.meta.com/design-at-meta/blog/whatsapp-user-interface-update/) | 采用统一强调色系，增加中性色；图标使用一致的圆润描边语言 | 大面积以中性色承载内容；同一类状态重复同一语义，避免图标与名称各配一套底色 |
+| [Facebook 品牌更新，2023-09-20](https://www.meta.com/design-at-meta/blog/redefining-facebooks-brand-identity/) | 核心蓝与扩展明度范围共同使用，并考虑对比度和图标可读性 | 强调色需要成套明度关系；不能把品牌蓝直接铺在每个状态上 |
+| [Meta UI Set ColorScheme 1.0.0](https://developers.meta.com/horizon/reference/metavrx-uiset-compose/1.0.0/metavrx_uiset_compose_theme_colorscheme/) | 区分 background/surface/surfaceVariant、accent/selected、状态、边界、交互及进度；容器与前景成对 | 表面、选择、焦点、反馈分工；先定义角色，再决定数值 |
+| [InteractionColors](https://developers.meta.com/vr/reference/metavrx-uiset-compose/1.0.0/metavrx_uiset_compose_theme_interactioncolors/) 与 [InteractionOverlay](https://developers.meta.com/vr/reference/metavrx-uiset-compose/1.0.0/metavrx_uiset_compose_theme_interactionoverlay/) | 中性、强调和媒体表面有相应叠层，hover/pressed 为交互覆盖色，scrim 另设角色 | Hover/pressed 从所在表面推导，叠层放在内容之后、前景之前；不另外发明相互竞争的色块 |
+| [UI Set Theme，2026-09-01](https://developers.meta.com/vr/documentation/android-apps/ui-theme/) 与 [LocalContentColors](https://developers.meta.com/vr/reference/metavrx-uiset-compose/1.0.0/metavrx_uiset_compose_theme_localcontentcolors/) | 前景层级跟随最近的容器；修改基础主题可传递到组件；自定义强调色提供对比度约束 | 文字/图标应随容器正确配对，失焦选中与禁用不能混用；同一状态计算规则覆盖整个组件族 |
+| [Facebook.com 主题技术，2020-05-08](https://engineering.fb.com/2020/05/08/web/facebook-redesign/) | 主题通过共享变量传递到组件；不同产品可使用不同主题 | 用共享语义 token 实施，避免多个组件继续硬编码近似灰色 |
+
+以上不等同于 Meta 所有产品共用唯一 RGB 表；所查公开资料中，Horizon 的角色定义最完整，但属于其 XR/Android UI Set。Backleaf 借用角色组织与配对方法，Windows 密度和键鼠操作仍遵循既定基线。`design/color-system.json` 的具体色值是本项目提案，不能标作 Meta 内部规范。
+
+本轮推导：普通文件保持开放排版；选择由覆盖图标与名称的单一浅色状态层承载，名称不再另加实心色块，图标不再叠独立灰底；名称字重作为额外识别线索。焦点独立，仅键盘出现；浮层靠层级、边界与影子区分，普通文件没有阴影。以相同位置、尺寸、留白和状态优先级形成重复与节奏。明暗方案、状态组合、对比度和实际窗口一起验收后再实施。

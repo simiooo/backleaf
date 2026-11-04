@@ -1,9 +1,11 @@
+use crate::theme::{Palette, Role as ColorRole};
 use gpui::{prelude::*, *};
 use std::ops::Range;
 use unicode_segmentation::UnicodeSegmentation;
 
 /// Read-only, wrapped text with mouse/keyboard selection and an unchanged clipboard value.
 pub struct Selectable {
+    pub colors: &'static Palette,
     text: SharedString,
     focus: FocusHandle,
     selected: Range<usize>,
@@ -11,8 +13,9 @@ pub struct Selectable {
     dragging: bool,
 }
 impl Selectable {
-    pub fn new(text: String, cx: &mut Context<Self>) -> Self {
+    pub fn new(text: String, colors: &'static Palette, cx: &mut Context<Self>) -> Self {
         Self {
+            colors,
             text: text.into(),
             focus: cx.focus_handle(),
             selected: 0..0,
@@ -37,7 +40,8 @@ impl Render for Selectable {
             (!selection.is_empty()).then_some((
                 selection,
                 HighlightStyle {
-                    background_color: Some(rgb(0xdce7ed).into()),
+                    background_color: Some(self.colors.color(ColorRole::Selected)),
+                    color: Some(self.colors.color(ColorRole::OnSelected)),
                     ..Default::default()
                 },
             )),

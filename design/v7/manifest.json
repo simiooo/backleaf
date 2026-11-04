@@ -1,0 +1,30 @@
+{
+  "version": "v7-selection",
+  "baseline": "Backleaf.fig v6",
+  "retainedPages": 44,
+  "added": [
+    {
+      "key": "45-selection-home",
+      "name": "45 · v7 选中态 / 图标底板与贴合名称",
+      "pageId": "518601501:1",
+      "rootId": "518601501:2",
+      "nodes": 119
+    },
+    {
+      "key": "46-selection-states",
+      "name": "46 · v7 选择状态 / 鼠标、键盘、失焦与长名称",
+      "pageId": "518601501:123",
+      "rootId": "518601501:124",
+      "nodes": 44
+    },
+    {
+      "key": "47-marquee",
+      "name": "47 · v7 鼠标框选 / 连续滚动与可见选区",
+      "pageId": "518601501:170",
+      "rootId": "518601501:171",
+      "nodes": 120
+    }
+  ],
+  "source": "scripts/design/selection-v7.mjs",
+  "rule": "New pages supersede selection/focus examples in retained v6 states."
+}

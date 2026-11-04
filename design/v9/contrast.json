@@ -1,0 +1,159 @@
+{
+  "status": "Backleaf proposal, measured sRGB pairs",
+  "checks": [
+    {
+      "mode": "Light",
+      "fg": "content/primary",
+      "bg": "surface/canvas",
+      "ratio": 14.555744900315577,
+      "minimum": 4.5
+    },
+    {
+      "mode": "Light",
+      "fg": "content/secondary",
+      "bg": "surface/canvas",
+      "ratio": 5.672195122226093,
+      "minimum": 4.5
+    },
+    {
+      "mode": "Light",
+      "fg": "content/primary",
+      "bg": "surface/floating",
+      "ratio": 14.555744900315577,
+      "minimum": 4.5
+    },
+    {
+      "mode": "Light",
+      "fg": "content/secondary",
+      "bg": "surface/floating",
+      "ratio": 5.672195122226093,
+      "minimum": 4.5
+    },
+    {
+      "mode": "Light",
+      "fg": "selection/content",
+      "bg": "selection/surface",
+      "ratio": 8.669903953185505,
+      "minimum": 4.5
+    },
+    {
+      "mode": "Light",
+      "fg": "selection/inactive-content",
+      "bg": "selection/inactive-surface",
+      "ratio": 8.811909537355206,
+      "minimum": 4.5
+    },
+    {
+      "mode": "Light",
+      "fg": "accent/on-strong",
+      "bg": "accent/strong",
+      "ratio": 5.281137752370586,
+      "minimum": 4.5
+    },
+    {
+      "mode": "Light",
+      "fg": "focus/ring",
+      "bg": "surface/canvas",
+      "ratio": 5.281137752370586,
+      "minimum": 3
+    },
+    {
+      "mode": "Light",
+      "fg": "focus/ring",
+      "bg": "selection/surface",
+      "ratio": 4.670345226293672,
+      "minimum": 3
+    },
+    {
+      "mode": "Light",
+      "fg": "icon/folder-stroke",
+      "bg": "surface/canvas",
+      "ratio": 4.834170908201347,
+      "minimum": 3
+    },
+    {
+      "mode": "Light",
+      "fg": "icon/folder-stroke",
+      "bg": "selection/surface",
+      "ratio": 4.275072547401642,
+      "minimum": 3
+    },
+    {
+      "mode": "Dark",
+      "fg": "content/primary",
+      "bg": "surface/canvas",
+      "ratio": 14.529897482650483,
+      "minimum": 4.5
+    },
+    {
+      "mode": "Dark",
+      "fg": "content/secondary",
+      "bg": "surface/canvas",
+      "ratio": 8.387400750546213,
+      "minimum": 4.5
+    },
+    {
+      "mode": "Dark",
+      "fg": "content/primary",
+      "bg": "surface/floating",
+      "ratio": 11.145501712969738,
+      "minimum": 4.5
+    },
+    {
+      "mode": "Dark",
+      "fg": "content/secondary",
+      "bg": "surface/floating",
+      "ratio": 6.433754232897996,
+      "minimum": 4.5
+    },
+    {
+      "mode": "Dark",
+      "fg": "selection/content",
+      "bg": "selection/surface",
+      "ratio": 9.651926220175092,
+      "minimum": 4.5
+    },
+    {
+      "mode": "Dark",
+      "fg": "selection/inactive-content",
+      "bg": "selection/inactive-surface",
+      "ratio": 9.801225372700738,
+      "minimum": 4.5
+    },
+    {
+      "mode": "Dark",
+      "fg": "accent/on-strong",
+      "bg": "accent/strong",
+      "ratio": 7.800135939353247,
+      "minimum": 4.5
+    },
+    {
+      "mode": "Dark",
+      "fg": "focus/ring",
+      "bg": "surface/canvas",
+      "ratio": 9.25025015359029,
+      "minimum": 3
+    },
+    {
+      "mode": "Dark",
+      "fg": "focus/ring",
+      "bg": "selection/surface",
+      "ratio": 6.187473698630354,
+      "minimum": 3
+    },
+    {
+      "mode": "Dark",
+      "fg": "icon/folder-stroke",
+      "bg": "surface/canvas",
+      "ratio": 10.690319991478871,
+      "minimum": 3
+    },
+    {
+      "mode": "Dark",
+      "fg": "icon/folder-stroke",
+      "bg": "selection/surface",
+      "ratio": 7.1507335130331136,
+      "minimum": 3
+    }
+  ]
+}

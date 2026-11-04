@@ -1,0 +1,61 @@
+{
+  "version": "v9-color-and-geometry",
+  "retainedPages": 44,
+  "colorVariables": 23,
+  "modes": {
+    "Light": "1010434689:2",
+    "Dark": "1010434689:3"
+  },
+  "pages": [
+    {
+      "key": "45-foundations",
+      "name": "45 · v9 视觉系统 / 表面、语义与重复",
+      "mode": "Light",
+      "nodes": 111
+    },
+    {
+      "key": "46-light-states",
+      "name": "46 · v9 状态矩阵 / 明色",
+      "mode": "Light",
+      "nodes": 102
+    },
+    {
+      "key": "47-dark-states",
+      "name": "47 · v9 状态矩阵 / 深色",
+      "mode": "Dark",
+      "nodes": 102
+    },
+    {
+      "key": "48-selection",
+      "name": "48 · v9 文件选择 / 单一浅色状态层",
+      "mode": "Light",
+      "nodes": 143
+    },
+    {
+      "key": "49-floating",
+      "name": "49 · v9 浮层 / 与内容层区分",
+      "mode": "Light",
+      "nodes": 182
+    },
+    {
+      "key": "50-marquee",
+      "name": "50 · v9 框选 / 同一状态语义",
+      "mode": "Light",
+      "nodes": 144
+    },
+    {
+      "key": "51-task-light",
+      "name": "51 · v9 任务浮层 / 明色",
+      "mode": "Light",
+      "nodes": 33
+    },
+    {
+      "key": "52-task-dark",
+      "name": "52 · v9 任务浮层 / 深色",
+      "mode": "Dark",
+      "nodes": 33
+    }
+  ],
+  "source": "scripts/design/visual-v9.mjs",
+  "status": "Research-derived colors; geometry/rhythm revision after user feedback"
+}

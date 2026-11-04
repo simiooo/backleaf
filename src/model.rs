@@ -1,7 +1,7 @@
 //! Directory snapshots live on a worker-owned SQLite connection. The UI owns a viewport page.
 use rusqlite::{Connection, params};
 use std::{
-    collections::{BTreeMap, HashSet},
+    collections::BTreeMap,
     ops::Range,
     path::PathBuf,
     sync::{
@@ -243,57 +243,7 @@ fn decode_name(raw: &[u8]) -> std::ffi::OsString {
     )
 }
 
-#[derive(Default)]
-pub struct Selection {
-    pub base: Range<usize>,
-    pub extra: HashSet<usize>,
-    pub excluded: HashSet<usize>,
-    pub focus: Option<usize>,
-    pub anchor: usize,
-}
-impl Selection {
-    pub fn contains(&self, id: usize) -> bool {
-        (self.base.contains(&id) || self.extra.contains(&id)) && !self.excluded.contains(&id)
-    }
-    pub fn count(&self) -> usize {
-        self.base.len()
-            + self
-                .extra
-                .iter()
-                .filter(|id| !self.base.contains(id))
-                .count()
-            - self.excluded.len()
-    }
-    pub fn select(&mut self, id: usize, control: bool, shift: bool) {
-        if shift {
-            self.base = self.anchor.min(id)..self.anchor.max(id) + 1;
-            self.extra.clear();
-            self.excluded.clear();
-        } else if control {
-            if self.contains(id) {
-                self.extra.remove(&id);
-                if self.base.contains(&id) {
-                    self.excluded.insert(id);
-                }
-            } else {
-                self.excluded.remove(&id);
-                self.extra.insert(id);
-            }
-            self.anchor = id;
-        } else {
-            self.base = id..id + 1;
-            self.extra.clear();
-            self.excluded.clear();
-            self.anchor = id;
-        }
-        self.focus = Some(id);
-    }
-    pub fn all(&mut self, count: usize) {
-        self.base = 0..count;
-        self.extra.clear();
-        self.excluded.clear();
-    }
-}
+pub use crate::selection::Selection;
 pub type PageCache = BTreeMap<usize, Arc<Item>>;
 
 #[cfg(test)]
@@ -308,7 +258,7 @@ mod tests {
         assert!(!s.contains(50));
         s.select(50, true, false);
         assert_eq!(s.count(), 1_000_000);
-        assert!(s.extra.len() <= 1);
+        assert!(s.mask.bitmap_serialized_bytes() < 8192);
     }
     #[test]
     fn truncation_keeps_graphemes_and_raw_value() {

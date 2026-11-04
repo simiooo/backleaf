@@ -1,0 +1,56 @@
+{
+  "masterSha256": "5203f80952ce64a7a70baf4a0c4ec863c58bb0c4211d92ea22da32e2f3803923",
+  "pages": 50,
+  "added": [
+    {
+      "key": "45-foundations",
+      "name": "45 · v8 视觉系统 / 表面、语义与重复",
+      "mode": "Light",
+      "nodes": 114,
+      "changedPixels": 52,
+      "totalPixels": 921600
+    },
+    {
+      "key": "46-light-states",
+      "name": "46 · v8 状态矩阵 / 明色",
+      "mode": "Light",
+      "nodes": 114,
+      "changedPixels": 194,
+      "totalPixels": 499200
+    },
+    {
+      "key": "47-dark-states",
+      "name": "47 · v8 状态矩阵 / 深色",
+      "mode": "Dark",
+      "nodes": 114,
+      "changedPixels": 179,
+      "totalPixels": 499200
+    },
+    {
+      "key": "48-selection",
+      "name": "48 · v8 文件选择 / 单一浅色状态层",
+      "mode": "Light",
+      "nodes": 158,
+      "changedPixels": 95,
+      "totalPixels": 806400
+    },
+    {
+      "key": "49-floating",
+      "name": "49 · v8 浮层 / 与内容层区分",
+      "mode": "Light",
+      "nodes": 197,
+      "changedPixels": 137,
+      "totalPixels": 806400
+    },
+    {
+      "key": "50-marquee",
+      "name": "50 · v8 框选 / 同一状态语义",
+      "mode": "Light",
+      "nodes": 159,
+      "changedPixels": 87,
+      "totalPixels": 806400
+    }
+  ],
+  "result": "passed",
+  "verifiedAt": "2026-11-04T04:10:55.447Z"
+}

@@ -1,0 +1,26 @@
+{
+  "masterSha256": "f8abab24904a953eadf2523ccd31837bca4cd9e8ff15a8763f701824f19fee9b",
+  "retainedPages": 44,
+  "added": [
+    {
+      "name": "45 · v7 选中态 / 图标底板与贴合名称",
+      "nodes": 119,
+      "changedPixels": 70,
+      "totalPixels": 806400
+    },
+    {
+      "name": "46 · v7 选择状态 / 鼠标、键盘、失焦与长名称",
+      "nodes": 44,
+      "changedPixels": 105,
+      "totalPixels": 237120
+    },
+    {
+      "name": "47 · v7 鼠标框选 / 连续滚动与可见选区",
+      "nodes": 120,
+      "changedPixels": 70,
+      "totalPixels": 806400
+    }
+  ],
+  "result": "passed",
+  "verifiedAt": "2026-11-04T03:36:04.636Z"
+}

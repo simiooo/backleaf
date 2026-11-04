@@ -1,0 +1,72 @@
+{
+  "masterSha256": "0fea7e1a6d99d94a07f1db6c77e6960e08c02153beb53e613e372b33f1e3740c",
+  "pages": 52,
+  "added": [
+    {
+      "key": "45-foundations",
+      "name": "45 · v9 视觉系统 / 表面、语义与重复",
+      "mode": "Light",
+      "nodes": 111,
+      "changedPixels": 52,
+      "totalPixels": 921600
+    },
+    {
+      "key": "46-light-states",
+      "name": "46 · v9 状态矩阵 / 明色",
+      "mode": "Light",
+      "nodes": 102,
+      "changedPixels": 194,
+      "totalPixels": 552960
+    },
+    {
+      "key": "47-dark-states",
+      "name": "47 · v9 状态矩阵 / 深色",
+      "mode": "Dark",
+      "nodes": 102,
+      "changedPixels": 179,
+      "totalPixels": 552960
+    },
+    {
+      "key": "48-selection",
+      "name": "48 · v9 文件选择 / 单一浅色状态层",
+      "mode": "Light",
+      "nodes": 143,
+      "changedPixels": 450,
+      "totalPixels": 806400
+    },
+    {
+      "key": "49-floating",
+      "name": "49 · v9 浮层 / 与内容层区分",
+      "mode": "Light",
+      "nodes": 182,
+      "changedPixels": 460,
+      "totalPixels": 806400
+    },
+    {
+      "key": "50-marquee",
+      "name": "50 · v9 框选 / 同一状态语义",
+      "mode": "Light",
+      "nodes": 144,
+      "changedPixels": 450,
+      "totalPixels": 806400
+    },
+    {
+      "key": "51-task-light",
+      "name": "51 · v9 任务浮层 / 明色",
+      "mode": "Light",
+      "nodes": 33,
+      "changedPixels": 73,
+      "totalPixels": 403200
+    },
+    {
+      "key": "52-task-dark",
+      "name": "52 · v9 任务浮层 / 深色",
+      "mode": "Dark",
+      "nodes": 33,
+      "changedPixels": 55,
+      "totalPixels": 403200
+    }
+  ],
+  "result": "passed",
+  "verifiedAt": "2026-11-04T04:55:36.812Z"
+}

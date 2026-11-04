@@ -1,6 +1,6 @@
 [package]
 name = "backleaf"
-version = "0.1.0-preview.1"
+version = "0.1.0-preview.2"
 edition = "2024"
 license = "Apache-2.0"
 publish = false
@@ -15,6 +15,7 @@ rusqlite = { version = "0.38", features = ["bundled"] }
 unicode-segmentation = "1.12"
 async-channel = "2"
 raw-window-handle = "0.6"
+roaring = "=0.12.0"
 
 [target.'cfg(windows)'.dependencies]
 windows = { version = "0.62", features = ["Win32_UI_WindowsAndMessaging", "Win32_UI_Accessibility", "Win32_System_ProcessStatus", "Win32_System_Threading", "Win32_System_RemoteDesktop", "Win32_System_LibraryLoader", "Win32_Graphics_Dwm"] }

@@ -1,0 +1,3364 @@
+{
+  "version": "v9",
+  "method": "actual reopened OpenPencil node geometry, not JSX intentions",
+  "checks": [
+    {
+      "name": "Every file keeps a 112 px hit area",
+      "pass": true
+    },
+    {
+      "name": "File surfaces repeat 8/8/12/8 padding, 8 gap and 10 radius",
+      "pass": true
+    },
+    {
+      "name": "Content surfaces hug one or two lines",
+      "pass": true
+    },
+    {
+      "name": "Icon starts 8 px inside surface",
+      "pass": true
+    },
+    {
+      "name": "Floating container uses 12 radius",
+      "pass": true
+    },
+    {
+      "name": "Menu rows repeat 32 height, 8 radius and 8 horizontal inset",
+      "pass": true
+    },
+    {
+      "name": "Menu text inherits content inset 12/16",
+      "pass": true
+    },
+    {
+      "name": "Controls repeat 32 height and 8 radius",
+      "pass": true
+    },
+    {
+      "name": "Task panels repeat 12/16 padding and 12 radius",
+      "pass": true
+    },
+    {
+      "name": "Task title, progress, counts and filenames share the same actual left axis",
+      "pass": true
+    },
+    {
+      "name": "Task cancel repeats shared control geometry",
+      "pass": true
+    }
+  ],
+  "records": [
+    {
+      "page": "45 · v9 视觉系统 / 表面、语义与重复",
+      "name": "File hit area / 文档",
+      "role": "File hit area",
+      "width": 100,
+      "height": 112,
+      "padding": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "gap": 0,
+      "radius": 0,
+      "visual": {
+        "width": 60,
+        "height": 92,
+        "top": 0,
+        "left": 20
+      }
+    },
+    {
+      "page": "45 · v9 视觉系统 / 表面、语义与重复",
+      "name": "File visual container / content fit",
+      "role": "File visual container",
+      "width": 60,
+      "height": 92,
+      "padding": {
+        "top": 8,
+        "right": 8,
+        "bottom": 12,
+        "left": 8
+      },
+      "gap": 8,
+      "radius": 10,
+      "iconInset": {
+        "top": 8,
+        "left": 8
+      }
+    },
+    {
+      "page": "45 · v9 视觉系统 / 表面、语义与重复",
+      "name": "File hit area / 图片",
+      "role": "File hit area",
+      "width": 100,
+      "height": 112,
+      "padding": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "gap": 0,
+      "radius": 0,
+      "visual": {
+        "width": 60,
+        "height": 92,
+        "top": 0,
+        "left": 20
+      }
+    },
+    {
+      "page": "45 · v9 视觉系统 / 表面、语义与重复",
+      "name": "File visual container / content fit",
+      "role": "File visual container",
+      "width": 60,
+      "height": 92,
+      "padding": {
+        "top": 8,
+        "right": 8,
+        "bottom": 12,
+        "left": 8
+      },
+      "gap": 8,
+      "radius": 10,
+      "iconInset": {
+        "top": 8,
+        "left": 8
+      }
+    },
+    {
+      "page": "45 · v9 视觉系统 / 表面、语义与重复",
+      "name": "File hit area / 研究笔记.pdf",
+      "role": "File hit area",
+      "width": 100,
+      "height": 112,
+      "padding": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "gap": 0,
+      "radius": 0,
+      "visual": {
+        "width": 95,
+        "height": 92,
+        "top": 0,
+        "left": 2.5
+      }
+    },
+    {
+      "page": "45 · v9 视觉系统 / 表面、语义与重复",
+      "name": "File visual container / content fit",
+      "role": "File visual container",
+      "width": 95,
+      "height": 92,
+      "padding": {
+        "top": 8,
+        "right": 8,
+        "bottom": 12,
+        "left": 8
+      },
+      "gap": 8,
+      "radius": 10,
+      "iconInset": {
+        "top": 8,
+        "left": 25.5
+      }
+    },
+    {
+      "page": "45 · v9 视觉系统 / 表面、语义与重复",
+      "name": "Floating menu / visual-system specimen",
+      "role": "Floating menu",
+      "width": 248,
+      "height": 320,
+      "padding": {
+        "top": 8,
+        "right": 4,
+        "bottom": 8,
+        "left": 4
+      },
+      "gap": 0,
+      "radius": 12
+    },
+    {
+      "page": "45 · v9 视觉系统 / 表面、语义与重复",
+      "name": "Menu row",
+      "role": "Menu row",
+      "width": 240,
+      "height": 32,
+      "padding": {
+        "top": 0,
+        "right": 8,
+        "bottom": 0,
+        "left": 8
+      },
+      "gap": 0,
+      "radius": 8
+    },
+    {
+      "page": "45 · v9 视觉系统 / 表面、语义与重复",
+      "name": "Menu row",
+      "role": "Menu row",
+      "width": 240,
+      "height": 32,
+      "padding": {
+        "top": 0,
+        "right": 8,
+        "bottom": 0,
+        "left": 8
+      },
+      "gap": 0,
+      "radius": 8
+    },
+    {
+      "page": "45 · v9 视觉系统 / 表面、语义与重复",
+      "name": "Menu row",
+      "role": "Menu row",
+      "width": 240,
+      "height": 32,
+      "padding": {
+        "top": 0,
+        "right": 8,
+        "bottom": 0,
+        "left": 8
+      },
+      "gap": 0,
+      "radius": 8
+    },
+    {
+      "page": "45 · v9 视觉系统 / 表面、语义与重复",
+      "name": "Menu row",
+      "role": "Menu row",
+      "width": 240,
+      "height": 32,
+      "padding": {
+        "top": 0,
+        "right": 8,
+        "bottom": 0,
+        "left": 8
+      },
+      "gap": 0,
+      "radius": 8
+    },
+    {
+      "page": "45 · v9 视觉系统 / 表面、语义与重复",
+      "name": "Menu row",
+      "role": "Menu row",
+      "width": 240,
+      "height": 32,
+      "padding": {
+        "top": 0,
+        "right": 8,
+        "bottom": 0,
+        "left": 8
+      },
+      "gap": 0,
+      "radius": 8
+    },
+    {
+      "page": "45 · v9 视觉系统 / 表面、语义与重复",
+      "name": "Menu row",
+      "role": "Menu row",
+      "width": 240,
+      "height": 32,
+      "padding": {
+        "top": 0,
+        "right": 8,
+        "bottom": 0,
+        "left": 8
+      },
+      "gap": 0,
+      "radius": 8
+    },
+    {
+      "page": "45 · v9 视觉系统 / 表面、语义与重复",
+      "name": "Menu row",
+      "role": "Menu row",
+      "width": 240,
+      "height": 32,
+      "padding": {
+        "top": 0,
+        "right": 8,
+        "bottom": 0,
+        "left": 8
+      },
+      "gap": 0,
+      "radius": 8
+    },
+    {
+      "page": "45 · v9 视觉系统 / 表面、语义与重复",
+      "name": "Menu row",
+      "role": "Menu row",
+      "width": 240,
+      "height": 32,
+      "padding": {
+        "top": 0,
+        "right": 8,
+        "bottom": 0,
+        "left": 8
+      },
+      "gap": 0,
+      "radius": 8
+    },
+    {
+      "page": "46 · v9 状态矩阵 / 明色",
+      "name": "File hit area / 文档",
+      "role": "File hit area",
+      "width": 100,
+      "height": 112,
+      "padding": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "gap": 0,
+      "radius": 0,
+      "visual": {
+        "width": 60,
+        "height": 92,
+        "top": 0,
+        "left": 20
+      }
+    },
+    {
+      "page": "46 · v9 状态矩阵 / 明色",
+      "name": "File visual container / content fit",
+      "role": "File visual container",
+      "width": 60,
+      "height": 92,
+      "padding": {
+        "top": 8,
+        "right": 8,
+        "bottom": 12,
+        "left": 8
+      },
+      "gap": 8,
+      "radius": 10,
+      "iconInset": {
+        "top": 8,
+        "left": 8
+      }
+    },
+    {
+      "page": "46 · v9 状态矩阵 / 明色",
+      "name": "File hit area / 文档",
+      "role": "File hit area",
+      "width": 100,
+      "height": 112,
+      "padding": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "gap": 0,
+      "radius": 0,
+      "visual": {
+        "width": 60,
+        "height": 92,
+        "top": 0,
+        "left": 20
+      }
+    },
+    {
+      "page": "46 · v9 状态矩阵 / 明色",
+      "name": "File visual container / content fit",
+      "role": "File visual container",
+      "width": 60,
+      "height": 92,
+      "padding": {
+        "top": 8,
+        "right": 8,
+        "bottom": 12,
+        "left": 8
+      },
+      "gap": 8,
+      "radius": 10,
+      "iconInset": {
+        "top": 8,
+        "left": 8
+      }
+    },
+    {
+      "page": "46 · v9 状态矩阵 / 明色",
+      "name": "File hit area / 文档",
+      "role": "File hit area",
+      "width": 100,
+      "height": 112,
+      "padding": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "gap": 0,
+      "radius": 0,
+      "visual": {
+        "width": 60,
+        "height": 92,
+        "top": 0,
+        "left": 20
+      }
+    },
+    {
+      "page": "46 · v9 状态矩阵 / 明色",
+      "name": "File visual container / content fit",
+      "role": "File visual container",
+      "width": 60,
+      "height": 92,
+      "padding": {
+        "top": 8,
+        "right": 8,
+        "bottom": 12,
+        "left": 8
+      },
+      "gap": 8,
+      "radius": 10,
+      "iconInset": {
+        "top": 8,
+        "left": 8
+      }
+    },
+    {
+      "page": "46 · v9 状态矩阵 / 明色",
+      "name": "File hit area / 文档",
+      "role": "File hit area",
+      "width": 100,
+      "height": 112,
+      "padding": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "gap": 0,
+      "radius": 0,
+      "visual": {
+        "width": 60,
+        "height": 92,
+        "top": 0,
+        "left": 20
+      }
+    },
+    {
+      "page": "46 · v9 状态矩阵 / 明色",
+      "name": "File visual container / content fit",
+      "role": "File visual container",
+      "width": 60,
+      "height": 92,
+      "padding": {
+        "top": 8,
+        "right": 8,
+        "bottom": 12,
+        "left": 8
+      },
+      "gap": 8,
+      "radius": 10,
+      "iconInset": {
+        "top": 8,
+        "left": 8
+      }
+    },
+    {
+      "page": "46 · v9 状态矩阵 / 明色",
+      "name": "File hit area / 文档",
+      "role": "File hit area",
+      "width": 100,
+      "height": 112,
+      "padding": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "gap": 0,
+      "radius": 0,
+      "visual": {
+        "width": 60,
+        "height": 92,
+        "top": 0,
+        "left": 20
+      }
+    },
+    {
+      "page": "46 · v9 状态矩阵 / 明色",
+      "name": "File visual container / content fit",
+      "role": "File visual container",
+      "width": 60,
+      "height": 92,
+      "padding": {
+        "top": 8,
+        "right": 8,
+        "bottom": 12,
+        "left": 8
+      },
+      "gap": 8,
+      "radius": 10,
+      "iconInset": {
+        "top": 8,
+        "left": 8
+      }
+    },
+    {
+      "page": "46 · v9 状态矩阵 / 明色",
+      "name": "File hit area / 文档",
+      "role": "File hit area",
+      "width": 100,
+      "height": 112,
+      "padding": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "gap": 0,
+      "radius": 0,
+      "visual": {
+        "width": 60,
+        "height": 92,
+        "top": 0,
+        "left": 20
+      }
+    },
+    {
+      "page": "46 · v9 状态矩阵 / 明色",
+      "name": "File visual container / content fit",
+      "role": "File visual container",
+      "width": 60,
+      "height": 92,
+      "padding": {
+        "top": 8,
+        "right": 8,
+        "bottom": 12,
+        "left": 8
+      },
+      "gap": 8,
+      "radius": 10,
+      "iconInset": {
+        "top": 8,
+        "left": 8
+      }
+    },
+    {
+      "page": "46 · v9 状态矩阵 / 明色",
+      "name": "File hit area / 文档",
+      "role": "File hit area",
+      "width": 100,
+      "height": 112,
+      "padding": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "gap": 0,
+      "radius": 0,
+      "visual": {
+        "width": 60,
+        "height": 92,
+        "top": 0,
+        "left": 20
+      }
+    },
+    {
+      "page": "46 · v9 状态矩阵 / 明色",
+      "name": "File visual container / content fit",
+      "role": "File visual container",
+      "width": 60,
+      "height": 92,
+      "padding": {
+        "top": 8,
+        "right": 8,
+        "bottom": 12,
+        "left": 8
+      },
+      "gap": 8,
+      "radius": 10,
+      "iconInset": {
+        "top": 8,
+        "left": 8
+      }
+    },
+    {
+      "page": "46 · v9 状态矩阵 / 明色",
+      "name": "File hit area / 文档",
+      "role": "File hit area",
+      "width": 100,
+      "height": 112,
+      "padding": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "gap": 0,
+      "radius": 0,
+      "visual": {
+        "width": 60,
+        "height": 92,
+        "top": 0,
+        "left": 20
+      }
+    },
+    {
+      "page": "46 · v9 状态矩阵 / 明色",
+      "name": "File visual container / content fit",
+      "role": "File visual container",
+      "width": 60,
+      "height": 92,
+      "padding": {
+        "top": 8,
+        "right": 8,
+        "bottom": 12,
+        "left": 8
+      },
+      "gap": 8,
+      "radius": 10,
+      "iconInset": {
+        "top": 8,
+        "left": 8
+      }
+    },
+    {
+      "page": "46 · v9 状态矩阵 / 明色",
+      "name": "File hit area / 文档",
+      "role": "File hit area",
+      "width": 100,
+      "height": 112,
+      "padding": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "gap": 0,
+      "radius": 0,
+      "visual": {
+        "width": 60,
+        "height": 92,
+        "top": 0,
+        "left": 20
+      }
+    },
+    {
+      "page": "46 · v9 状态矩阵 / 明色",
+      "name": "File visual container / content fit",
+      "role": "File visual container",
+      "width": 60,
+      "height": 92,
+      "padding": {
+        "top": 8,
+        "right": 8,
+        "bottom": 12,
+        "left": 8
+      },
+      "gap": 8,
+      "radius": 10,
+      "iconInset": {
+        "top": 8,
+        "left": 8
+      }
+    },
+    {
+      "page": "46 · v9 状态矩阵 / 明色",
+      "name": "Primary action",
+      "role": "Primary action",
+      "width": 57,
+      "height": 32,
+      "padding": {
+        "top": 0,
+        "right": 16,
+        "bottom": 0,
+        "left": 16
+      },
+      "gap": 0,
+      "radius": 8
+    },
+    {
+      "page": "46 · v9 状态矩阵 / 明色",
+      "name": "Hover action",
+      "role": "Hover action",
+      "width": 49,
+      "height": 32,
+      "padding": {
+        "top": 0,
+        "right": 12,
+        "bottom": 0,
+        "left": 12
+      },
+      "gap": 0,
+      "radius": 8
+    },
+    {
+      "page": "46 · v9 状态矩阵 / 明色",
+      "name": "Input focus",
+      "role": "Input focus",
+      "width": 220,
+      "height": 32,
+      "padding": {
+        "top": 0,
+        "right": 8,
+        "bottom": 0,
+        "left": 8
+      },
+      "gap": 0,
+      "radius": 8
+    },
+    {
+      "page": "47 · v9 状态矩阵 / 深色",
+      "name": "File hit area / 文档",
+      "role": "File hit area",
+      "width": 100,
+      "height": 112,
+      "padding": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "gap": 0,
+      "radius": 0,
+      "visual": {
+        "width": 60,
+        "height": 92,
+        "top": 0,
+        "left": 20
+      }
+    },
+    {
+      "page": "47 · v9 状态矩阵 / 深色",
+      "name": "File visual container / content fit",
+      "role": "File visual container",
+      "width": 60,
+      "height": 92,
+      "padding": {
+        "top": 8,
+        "right": 8,
+        "bottom": 12,
+        "left": 8
+      },
+      "gap": 8,
+      "radius": 10,
+      "iconInset": {
+        "top": 8,
+        "left": 8
+      }
+    },
+    {
+      "page": "47 · v9 状态矩阵 / 深色",
+      "name": "File hit area / 文档",
+      "role": "File hit area",
+      "width": 100,
+      "height": 112,
+      "padding": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "gap": 0,
+      "radius": 0,
+      "visual": {
+        "width": 60,
+        "height": 92,
+        "top": 0,
+        "left": 20
+      }
+    },
+    {
+      "page": "47 · v9 状态矩阵 / 深色",
+      "name": "File visual container / content fit",
+      "role": "File visual container",
+      "width": 60,
+      "height": 92,
+      "padding": {
+        "top": 8,
+        "right": 8,
+        "bottom": 12,
+        "left": 8
+      },
+      "gap": 8,
+      "radius": 10,
+      "iconInset": {
+        "top": 8,
+        "left": 8
+      }
+    },
+    {
+      "page": "47 · v9 状态矩阵 / 深色",
+      "name": "File hit area / 文档",
+      "role": "File hit area",
+      "width": 100,
+      "height": 112,
+      "padding": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "gap": 0,
+      "radius": 0,
+      "visual": {
+        "width": 60,
+        "height": 92,
+        "top": 0,
+        "left": 20
+      }
+    },
+    {
+      "page": "47 · v9 状态矩阵 / 深色",
+      "name": "File visual container / content fit",
+      "role": "File visual container",
+      "width": 60,
+      "height": 92,
+      "padding": {
+        "top": 8,
+        "right": 8,
+        "bottom": 12,
+        "left": 8
+      },
+      "gap": 8,
+      "radius": 10,
+      "iconInset": {
+        "top": 8,
+        "left": 8
+      }
+    },
+    {
+      "page": "47 · v9 状态矩阵 / 深色",
+      "name": "File hit area / 文档",
+      "role": "File hit area",
+      "width": 100,
+      "height": 112,
+      "padding": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "gap": 0,
+      "radius": 0,
+      "visual": {
+        "width": 60,
+        "height": 92,
+        "top": 0,
+        "left": 20
+      }
+    },
+    {
+      "page": "47 · v9 状态矩阵 / 深色",
+      "name": "File visual container / content fit",
+      "role": "File visual container",
+      "width": 60,
+      "height": 92,
+      "padding": {
+        "top": 8,
+        "right": 8,
+        "bottom": 12,
+        "left": 8
+      },
+      "gap": 8,
+      "radius": 10,
+      "iconInset": {
+        "top": 8,
+        "left": 8
+      }
+    },
+    {
+      "page": "47 · v9 状态矩阵 / 深色",
+      "name": "File hit area / 文档",
+      "role": "File hit area",
+      "width": 100,
+      "height": 112,
+      "padding": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "gap": 0,
+      "radius": 0,
+      "visual": {
+        "width": 60,
+        "height": 92,
+        "top": 0,
+        "left": 20
+      }
+    },
+    {
+      "page": "47 · v9 状态矩阵 / 深色",
+      "name": "File visual container / content fit",
+      "role": "File visual container",
+      "width": 60,
+      "height": 92,
+      "padding": {
+        "top": 8,
+        "right": 8,
+        "bottom": 12,
+        "left": 8
+      },
+      "gap": 8,
+      "radius": 10,
+      "iconInset": {
+        "top": 8,
+        "left": 8
+      }
+    },
+    {
+      "page": "47 · v9 状态矩阵 / 深色",
+      "name": "File hit area / 文档",
+      "role": "File hit area",
+      "width": 100,
+      "height": 112,
+      "padding": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "gap": 0,
+      "radius": 0,
+      "visual": {
+        "width": 60,
+        "height": 92,
+        "top": 0,
+        "left": 20
+      }
+    },
+    {
+      "page": "47 · v9 状态矩阵 / 深色",
+      "name": "File visual container / content fit",
+      "role": "File visual container",
+      "width": 60,
+      "height": 92,
+      "padding": {
+        "top": 8,
+        "right": 8,
+        "bottom": 12,
+        "left": 8
+      },
+      "gap": 8,
+      "radius": 10,
+      "iconInset": {
+        "top": 8,
+        "left": 8
+      }
+    },
+    {
+      "page": "47 · v9 状态矩阵 / 深色",
+      "name": "File hit area / 文档",
+      "role": "File hit area",
+      "width": 100,
+      "height": 112,
+      "padding": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "gap": 0,
+      "radius": 0,
+      "visual": {
+        "width": 60,
+        "height": 92,
+        "top": 0,
+        "left": 20
+      }
+    },
+    {
+      "page": "47 · v9 状态矩阵 / 深色",
+      "name": "File visual container / content fit",
+      "role": "File visual container",
+      "width": 60,
+      "height": 92,
+      "padding": {
+        "top": 8,
+        "right": 8,
+        "bottom": 12,
+        "left": 8
+      },
+      "gap": 8,
+      "radius": 10,
+      "iconInset": {
+        "top": 8,
+        "left": 8
+      }
+    },
+    {
+      "page": "47 · v9 状态矩阵 / 深色",
+      "name": "File hit area / 文档",
+      "role": "File hit area",
+      "width": 100,
+      "height": 112,
+      "padding": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "gap": 0,
+      "radius": 0,
+      "visual": {
+        "width": 60,
+        "height": 92,
+        "top": 0,
+        "left": 20
+      }
+    },
+    {
+      "page": "47 · v9 状态矩阵 / 深色",
+      "name": "File visual container / content fit",
+      "role": "File visual container",
+      "width": 60,
+      "height": 92,
+      "padding": {
+        "top": 8,
+        "right": 8,
+        "bottom": 12,
+        "left": 8
+      },
+      "gap": 8,
+      "radius": 10,
+      "iconInset": {
+        "top": 8,
+        "left": 8
+      }
+    },
+    {
+      "page": "47 · v9 状态矩阵 / 深色",
+      "name": "File hit area / 文档",
+      "role": "File hit area",
+      "width": 100,
+      "height": 112,
+      "padding": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "gap": 0,
+      "radius": 0,
+      "visual": {
+        "width": 60,
+        "height": 92,
+        "top": 0,
+        "left": 20
+      }
+    },
+    {
+      "page": "47 · v9 状态矩阵 / 深色",
+      "name": "File visual container / content fit",
+      "role": "File visual container",
+      "width": 60,
+      "height": 92,
+      "padding": {
+        "top": 8,
+        "right": 8,
+        "bottom": 12,
+        "left": 8
+      },
+      "gap": 8,
+      "radius": 10,
+      "iconInset": {
+        "top": 8,
+        "left": 8
+      }
+    },
+    {
+      "page": "47 · v9 状态矩阵 / 深色",
+      "name": "Primary action",
+      "role": "Primary action",
+      "width": 57,
+      "height": 32,
+      "padding": {
+        "top": 0,
+        "right": 16,
+        "bottom": 0,
+        "left": 16
+      },
+      "gap": 0,
+      "radius": 8
+    },
+    {
+      "page": "47 · v9 状态矩阵 / 深色",
+      "name": "Hover action",
+      "role": "Hover action",
+      "width": 49,
+      "height": 32,
+      "padding": {
+        "top": 0,
+        "right": 12,
+        "bottom": 0,
+        "left": 12
+      },
+      "gap": 0,
+      "radius": 8
+    },
+    {
+      "page": "47 · v9 状态矩阵 / 深色",
+      "name": "Input focus",
+      "role": "Input focus",
+      "width": 220,
+      "height": 32,
+      "padding": {
+        "top": 0,
+        "right": 8,
+        "bottom": 0,
+        "left": 8
+      },
+      "gap": 0,
+      "radius": 8
+    },
+    {
+      "page": "48 · v9 文件选择 / 单一浅色状态层",
+      "name": "File hit area / 文档",
+      "role": "File hit area",
+      "width": 102.4000015258789,
+      "height": 112,
+      "padding": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "gap": 0,
+      "radius": 0,
+      "visual": {
+        "width": 60,
+        "height": 92,
+        "top": 0,
+        "left": 21.200000762939453
+      }
+    },
+    {
+      "page": "48 · v9 文件选择 / 单一浅色状态层",
+      "name": "File visual container / content fit",
+      "role": "File visual container",
+      "width": 60,
+      "height": 92,
+      "padding": {
+        "top": 8,
+        "right": 8,
+        "bottom": 12,
+        "left": 8
+      },
+      "gap": 8,
+      "radius": 10,
+      "iconInset": {
+        "top": 8,
+        "left": 8
+      }
+    },
+    {
+      "page": "48 · v9 文件选择 / 单一浅色状态层",
+      "name": "File hit area / 图片",
+      "role": "File hit area",
+      "width": 102.4000015258789,
+      "height": 112,
+      "padding": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "gap": 0,
+      "radius": 0,
+      "visual": {
+        "width": 60,
+        "height": 92,
+        "top": 0,
+        "left": 21.200000762939453
+      }
+    },
+    {
+      "page": "48 · v9 文件选择 / 单一浅色状态层",
+      "name": "File visual container / content fit",
+      "role": "File visual container",
+      "width": 60,
+      "height": 92,
+      "padding": {
+        "top": 8,
+        "right": 8,
+        "bottom": 12,
+        "left": 8
+      },
+      "gap": 8,
+      "radius": 10,
+      "iconInset": {
+        "top": 8,
+        "left": 8
+      }
+    },
+    {
+      "page": "48 · v9 文件选择 / 单一浅色状态层",
+      "name": "File hit area / 设计资料",
+      "role": "File hit area",
+      "width": 102.4000015258789,
+      "height": 112,
+      "padding": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "gap": 0,
+      "radius": 0,
+      "visual": {
+        "width": 73,
+        "height": 92,
+        "top": 0,
+        "left": 14.700000762939453
+      }
+    },
+    {
+      "page": "48 · v9 文件选择 / 单一浅色状态层",
+      "name": "File visual container / content fit",
+      "role": "File visual container",
+      "width": 73,
+      "height": 92,
+      "padding": {
+        "top": 8,
+        "right": 8,
+        "bottom": 12,
+        "left": 8
+      },
+      "gap": 8,
+      "radius": 10,
+      "iconInset": {
+        "top": 8,
+        "left": 14.5
+      }
+    },
+    {
+      "page": "48 · v9 文件选择 / 单一浅色状态层",
+      "name": "File hit area / 研究笔记.pdf",
+      "role": "File hit area",
+      "width": 102.4000015258789,
+      "height": 112,
+      "padding": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "gap": 0,
+      "radius": 0,
+      "visual": {
+        "width": 95,
+        "height": 92,
+        "top": 0,
+        "left": 3.700000762939453
+      }
+    },
+    {
+      "page": "48 · v9 文件选择 / 单一浅色状态层",
+      "name": "File visual container / content fit",
+      "role": "File visual container",
+      "width": 95,
+      "height": 92,
+      "padding": {
+        "top": 8,
+        "right": 8,
+        "bottom": 12,
+        "left": 8
+      },
+      "gap": 8,
+      "radius": 10,
+      "iconInset": {
+        "top": 8,
+        "left": 25.5
+      }
+    },
+    {
+      "page": "48 · v9 文件选择 / 单一浅色状态层",
+      "name": "File hit area / 项目研究记录_最终核对稿.pdf",
+      "role": "File hit area",
+      "width": 102.4000015258789,
+      "height": 112,
+      "padding": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "gap": 0,
+      "radius": 0,
+      "visual": {
+        "width": 102.4000015258789,
+        "height": 108,
+        "top": 0,
+        "left": 0
+      }
+    },
+    {
+      "page": "48 · v9 文件选择 / 单一浅色状态层",
+      "name": "File visual container / content fit",
+      "role": "File visual container",
+      "width": 102.4000015258789,
+      "height": 108,
+      "padding": {
+        "top": 8,
+        "right": 8,
+        "bottom": 12,
+        "left": 8
+      },
+      "gap": 8,
+      "radius": 10,
+      "iconInset": {
+        "top": 8,
+        "left": 29.200000762939453
+      }
+    },
+    {
+      "page": "48 · v9 文件选择 / 单一浅色状态层",
+      "name": "File hit area / 预算.xlsx",
+      "role": "File hit area",
+      "width": 102.4000015258789,
+      "height": 112,
+      "padding": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "gap": 0,
+      "radius": 0,
+      "visual": {
+        "width": 73,
+        "height": 92,
+        "top": 0,
+        "left": 14.700000762939453
+      }
+    },
+    {
+      "page": "48 · v9 文件选择 / 单一浅色状态层",
+      "name": "File visual container / content fit",
+      "role": "File visual container",
+      "width": 73,
+      "height": 92,
+      "padding": {
+        "top": 8,
+        "right": 8,
+        "bottom": 12,
+        "left": 8
+      },
+      "gap": 8,
+      "radius": 10,
+      "iconInset": {
+        "top": 8,
+        "left": 14.5
+      }
+    },
+    {
+      "page": "48 · v9 文件选择 / 单一浅色状态层",
+      "name": "File hit area / 归档",
+      "role": "File hit area",
+      "width": 102.4000015258789,
+      "height": 112,
+      "padding": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "gap": 0,
+      "radius": 0,
+      "visual": {
+        "width": 60,
+        "height": 92,
+        "top": 0,
+        "left": 21.200000762939453
+      }
+    },
+    {
+      "page": "48 · v9 文件选择 / 单一浅色状态层",
+      "name": "File visual container / content fit",
+      "role": "File visual container",
+      "width": 60,
+      "height": 92,
+      "padding": {
+        "top": 8,
+        "right": 8,
+        "bottom": 12,
+        "left": 8
+      },
+      "gap": 8,
+      "radius": 10,
+      "iconInset": {
+        "top": 8,
+        "left": 8
+      }
+    },
+    {
+      "page": "48 · v9 文件选择 / 单一浅色状态层",
+      "name": "File hit area / 收据.pdf",
+      "role": "File hit area",
+      "width": 102.4000015258789,
+      "height": 112,
+      "padding": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "gap": 0,
+      "radius": 0,
+      "visual": {
+        "width": 71,
+        "height": 92,
+        "top": 0,
+        "left": 15.700000762939453
+      }
+    },
+    {
+      "page": "48 · v9 文件选择 / 单一浅色状态层",
+      "name": "File visual container / content fit",
+      "role": "File visual container",
+      "width": 71,
+      "height": 92,
+      "padding": {
+        "top": 8,
+        "right": 8,
+        "bottom": 12,
+        "left": 8
+      },
+      "gap": 8,
+      "radius": 10,
+      "iconInset": {
+        "top": 8,
+        "left": 13.5
+      }
+    },
+    {
+      "page": "48 · v9 文件选择 / 单一浅色状态层",
+      "name": "File hit area / 旅行计划",
+      "role": "File hit area",
+      "width": 102.4000015258789,
+      "height": 112,
+      "padding": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "gap": 0,
+      "radius": 0,
+      "visual": {
+        "width": 73,
+        "height": 92,
+        "top": 0,
+        "left": 14.700000762939453
+      }
+    },
+    {
+      "page": "48 · v9 文件选择 / 单一浅色状态层",
+      "name": "File visual container / content fit",
+      "role": "File visual container",
+      "width": 73,
+      "height": 92,
+      "padding": {
+        "top": 8,
+        "right": 8,
+        "bottom": 12,
+        "left": 8
+      },
+      "gap": 8,
+      "radius": 10,
+      "iconInset": {
+        "top": 8,
+        "left": 14.5
+      }
+    },
+    {
+      "page": "48 · v9 文件选择 / 单一浅色状态层",
+      "name": "File hit area / 个人资料",
+      "role": "File hit area",
+      "width": 102.4000015258789,
+      "height": 112,
+      "padding": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "gap": 0,
+      "radius": 0,
+      "visual": {
+        "width": 73,
+        "height": 92,
+        "top": 0,
+        "left": 14.700000762939453
+      }
+    },
+    {
+      "page": "48 · v9 文件选择 / 单一浅色状态层",
+      "name": "File visual container / content fit",
+      "role": "File visual container",
+      "width": 73,
+      "height": 92,
+      "padding": {
+        "top": 8,
+        "right": 8,
+        "bottom": 12,
+        "left": 8
+      },
+      "gap": 8,
+      "radius": 10,
+      "iconInset": {
+        "top": 8,
+        "left": 14.5
+      }
+    },
+    {
+      "page": "48 · v9 文件选择 / 单一浅色状态层",
+      "name": "File hit area / 合同.pdf",
+      "role": "File hit area",
+      "width": 102.4000015258789,
+      "height": 112,
+      "padding": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "gap": 0,
+      "radius": 0,
+      "visual": {
+        "width": 71,
+        "height": 92,
+        "top": 0,
+        "left": 15.700000762939453
+      }
+    },
+    {
+      "page": "48 · v9 文件选择 / 单一浅色状态层",
+      "name": "File visual container / content fit",
+      "role": "File visual container",
+      "width": 71,
+      "height": 92,
+      "padding": {
+        "top": 8,
+        "right": 8,
+        "bottom": 12,
+        "left": 8
+      },
+      "gap": 8,
+      "radius": 10,
+      "iconInset": {
+        "top": 8,
+        "left": 13.5
+      }
+    },
+    {
+      "page": "48 · v9 文件选择 / 单一浅色状态层",
+      "name": "File hit area / 参考资料",
+      "role": "File hit area",
+      "width": 102.4000015258789,
+      "height": 112,
+      "padding": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "gap": 0,
+      "radius": 0,
+      "visual": {
+        "width": 73,
+        "height": 92,
+        "top": 0,
+        "left": 14.700000762939453
+      }
+    },
+    {
+      "page": "48 · v9 文件选择 / 单一浅色状态层",
+      "name": "File visual container / content fit",
+      "role": "File visual container",
+      "width": 73,
+      "height": 92,
+      "padding": {
+        "top": 8,
+        "right": 8,
+        "bottom": 12,
+        "left": 8
+      },
+      "gap": 8,
+      "radius": 10,
+      "iconInset": {
+        "top": 8,
+        "left": 14.5
+      }
+    },
+    {
+      "page": "48 · v9 文件选择 / 单一浅色状态层",
+      "name": "File hit area / 拍摄计划",
+      "role": "File hit area",
+      "width": 102.4000015258789,
+      "height": 112,
+      "padding": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "gap": 0,
+      "radius": 0,
+      "visual": {
+        "width": 73,
+        "height": 92,
+        "top": 0,
+        "left": 14.700000762939453
+      }
+    },
+    {
+      "page": "48 · v9 文件选择 / 单一浅色状态层",
+      "name": "File visual container / content fit",
+      "role": "File visual container",
+      "width": 73,
+      "height": 92,
+      "padding": {
+        "top": 8,
+        "right": 8,
+        "bottom": 12,
+        "left": 8
+      },
+      "gap": 8,
+      "radius": 10,
+      "iconInset": {
+        "top": 8,
+        "left": 14.5
+      }
+    },
+    {
+      "page": "48 · v9 文件选择 / 单一浅色状态层",
+      "name": "File hit area / 会议记录.pdf",
+      "role": "File hit area",
+      "width": 102.4000015258789,
+      "height": 112,
+      "padding": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "gap": 0,
+      "radius": 0,
+      "visual": {
+        "width": 95,
+        "height": 92,
+        "top": 0,
+        "left": 3.700000762939453
+      }
+    },
+    {
+      "page": "48 · v9 文件选择 / 单一浅色状态层",
+      "name": "File visual container / content fit",
+      "role": "File visual container",
+      "width": 95,
+      "height": 92,
+      "padding": {
+        "top": 8,
+        "right": 8,
+        "bottom": 12,
+        "left": 8
+      },
+      "gap": 8,
+      "radius": 10,
+      "iconInset": {
+        "top": 8,
+        "left": 25.5
+      }
+    },
+    {
+      "page": "48 · v9 文件选择 / 单一浅色状态层",
+      "name": "File hit area / 读书笔记",
+      "role": "File hit area",
+      "width": 102.4000015258789,
+      "height": 112,
+      "padding": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "gap": 0,
+      "radius": 0,
+      "visual": {
+        "width": 73,
+        "height": 92,
+        "top": 0,
+        "left": 14.700000762939453
+      }
+    },
+    {
+      "page": "48 · v9 文件选择 / 单一浅色状态层",
+      "name": "File visual container / content fit",
+      "role": "File visual container",
+      "width": 73,
+      "height": 92,
+      "padding": {
+        "top": 8,
+        "right": 8,
+        "bottom": 12,
+        "left": 8
+      },
+      "gap": 8,
+      "radius": 10,
+      "iconInset": {
+        "top": 8,
+        "left": 14.5
+      }
+    },
+    {
+      "page": "49 · v9 浮层 / 与内容层区分",
+      "name": "File hit area / 文档",
+      "role": "File hit area",
+      "width": 102.4000015258789,
+      "height": 112,
+      "padding": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "gap": 0,
+      "radius": 0,
+      "visual": {
+        "width": 60,
+        "height": 92,
+        "top": 0,
+        "left": 21.200000762939453
+      }
+    },
+    {
+      "page": "49 · v9 浮层 / 与内容层区分",
+      "name": "File visual container / content fit",
+      "role": "File visual container",
+      "width": 60,
+      "height": 92,
+      "padding": {
+        "top": 8,
+        "right": 8,
+        "bottom": 12,
+        "left": 8
+      },
+      "gap": 8,
+      "radius": 10,
+      "iconInset": {
+        "top": 8,
+        "left": 8
+      }
+    },
+    {
+      "page": "49 · v9 浮层 / 与内容层区分",
+      "name": "File hit area / 图片",
+      "role": "File hit area",
+      "width": 102.4000015258789,
+      "height": 112,
+      "padding": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "gap": 0,
+      "radius": 0,
+      "visual": {
+        "width": 60,
+        "height": 92,
+        "top": 0,
+        "left": 21.200000762939453
+      }
+    },
+    {
+      "page": "49 · v9 浮层 / 与内容层区分",
+      "name": "File visual container / content fit",
+      "role": "File visual container",
+      "width": 60,
+      "height": 92,
+      "padding": {
+        "top": 8,
+        "right": 8,
+        "bottom": 12,
+        "left": 8
+      },
+      "gap": 8,
+      "radius": 10,
+      "iconInset": {
+        "top": 8,
+        "left": 8
+      }
+    },
+    {
+      "page": "49 · v9 浮层 / 与内容层区分",
+      "name": "File hit area / 设计资料",
+      "role": "File hit area",
+      "width": 102.4000015258789,
+      "height": 112,
+      "padding": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "gap": 0,
+      "radius": 0,
+      "visual": {
+        "width": 73,
+        "height": 92,
+        "top": 0,
+        "left": 14.700000762939453
+      }
+    },
+    {
+      "page": "49 · v9 浮层 / 与内容层区分",
+      "name": "File visual container / content fit",
+      "role": "File visual container",
+      "width": 73,
+      "height": 92,
+      "padding": {
+        "top": 8,
+        "right": 8,
+        "bottom": 12,
+        "left": 8
+      },
+      "gap": 8,
+      "radius": 10,
+      "iconInset": {
+        "top": 8,
+        "left": 14.5
+      }
+    },
+    {
+      "page": "49 · v9 浮层 / 与内容层区分",
+      "name": "File hit area / 研究笔记.pdf",
+      "role": "File hit area",
+      "width": 102.4000015258789,
+      "height": 112,
+      "padding": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "gap": 0,
+      "radius": 0,
+      "visual": {
+        "width": 95,
+        "height": 92,
+        "top": 0,
+        "left": 3.700000762939453
+      }
+    },
+    {
+      "page": "49 · v9 浮层 / 与内容层区分",
+      "name": "File visual container / content fit",
+      "role": "File visual container",
+      "width": 95,
+      "height": 92,
+      "padding": {
+        "top": 8,
+        "right": 8,
+        "bottom": 12,
+        "left": 8
+      },
+      "gap": 8,
+      "radius": 10,
+      "iconInset": {
+        "top": 8,
+        "left": 25.5
+      }
+    },
+    {
+      "page": "49 · v9 浮层 / 与内容层区分",
+      "name": "File hit area / 项目研究记录_最终核对稿.pdf",
+      "role": "File hit area",
+      "width": 102.4000015258789,
+      "height": 112,
+      "padding": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "gap": 0,
+      "radius": 0,
+      "visual": {
+        "width": 102.4000015258789,
+        "height": 108,
+        "top": 0,
+        "left": 0
+      }
+    },
+    {
+      "page": "49 · v9 浮层 / 与内容层区分",
+      "name": "File visual container / content fit",
+      "role": "File visual container",
+      "width": 102.4000015258789,
+      "height": 108,
+      "padding": {
+        "top": 8,
+        "right": 8,
+        "bottom": 12,
+        "left": 8
+      },
+      "gap": 8,
+      "radius": 10,
+      "iconInset": {
+        "top": 8,
+        "left": 29.200000762939453
+      }
+    },
+    {
+      "page": "49 · v9 浮层 / 与内容层区分",
+      "name": "File hit area / 预算.xlsx",
+      "role": "File hit area",
+      "width": 102.4000015258789,
+      "height": 112,
+      "padding": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "gap": 0,
+      "radius": 0,
+      "visual": {
+        "width": 73,
+        "height": 92,
+        "top": 0,
+        "left": 14.700000762939453
+      }
+    },
+    {
+      "page": "49 · v9 浮层 / 与内容层区分",
+      "name": "File visual container / content fit",
+      "role": "File visual container",
+      "width": 73,
+      "height": 92,
+      "padding": {
+        "top": 8,
+        "right": 8,
+        "bottom": 12,
+        "left": 8
+      },
+      "gap": 8,
+      "radius": 10,
+      "iconInset": {
+        "top": 8,
+        "left": 14.5
+      }
+    },
+    {
+      "page": "49 · v9 浮层 / 与内容层区分",
+      "name": "File hit area / 归档",
+      "role": "File hit area",
+      "width": 102.4000015258789,
+      "height": 112,
+      "padding": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "gap": 0,
+      "radius": 0,
+      "visual": {
+        "width": 60,
+        "height": 92,
+        "top": 0,
+        "left": 21.200000762939453
+      }
+    },
+    {
+      "page": "49 · v9 浮层 / 与内容层区分",
+      "name": "File visual container / content fit",
+      "role": "File visual container",
+      "width": 60,
+      "height": 92,
+      "padding": {
+        "top": 8,
+        "right": 8,
+        "bottom": 12,
+        "left": 8
+      },
+      "gap": 8,
+      "radius": 10,
+      "iconInset": {
+        "top": 8,
+        "left": 8
+      }
+    },
+    {
+      "page": "49 · v9 浮层 / 与内容层区分",
+      "name": "File hit area / 收据.pdf",
+      "role": "File hit area",
+      "width": 102.4000015258789,
+      "height": 112,
+      "padding": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "gap": 0,
+      "radius": 0,
+      "visual": {
+        "width": 71,
+        "height": 92,
+        "top": 0,
+        "left": 15.700000762939453
+      }
+    },
+    {
+      "page": "49 · v9 浮层 / 与内容层区分",
+      "name": "File visual container / content fit",
+      "role": "File visual container",
+      "width": 71,
+      "height": 92,
+      "padding": {
+        "top": 8,
+        "right": 8,
+        "bottom": 12,
+        "left": 8
+      },
+      "gap": 8,
+      "radius": 10,
+      "iconInset": {
+        "top": 8,
+        "left": 13.5
+      }
+    },
+    {
+      "page": "49 · v9 浮层 / 与内容层区分",
+      "name": "File hit area / 旅行计划",
+      "role": "File hit area",
+      "width": 102.4000015258789,
+      "height": 112,
+      "padding": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "gap": 0,
+      "radius": 0,
+      "visual": {
+        "width": 73,
+        "height": 92,
+        "top": 0,
+        "left": 14.700000762939453
+      }
+    },
+    {
+      "page": "49 · v9 浮层 / 与内容层区分",
+      "name": "File visual container / content fit",
+      "role": "File visual container",
+      "width": 73,
+      "height": 92,
+      "padding": {
+        "top": 8,
+        "right": 8,
+        "bottom": 12,
+        "left": 8
+      },
+      "gap": 8,
+      "radius": 10,
+      "iconInset": {
+        "top": 8,
+        "left": 14.5
+      }
+    },
+    {
+      "page": "49 · v9 浮层 / 与内容层区分",
+      "name": "File hit area / 个人资料",
+      "role": "File hit area",
+      "width": 102.4000015258789,
+      "height": 112,
+      "padding": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "gap": 0,
+      "radius": 0,
+      "visual": {
+        "width": 73,
+        "height": 92,
+        "top": 0,
+        "left": 14.700000762939453
+      }
+    },
+    {
+      "page": "49 · v9 浮层 / 与内容层区分",
+      "name": "File visual container / content fit",
+      "role": "File visual container",
+      "width": 73,
+      "height": 92,
+      "padding": {
+        "top": 8,
+        "right": 8,
+        "bottom": 12,
+        "left": 8
+      },
+      "gap": 8,
+      "radius": 10,
+      "iconInset": {
+        "top": 8,
+        "left": 14.5
+      }
+    },
+    {
+      "page": "49 · v9 浮层 / 与内容层区分",
+      "name": "File hit area / 合同.pdf",
+      "role": "File hit area",
+      "width": 102.4000015258789,
+      "height": 112,
+      "padding": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "gap": 0,
+      "radius": 0,
+      "visual": {
+        "width": 71,
+        "height": 92,
+        "top": 0,
+        "left": 15.700000762939453
+      }
+    },
+    {
+      "page": "49 · v9 浮层 / 与内容层区分",
+      "name": "File visual container / content fit",
+      "role": "File visual container",
+      "width": 71,
+      "height": 92,
+      "padding": {
+        "top": 8,
+        "right": 8,
+        "bottom": 12,
+        "left": 8
+      },
+      "gap": 8,
+      "radius": 10,
+      "iconInset": {
+        "top": 8,
+        "left": 13.5
+      }
+    },
+    {
+      "page": "49 · v9 浮层 / 与内容层区分",
+      "name": "File hit area / 参考资料",
+      "role": "File hit area",
+      "width": 102.4000015258789,
+      "height": 112,
+      "padding": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "gap": 0,
+      "radius": 0,
+      "visual": {
+        "width": 73,
+        "height": 92,
+        "top": 0,
+        "left": 14.700000762939453
+      }
+    },
+    {
+      "page": "49 · v9 浮层 / 与内容层区分",
+      "name": "File visual container / content fit",
+      "role": "File visual container",
+      "width": 73,
+      "height": 92,
+      "padding": {
+        "top": 8,
+        "right": 8,
+        "bottom": 12,
+        "left": 8
+      },
+      "gap": 8,
+      "radius": 10,
+      "iconInset": {
+        "top": 8,
+        "left": 14.5
+      }
+    },
+    {
+      "page": "49 · v9 浮层 / 与内容层区分",
+      "name": "File hit area / 拍摄计划",
+      "role": "File hit area",
+      "width": 102.4000015258789,
+      "height": 112,
+      "padding": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "gap": 0,
+      "radius": 0,
+      "visual": {
+        "width": 73,
+        "height": 92,
+        "top": 0,
+        "left": 14.700000762939453
+      }
+    },
+    {
+      "page": "49 · v9 浮层 / 与内容层区分",
+      "name": "File visual container / content fit",
+      "role": "File visual container",
+      "width": 73,
+      "height": 92,
+      "padding": {
+        "top": 8,
+        "right": 8,
+        "bottom": 12,
+        "left": 8
+      },
+      "gap": 8,
+      "radius": 10,
+      "iconInset": {
+        "top": 8,
+        "left": 14.5
+      }
+    },
+    {
+      "page": "49 · v9 浮层 / 与内容层区分",
+      "name": "File hit area / 会议记录.pdf",
+      "role": "File hit area",
+      "width": 102.4000015258789,
+      "height": 112,
+      "padding": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "gap": 0,
+      "radius": 0,
+      "visual": {
+        "width": 95,
+        "height": 92,
+        "top": 0,
+        "left": 3.700000762939453
+      }
+    },
+    {
+      "page": "49 · v9 浮层 / 与内容层区分",
+      "name": "File visual container / content fit",
+      "role": "File visual container",
+      "width": 95,
+      "height": 92,
+      "padding": {
+        "top": 8,
+        "right": 8,
+        "bottom": 12,
+        "left": 8
+      },
+      "gap": 8,
+      "radius": 10,
+      "iconInset": {
+        "top": 8,
+        "left": 25.5
+      }
+    },
+    {
+      "page": "49 · v9 浮层 / 与内容层区分",
+      "name": "File hit area / 读书笔记",
+      "role": "File hit area",
+      "width": 102.4000015258789,
+      "height": 112,
+      "padding": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "gap": 0,
+      "radius": 0,
+      "visual": {
+        "width": 73,
+        "height": 92,
+        "top": 0,
+        "left": 14.700000762939453
+      }
+    },
+    {
+      "page": "49 · v9 浮层 / 与内容层区分",
+      "name": "File visual container / content fit",
+      "role": "File visual container",
+      "width": 73,
+      "height": 92,
+      "padding": {
+        "top": 8,
+        "right": 8,
+        "bottom": 12,
+        "left": 8
+      },
+      "gap": 8,
+      "radius": 10,
+      "iconInset": {
+        "top": 8,
+        "left": 14.5
+      }
+    },
+    {
+      "page": "49 · v9 浮层 / 与内容层区分",
+      "name": "Floating menu / visual-system specimen",
+      "role": "Floating menu",
+      "width": 248,
+      "height": 320,
+      "padding": {
+        "top": 8,
+        "right": 4,
+        "bottom": 8,
+        "left": 4
+      },
+      "gap": 0,
+      "radius": 12
+    },
+    {
+      "page": "49 · v9 浮层 / 与内容层区分",
+      "name": "Menu row",
+      "role": "Menu row",
+      "width": 240,
+      "height": 32,
+      "padding": {
+        "top": 0,
+        "right": 8,
+        "bottom": 0,
+        "left": 8
+      },
+      "gap": 0,
+      "radius": 8
+    },
+    {
+      "page": "49 · v9 浮层 / 与内容层区分",
+      "name": "Menu row",
+      "role": "Menu row",
+      "width": 240,
+      "height": 32,
+      "padding": {
+        "top": 0,
+        "right": 8,
+        "bottom": 0,
+        "left": 8
+      },
+      "gap": 0,
+      "radius": 8
+    },
+    {
+      "page": "49 · v9 浮层 / 与内容层区分",
+      "name": "Menu row",
+      "role": "Menu row",
+      "width": 240,
+      "height": 32,
+      "padding": {
+        "top": 0,
+        "right": 8,
+        "bottom": 0,
+        "left": 8
+      },
+      "gap": 0,
+      "radius": 8
+    },
+    {
+      "page": "49 · v9 浮层 / 与内容层区分",
+      "name": "Menu row",
+      "role": "Menu row",
+      "width": 240,
+      "height": 32,
+      "padding": {
+        "top": 0,
+        "right": 8,
+        "bottom": 0,
+        "left": 8
+      },
+      "gap": 0,
+      "radius": 8
+    },
+    {
+      "page": "49 · v9 浮层 / 与内容层区分",
+      "name": "Menu row",
+      "role": "Menu row",
+      "width": 240,
+      "height": 32,
+      "padding": {
+        "top": 0,
+        "right": 8,
+        "bottom": 0,
+        "left": 8
+      },
+      "gap": 0,
+      "radius": 8
+    },
+    {
+      "page": "49 · v9 浮层 / 与内容层区分",
+      "name": "Menu row",
+      "role": "Menu row",
+      "width": 240,
+      "height": 32,
+      "padding": {
+        "top": 0,
+        "right": 8,
+        "bottom": 0,
+        "left": 8
+      },
+      "gap": 0,
+      "radius": 8
+    },
+    {
+      "page": "49 · v9 浮层 / 与内容层区分",
+      "name": "Menu row",
+      "role": "Menu row",
+      "width": 240,
+      "height": 32,
+      "padding": {
+        "top": 0,
+        "right": 8,
+        "bottom": 0,
+        "left": 8
+      },
+      "gap": 0,
+      "radius": 8
+    },
+    {
+      "page": "49 · v9 浮层 / 与内容层区分",
+      "name": "Menu row",
+      "role": "Menu row",
+      "width": 240,
+      "height": 32,
+      "padding": {
+        "top": 0,
+        "right": 8,
+        "bottom": 0,
+        "left": 8
+      },
+      "gap": 0,
+      "radius": 8
+    },
+    {
+      "page": "50 · v9 框选 / 同一状态语义",
+      "name": "File hit area / 文档",
+      "role": "File hit area",
+      "width": 102.4000015258789,
+      "height": 112,
+      "padding": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "gap": 0,
+      "radius": 0,
+      "visual": {
+        "width": 60,
+        "height": 92,
+        "top": 0,
+        "left": 21.200000762939453
+      }
+    },
+    {
+      "page": "50 · v9 框选 / 同一状态语义",
+      "name": "File visual container / content fit",
+      "role": "File visual container",
+      "width": 60,
+      "height": 92,
+      "padding": {
+        "top": 8,
+        "right": 8,
+        "bottom": 12,
+        "left": 8
+      },
+      "gap": 8,
+      "radius": 10,
+      "iconInset": {
+        "top": 8,
+        "left": 8
+      }
+    },
+    {
+      "page": "50 · v9 框选 / 同一状态语义",
+      "name": "File hit area / 图片",
+      "role": "File hit area",
+      "width": 102.4000015258789,
+      "height": 112,
+      "padding": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "gap": 0,
+      "radius": 0,
+      "visual": {
+        "width": 60,
+        "height": 92,
+        "top": 0,
+        "left": 21.200000762939453
+      }
+    },
+    {
+      "page": "50 · v9 框选 / 同一状态语义",
+      "name": "File visual container / content fit",
+      "role": "File visual container",
+      "width": 60,
+      "height": 92,
+      "padding": {
+        "top": 8,
+        "right": 8,
+        "bottom": 12,
+        "left": 8
+      },
+      "gap": 8,
+      "radius": 10,
+      "iconInset": {
+        "top": 8,
+        "left": 8
+      }
+    },
+    {
+      "page": "50 · v9 框选 / 同一状态语义",
+      "name": "File hit area / 设计资料",
+      "role": "File hit area",
+      "width": 102.4000015258789,
+      "height": 112,
+      "padding": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "gap": 0,
+      "radius": 0,
+      "visual": {
+        "width": 73,
+        "height": 92,
+        "top": 0,
+        "left": 14.700000762939453
+      }
+    },
+    {
+      "page": "50 · v9 框选 / 同一状态语义",
+      "name": "File visual container / content fit",
+      "role": "File visual container",
+      "width": 73,
+      "height": 92,
+      "padding": {
+        "top": 8,
+        "right": 8,
+        "bottom": 12,
+        "left": 8
+      },
+      "gap": 8,
+      "radius": 10,
+      "iconInset": {
+        "top": 8,
+        "left": 14.5
+      }
+    },
+    {
+      "page": "50 · v9 框选 / 同一状态语义",
+      "name": "File hit area / 研究笔记.pdf",
+      "role": "File hit area",
+      "width": 102.4000015258789,
+      "height": 112,
+      "padding": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "gap": 0,
+      "radius": 0,
+      "visual": {
+        "width": 95,
+        "height": 92,
+        "top": 0,
+        "left": 3.700000762939453
+      }
+    },
+    {
+      "page": "50 · v9 框选 / 同一状态语义",
+      "name": "File visual container / content fit",
+      "role": "File visual container",
+      "width": 95,
+      "height": 92,
+      "padding": {
+        "top": 8,
+        "right": 8,
+        "bottom": 12,
+        "left": 8
+      },
+      "gap": 8,
+      "radius": 10,
+      "iconInset": {
+        "top": 8,
+        "left": 25.5
+      }
+    },
+    {
+      "page": "50 · v9 框选 / 同一状态语义",
+      "name": "File hit area / 项目研究记录_最终核对稿.pdf",
+      "role": "File hit area",
+      "width": 102.4000015258789,
+      "height": 112,
+      "padding": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "gap": 0,
+      "radius": 0,
+      "visual": {
+        "width": 102.4000015258789,
+        "height": 108,
+        "top": 0,
+        "left": 0
+      }
+    },
+    {
+      "page": "50 · v9 框选 / 同一状态语义",
+      "name": "File visual container / content fit",
+      "role": "File visual container",
+      "width": 102.4000015258789,
+      "height": 108,
+      "padding": {
+        "top": 8,
+        "right": 8,
+        "bottom": 12,
+        "left": 8
+      },
+      "gap": 8,
+      "radius": 10,
+      "iconInset": {
+        "top": 8,
+        "left": 29.200000762939453
+      }
+    },
+    {
+      "page": "50 · v9 框选 / 同一状态语义",
+      "name": "File hit area / 预算.xlsx",
+      "role": "File hit area",
+      "width": 102.4000015258789,
+      "height": 112,
+      "padding": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "gap": 0,
+      "radius": 0,
+      "visual": {
+        "width": 73,
+        "height": 92,
+        "top": 0,
+        "left": 14.700000762939453
+      }
+    },
+    {
+      "page": "50 · v9 框选 / 同一状态语义",
+      "name": "File visual container / content fit",
+      "role": "File visual container",
+      "width": 73,
+      "height": 92,
+      "padding": {
+        "top": 8,
+        "right": 8,
+        "bottom": 12,
+        "left": 8
+      },
+      "gap": 8,
+      "radius": 10,
+      "iconInset": {
+        "top": 8,
+        "left": 14.5
+      }
+    },
+    {
+      "page": "50 · v9 框选 / 同一状态语义",
+      "name": "File hit area / 归档",
+      "role": "File hit area",
+      "width": 102.4000015258789,
+      "height": 112,
+      "padding": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "gap": 0,
+      "radius": 0,
+      "visual": {
+        "width": 60,
+        "height": 92,
+        "top": 0,
+        "left": 21.200000762939453
+      }
+    },
+    {
+      "page": "50 · v9 框选 / 同一状态语义",
+      "name": "File visual container / content fit",
+      "role": "File visual container",
+      "width": 60,
+      "height": 92,
+      "padding": {
+        "top": 8,
+        "right": 8,
+        "bottom": 12,
+        "left": 8
+      },
+      "gap": 8,
+      "radius": 10,
+      "iconInset": {
+        "top": 8,
+        "left": 8
+      }
+    },
+    {
+      "page": "50 · v9 框选 / 同一状态语义",
+      "name": "File hit area / 收据.pdf",
+      "role": "File hit area",
+      "width": 102.4000015258789,
+      "height": 112,
+      "padding": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "gap": 0,
+      "radius": 0,
+      "visual": {
+        "width": 71,
+        "height": 92,
+        "top": 0,
+        "left": 15.700000762939453
+      }
+    },
+    {
+      "page": "50 · v9 框选 / 同一状态语义",
+      "name": "File visual container / content fit",
+      "role": "File visual container",
+      "width": 71,
+      "height": 92,
+      "padding": {
+        "top": 8,
+        "right": 8,
+        "bottom": 12,
+        "left": 8
+      },
+      "gap": 8,
+      "radius": 10,
+      "iconInset": {
+        "top": 8,
+        "left": 13.5
+      }
+    },
+    {
+      "page": "50 · v9 框选 / 同一状态语义",
+      "name": "File hit area / 旅行计划",
+      "role": "File hit area",
+      "width": 102.4000015258789,
+      "height": 112,
+      "padding": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "gap": 0,
+      "radius": 0,
+      "visual": {
+        "width": 73,
+        "height": 92,
+        "top": 0,
+        "left": 14.700000762939453
+      }
+    },
+    {
+      "page": "50 · v9 框选 / 同一状态语义",
+      "name": "File visual container / content fit",
+      "role": "File visual container",
+      "width": 73,
+      "height": 92,
+      "padding": {
+        "top": 8,
+        "right": 8,
+        "bottom": 12,
+        "left": 8
+      },
+      "gap": 8,
+      "radius": 10,
+      "iconInset": {
+        "top": 8,
+        "left": 14.5
+      }
+    },
+    {
+      "page": "50 · v9 框选 / 同一状态语义",
+      "name": "File hit area / 个人资料",
+      "role": "File hit area",
+      "width": 102.4000015258789,
+      "height": 112,
+      "padding": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "gap": 0,
+      "radius": 0,
+      "visual": {
+        "width": 73,
+        "height": 92,
+        "top": 0,
+        "left": 14.700000762939453
+      }
+    },
+    {
+      "page": "50 · v9 框选 / 同一状态语义",
+      "name": "File visual container / content fit",
+      "role": "File visual container",
+      "width": 73,
+      "height": 92,
+      "padding": {
+        "top": 8,
+        "right": 8,
+        "bottom": 12,
+        "left": 8
+      },
+      "gap": 8,
+      "radius": 10,
+      "iconInset": {
+        "top": 8,
+        "left": 14.5
+      }
+    },
+    {
+      "page": "50 · v9 框选 / 同一状态语义",
+      "name": "File hit area / 合同.pdf",
+      "role": "File hit area",
+      "width": 102.4000015258789,
+      "height": 112,
+      "padding": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "gap": 0,
+      "radius": 0,
+      "visual": {
+        "width": 72,
+        "height": 92,
+        "top": 0,
+        "left": 15.200000762939453
+      }
+    },
+    {
+      "page": "50 · v9 框选 / 同一状态语义",
+      "name": "File visual container / content fit",
+      "role": "File visual container",
+      "width": 72,
+      "height": 92,
+      "padding": {
+        "top": 8,
+        "right": 8,
+        "bottom": 12,
+        "left": 8
+      },
+      "gap": 8,
+      "radius": 10,
+      "iconInset": {
+        "top": 8,
+        "left": 14
+      }
+    },
+    {
+      "page": "50 · v9 框选 / 同一状态语义",
+      "name": "File hit area / 参考资料",
+      "role": "File hit area",
+      "width": 102.4000015258789,
+      "height": 112,
+      "padding": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "gap": 0,
+      "radius": 0,
+      "visual": {
+        "width": 73,
+        "height": 92,
+        "top": 0,
+        "left": 14.700000762939453
+      }
+    },
+    {
+      "page": "50 · v9 框选 / 同一状态语义",
+      "name": "File visual container / content fit",
+      "role": "File visual container",
+      "width": 73,
+      "height": 92,
+      "padding": {
+        "top": 8,
+        "right": 8,
+        "bottom": 12,
+        "left": 8
+      },
+      "gap": 8,
+      "radius": 10,
+      "iconInset": {
+        "top": 8,
+        "left": 14.5
+      }
+    },
+    {
+      "page": "50 · v9 框选 / 同一状态语义",
+      "name": "File hit area / 拍摄计划",
+      "role": "File hit area",
+      "width": 102.4000015258789,
+      "height": 112,
+      "padding": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "gap": 0,
+      "radius": 0,
+      "visual": {
+        "width": 73,
+        "height": 92,
+        "top": 0,
+        "left": 14.700000762939453
+      }
+    },
+    {
+      "page": "50 · v9 框选 / 同一状态语义",
+      "name": "File visual container / content fit",
+      "role": "File visual container",
+      "width": 73,
+      "height": 92,
+      "padding": {
+        "top": 8,
+        "right": 8,
+        "bottom": 12,
+        "left": 8
+      },
+      "gap": 8,
+      "radius": 10,
+      "iconInset": {
+        "top": 8,
+        "left": 14.5
+      }
+    },
+    {
+      "page": "50 · v9 框选 / 同一状态语义",
+      "name": "File hit area / 会议记录.pdf",
+      "role": "File hit area",
+      "width": 102.4000015258789,
+      "height": 112,
+      "padding": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "gap": 0,
+      "radius": 0,
+      "visual": {
+        "width": 95,
+        "height": 92,
+        "top": 0,
+        "left": 3.700000762939453
+      }
+    },
+    {
+      "page": "50 · v9 框选 / 同一状态语义",
+      "name": "File visual container / content fit",
+      "role": "File visual container",
+      "width": 95,
+      "height": 92,
+      "padding": {
+        "top": 8,
+        "right": 8,
+        "bottom": 12,
+        "left": 8
+      },
+      "gap": 8,
+      "radius": 10,
+      "iconInset": {
+        "top": 8,
+        "left": 25.5
+      }
+    },
+    {
+      "page": "50 · v9 框选 / 同一状态语义",
+      "name": "File hit area / 读书笔记",
+      "role": "File hit area",
+      "width": 102.4000015258789,
+      "height": 112,
+      "padding": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "gap": 0,
+      "radius": 0,
+      "visual": {
+        "width": 73,
+        "height": 92,
+        "top": 0,
+        "left": 14.700000762939453
+      }
+    },
+    {
+      "page": "50 · v9 框选 / 同一状态语义",
+      "name": "File visual container / content fit",
+      "role": "File visual container",
+      "width": 73,
+      "height": 92,
+      "padding": {
+        "top": 8,
+        "right": 8,
+        "bottom": 12,
+        "left": 8
+      },
+      "gap": 8,
+      "radius": 10,
+      "iconInset": {
+        "top": 8,
+        "left": 14.5
+      }
+    },
+    {
+      "page": "51 · v9 任务浮层 / 明色",
+      "name": "Task panel / surface and shared padding",
+      "role": "Task panel",
+      "width": 400,
+      "height": 338,
+      "padding": {
+        "top": 16,
+        "right": 12,
+        "bottom": 16,
+        "left": 12
+      },
+      "gap": 0,
+      "radius": 12,
+      "axis": {
+        "title": 12,
+        "progress": 12,
+        "counts": 12,
+        "filename": 12
+      }
+    },
+    {
+      "page": "51 · v9 任务浮层 / 明色",
+      "name": "Task cancel / shared control",
+      "role": "Task cancel",
+      "width": 49,
+      "height": 32,
+      "padding": {
+        "top": 0,
+        "right": 12,
+        "bottom": 0,
+        "left": 12
+      },
+      "gap": 0,
+      "radius": 8
+    },
+    {
+      "page": "51 · v9 任务浮层 / 明色",
+      "name": "Task file row",
+      "role": "Task file row",
+      "width": 376,
+      "height": 28,
+      "padding": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "gap": 0,
+      "radius": 0
+    },
+    {
+      "page": "51 · v9 任务浮层 / 明色",
+      "name": "Task file row",
+      "role": "Task file row",
+      "width": 376,
+      "height": 28,
+      "padding": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "gap": 0,
+      "radius": 0
+    },
+    {
+      "page": "51 · v9 任务浮层 / 明色",
+      "name": "Task file row",
+      "role": "Task file row",
+      "width": 376,
+      "height": 28,
+      "padding": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "gap": 0,
+      "radius": 0
+    },
+    {
+      "page": "51 · v9 任务浮层 / 明色",
+      "name": "Task file row",
+      "role": "Task file row",
+      "width": 376,
+      "height": 28,
+      "padding": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "gap": 0,
+      "radius": 0
+    },
+    {
+      "page": "51 · v9 任务浮层 / 明色",
+      "name": "Task file row",
+      "role": "Task file row",
+      "width": 376,
+      "height": 28,
+      "padding": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "gap": 0,
+      "radius": 0
+    },
+    {
+      "page": "51 · v9 任务浮层 / 明色",
+      "name": "Task file row",
+      "role": "Task file row",
+      "width": 376,
+      "height": 28,
+      "padding": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "gap": 0,
+      "radius": 0
+    },
+    {
+      "page": "51 · v9 任务浮层 / 明色",
+      "name": "Task file row",
+      "role": "Task file row",
+      "width": 376,
+      "height": 28,
+      "padding": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "gap": 0,
+      "radius": 0
+    },
+    {
+      "page": "51 · v9 任务浮层 / 明色",
+      "name": "Task file row",
+      "role": "Task file row",
+      "width": 376,
+      "height": 28,
+      "padding": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "gap": 0,
+      "radius": 0
+    },
+    {
+      "page": "52 · v9 任务浮层 / 深色",
+      "name": "Task panel / surface and shared padding",
+      "role": "Task panel",
+      "width": 400,
+      "height": 338,
+      "padding": {
+        "top": 16,
+        "right": 12,
+        "bottom": 16,
+        "left": 12
+      },
+      "gap": 0,
+      "radius": 12,
+      "axis": {
+        "title": 12,
+        "progress": 12,
+        "counts": 12,
+        "filename": 12
+      }
+    },
+    {
+      "page": "52 · v9 任务浮层 / 深色",
+      "name": "Task cancel / shared control",
+      "role": "Task cancel",
+      "width": 49,
+      "height": 32,
+      "padding": {
+        "top": 0,
+        "right": 12,
+        "bottom": 0,
+        "left": 12
+      },
+      "gap": 0,
+      "radius": 8
+    },
+    {
+      "page": "52 · v9 任务浮层 / 深色",
+      "name": "Task file row",
+      "role": "Task file row",
+      "width": 376,
+      "height": 28,
+      "padding": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "gap": 0,
+      "radius": 0
+    },
+    {
+      "page": "52 · v9 任务浮层 / 深色",
+      "name": "Task file row",
+      "role": "Task file row",
+      "width": 376,
+      "height": 28,
+      "padding": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "gap": 0,
+      "radius": 0
+    },
+    {
+      "page": "52 · v9 任务浮层 / 深色",
+      "name": "Task file row",
+      "role": "Task file row",
+      "width": 376,
+      "height": 28,
+      "padding": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "gap": 0,
+      "radius": 0
+    },
+    {
+      "page": "52 · v9 任务浮层 / 深色",
+      "name": "Task file row",
+      "role": "Task file row",
+      "width": 376,
+      "height": 28,
+      "padding": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "gap": 0,
+      "radius": 0
+    },
+    {
+      "page": "52 · v9 任务浮层 / 深色",
+      "name": "Task file row",
+      "role": "Task file row",
+      "width": 376,
+      "height": 28,
+      "padding": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "gap": 0,
+      "radius": 0
+    },
+    {
+      "page": "52 · v9 任务浮层 / 深色",
+      "name": "Task file row",
+      "role": "Task file row",
+      "width": 376,
+      "height": 28,
+      "padding": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "gap": 0,
+      "radius": 0
+    },
+    {
+      "page": "52 · v9 任务浮层 / 深色",
+      "name": "Task file row",
+      "role": "Task file row",
+      "width": 376,
+      "height": 28,
+      "padding": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "gap": 0,
+      "radius": 0
+    },
+    {
+      "page": "52 · v9 任务浮层 / 深色",
+      "name": "Task file row",
+      "role": "Task file row",
+      "width": 376,
+      "height": 28,
+      "padding": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "gap": 0,
+      "radius": 0
+    }
+  ]
+}
