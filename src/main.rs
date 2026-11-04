@@ -7,6 +7,8 @@ mod file_geometry;
 mod file_icons;
 mod input;
 mod layout;
+mod marquee_scroll;
+mod marquee_smoke;
 mod menu;
 mod metrics;
 mod model;
@@ -110,6 +112,7 @@ struct Marquee {
     token: u64,
     accepted: u64,
     last_tick: Instant,
+    auto_scroll: marquee_scroll::Controller,
 }
 impl Drop for Backleaf {
     fn drop(&mut self) {
@@ -272,6 +275,11 @@ impl Backleaf {
         });
         let activated = cx.observe_window_activation(window, |this, window, cx| {
             if !window.is_window_active() {
+                if this.marquee.is_some() {
+                    this.metrics
+                        .borrow_mut()
+                        .event("marquee-stop window-deactivated");
+                }
                 this.scrollbar_drag = None;
                 this.navigation.hovered = false;
                 this.commit_rename_blur(cx);
@@ -307,6 +315,9 @@ impl Backleaf {
         });
         if options.selection_smoke {
             selection_smoke::schedule(window, cx);
+        }
+        if options.marquee_smoke {
+            marquee_smoke::schedule(window, cx);
         }
         Self {
             application_icons,
@@ -614,7 +625,7 @@ impl Backleaf {
     fn selection_busy(&self) -> bool {
         self.marquee
             .as_ref()
-            .is_some_and(|m| m.active && !m.held && m.accepted != m.token)
+            .is_some_and(|m| m.active && (m.held || m.accepted != m.token))
     }
     fn is_selected(&self, id: usize) -> bool {
         if let Some(m) = &self.marquee
@@ -673,6 +684,7 @@ impl Backleaf {
             token: 0,
             accepted: 0,
             last_tick: Instant::now(),
+            auto_scroll: marquee_scroll::Controller::default(),
         });
         cx.notify();
     }
@@ -722,6 +734,10 @@ impl Backleaf {
             return;
         }
         if !event.dragging() {
+            self.metrics
+                .borrow_mut()
+                .event("marquee-stop pointer-without-held-button");
+            self.update_marquee_band(window, cx);
             self.finish_marquee(cx);
             return;
         }
@@ -730,6 +746,12 @@ impl Backleaf {
         if f32::from(delta.x).hypot(f32::from(delta.y)) >= 4. {
             m.active = true;
         }
+        let edge = self.marquee_edge(window);
+        let m = self.marquee.as_mut().unwrap();
+        if m.auto_scroll.direction() != edge.direction || edge.direction == 0 {
+            m.last_tick = Instant::now();
+        }
+        m.auto_scroll.observe(edge);
         self.update_marquee_band(window, cx);
     }
     fn finish_marquee(&mut self, cx: &mut Context<Self>) {
@@ -737,6 +759,7 @@ impl Backleaf {
             return;
         };
         m.held = false;
+        m.auto_scroll.reset();
         if m.active {
             self.suppress_click = true;
         }
@@ -745,51 +768,60 @@ impl Backleaf {
         }
         cx.notify();
     }
-    fn marquee_velocity(&self, window: &Window) -> f32 {
+    fn marquee_edge(&self, window: &Window) -> marquee_scroll::Edge {
+        let Some(m) = &self.marquee else {
+            return marquee_scroll::Edge::default();
+        };
+        if !m.active
+            || !m.held
+            || self.session_locked
+            || !window.is_window_active()
+            || !window.is_visible()
+            || !self.focus.is_focused(window)
+        {
+            return marquee_scroll::Edge::default();
+        }
+        let Some(g) = self.scroll_geometry(app_scroll::Kind::Files, window) else {
+            return marquee_scroll::Edge::default();
+        };
+        marquee_scroll::edge_at(
+            f64::from(f32::from(m.pointer.y)),
+            f64::from(layout::content_top()),
+            f64::from(f32::from(window.viewport_size().height)) - 16.,
+            g.offset,
+            g.maximum,
+        )
+    }
+    fn marquee_velocity(&self, window: &Window) -> f64 {
         let Some(m) = &self.marquee else {
             return 0.;
         };
-        if !m.active || !m.held || !window.is_window_active() {
+        let Some(g) = self.scroll_geometry(app_scroll::Kind::Files, window) else {
             return 0.;
-        }
-        let top = self
-            .global_point(point(px(12.), px(layout::content_top())))
-            .1;
-        let visible =
-            (f32::from(window.viewport_size().height) - layout::grid_reserved_height()).max(1.);
-        let maximum = (self.source.count().div_ceil(self.columns) as f64
-            * layout::row_step() as f64
-            - visible as f64)
-            .max(0.);
-        let y = f32::from(m.pointer.y);
-        let bottom = f32::from(window.viewport_size().height) - 16.;
-        if y < 84. && top > 0. {
-            -900. * ((84. - y) / 24.).clamp(0., 1.)
-        } else if y > bottom - 24. && top < maximum {
-            900. * ((y - bottom + 24.) / 24.).clamp(0., 1.)
-        } else {
-            0.
-        }
+        };
+        m.auto_scroll
+            .velocity(self.marquee_edge(window), g.viewport, g.maximum, g.offset)
     }
     fn step_marquee(&mut self, window: &Window, cx: &mut Context<Self>) {
-        let speed = self.marquee_velocity(window);
-        if speed == 0. {
+        let edge = self.marquee_edge(window);
+        if edge.direction == 0 {
+            if let Some(m) = &mut self.marquee {
+                m.auto_scroll.reset();
+                m.last_tick = Instant::now();
+            }
             return;
         }
+        let Some(g) = self.scroll_geometry(app_scroll::Kind::Files, window) else {
+            return;
+        };
         let m = self.marquee.as_mut().unwrap();
         let now = Instant::now();
-        let delta = now.duration_since(m.last_tick).as_secs_f32().min(0.05);
+        let delta = now.duration_since(m.last_tick).as_secs_f64();
         m.last_tick = now;
-        {
-            let state = self.scroll.0.borrow();
-            let handle = &state.base_handle;
-            let maximum = (self.source.count().div_ceil(self.columns).min(4096) as f32
-                * layout::row_step()
-                - (f32::from(window.viewport_size().height) - layout::grid_reserved_height()))
-            .max(0.);
-            let y = (f32::from(handle.offset().y) - speed * delta).clamp(-maximum, 0.);
-            handle.set_offset(point(px(0.), px(y)));
-        }
+        let next = m
+            .auto_scroll
+            .advance(edge, delta, g.viewport, g.maximum, g.offset);
+        self.set_scroll_offset(app_scroll::Kind::Files, next, window, cx);
         self.update_marquee_band(window, cx);
     }
     fn key(&mut self, event: &KeyDownEvent, window: &mut Window, cx: &mut Context<Self>) {
@@ -1735,6 +1767,10 @@ impl Render for Backleaf {
             .on_key_down(cx.listener(Self::key))
             .on_scroll(cx.listener(|this, _, window, cx| {
                 this.metrics.borrow_mut().input("wheel");
+                if let Some(m) = &mut this.marquee {
+                    m.auto_scroll.reset();
+                    m.last_tick = Instant::now();
+                }
                 this.hovered_id = None;
                 this.update_marquee_band(window, cx);
                 this.grid.update(cx, |_, cx| cx.notify());
@@ -1917,7 +1953,7 @@ impl Render for Backleaf {
                             }
                         });
                         let upper = owner.clone();
-                        window.on_mouse_event(move |event: &MouseUpEvent, phase, _, cx| {
+                        window.on_mouse_event(move |event: &MouseUpEvent, phase, window, cx| {
                             if phase == DispatchPhase::Capture
                                 && event.button == MouseButton::Left
                                 && let Some(view) = upper.upgrade()
@@ -1928,6 +1964,10 @@ impl Render for Backleaf {
                                 view.update(cx, |this, cx| {
                                     this.scrollbar_drag = None;
                                     this.pressed_id = None;
+                                    if this.marquee.is_some() {
+                                        this.metrics.borrow_mut().event("marquee-stop mouse-up");
+                                    }
+                                    this.update_marquee_band(window, cx);
                                     this.finish_marquee(cx);
                                     cx.notify();
                                 });

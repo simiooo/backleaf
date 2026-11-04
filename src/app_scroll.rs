@@ -34,7 +34,7 @@ impl Backleaf {
         };
         Geometry::new(f64::from(viewport), content, offset, s.minimum_thumb_height)
     }
-    fn set_scroll_offset(
+    pub(super) fn set_scroll_offset(
         &mut self,
         kind: Kind,
         value: f64,

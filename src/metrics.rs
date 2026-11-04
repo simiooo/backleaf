@@ -17,6 +17,7 @@ pub struct Options {
     pub height: f32,
     pub theme: Option<bool>,
     pub selection_smoke: bool,
+    pub marquee_smoke: bool,
     pub navigation_fixture: usize,
     pub state_dir: PathBuf,
 }
@@ -34,6 +35,7 @@ impl Options {
             height: 720.,
             theme: None,
             selection_smoke: false,
+            marquee_smoke: false,
             navigation_fixture: 0,
             state_dir: std::env::var_os("LOCALAPPDATA")
                 .map(PathBuf::from)
@@ -64,6 +66,7 @@ impl Options {
                     })
                 }
                 "--selection-smoke" => result.selection_smoke = true,
+                "--marquee-smoke" => result.marquee_smoke = true,
                 "--navigation-fixture" => {
                     result.navigation_fixture = args
                         .next()
@@ -79,6 +82,16 @@ impl Options {
             result.navigation_fixture == 0 || result.fixture.is_some(),
             "navigation fixture requires generated metadata mode"
         );
+        if result.marquee_smoke {
+            assert!(
+                result.fixture.is_some_and(|n| n >= 1000)
+                    && result.output.is_some()
+                    && !result.scroll
+                    && !result.selection_smoke,
+                "marquee smoke requires generated metadata and report only"
+            );
+            result.seconds = result.seconds.max(50);
+        }
         if result.selection_smoke {
             assert!(
                 result.fixture.is_some_and(|count| count >= 100_000) && result.output.is_some(),
@@ -129,6 +142,7 @@ pub struct Report {
     pub theme_dark: bool,
     pub scripted_scroll: bool,
     pub synthetic_selection_script: bool,
+    pub synthetic_marquee_script: bool,
     pub flow_limit: usize,
     pub reduced_motion: bool,
     pub logical_viewport: [f32; 2],
@@ -279,6 +293,7 @@ impl Metrics {
             theme_dark: false,
             scripted_scroll: options.scroll,
             synthetic_selection_script: options.selection_smoke,
+            synthetic_marquee_script: options.marquee_smoke,
             flow_limit: options.flow,
             reduced_motion: options.reduced_motion,
             logical_viewport: self.viewport,

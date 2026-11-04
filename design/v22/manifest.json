@@ -1,0 +1,38 @@
+{
+  "version": "v22-progressive-marquee",
+  "retainedPages": 143,
+  "pages": [
+    {
+      "key": "144-shallow-fine",
+      "name": "144 · v22 shallow-fine",
+      "nodes": 103
+    },
+    {
+      "key": "145-deep-ramp",
+      "name": "145 · v22 deep-ramp",
+      "nodes": 103
+    },
+    {
+      "key": "146-large-range",
+      "name": "146 · v22 large-range",
+      "nodes": 103
+    },
+    {
+      "key": "147-return-stop",
+      "name": "147 · v22 return-stop",
+      "nodes": 103
+    },
+    {
+      "key": "148-reverse-fine",
+      "name": "148 · v22 reverse-fine",
+      "nodes": 103
+    },
+    {
+      "key": "149-pending-dark",
+      "name": "149 · v22 pending-dark",
+      "nodes": 103
+    }
+  ],
+  "tokens": "design/layout-system.json",
+  "source": "scripts/design/chrome-v22.mjs"
+}

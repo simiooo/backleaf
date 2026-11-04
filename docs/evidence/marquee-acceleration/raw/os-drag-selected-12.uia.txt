@@ -1,0 +1,82 @@
+Window: "拾径 · Backleaf", App: Backleaf.exe.
+	0 区域 拾径 · Backleaf Secondary Actions: Raise
+		1 标题栏 (settable, string) Value: 拾径 · Backleaf
+			2 菜单栏 系统 ID: MenuBar
+				71 菜单项 系统
+			4 按钮 最小化
+			5 按钮 最大化
+			6 按钮 关闭
+		7 应用程序 拾径 Backleaf
+			8 按钮 后退
+			9 按钮 上一级
+			10 导航 当前位置 D:\work\backleaf\.local\worktrees\marquee\.local\marquee-fixture
+				11 链接 前往 D:\
+				12 按钮 显示折叠的上级路径
+				13 链接 前往 D:\work\backleaf\.local\worktrees\marquee\.local
+				14 按钮 编辑当前位置 D:\work\backleaf\.local\worktrees\marquee\.local\marquee-fixture Value: D:\work\backleaf\.local\worktrees\marquee\.local\marquee-fixture
+				15 按钮 浏览当前目录层级
+			16 按钮 搜索文件名，Ctrl+F
+			17 按钮 最小化
+			18 按钮 最大化或还原
+			19 按钮 关闭
+			20 导航 快捷访问
+				21 按钮 个人文件夹，C:\Users\qq651
+				22 按钮 桌面，C:\Users\qq651\Desktop
+				23 按钮 下载，C:\Users\qq651\Downloads
+				24 按钮 文档，C:\Users\qq651\Documents
+				25 按钮 图片，C:\Users\qq651\Pictures
+				26 按钮 音乐，C:\Users\qq651\Music
+				27 按钮 视频，C:\Users\qq651\Videos
+			28 列表 文件
+				29 选项 (selectable) sample-000.txt
+				30 选项 (selectable) sample-001.txt
+				31 选项 (selectable) sample-002.txt
+				32 选项 (selectable) sample-003.txt
+				33 选项 (selectable) sample-004.txt
+				34 选项 (selectable) sample-005.txt
+				35 选项 (selectable) sample-006.txt
+				36 选项 (selectable) sample-007.txt
+				37 选项 (selectable) sample-008.txt
+				38 选项 (selectable) sample-009.txt
+				39 选项 (selectable) sample-010.txt
+				40 选项 (selectable) sample-011.txt
+				41 选项 (selectable) sample-012.txt
+				42 选项 (selectable) sample-013.txt
+				43 选项 (selectable) sample-014.txt
+				44 选项 (selectable) sample-015.txt
+				45 选项 (selectable) sample-016.txt
+				46 选项 (selectable) sample-017.txt
+				47 选项 (selectable) sample-018.txt
+				48 选项 (selectable) sample-019.txt
+				49 选项 (selectable) sample-020.txt
+				50 选项 (selectable) sample-021.txt
+				51 选项 (selectable) sample-022.txt
+				52 选项 (selectable) sample-023.txt
+				53 选项 (selectable) sample-024.txt
+				54 选项 (selectable) sample-025.txt
+				55 选项 (selectable) sample-026.txt
+				56 选项 (selectable) sample-027.txt
+				57 选项 (selectable) sample-028.txt
+				58 选项 (selectable) sample-029.txt
+				59 选项 (selectable) sample-030.txt
+				60 选项 (selectable) sample-031.txt
+				61 选项 (selectable) sample-032.txt
+				62 选项 (selectable) sample-033.txt
+				63 选项 (selectable) sample-034.txt
+				64 选项 (selectable) sample-035.txt
+				65 选项 (selectable) sample-036.txt
+				66 选项 (selectable) sample-037.txt
+				67 选项 (selectable) sample-038.txt
+				68 选项 (selectable) sample-039.txt
+				72 选项 (selectable) sample-040.txt
+				73 选项 (selectable) sample-041.txt
+				74 选项 (selectable) sample-042.txt
+				75 选项 (selectable) sample-043.txt
+				76 选项 (selectable) sample-044.txt
+				77 选项 (selectable) sample-045.txt
+				78 选项 (selectable) sample-046.txt
+				79 选项 (selectable) sample-047.txt
+				69 滚动条 文件滚动条 Value: 24.609375
+			70 文本 已选 12 项
+
+The focused UI element is 55 选项 (selectable) sample-026.txt.

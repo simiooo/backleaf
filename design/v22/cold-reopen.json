@@ -1,0 +1,39 @@
+{
+  "masterSha256": "36dc661fc12521e71b981ee6b0c61bff50bb8bebdda3c36cd33efe0e2daea2ef",
+  "retainedPages": 143,
+  "pages": 149,
+  "result": "passed",
+  "results": [
+    {
+      "key": "144-shallow-fine",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "145-deep-ramp",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "146-large-range",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "147-return-stop",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "148-reverse-fine",
+      "changedPixels": 0,
+      "totalPixels": 246400
+    },
+    {
+      "key": "149-pending-dark",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    }
+  ],
+  "verifiedAt": "2026-11-04T16:47:05.999Z"
+}

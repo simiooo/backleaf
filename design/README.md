@@ -1,3 +1,5 @@
+最新主稿：[Backleaf-v22.fig](Backleaf-v22.fig)，149页，保留已发布v20的143页，新增6个渐进框选状态。持续加速的参数和行为见[交互契约](marquee-scroll-contract.md)。v21路径/磁盘设计仍属于另一个未交付候选单元。
+
 最新主稿：[Backleaf-v20.fig](Backleaf-v20.fig)，143页；保留前137页，补充短/长名称、空白清选、重命名输入与明暗/窄窗命中状态。
 
 最新主稿：[Backleaf-v19.fig](Backleaf-v19.fig)，137页；8个紧凑计数/无溢出/主区溢出/侧栏hover条件/短窗/深色/千万/空列表状态，保留全部前129页。几何见[scroll-system.json](scroll-system.json)。
