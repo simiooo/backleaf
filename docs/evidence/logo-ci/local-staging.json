@@ -1,0 +1,8 @@
+{
+  "deployed_at": "2026-11-04T17:14:05.6144872+08:00",
+  "origin": "local build; CI release is separate",
+  "source_commit": "791ff341da1e893d74fa3e82cc5a1954ec203629",
+  "exe_sha256": "A3F7B3DC55E1629EA6E32C6338EA16B74BB2BDC13E4F1375F62E012E0BDD1DCA",
+  "staging": "D:/work/backleaf/.local/staging/logo-preview.3-791ff34",
+  "cli_smoke_passed": true
+}

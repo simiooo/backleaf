@@ -1,0 +1,11 @@
+{
+  "version": "0.1.0-preview.3",
+  "source_commit": "791ff341da1e893d74fa3e82cc5a1954ec203629",
+  "gpui_revision": "d36a70661471ec64dce230798121d554930d5c60",
+  "built_at_utc": "2026-11-04T09:22:44.1036526Z",
+  "exe_sha256": "615405793e2b97a2dd842f3b801f01c7ff6e171d35dae737482a71f3b57f1d6e",
+  "ci_run_url": "https://github.com/simiooo/backleaf/actions/runs/41805389699",
+  "scope": "Logo integration on verified preview.2; file operations/search WIP excluded",
+  "interactive_smoke": "not run on hosted CI",
+  "cli_smoke_passed": true
+}

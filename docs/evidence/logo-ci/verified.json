@@ -1,0 +1,11 @@
+{
+  "release_zip": "Backleaf-0.1.0-preview.3-791ff341-win-x64.zip",
+  "zip_sha256": "ed76df9aa75586979d128e5ed4a4b1d85f3599517b02280946ce53596082be42",
+  "exe_sha256": "615405793e2b97a2dd842f3b801f01c7ff6e171d35dae737482a71f3b57f1d6e",
+  "source_commit": "791ff341da1e893d74fa3e82cc5a1954ec203629",
+  "ci_packaged_cli_smoke": true,
+  "ci_exe_icon_group_1_images": 9,
+  "packaged_logo_identical": true,
+  "licenses_included": true,
+  "validation": "download and static inspection only; downloaded executable not run"
+}
