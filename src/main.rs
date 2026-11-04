@@ -679,6 +679,9 @@ impl Backleaf {
     fn key(&mut self, event: &KeyDownEvent, window: &mut Window, cx: &mut Context<Self>) {
         let key = event.keystroke.key.as_str();
         let modifiers = event.keystroke.modifiers;
+        if modifiers.platform || (key == "escape" && (modifiers.control || modifiers.alt)) {
+            return;
+        }
         self.metrics.borrow_mut().input("key");
         if key == "tab" && !modifiers.control && !modifiers.alt {
             self.keyboard_focus = true;
@@ -740,6 +743,9 @@ impl Backleaf {
             return;
         }
         if !self.focus.is_focused(window) {
+            return;
+        }
+        if modifiers.alt && key != "enter" {
             return;
         }
         if modifiers.control && key == "a" {
@@ -942,7 +948,7 @@ impl Backleaf {
             .active(move |d| d.bg(colors.color(ColorRole::Pressed)))
             .focus_visible(move |d| d.border_color(colors.color(ColorRole::Focus)))
             .on_key_down(move |event, window, cx| {
-                if matches!(event.keystroke.key.as_str(), "enter" | "space") {
+                if paint::activation_key(event) {
                     cx.stop_propagation();
                     keyboard(&ClickEvent::default(), window, cx);
                 }

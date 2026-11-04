@@ -41,6 +41,9 @@ pub(super) fn schedule(window: &Window, cx: &mut Context<Backleaf>) {
         if this.update_in(cx,|this,window,cx|{
             this.panel=false;this.selection.select(3,false,false);
             window.focus(&this.focus,cx);
+            this.key(&KeyDownEvent{keystroke:Keystroke::parse("alt-space").unwrap(),is_held:false,prefer_character_input:false},window,cx);
+            let preserved=this.selection.count()==1&&this.selection.contains(3);
+            this.metrics.borrow_mut().event(&format!("selection-smoke system-shortcut-pass={preserved}"));
             this.scroll_global(3966,ScrollStrategy::Top,true);
             this.metrics.borrow_mut().event("selection-smoke scope=synthetic-controller-events-real-window-not-OS-input");
             cx.notify();

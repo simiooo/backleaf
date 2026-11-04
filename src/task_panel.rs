@@ -71,7 +71,7 @@ impl Render for TaskPanel {
                             .tab_stop(true)
                             .focus_visible(move |d| d.shadow(vec![colors.focus_ring()]))
                             .on_key_down(cx.listener(|this, event: &KeyDownEvent, _, cx| {
-                                if matches!(event.keystroke.key.as_str(), "enter" | "space") {
+                                if crate::paint::activation_key(event) {
                                     this.expanded = !this.expanded;
                                     cx.stop_propagation();
                                     cx.notify();
@@ -108,7 +108,7 @@ impl Render for TaskPanel {
                             .active(move |d| d.bg(colors.color(ColorRole::Pressed)))
                             .focus_visible(move |d| d.shadow(vec![colors.focus_ring()]))
                             .on_key_down(cx.listener(|_, event: &KeyDownEvent, _, cx| {
-                                if matches!(event.keystroke.key.as_str(), "enter" | "space") {
+                                if crate::paint::activation_key(event) {
                                     cx.stop_propagation();
                                     cx.emit(ClosePanel);
                                 }

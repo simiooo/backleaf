@@ -327,6 +327,13 @@ pub fn icon(name: &'static str, colors: &'static Palette) -> Svg {
         .size(px(crate::layout::LAYOUT.control.icon_size))
         .text_color(colors.color(ColorRole::Secondary))
 }
+pub fn activation_key(event: &KeyDownEvent) -> bool {
+    let modifiers = event.keystroke.modifiers;
+    matches!(event.keystroke.key.as_str(), "enter" | "space")
+        && !modifiers.control
+        && !modifiers.alt
+        && !modifiers.platform
+}
 
 pub struct Tip(pub String, pub &'static Palette);
 impl Render for Tip {
