@@ -8,6 +8,10 @@ publish = false
 name = "backleaf-shell-probe"
 path = "src/verification.rs"
 
+[[bin]]
+name = "backleaf-search-probe"
+path = "src/search-probe.rs"
+
 [dependencies]
 anyhow = "1"
 serde_json = "1"

@@ -3,3 +3,5 @@ docs/evidence/native/unlocked/*.json -text
 docs/evidence/native/unlocked/*.png binary
 # Preserve the measured bytes across Git storage and Windows checkouts.
 docs/evidence/native-selection/** -text whitespace=cr-at-eol
+
+docs/evidence/search-entry/raw/* -text whitespace=cr-at-eol,-blank-at-eof

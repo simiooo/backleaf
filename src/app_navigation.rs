@@ -78,7 +78,11 @@ impl Backleaf {
         window: Option<&mut Window>,
         cx: &mut Context<Self>,
     ) {
-        if self.options.fixture.is_some() || self.files.editor.is_some() || self.files.close_guard {
+        if self.options.fixture.is_some()
+            || self.files.editor.is_some()
+            || self.files.close_guard
+            || self.search.open
+        {
             return;
         }
         self.navigation.open = true;
@@ -212,11 +216,14 @@ impl Backleaf {
                                     .items_center()
                                     .gap(px(8.))
                                     .role(Role::Button)
-                                    .aria_label(format!("{label}，{}", path.to_string_lossy()))
+                                    .aria_label(format!(
+                                        "{label}，{}",
+                                        navigation::display_path(&path)
+                                    ))
                                     .aria_selected(selected)
                                     .focusable()
                                     .tab_stop(true)
-                                    .tooltip(tooltip(path.to_string_lossy().into_owned(), colors))
+                                    .tooltip(tooltip(navigation::display_path(&path), colors))
                                     .when(selected, |d| {
                                         d.bg(colors.color(ColorRole::Selected))
                                             .text_color(colors.color(ColorRole::OnSelected))
@@ -255,7 +262,7 @@ impl Backleaf {
         cx: &mut Context<Self>,
     ) -> AnyElement {
         let colors = self.colors;
-        let path = self.path.to_string_lossy().into_owned();
+        let path = navigation::display_path(&self.path);
         if self.options.fixture.is_some() {
             return div()
                 .min_w_0()
@@ -271,6 +278,15 @@ impl Backleaf {
             - 8.
             - 64.
             - 138.
+            - if self.options.fixture.is_none() {
+                if f32::from(window.viewport_size().width) < 900. {
+                    48.
+                } else {
+                    120.
+                }
+            } else {
+                0.
+            }
             - 32.
             - if self.files.hub.views().is_empty() {
                 0.
@@ -356,7 +372,7 @@ impl Backleaf {
                 }
                 if let Some(path) = part {
                     let label = crate::navigation::display_name(&path);
-                    let full = path.to_string_lossy().into_owned();
+                    let full = navigation::display_path(&path);
                     if current {
                         elements.push(
                             div()
@@ -542,14 +558,14 @@ impl Backleaf {
                             .flex()
                             .items_center()
                             .role(Role::TreeItem)
-                            .aria_label(path.to_string_lossy().into_owned())
+                            .aria_label(navigation::display_path(&path))
                             .aria_selected(row.current)
                             .when(focus, |d| d.aria_active_descendant())
                             .when(row.current || focus, |d| {
                                 d.bg(colors.color(ColorRole::Hover))
                             })
                             .hover(move |d| d.bg(colors.color(ColorRole::Hover)))
-                            .tooltip(tooltip(path.to_string_lossy().into_owned(), colors))
+                            .tooltip(tooltip(navigation::display_path(&path), colors))
                             .on_click(cx.listener(move |this, _, window, cx| {
                                 this.close_path_tree();
                                 this.navigate(path.clone(), true, cx);

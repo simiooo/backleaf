@@ -158,9 +158,16 @@ impl Worker {
 }
 pub fn display_name(path: &std::path::Path) -> String {
     path.file_name()
-        .unwrap_or(path.as_os_str())
-        .to_string_lossy()
-        .into_owned()
+        .map(|n| n.to_string_lossy().into_owned())
+        .unwrap_or_else(|| display_path(path))
+}
+pub fn display_path(path: &std::path::Path) -> String {
+    let value = path.to_string_lossy();
+    if let Some(unc) = value.strip_prefix(r"\\?\UNC\") {
+        format!(r"\\{unc}")
+    } else {
+        value.strip_prefix(r"\\?\").unwrap_or(&value).to_owned()
+    }
 }
 /// Only a few bounded paths are copied; hidden ancestors remain reachable through the menu.
 pub fn breadcrumbs(
@@ -236,6 +243,17 @@ fn common_locations() -> Vec<Location> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn path_display_hides_internal_prefix_without_changing_navigation_targets() {
+        let drive = PathBuf::from(r"\\?\C:\资料\当前");
+        assert_eq!(display_path(&drive), r"C:\资料\当前");
+        assert_eq!(display_name(std::path::Path::new(r"\\?\C:\")), r"C:\");
+        assert_eq!(
+            display_path(std::path::Path::new(r"\\?\UNC\server\share\中文")),
+            r"\\server\share\中文"
+        );
+        assert_eq!(drive, PathBuf::from(r"\\?\C:\资料\当前"));
+    }
     #[test]
     fn crumbs_preserve_unc_roots_unicode_and_exact_navigation_targets() {
         for raw in [

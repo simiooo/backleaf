@@ -31,6 +31,7 @@ pub struct Detail {
     pub identity: Option<[u8; 33]>,
 }
 pub enum Event {
+    Search(crate::search::Notice),
     Navigation(crate::navigation::Notice),
     Located {
         generation: u64,

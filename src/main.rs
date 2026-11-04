@@ -1,6 +1,7 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 mod app_navigation;
 mod app_operations;
+mod app_search;
 mod input;
 mod layout;
 mod menu;
@@ -9,6 +10,7 @@ mod model;
 mod navigation;
 mod operations;
 mod paint;
+mod search;
 mod selectable;
 mod selection;
 mod selection_smoke;
@@ -37,6 +39,7 @@ use task_panel::{ClosePanel, TaskPanel};
 use theme::{Palette, Role as ColorRole};
 
 struct Backleaf {
+    search: app_search::SearchUi,
     navigation: app_navigation::NavigationUi,
     files: app_operations::FileOperations,
     native_owner_handle: usize,
@@ -126,6 +129,7 @@ impl Backleaf {
         });
         let (tx, rx) = async_channel::bounded(8);
         let navigation = app_navigation::NavigationUi::new(navigation::Worker::new(tx.clone()), cx);
+        let search = app_search::SearchUi::new(search::Worker::new(tx.clone()));
         let (operation_tx, operation_rx) = async_channel::bounded(1);
         let hub = operations::service::Hub::new(options.state_dir.clone(), operation_tx);
         cx.spawn(async move |this, cx| {
@@ -291,6 +295,7 @@ impl Backleaf {
             selection_smoke::schedule(window, cx);
         }
         Self {
+            search,
             navigation,
             files: app_operations::FileOperations::new(hub),
             native_owner_handle: Self::native_owner(window),
@@ -363,6 +368,7 @@ impl Backleaf {
             return;
         }
         match event {
+            Event::Search(notice) => self.accept_search(notice, cx),
             Event::Navigation(notice) => self.accept_navigation(notice, cx),
             Event::Session { locked } => {
                 if locked {
@@ -467,6 +473,7 @@ impl Backleaf {
             return;
         }
         self.cancel_marquee();
+        self.close_search();
         if self.options.fixture.is_some() {
             return;
         }
@@ -743,6 +750,10 @@ impl Backleaf {
         self.update_marquee_band(window, cx);
     }
     fn key(&mut self, event: &KeyDownEvent, window: &mut Window, cx: &mut Context<Self>) {
+        if self.search_key(event, window, cx) {
+            cx.stop_propagation();
+            return;
+        }
         if self.navigation_key(event, window, cx) {
             cx.stop_propagation();
             return;
@@ -1121,6 +1132,9 @@ impl Backleaf {
             )
             .when(!self.files.hub.views().is_empty(), |d| {
                 d.child(self.operation_entry(cx))
+            })
+            .when(self.options.fixture.is_none(), |d| {
+                d.child(self.search_entry(window, cx))
             })
             .children(
                 [
@@ -1639,6 +1653,9 @@ impl Render for Backleaf {
             .child(self.operation_overlay(window, cx))
             .when(self.navigation.open, |d| {
                 d.child(self.path_overlay(window, cx))
+            })
+            .when(self.search.open, |d| {
+                d.child(self.search_overlay(window, cx))
             })
             .child(
                 canvas(

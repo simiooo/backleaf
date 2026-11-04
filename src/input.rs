@@ -48,6 +48,15 @@ pub struct TextInput {
 }
 
 impl TextInput {
+    pub fn value(&self) -> String {
+        self.content.to_string()
+    }
+    pub fn is_composing(&self) -> bool {
+        self.marked_range.is_some()
+    }
+    pub fn set_placeholder(&mut self, value: &'static str) {
+        self.placeholder = value.into();
+    }
     fn left(&mut self, _: &Left, window: &mut Window, cx: &mut Context<Self>) {
         if self.selected_range.is_empty() {
             self.move_to(self.previous_boundary(self.cursor_offset()), window, cx);

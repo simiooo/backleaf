@@ -15,6 +15,9 @@ mod selection;
 #[path = "../../../src/navigation.rs"]
 #[allow(dead_code)]
 mod navigation;
+#[path = "../../../src/search.rs"]
+#[allow(dead_code)]
+mod search;
 use operations::ledger::Ledger;
 use operations::windows as shell;
 use serde_json::{Value, json};

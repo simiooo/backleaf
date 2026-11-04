@@ -1,3 +1,5 @@
+当前搜索入口基线：[Backleaf-v12.fig](Backleaf-v12.fig)，92 页，保留 v11 的 84 页，新增 8 个搜索状态。预览与冷重开记录见 v12/。
+
 # 当前修订稿 · v11
 
 在 OpenPencil 打开 **[Backleaf-v11.fig](Backleaf-v11.fig)**，共 84 个可编辑页面。71–84 页加入左侧导航、Ant Design / shadcn 面包屑、浮层和 inline 选择计数，详见 [v11 导航规范](../docs/navigation-v11.md)。

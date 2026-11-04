@@ -1,0 +1,56 @@
+{
+  "version": "v12-search",
+  "retainedPages": 84,
+  "pages": [
+    {
+      "key": "85-search-entry",
+      "name": "85 · v12 搜索 entry",
+      "mode": "Light",
+      "nodes": 145
+    },
+    {
+      "key": "86-search-input",
+      "name": "86 · v12 搜索 input",
+      "mode": "Light",
+      "nodes": 150
+    },
+    {
+      "key": "87-search-running",
+      "name": "87 · v12 搜索 running",
+      "mode": "Light",
+      "nodes": 173
+    },
+    {
+      "key": "88-search-results",
+      "name": "88 · v12 搜索 results",
+      "mode": "Light",
+      "nodes": 173
+    },
+    {
+      "key": "89-search-empty",
+      "name": "89 · v12 搜索 empty",
+      "mode": "Light",
+      "nodes": 153
+    },
+    {
+      "key": "90-search-incomplete",
+      "name": "90 · v12 搜索 incomplete",
+      "mode": "Light",
+      "nodes": 173
+    },
+    {
+      "key": "91-search-narrow",
+      "name": "91 · v12 搜索 narrow",
+      "mode": "Light",
+      "nodes": 175
+    },
+    {
+      "key": "92-search-dark",
+      "name": "92 · v12 搜索 dark",
+      "mode": "Dark",
+      "nodes": 173
+    }
+  ],
+  "source": "scripts/design/search-v12.mjs",
+  "status": "Implementation proposal; native operation validation pending"
+}

@@ -1,0 +1,49 @@
+{
+  "masterSha256": "2852e45dae6d07ccbc6a207b9e49b2f01c4c14da83512310abe6119c10ce6766",
+  "retainedPages": 84,
+  "pages": 92,
+  "result": "passed",
+  "results": [
+    {
+      "key": "85-search-entry",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "86-search-input",
+      "changedPixels": 0,
+      "totalPixels": 815040
+    },
+    {
+      "key": "87-search-running",
+      "changedPixels": 44,
+      "totalPixels": 815040
+    },
+    {
+      "key": "88-search-results",
+      "changedPixels": 8,
+      "totalPixels": 815040
+    },
+    {
+      "key": "89-search-empty",
+      "changedPixels": 0,
+      "totalPixels": 815040
+    },
+    {
+      "key": "90-search-incomplete",
+      "changedPixels": 85,
+      "totalPixels": 815040
+    },
+    {
+      "key": "91-search-narrow",
+      "changedPixels": 75,
+      "totalPixels": 527040
+    },
+    {
+      "key": "92-search-dark",
+      "changedPixels": 30,
+      "totalPixels": 815040
+    }
+  ],
+  "verifiedAt": "2026-11-04T10:45:24.549Z"
+}
