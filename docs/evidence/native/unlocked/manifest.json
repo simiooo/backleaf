@@ -1,0 +1,86 @@
+{
+  "version": "0.1.0-preview.1",
+  "source_commit": "edfcfc674d8a309f5e2e780c870f0269530208ef",
+  "exe_sha256": "c2b8a283ac7b203c8fce6bef1800846d379c000a4c9ef0000f3186bee480aa50",
+  "zip_sha256": "fb9b6d863f3a27100df6305e98161ae0e4aecebfaa80815530dba56f1e41692e",
+  "verified_at_utc": "2026-11-04T03:13:35.149475+00:00",
+  "execution": "Installed portable staging executable, unlocked visible Windows desktop; one native case at a time.",
+  "reports": {
+    "100k-scroll.json": {
+      "sha256": "a3873c08847a781cf34ad876dbb7f5587be872f168313ba54ead67ac4d16e139",
+      "item_count": 100000,
+      "dataset": "generated metadata fixture (same native grid)"
+    },
+    "10m-scroll.json": {
+      "sha256": "fb825bb33bd02098c0e0275446dfa3d02501f0f5b3243ff84ba4aa8e17619462",
+      "item_count": 10000000,
+      "dataset": "generated metadata fixture (same native grid)"
+    },
+    "1k-scroll.json": {
+      "sha256": "5ca8b20a8dcda97e5c4982d6b748c76490431eb84f6c12978f19a705de42e13e",
+      "item_count": 1000,
+      "dataset": "generated metadata fixture (same native grid)"
+    },
+    "1m-flow1.json": {
+      "sha256": "4294a151a19487ff6fad4028f89823c9f35da52d2d2033bfe18cc67dcb72de5d",
+      "item_count": 1000000,
+      "dataset": "generated metadata fixture (same native grid)"
+    },
+    "1m-flow8.json": {
+      "sha256": "a85aa486fcd3a85a2d8fd50b0ae35f0a89cca85cb017e6137490c0d008941a98",
+      "item_count": 1000000,
+      "dataset": "generated metadata fixture (same native grid)"
+    },
+    "1m-idle.json": {
+      "sha256": "d19dfe4551994979c544c8495bfd7103e3dd9b8316f3340738d1f38dc362c738",
+      "item_count": 1000000,
+      "dataset": "generated metadata fixture (same native grid)"
+    },
+    "1m-narrow.json": {
+      "sha256": "47ee908819494d45a68e78a69ab67da7a9f837c4bdf6ba6b8738a97d7adcce09",
+      "item_count": 1000000,
+      "dataset": "generated metadata fixture (same native grid)"
+    },
+    "1m-reduced.json": {
+      "sha256": "1d1602a4b85625a5b1f97347026e8f1803168d300d7a6366464d74ea6ddb360d",
+      "item_count": 1000000,
+      "dataset": "generated metadata fixture (same native grid)"
+    },
+    "1m-scroll-flow8.json": {
+      "sha256": "ac9992e4da20b4f27e8eaac3751efe796f264b2890821dcb19d29da1664e3cfe",
+      "item_count": 1000000,
+      "dataset": "generated metadata fixture (same native grid)"
+    },
+    "1m-scroll.json": {
+      "sha256": "ff580bdf8977362fe74483f19e07f50063a7bc578645e96e65051ee813e9facb",
+      "item_count": 1000000,
+      "dataset": "generated metadata fixture (same native grid)"
+    },
+    "1m-wide.json": {
+      "sha256": "9efa881279016a144d69e8522a7c3f10a060287b70f3c67face6aced3ea64a58",
+      "item_count": 1000000,
+      "dataset": "generated metadata fixture (same native grid)"
+    },
+    "interaction-visibility.json": {
+      "sha256": "9844ea95e4d18eccdf1ad77081720e19a92858b4bf7e9911473125a676a35ce3",
+      "item_count": 10000000,
+      "dataset": "generated metadata fixture (same native grid)"
+    },
+    "real-100k.json": {
+      "sha256": "86442644524db254fe721eeb6e4084e4d771957e08df90d1d3de8fae98d001ce",
+      "item_count": 100001,
+      "dataset": "real directory snapshot / SQLite worker"
+    }
+  },
+  "checks": {
+    "continuous_scroll_cpu_and_interval": "passed",
+    "bounded_cache_and_working_set": "passed",
+    "one_pending_callback": "passed",
+    "idle_and_reduced_no_animation": "passed"
+  },
+  "notes": [
+    "Flow-only frame-interval variability is retained in raw reports; no guaranteed 60 FPS or GPU present claim.",
+    "interaction-visibility.json includes intentional idle/minimize periods and 7 handler-to-scene input samples.",
+    "Hardware inventory does not identify the selected rendering adapter."
+  ]
+}

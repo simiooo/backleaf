@@ -1,0 +1,14 @@
+{
+  "release_url": "https://github.com/simiooo/backleaf/releases/tag/native-v0.1.0-preview.1-20261104",
+  "published_at_utc": "2026-11-04T03:12:48Z",
+  "is_draft": false,
+  "is_prerelease": true,
+  "target_commit": "edfcfc674d8a309f5e2e780c870f0269530208ef",
+  "asset_id": "RA_kwDOVhcVes4qM5MM",
+  "asset_name": "Backleaf-0.1.0-preview.1-candidate-edfcfc67-win-x64.zip",
+  "published_asset_digest": "sha256:fb9b6d863f3a27100df6305e98161ae0e4aecebfaa80815530dba56f1e41692e",
+  "published_digest_matches_verified_download": true,
+  "installed_hash_and_visible_smoke": "passed before promotion on the same executable; see staging-candidate.json and unlocked/ui-smoke.json",
+  "supplementary_post_publish_run": "not executed: automatic approval rejected combined download/extract/CLI command with blocked by policy; no alternate execution attempt",
+  "verification_method": "Successful gh release view after publication confirms final target, prerelease state, sole current asset and its digest. The exact uploaded asset was downloaded and SHA256 checked before publication."
+}

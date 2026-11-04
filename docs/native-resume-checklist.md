@@ -1,11 +1,11 @@
-# SIM-951 resume checkpoint
+# SIM-951 acceptance checkpoint
 
-1. User unlocks Windows. Read `Backleaf.exe --session-status-file <json>` and require `locked:false,error:null`; recover a fresh Computer Use window binding. Do not interact with LockApp or security prompts.
-2. Run `scripts/native/check.ps1` only if source changes. Current source checks include format, Clippy, 4 behavior tests and the locked Release build.
-3. Run `scripts/native/benchmark.ps1 -Binary <installed Backleaf.exe> -Output <new results directory>` on the unlocked desktop. Preserve `session_initially_locked:false`, final unlocked state and no intervening lock event. Cover 1k/100k/1m/10m, 0/1/8 flow, reduced/idle, wide and narrow. Record actual viewport; this desktop clamps the wide request to 2048 × 1104 at 125%.
-4. Run the installed candidate with the real `.local/native-fixture` (100,001 entries including its marker), scrolling and real SQLite pages. Do not count synthetic metadata as actual files or copies.
-5. Native input smoke: Home/End at 10m, small wheel steps after a deep jump, Ctrl+A/Shift selection with bounded memory; full tooltip and detail for Chinese/emoji/ZWJ/combining/long unbroken ASCII; mouse selection and copy exactly equal raw names/paths; Esc returns focus. Verify no stale tooltip after scroll/navigation.
-6. Verify final conformance: filename-only selection background; centered icons/names; two-line ellipsis; task metadata in two left-aligned stable columns; one Cancel, no task X or status icons/trailing state labels; first-row flowing label keeps the common left axis. Fixture progress must remain labelled as a rendering sample.
-7. Check titlebar drag, resize, double-click, Alt+Space, native min/max/restore/close, Win11 restored corners and Snap Layout hover. Validate visible UIA options across repeated flow frames; GPUI cached-view fallback is conditional on active accessibility. Full Narrator/NVDA/IME/system operations remain SIM-935 follow-ups.
-8. Measure minimize/restore and natural session unlock: no new animation requests while hidden/locked; resume when visible/unlocked. Do not automate Windows lock/unlock. Preserve exact binary SHA and source commit in final reports.
-9. Complete installed-window smoke, publish/promote the draft staging prerelease, record URL/version/deploy time/evidence on SIM-951, set `in_review` and release claim. Product acceptance, not engineering completion, is what later sets `done`.
+The locked-desktop gate was resolved on 2026-11-04 after the user unlocked Windows and authorized continued automated checks. The final installed source is `edfcfc674d8a309f5e2e780c870f0269530208ef`. See [deployment](evidence/native/staging-candidate.json), [final raw evidence](evidence/native/README.md) and [method/results](native-render-validation.md).
+
+- Source format, Clippy, four behavior tests and Release build passed.
+- Eleven unlocked native performance cases and the real 100,001-entry NTFS directory completed.
+- Long Unicode/unbroken ASCII text, full details and clipboard values, external UIA text, ten-million-item navigation/selection, layout, native chrome/Snap Layout and actual directory navigation were checked in the installed window.
+- Active flowing labels stop requesting animation frames while minimized and resume when restored. Locked-state evidence remains separately mapped to its earlier build; Windows lock/unlock was not automated.
+- Portable ZIP is deployed to isolated local staging, uploaded bytes have been downloaded and verified, and the prerelease is the product acceptance entry.
+
+SIM-951 is engineering review, not product `done`. Remaining product work follows SIM-919's separate units: search/quick access, persistent indexing, restore, Shell writes, thumbnails, full Windows IME/accessibility/drag-and-drop and additional hardware/DPI coverage. Do not reopen SIM-951 merely to infer these features shipped.

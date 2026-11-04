@@ -14,6 +14,6 @@ cargo build --release --locked
 ./target/release/backleaf.exe
 ```
 
-`--fixture 1000000 --flow 8` opens an explicitly labelled rendering sample. `--path <directory>` uses a real directory. See [native validation and its current limits](docs/native-render-validation.md); engineering review requires the actual staging build and an unlocked Windows desktop smoke test.
+`--fixture 1000000 --flow 8` opens an explicitly labelled rendering sample. `--path <directory>` uses a real directory. The [Windows staging preview](https://github.com/simiooo/backleaf/releases/tag/native-v0.1.0-preview.1-20261104) has passed unlocked installed-window smoke and native rendering measurements through ten million metadata items, plus an actual 100,001-entry directory. See [native validation and its current limits](docs/native-render-validation.md).
 
 See [design contract](docs/design-contract.md), [research](docs/research.md) and [delivery status](docs/delivery.md).

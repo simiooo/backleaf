@@ -1,7 +1,13 @@
-# Native evidence status
+# Native evidence
+
+`unlocked/` contains the final installed executable's visible-desktop measurements from 2026-11-04. All reports record an initially and finally unlocked WTS session, with no intervening locked event. `manifest.json` maps every report to the source commit and executable hash. `ui-smoke.json` records manual checks; `installed-flow.png` is the installed native window, not a design rendering. The full method and result table are in [native validation](../../native-render-validation.md).
+
+The eleven 10-second continuous cases cover 1k/100k/1m/10m, flow 0/1/8, scrolling plus flow, idle, reduced motion, wide and narrow windows. `real-100k.json` uses an actual 100,001-entry NTFS directory for 15 seconds. `interaction-visibility.json` is a 180-second manual session with intentional idle/minimized periods: its large maximum callback gap is not a stalled continuous benchmark. The active-panel minimize/restore interval is 154.481–169.152 seconds; request count stays 9777 throughout. Its seven input samples are handler-to-scene observations, not input-to-photon latency.
+
+The one-label flow case retains a 24.72 ms interval P95; do not describe every animation run as a guaranteed 60 FPS. Static and reduced-motion zero-sample distributions mean no post-warmup redraw, not zero-ms frames. The scrolling CPU, working-set and bounded-cache gates passed; raw P99/max values remain in each report.
 
 `diagnostic/` contains real GPUI/Direct3D11 scene-build and process measurements from development, including a 100,001-entry NTFS directory. The desktop was later found locked and that build did not record session state. These are retained diagnostics, **not final visible-desktop acceptance results**.
 
 The later candidate adds WTS session notifications, a read-only session preflight, and benchmark rejection on locked/disconnected sessions. `locked-session-guard.json` tests the intentional locked branch: no decorative frame callbacks, no post-warmup redraw samples. Zero samples do not mean a zero-ms frame.
 
-Final unlocked performance, UIA, long-text/layout checks and installed-window smoke remain pending until the user unlocks Windows. Hardware inventory is not evidence that every enumerated adapter was used for rendering. All measurements must be interpreted with their recorded viewport, scale, warmup and backend limits.
+The final preview has passed source checks, upload/download hash verification, isolated portable staging deployment and installed-window smoke. [Publication verification](published-verification.json) confirms that the promoted release still carries the exact checked asset. A supplementary post-publication download/extract/CLI command was rejected by automatic approval with `blocked by policy` and was not run or retried through another path; it is not claimed as passing evidence. Hardware inventory is not evidence that every enumerated adapter was used for rendering. All measurements must be interpreted with their recorded viewport, scale, warmup and backend limits. Search, Shell writes, thumbnail decoding and full IME/NVDA/drag-and-drop testing are outside this rendering unit.

@@ -22,6 +22,6 @@
     "cargo test --release --locked (4 passed)",
     "cargo build --release --locked"
   ],
-  "visible_acceptance": "pending desktop unlock",
+  "visible_acceptance": "passed on installed executable; see unlocked/manifest.json and ui-smoke.json",
   "last_change": "Expose read-only details and status as accessible text values."
 }

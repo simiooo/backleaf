@@ -1,23 +1,25 @@
 {
   "version": "0.1.0-preview.1",
-  "source_commit": "13be83f0e4986b788c74a4ce5aef4dfe2a284e44",
-  "deployed_at_utc": "2026-11-03T17:37:40.7403879Z",
+  "source_commit": "edfcfc674d8a309f5e2e780c870f0269530208ef",
+  "deployed_at_utc": "2026-11-04T02:51:39.2184152Z",
   "installation": "portable ZIP extracted to isolated staging directory",
-  "staging_path": "D:\\work\\backleaf\\.local\\staging\\0.1.0-preview.1-13be83f0",
-  "artifact_path": "D:\\work\\backleaf\\.local\\artifacts\\Backleaf-0.1.0-preview.1-candidate-13be83f0-win-x64.zip",
-  "artifact_sha256": "d7467f48289c0e83f98136ef13067c8ecf2879d3673c99b2a7f7e7b2880fe310",
-  "exe_sha256": "94153f49ea1ac742569e5c11f54a386ffb41206fe01855c5a51152656f185da4",
+  "staging_path": "D:\\work\\backleaf\\.local\\staging\\0.1.0-preview.1-edfcfc67",
+  "artifact_path": "D:\\work\\backleaf\\.local\\artifacts\\Backleaf-0.1.0-preview.1-candidate-edfcfc67-win-x64.zip",
+  "artifact_sha256": "fb9b6d863f3a27100df6305e98161ae0e4aecebfaa80815530dba56f1e41692e",
+  "exe_sha256": "c2b8a283ac7b203c8fce6bef1800846d379c000a4c9ef0000f3186bee480aa50",
   "installed_hash_matches": true,
   "cli_smoke_passed": true,
-  "interactive_smoke_passed": false,
+  "interactive_smoke_passed": true,
   "session": {
-    "locked": true,
+    "locked": false,
     "error": null
   },
-  "release_url": "https://github.com/simiooo/backleaf/releases/tag/untagged-86bddf9180ae0de8a555",
+  "interactive_verified_at_utc": "2026-11-04T03:13:35.149475+00:00",
+  "release_url": "https://github.com/simiooo/backleaf/releases/tag/native-v0.1.0-preview.1-20261104",
   "release_tag": "native-v0.1.0-preview.1-20261104",
-  "release_is_draft": true,
+  "release_is_draft": false,
+  "release_published_at_utc": "2026-11-04T03:12:48Z",
   "uploaded_download_hash_matches": true,
-  "interactive_launch_automatic_review": "rejected: blocked by policy; no alternate launch attempted",
-  "resume_condition": "User unlocks Windows; obtain fresh Computer Use binding, then run final visible performance and installed-window smoke."
+  "evidence": "unlocked/manifest.json",
+  "ui_smoke": "unlocked/ui-smoke.json"
 }

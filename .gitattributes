@@ -1,0 +1,3 @@
+# Native measurement manifests hash the exact report bytes.
+docs/evidence/native/unlocked/*.json -text
+docs/evidence/native/unlocked/*.png binary

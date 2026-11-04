@@ -1,0 +1,58 @@
+{
+  "session_initially_locked": false,
+  "session_locked_at_end": false,
+  "accessibility_active": true,
+  "version": "0.1.0-preview.1",
+  "gpui_revision": "d36a70661471ec64dce230798121d554930d5c60",
+  "backend": "GPUI / Win32 / Direct3D 11 / DirectWrite",
+  "dataset": "generated metadata fixture (same native grid)",
+  "item_count": 1000000,
+  "scripted_scroll": false,
+  "flow_limit": 1,
+  "reduced_motion": false,
+  "logical_viewport": [
+    1120.0,
+    720.0
+  ],
+  "scale_factor": 1.25,
+  "duration_seconds": 10.0231559,
+  "scene_cpu": {
+    "samples": 542,
+    "p50_ms": 2.4323,
+    "p95_ms": 3.2545,
+    "p99_ms": 3.6925,
+    "max_ms": 4.4256
+  },
+  "frame_callback_interval": {
+    "samples": 542,
+    "p50_ms": 16.682599999999997,
+    "p95_ms": 24.7173,
+    "p99_ms": 25.6773,
+    "max_ms": 27.154799999999998
+  },
+  "input_handler_to_scene": {
+    "samples": 0,
+    "p50_ms": 0.0,
+    "p95_ms": 0.0,
+    "p99_ms": 0.0,
+    "max_ms": 0.0
+  },
+  "frames": 542,
+  "grid_builds": 603,
+  "label_layout_builds": 66,
+  "label_cache_peak": 66,
+  "visible_cells_peak": 66,
+  "cached_items_peak": 88,
+  "flow_layout_builds": 1,
+  "animation_requests": 1199,
+  "max_pending_frame_callbacks": 1,
+  "hidden_animation_requests": 0,
+  "peak_working_set_mib": 71.75390625,
+  "private_bytes_mib": 86.23828125,
+  "cpu_seconds": 3.25,
+  "cpu_one_core_percent": 32.42491718601323,
+  "events": [
+    "0.013s session-unlocked requests=0 frames=0"
+  ],
+  "measurement_notes": "Native release executable, real GPUI layout/paint and D3D11 window. Scene CPU is render start through final canvas paint; callback intervals are not GPU fence/present latency. Input measurement starts in the native event handler. Fixtures are metadata, not real copied files. Warmup: 1 second; first initialization and memory remain in wall-time/peak."
+}

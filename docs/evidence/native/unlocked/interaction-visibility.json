@@ -1,0 +1,70 @@
+{
+  "session_initially_locked": false,
+  "session_locked_at_end": false,
+  "accessibility_active": true,
+  "version": "0.1.0-preview.1",
+  "gpui_revision": "d36a70661471ec64dce230798121d554930d5c60",
+  "backend": "GPUI / Win32 / Direct3D 11 / DirectWrite",
+  "dataset": "generated metadata fixture (same native grid)",
+  "item_count": 10000000,
+  "scripted_scroll": false,
+  "flow_limit": 8,
+  "reduced_motion": false,
+  "logical_viewport": [
+    1120.0,
+    720.0
+  ],
+  "scale_factor": 1.25,
+  "duration_seconds": 180.0295167,
+  "scene_cpu": {
+    "samples": 5056,
+    "p50_ms": 2.4613,
+    "p95_ms": 3.305,
+    "p99_ms": 3.8154,
+    "max_ms": 13.2053
+  },
+  "frame_callback_interval": {
+    "samples": 5052,
+    "p50_ms": 16.6064,
+    "p95_ms": 21.0477,
+    "p99_ms": 25.263399999999997,
+    "max_ms": 19264.768799999998
+  },
+  "input_handler_to_scene": {
+    "samples": 7,
+    "p50_ms": 7.1582,
+    "p95_ms": 15.1278,
+    "p99_ms": 15.1278,
+    "max_ms": 15.1278
+  },
+  "frames": 5056,
+  "grid_builds": 5115,
+  "label_layout_builds": 180,
+  "label_cache_peak": 66,
+  "visible_cells_peak": 66,
+  "cached_items_peak": 88,
+  "flow_layout_builds": 8,
+  "animation_requests": 10998,
+  "max_pending_frame_callbacks": 1,
+  "hidden_animation_requests": 0,
+  "peak_working_set_mib": 72.6875,
+  "private_bytes_mib": 89.3125,
+  "cpu_seconds": 28.46875,
+  "cpu_one_core_percent": 15.813379117958828,
+  "events": [
+    "0.020s session-unlocked requests=0 frames=0",
+    "20.689s key",
+    "36.807s pointer-select",
+    "45.580s key",
+    "45.580s detail-ready id=0",
+    "64.056s key",
+    "83.318s key",
+    "92.571s hidden requests=5516 frames=2716",
+    "108.520s visible requests=5516 frames=2718",
+    "125.246s key",
+    "140.311s key",
+    "154.481s hidden requests=9777 frames=4436",
+    "169.152s visible requests=9777 frames=4438"
+  ],
+  "measurement_notes": "Native release executable, real GPUI layout/paint and D3D11 window. Scene CPU is render start through final canvas paint; callback intervals are not GPU fence/present latency. Input measurement starts in the native event handler. Fixtures are metadata, not real copied files. Warmup: 1 second; first initialization and memory remain in wall-time/peak."
+}

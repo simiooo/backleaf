@@ -1,0 +1,25 @@
+{
+  "date": "2026-11-04",
+  "source_commit": "edfcfc674d8a309f5e2e780c870f0269530208ef",
+  "exe_sha256": "c2b8a283ac7b203c8fce6bef1800846d379c000a4c9ef0000f3186bee480aa50",
+  "environment": "Unlocked Windows 11, 125% scale, installed portable staging executable",
+  "checks": [
+    {"name": "deep_navigation", "passed": true, "observation": "End focused index 9,999,999; an 8-unit upward wheel input retained fine-grained nearby rows."},
+    {"name": "select_all", "passed": true, "observation": "UIA footer exposed 10,000,000 selected items. Private memory before End/selection was 85.1289 MiB; after all-selection 85.0781 MiB. Process sampling includes allocator variation."},
+    {"name": "shift_selection", "passed": true, "observation": "Shift+Right exposed 2 selected items; selection background covers filename area, with a separate focus outline."},
+    {"name": "full_text_copy", "passed": true, "observation": "Unicode/emoji/ZWJ path (281 UTF-16 units), unbroken ASCII name (253) and path (472) match expected clipboard strings exactly. A mouse-selected 252-unit prefix matched exactly; missing final character was outside that drag range."},
+    {"name": "accessible_text", "passed": true, "observation": "External UIA reads complete name/path details and footer counts after static Label values use aria_value. Visible file and active task options persist across repeated flowing frames."},
+    {"name": "layout", "passed": true, "observation": "Centered icons and two-line ellipsis; shared task left axis; count and size in stable columns; filename colors/flow carry state; one Cancel without redundant X/icons/trailing status labels. Fixture is visibly labelled as a rendering sample."},
+    {"name": "native_window", "passed": true, "observation": "Titlebar drag, top-border resize (1122x721 capture to 1122x561), double-click maximize, caption max/restore/min/close, Alt+Space, Windows 11 restored corners and Snap Layout hover observed."},
+    {"name": "hidden_animation", "passed": true, "observation": "With 8 active flowing labels, keyboard system-menu minimize retained the panel. Hidden at 154.481s and visible at 169.152s both recorded 9777 frame requests; animation resumed after restore. See interaction-visibility.json."},
+    {"name": "real_navigation", "passed": true, "observation": "Isolated two-folder NTFS fixture: double-click Documents opens its one file, Alt+Left and Up return to the two-folder parent after worker completion. Normal directories show no simulated task progress."},
+    {"name": "source_checks", "passed": true, "observation": "Format, Clippy with warnings denied, 4 release tests and locked release build passed. See ../source-checks.txt."},
+    {"name": "package_roundtrip", "passed": true, "observation": "Built/installed EXE hashes match. Uploaded ZIP downloaded to a fresh directory has SHA256 fb9b6d863f3a27100df6305e98161ae0e4aecebfaa80815530dba56f1e41692e."}
+  ],
+  "limits": [
+    "Ten million items are lazy metadata; actual filesystem stress fixture has 100,001 entries.",
+    "No GPU fence/present or input-to-photon claim; manual input report has 7 samples.",
+    "Single-label flow retained a 24.7173 ms frame-interval P95; continuous scrolling meets its separate 20 ms gate.",
+    "Full IME, Narrator/NVDA, drag/drop, multiple physical DPIs/adapters, Shell writes and thumbnails remain separate validation or engineering units."
+  ]
+}
