@@ -1,0 +1,92 @@
+{
+  "version": "v11-navigation",
+  "retainedPages": 70,
+  "pages": [
+    {
+      "key": "71-sidebar",
+      "name": "71 · v11 左侧统一常用导航",
+      "mode": "Light",
+      "nodes": 140
+    },
+    {
+      "key": "72-path-hover",
+      "name": "72 · v11 路径 hover 浮层",
+      "mode": "Light",
+      "nodes": 157
+    },
+    {
+      "key": "73-path-click",
+      "name": "73 · v11 单击路径树导航",
+      "mode": "Light",
+      "nodes": 155
+    },
+    {
+      "key": "74-path-edit",
+      "name": "74 · v11 双击路径编辑",
+      "mode": "Light",
+      "nodes": 126
+    },
+    {
+      "key": "75-inline-selection",
+      "name": "75 · v11 悬浮选择计数",
+      "mode": "Light",
+      "nodes": 142
+    },
+    {
+      "key": "76-file-menu",
+      "name": "76 · v11 右键菜单而非详情",
+      "mode": "Light",
+      "nodes": 177
+    },
+    {
+      "key": "77-explicit-details",
+      "name": "77 · v11 右侧显式详情",
+      "mode": "Light",
+      "nodes": 152
+    },
+    {
+      "key": "78-long-path",
+      "name": "78 · v11 长路径与窄窗",
+      "mode": "Light",
+      "nodes": 142
+    },
+    {
+      "key": "79-empty",
+      "name": "79 · v11 空目录不占底部行",
+      "mode": "Light",
+      "nodes": 60
+    },
+    {
+      "key": "80-dark-navigation",
+      "name": "80 · v11 深色导航与层级",
+      "mode": "Dark",
+      "nodes": 157
+    },
+    {
+      "key": "81-crumb-overflow",
+      "name": "81 · v11 面包屑省略菜单",
+      "mode": "Light",
+      "nodes": 157
+    },
+    {
+      "key": "82-root-crumb",
+      "name": "82 · v11 磁盘根目录",
+      "mode": "Light",
+      "nodes": 130
+    },
+    {
+      "key": "83-keyboard-crumb",
+      "name": "83 · v11 面包屑键盘导航",
+      "mode": "Light",
+      "nodes": 157
+    },
+    {
+      "key": "84-narrow-crumb",
+      "name": "84 · v11 窄窗折叠祖先路径",
+      "mode": "Light",
+      "nodes": 157
+    }
+  ],
+  "source": "scripts/design/navigation-v11.mjs",
+  "status": "Implementation proposal; native operation validation pending"
+}

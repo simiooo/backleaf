@@ -8,10 +8,12 @@ Copy-Item target/release/backleaf.exe "$bundle/Backleaf.exe"
 Copy-Item docs/native-preview-readme.txt "$bundle/README.txt"
 Copy-Item LICENSE "$bundle/LICENSE"
 Copy-Item assets/brand/backleaf-logo.png "$bundle/Logo.png"
+Copy-Item design/Backleaf-v11.fig "$bundle/Backleaf-v11.fig"
+Copy-Item design/Backleaf-v11.fig .local/ci/Backleaf-v11.fig
 python scripts/native/collect-licenses.py "$bundle/licenses"
 if ($LASTEXITCODE) { throw 'License collection failed' }
 $exeHash = (Get-FileHash "$bundle/Backleaf.exe" -Algorithm SHA256).Hash.ToLowerInvariant()
-$metadata = [ordered]@{version=$version;source_commit=$commit;gpui_revision=(git -C vendor/zed rev-parse HEAD).Trim();built_at_utc=[DateTime]::UtcNow.ToString('o');exe_sha256=$exeHash;ci_run_url="https://github.com/$env:GITHUB_REPOSITORY/actions/runs/$env:GITHUB_RUN_ID";scope='Logo integration on verified preview.2; file operations/search WIP excluded';interactive_smoke='not run on hosted CI'}
+$metadata = [ordered]@{version=$version;source_commit=$commit;gpui_revision=(git -C vendor/zed rev-parse HEAD).Trim();built_at_utc=[DateTime]::UtcNow.ToString('o');exe_sha256=$exeHash;design_sha256=(Get-FileHash design/Backleaf-v11.fig).Hash.ToLowerInvariant();ci_run_url="https://github.com/$env:GITHUB_REPOSITORY/actions/runs/$env:GITHUB_RUN_ID";scope='Native navigation and context-menu preview; file operations experimental; saved search/index/restore pending';interactive_smoke='not run on hosted CI; local scope is recorded separately'}
 $metadata | ConvertTo-Json | Set-Content "$bundle/build.json" -Encoding utf8
 Copy-Item "$bundle/build.json" .local/ci/build.json
 $zip = ".local/ci/Backleaf-$version-$short-win-x64.zip"
@@ -26,4 +28,5 @@ $metadata.cli_smoke_passed = $true
 $metadata | ConvertTo-Json | Set-Content .local/ci/build.json -Encoding utf8
 $sum = (Get-FileHash $zip).Hash.ToLowerInvariant() + '  ' + (Split-Path $zip -Leaf)
 $sum | Set-Content .local/ci/SHA256SUMS.txt -Encoding ascii
-@{tag="test-v$version-$short";title="Backleaf $version · Logo 测试包"} | ConvertTo-Json | Set-Content .local/ci/release.json -Encoding utf8
+((Get-FileHash .local/ci/Backleaf-v11.fig).Hash.ToLowerInvariant()+'  Backleaf-v11.fig') | Add-Content .local/ci/SHA256SUMS.txt -Encoding ascii
+@{tag="test-v$version-$short";title="Backleaf $version · 原生测试包"} | ConvertTo-Json | Set-Content .local/ci/release.json -Encoding utf8

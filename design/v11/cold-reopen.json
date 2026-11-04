@@ -1,0 +1,79 @@
+{
+  "masterSha256": "e47cb3444f93cfe6b40ba849a3805db434ec1373e4b6ef8cf05813e23027692d",
+  "retainedPages": 70,
+  "pages": 84,
+  "result": "passed",
+  "results": [
+    {
+      "key": "71-sidebar",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "72-path-hover",
+      "changedPixels": 5,
+      "totalPixels": 815360
+    },
+    {
+      "key": "73-path-click",
+      "changedPixels": 0,
+      "totalPixels": 815360
+    },
+    {
+      "key": "74-path-edit",
+      "changedPixels": 5,
+      "totalPixels": 806400
+    },
+    {
+      "key": "75-inline-selection",
+      "changedPixels": 5,
+      "totalPixels": 806400
+    },
+    {
+      "key": "76-file-menu",
+      "changedPixels": 18,
+      "totalPixels": 806400
+    },
+    {
+      "key": "77-explicit-details",
+      "changedPixels": 41,
+      "totalPixels": 806400
+    },
+    {
+      "key": "78-long-path",
+      "changedPixels": 29,
+      "totalPixels": 518400
+    },
+    {
+      "key": "79-empty",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "80-dark-navigation",
+      "changedPixels": 21,
+      "totalPixels": 815360
+    },
+    {
+      "key": "81-crumb-overflow",
+      "changedPixels": 27,
+      "totalPixels": 815360
+    },
+    {
+      "key": "82-root-crumb",
+      "changedPixels": 29,
+      "totalPixels": 806400
+    },
+    {
+      "key": "83-keyboard-crumb",
+      "changedPixels": 27,
+      "totalPixels": 815360
+    },
+    {
+      "key": "84-narrow-crumb",
+      "changedPixels": 26,
+      "totalPixels": 524160
+    }
+  ],
+  "verifiedAt": "2026-11-04T09:44:19.207Z"
+}

@@ -1,7 +1,7 @@
 name: Windows test package
 on:
   push:
-    branches: ['test/logo-preview.3']
+    branches: ['test/**']
   workflow_dispatch:
 permissions:
   contents: write
@@ -50,5 +50,5 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           $metadata = Get-Content .local/ci/release.json -Raw | ConvertFrom-Json
-          gh release create $metadata.tag --target $env:GITHUB_SHA --prerelease --title $metadata.title --notes-file docs/logo-test-release.md .local/ci/*.zip .local/ci/SHA256SUMS.txt .local/ci/build.json
+          gh release create $metadata.tag --target $env:GITHUB_SHA --prerelease --title $metadata.title --notes-file docs/native-test-release.md .local/ci/*.zip .local/ci/*.fig .local/ci/SHA256SUMS.txt .local/ci/build.json
           if ($LASTEXITCODE) { throw 'Release publication failed' }

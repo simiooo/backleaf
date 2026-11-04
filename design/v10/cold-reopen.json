@@ -1,5 +1,5 @@
 {
-  "masterSha256": "d9ff3150118c8bd578c4eb71f24ad16c1d5adc1b1b440a9d899adbdc43d25858",
+  "masterSha256": "b30b467452365f78eac4d55e5eb28d46581ce10f80023cae0f17f9e7dd05d567",
   "retainedPages": 52,
   "pages": 70,
   "result": "passed",
@@ -26,7 +26,7 @@
     },
     {
       "key": "57-rename",
-      "changedPixels": 108,
+      "changedPixels": 89,
       "totalPixels": 806400
     },
     {
@@ -61,7 +61,7 @@
     },
     {
       "key": "64-path-error",
-      "changedPixels": 152,
+      "changedPixels": 166,
       "totalPixels": 806400
     },
     {
@@ -86,7 +86,7 @@
     },
     {
       "key": "69-rename-error",
-      "changedPixels": 42,
+      "changedPixels": 51,
       "totalPixels": 806400
     },
     {
@@ -95,5 +95,5 @@
       "totalPixels": 806400
     }
   ],
-  "verifiedAt": "2026-11-04T06:43:15.688Z"
+  "verifiedAt": "2026-11-04T09:01:09.135Z"
 }

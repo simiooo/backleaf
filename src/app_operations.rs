@@ -1,0 +1,1494 @@
+//! Window-facing file commands. Every filesystem/clipboard scan stays on the bounded service.
+use super::*;
+use crate::{
+    input::{InputEvent, TextInput},
+    menu::{Command, FileMenu, MenuEvent},
+    operations::{
+        ledger::State,
+        service::{Hub, Operation, Phase, View},
+        windows::identity::Identity,
+    },
+};
+use roaring::RoaringTreemap;
+use std::{collections::HashSet, ffi::OsString};
+
+pub struct FileOperations {
+    refresh_pending: bool,
+    pub hub: Hub,
+    pub menu: Option<Entity<FileMenu>>,
+    menu_subscription: Option<Subscription>,
+    menu_generation: u64,
+    pub editor: Option<Editor>,
+    editor_subscription: Option<Subscription>,
+    pub open: bool,
+    selected: Option<u64>,
+    expanded: bool,
+    failed_only: bool,
+    page_after: u64,
+    page_history: Vec<u64>,
+    page_requested: Option<(u64, u64, bool, u64, bool)>,
+    pub removed: RoaringTreemap,
+    seen: HashSet<u64>,
+    clipboard_sequence: u32,
+    pub detail_intent: DetailIntent,
+    pub locate_token: u64,
+    pub locate_rename: bool,
+    pub focus_grid: bool,
+    new_folder: Option<u64>,
+    pub close_guard: bool,
+    pub exit_after_cancel: bool,
+}
+#[derive(Clone, Copy, PartialEq, Eq)]
+pub enum DetailIntent {
+    Show,
+    Open,
+    Rename,
+    PasteFolder,
+}
+pub enum EditKind {
+    Path,
+    Rename(Detail),
+}
+pub struct Editor {
+    pub input: Entity<TextInput>,
+    pub kind: EditKind,
+    pub error: Option<String>,
+    pending: Option<u64>,
+    token: u64,
+    pub focus: bool,
+}
+impl FileOperations {
+    pub fn new(hub: Hub) -> Self {
+        Self {
+            refresh_pending: false,
+            hub,
+            menu: None,
+            menu_subscription: None,
+            menu_generation: 0,
+            editor: None,
+            editor_subscription: None,
+            open: false,
+            selected: None,
+            expanded: true,
+            failed_only: false,
+            page_after: 0,
+            page_history: vec![],
+            page_requested: None,
+            removed: RoaringTreemap::new(),
+            seen: HashSet::new(),
+            clipboard_sequence: 0,
+            detail_intent: DetailIntent::Show,
+            locate_token: 0,
+            locate_rename: false,
+            focus_grid: false,
+            new_folder: None,
+            close_guard: false,
+            exit_after_cancel: false,
+        }
+    }
+    pub fn animating(&self) -> bool {
+        self.open
+            && self.expanded
+            && self
+                .selected
+                .and_then(|id| self.hub.view(id))
+                .is_some_and(|v| v.phase == Phase::Running && !v.active.is_empty())
+    }
+}
+impl Backleaf {
+    pub fn native_owner(window: &Window) -> usize {
+        use raw_window_handle::{HasWindowHandle, RawWindowHandle};
+        if let Ok(handle) = HasWindowHandle::window_handle(window)
+            && let RawWindowHandle::Win32(h) = handle.as_raw()
+        {
+            h.hwnd.get() as usize
+        } else {
+            0
+        }
+    }
+    pub fn refresh_directory(
+        &mut self,
+        name: Option<OsString>,
+        rename: bool,
+        cx: &mut Context<Self>,
+    ) {
+        let path = self.path.clone();
+        self.navigate(path, false, cx);
+        if let Some(name) = name {
+            self.files.locate_token += 1;
+            self.files.locate_rename = rename;
+            self.source.locate(self.files.locate_token, name);
+        }
+    }
+    pub fn refresh_cut(&mut self, cx: &mut Context<Self>) {
+        self.files.hub.observe_clipboard();
+        let range = self.requested.clone();
+        self.requested = 0..0;
+        self.ensure_page(range);
+        cx.notify();
+    }
+    pub fn operations_changed(&mut self, cx: &mut Context<Self>) {
+        let views = self.files.hub.views();
+        let mut refresh = false;
+        let mut locate = None;
+        let mut rename = false;
+        for v in &views {
+            if v.source_mask.is_some()
+                && self
+                    .source
+                    .snapshot_path()
+                    .is_some_and(|p| v.source_snapshot.as_ref().is_some_and(|s| s.as_path() == p))
+            {
+                self.files.removed |= v.removed.as_ref();
+            }
+            if !v.phase.terminal() {
+                continue;
+            }
+            if self
+                .files
+                .editor
+                .as_ref()
+                .is_some_and(|e| e.pending == Some(v.id))
+            {
+                if v.phase == Phase::Complete {
+                    locate = v
+                        .created
+                        .as_ref()
+                        .and_then(|p| p.file_name().map(OsString::from));
+                    self.files.editor = None;
+                    self.files.editor_subscription = None;
+                    self.files.focus_grid = true;
+                    refresh = true;
+                } else if let Some(editor) = &mut self.files.editor {
+                    editor.pending = None;
+                    editor.error = Some(
+                        v.error
+                            .as_deref()
+                            .unwrap_or("无法重命名，请检查此位置")
+                            .to_owned(),
+                    );
+                    editor.focus = true;
+                    editor.input.update(cx, |input, cx| {
+                        input.enabled = true;
+                        cx.notify();
+                    });
+                }
+            }
+            if self.files.new_folder == Some(v.id) {
+                self.files.new_folder = None;
+                if v.phase == Phase::Complete {
+                    locate = v
+                        .created
+                        .as_ref()
+                        .and_then(|p| p.file_name().map(OsString::from));
+                    rename = true;
+                    refresh = true;
+                }
+            }
+            if self.files.seen.insert(v.id)
+                && matches!(
+                    v.operation,
+                    Operation::Copy
+                        | Operation::Move
+                        | Operation::Recycle
+                        | Operation::Rename
+                        | Operation::NewFolder
+                )
+            {
+                // Refresh once per completed task; never rebuild a huge directory for every copied item.
+                refresh |= same_location(&v.target, &self.path)
+                    || v.source_mask.is_some()
+                        && self.source.snapshot_path().is_some_and(|p| {
+                            v.source_snapshot.as_ref().is_some_and(|s| s.as_path() == p)
+                        });
+            }
+        }
+        self.selection.mask.exclude(&self.files.removed);
+        if self.files.seen.len() > 128 {
+            self.files
+                .seen
+                .retain(|id| views.iter().any(|v| v.id == *id));
+        }
+        if refresh && self.files.editor.is_some() {
+            self.files.refresh_pending = true;
+        } else if refresh {
+            self.refresh_directory(locate, rename, cx);
+        }
+        let sequence = operations::clipboard::Clipboard::sequence();
+        if sequence != self.files.clipboard_sequence {
+            self.files.clipboard_sequence = sequence;
+            self.refresh_cut(cx);
+        }
+        self.request_operation_page();
+        cx.notify();
+    }
+    pub fn open_menu(
+        &mut self,
+        position: Point<Pixels>,
+        id: Option<usize>,
+        keyboard: bool,
+        window: &mut Window,
+        cx: &mut Context<Self>,
+    ) {
+        self.close_path_tree();
+        if self.selection_busy() || self.files.editor.is_some() {
+            return;
+        }
+        self.cancel_marquee();
+        self.panel = false;
+        self.files.open = false;
+        if let Some(id) = id {
+            if !self.selection.contains(id) {
+                self.selection.select(id, false, false);
+            }
+        } else {
+            self.selection = Selection::default();
+        }
+        let folder = id
+            .and_then(|id| self.cache.get(&id))
+            .is_some_and(|i| i.directory)
+            && self.selection.count() == 1;
+        let paste =
+            !self.files.hub.clipboard_preparing() && operations::clipboard::Clipboard::available();
+        let menu = cx.new(|cx| {
+            FileMenu::new(
+                self.colors,
+                position,
+                self.selection.count(),
+                folder,
+                paste,
+                self.options.fixture.is_none(),
+                keyboard,
+                cx,
+            )
+        });
+        self.files.menu_generation = self.generation;
+        self.files.menu_subscription =
+            Some(
+                cx.subscribe_in(&menu, window, |this, _, event: &MenuEvent, window, cx| {
+                    let valid = this.files.menu_generation == this.generation;
+                    this.files.menu = None;
+                    window.focus(&this.focus, cx);
+                    if valid && let MenuEvent::Command(command) = event {
+                        this.file_command(*command, window, cx);
+                    }
+                    cx.notify();
+                }),
+            );
+        window.focus(&menu.focus_handle(cx), cx);
+        self.files.menu = Some(menu);
+        cx.notify();
+    }
+    pub fn file_command(&mut self, command: Command, window: &mut Window, cx: &mut Context<Self>) {
+        if self.selection_busy() || self.files.editor.is_some() {
+            return;
+        }
+        self.files.menu = None;
+        self.error = None;
+        if self.options.fixture.is_some() && command != Command::Details {
+            return;
+        }
+        let owner = Self::native_owner(window);
+        let count = self.selection.count();
+        let id = self
+            .selection
+            .focus
+            .filter(|id| self.selection.contains(*id));
+        let result: Result<Option<u64>, String> = (|| match command {
+            Command::Refresh => {
+                self.refresh_directory(None, false, cx);
+                Ok(None)
+            }
+            Command::Open | Command::Details | Command::Rename => {
+                if count != 1 {
+                    return Ok(None);
+                }
+                if let Some(id) = id {
+                    self.files.detail_intent = match command {
+                        Command::Open => DetailIntent::Open,
+                        Command::Rename => DetailIntent::Rename,
+                        _ => DetailIntent::Show,
+                    };
+                    self.request_detail(id, command == Command::Open, cx);
+                }
+                Ok(None)
+            }
+            Command::Copy | Command::Cut | Command::CopyPath | Command::Recycle => {
+                if count == 0 {
+                    return Ok(None);
+                }
+                let selection = self
+                    .source
+                    .freeze_selection(self.selection.mask.clone())
+                    .ok_or("目录尚未准备好")?;
+                let id = if command == Command::Recycle {
+                    self.files.hub.selection(
+                        selection,
+                        Operation::Recycle,
+                        PathBuf::from("回收站"),
+                        owner,
+                    )
+                } else {
+                    self.files.hub.clipboard(
+                        selection,
+                        command == Command::Cut,
+                        command == Command::CopyPath,
+                    )
+                }
+                .map_err(|e| e.to_string())?;
+                Ok(Some(id))
+            }
+            Command::Paste => {
+                if count == 1
+                    && id
+                        .and_then(|id| self.cache.get(&id))
+                        .is_some_and(|i| i.directory)
+                {
+                    self.files.detail_intent = DetailIntent::PasteFolder;
+                    self.request_detail(id.unwrap(), false, cx);
+                    Ok(None)
+                } else {
+                    self.files
+                        .hub
+                        .paste(
+                            self.source.parent().unwrap_or_else(|| self.path.clone()),
+                            self.source.parent_identity(),
+                            owner,
+                        )
+                        .map(Some)
+                        .map_err(|e| e.to_string())
+                }
+            }
+            Command::NewFolder => {
+                let id = self
+                    .files
+                    .hub
+                    .direct(
+                        PathBuf::new(),
+                        self.source.parent().unwrap_or_else(|| self.path.clone()),
+                        "新建文件夹".into(),
+                        self.source.parent_identity(),
+                        true,
+                        owner,
+                    )
+                    .map_err(|e| e.to_string())?;
+                self.files.new_folder = Some(id);
+                Ok(Some(id))
+            }
+        })();
+        match result {
+            Ok(Some(id)) => self.show_operation(id),
+            Ok(None) => (),
+            Err(error) => self.error = Some(error),
+        }
+        cx.notify();
+    }
+    pub fn show_operation(&mut self, id: u64) {
+        self.files.selected = Some(id);
+        self.files.open = true;
+        self.files.expanded = true;
+        self.files.failed_only = false;
+        self.files.page_after = 0;
+        self.files.page_history.clear();
+        self.files.page_requested = None;
+        self.request_operation_page();
+    }
+    pub fn begin_rename(
+        &mut self,
+        detail: Detail,
+        window: Option<&mut Window>,
+        cx: &mut Context<Self>,
+    ) {
+        if detail.path.file_name().and_then(|n| n.to_str()).is_none() {
+            self.error = Some("此名称包含无法编辑的字符，可复制完整路径处理".into());
+            return;
+        }
+        let selected = operations::windows::names::stem_range(&detail.name, detail.directory);
+        self.start_editor(
+            detail.name.clone(),
+            selected,
+            EditKind::Rename(detail),
+            window,
+            cx,
+        );
+    }
+    fn start_editor(
+        &mut self,
+        value: String,
+        selected: Range<usize>,
+        kind: EditKind,
+        window: Option<&mut Window>,
+        cx: &mut Context<Self>,
+    ) {
+        let is_path = matches!(kind, EditKind::Path);
+        let input = cx.new(|cx| {
+            TextInput::new(
+                value,
+                selected,
+                if is_path { "位置" } else { "文件名称" },
+                self.colors,
+                if is_path { 32767 } else { 1024 },
+                cx,
+            )
+        });
+        self.files.editor_subscription =
+            Some(cx.subscribe(&input, |this, _, event: &InputEvent, cx| {
+                match event {
+                    InputEvent::Cancel => {
+                        if this
+                            .files
+                            .editor
+                            .as_ref()
+                            .is_some_and(|e| e.pending.is_none())
+                        {
+                            this.files.editor = None;
+                            this.files.editor_subscription = None;
+                            this.files.focus_grid = true;
+                        }
+                    }
+                    InputEvent::Error(error) => {
+                        if let Some(editor) = &mut this.files.editor {
+                            editor.error = Some(error.clone());
+                        }
+                    }
+                    InputEvent::Changed => {
+                        if let Some(editor) = &mut this.files.editor {
+                            editor.error = None;
+                        }
+                    }
+                    InputEvent::Submit(value) => this.submit_editor(value.clone(), cx),
+                }
+                cx.notify();
+            }));
+        self.files.menu = None;
+        self.panel = false;
+        self.files.open = false;
+        let focus = window.is_none();
+        if let Some(window) = window {
+            window.focus(&input.focus_handle(cx), cx);
+        }
+        self.files.editor = Some(Editor {
+            input,
+            kind,
+            error: None,
+            pending: None,
+            token: 0,
+            focus,
+        });
+        self.files.focus_grid = false;
+        cx.notify();
+    }
+    pub fn edit_path(&mut self, window: &mut Window, cx: &mut Context<Self>) {
+        self.close_path_tree();
+        if self.options.fixture.is_some() {
+            return;
+        }
+        if let Some(editor) = &self.files.editor
+            && matches!(editor.kind, EditKind::Path)
+        {
+            editor.input.update(cx, |i, cx| i.select_full(cx));
+            window.focus(&editor.input.focus_handle(cx), cx);
+            return;
+        }
+        if self
+            .files
+            .editor
+            .as_ref()
+            .is_some_and(|e| e.pending.is_some())
+        {
+            return;
+        }
+        let value = self.path.to_string_lossy().into_owned();
+        let len = value.len();
+        self.start_editor(value, 0..len, EditKind::Path, Some(window), cx);
+    }
+    fn submit_editor(&mut self, value: String, cx: &mut Context<Self>) {
+        let Some(editor) = self.files.editor.as_mut() else {
+            return;
+        };
+        if editor.pending.is_some() {
+            return;
+        }
+        match &editor.kind {
+            EditKind::Path => {
+                self.detail_token += 1;
+                editor.token = self.detail_token;
+                let token = editor.token;
+                let tx = self.tx.clone();
+                let base = self.path.clone();
+                editor.input.update(cx, |input, cx| {
+                    input.enabled = false;
+                    cx.notify();
+                });
+                let _ = std::thread::Builder::new()
+                    .name("backleaf-location".into())
+                    .spawn(move || {
+                        let value = (|| -> Result<PathBuf, String> {
+                            let text = value.trim_matches('"');
+                            if text.is_empty() {
+                                return Err("请输入位置".into());
+                            }
+                            let path = PathBuf::from(text);
+                            let path = if path.is_absolute() {
+                                path
+                            } else {
+                                base.join(path)
+                            };
+                            match std::fs::read_dir(&path) {
+                                Ok(_) => Ok(path),
+                                Err(error) => Err(match error.kind() {
+                                    std::io::ErrorKind::NotFound => "找不到此位置",
+                                    std::io::ErrorKind::PermissionDenied => "无权访问此位置",
+                                    std::io::ErrorKind::NotADirectory => "此位置不是文件夹",
+                                    _ => "无法打开此位置",
+                                }
+                                .into()),
+                            }
+                        })();
+                        let _ = tx.send_blocking(Event::PathResolved { token, value });
+                    });
+            }
+            EditKind::Rename(detail) => {
+                if let Err(error) = operations::windows::names::validate(&value) {
+                    editor.error = Some(error.into());
+                    return;
+                }
+                if value == detail.name {
+                    self.files.editor = None;
+                    self.files.editor_subscription = None;
+                    self.files.focus_grid = true;
+                    return;
+                }
+                let expected = detail.identity.as_ref().and_then(|i| Identity::decode(i));
+                if expected.is_none() {
+                    editor.error = Some("文件已改变，请重新选择".into());
+                    return;
+                }
+                // HWND is captured at the window's creation; no filesystem work occurs here.
+                match self.files.hub.direct(
+                    detail.path.clone(),
+                    detail.path.parent().unwrap_or(&self.path).to_path_buf(),
+                    value.into(),
+                    expected,
+                    false,
+                    self.native_owner_handle,
+                ) {
+                    Ok(id) => {
+                        editor.pending = Some(id);
+                        editor.error = None;
+                        editor.input.update(cx, |input, cx| {
+                            input.enabled = false;
+                            cx.notify();
+                        });
+                    }
+                    Err(error) => editor.error = Some(error.to_string()),
+                }
+            }
+        }
+    }
+    pub fn accept_operation_detail(
+        &mut self,
+        detail: Detail,
+        cx: &mut Context<Self>,
+    ) -> Option<Detail> {
+        match self.files.detail_intent {
+            DetailIntent::Rename => {
+                self.files.detail_intent = DetailIntent::Show;
+                self.begin_rename(detail, None, cx);
+                None
+            }
+            DetailIntent::PasteFolder => {
+                self.files.detail_intent = DetailIntent::Show;
+                if detail.directory {
+                    match self.files.hub.paste(
+                        detail.path,
+                        detail.identity.as_ref().and_then(|i| Identity::decode(i)),
+                        self.native_owner_handle,
+                    ) {
+                        Ok(id) => self.show_operation(id),
+                        Err(error) => self.error = Some(error.to_string()),
+                    }
+                }
+                cx.notify();
+                None
+            }
+            _ => Some(detail),
+        }
+    }
+    pub fn receive_operation(&mut self, event: &Event, cx: &mut Context<Self>) -> bool {
+        match event {
+            Event::ClipboardChanged => {
+                self.refresh_cut(cx);
+                true
+            }
+            Event::Located {
+                generation,
+                token,
+                id,
+            } if *generation == self.generation && *token == self.files.locate_token => {
+                if let Some(id) = id {
+                    self.selection.select(*id, false, false);
+                    self.scroll_global(*id / self.columns, ScrollStrategy::Nearest, false);
+                    self.files.focus_grid = true;
+                    if self.files.locate_rename {
+                        self.files.locate_rename = false;
+                        self.files.detail_intent = DetailIntent::Rename;
+                        self.request_detail(*id, false, cx);
+                    }
+                }
+                cx.notify();
+                true
+            }
+            Event::PathResolved { token, value }
+                if self
+                    .files
+                    .editor
+                    .as_ref()
+                    .is_some_and(|e| matches!(e.kind, EditKind::Path) && e.token == *token) =>
+            {
+                match value {
+                    Ok(path) => {
+                        self.files.editor = None;
+                        self.files.editor_subscription = None;
+                        self.navigate(path.clone(), true, cx);
+                        self.files.focus_grid = true;
+                    }
+                    Err(error) => {
+                        if let Some(editor) = &mut self.files.editor {
+                            editor.error = Some(error.clone());
+                            editor.focus = true;
+                            editor.input.update(cx, |i, cx| {
+                                i.enabled = true;
+                                cx.notify();
+                            });
+                        }
+                    }
+                }
+                cx.notify();
+                true
+            }
+            _ => false,
+        }
+    }
+    pub fn file_shortcut(
+        &mut self,
+        event: &KeyDownEvent,
+        window: &mut Window,
+        cx: &mut Context<Self>,
+    ) -> bool {
+        let key = event.keystroke.key.as_str();
+        let m = event.keystroke.modifiers;
+        if self.files.close_guard {
+            if key == "escape" && !self.files.exit_after_cancel {
+                self.files.close_guard = false;
+                window.focus(&self.focus, cx);
+                cx.notify();
+            }
+            return key != "tab";
+        }
+        if m.platform {
+            return false;
+        }
+        if (m.control && !m.alt && key == "l") || (m.alt && !m.control && key == "d") {
+            self.edit_path(window, cx);
+            return true;
+        }
+        if self.files.menu.is_some() {
+            return true;
+        }
+        if self.files.editor.is_some() {
+            return false;
+        }
+        if !self.focus.is_focused(window) {
+            return false;
+        }
+        if key == "escape" && self.files.open {
+            self.files.open = false;
+            cx.notify();
+            return true;
+        }
+        if key == "escape" && self.files.hub.own_clipboard().is_some_and(|c| c.cut) {
+            if let Err(e) = self.files.hub.clear_cut() {
+                self.error = Some(e.to_string());
+            }
+            cx.notify();
+            return true;
+        }
+        if !m.alt && !m.control && (key == "menu" || (key == "f10" && m.shift)) {
+            let id = self.selection.focus;
+            let anchor = id
+                .map(|id| {
+                    let col = id % self.columns;
+                    let row = id / self.columns;
+                    let top = self.global_point(point(px(12.), px(60.))).1;
+                    point(
+                        px(self.sidebar_width()
+                            + 12.
+                            + col as f32 * (self.cell_width + layout::LAYOUT.grid.column_gap)),
+                        px((60. + row as f64 * layout::row_step() as f64 - top
+                            + layout::LAYOUT.grid.cell_height as f64)
+                            as f32),
+                    )
+                })
+                .unwrap_or(point(px(self.sidebar_width() + 20.), px(68.)));
+            self.open_menu(anchor, id, true, window, cx);
+            return true;
+        }
+        let command = match (key, m.control, m.shift, m.alt) {
+            ("c", true, true, false) => Some(Command::CopyPath),
+            ("c", true, false, false) => Some(Command::Copy),
+            ("x", true, false, false) => Some(Command::Cut),
+            ("v", true, false, false) => Some(Command::Paste),
+            ("d", true, false, false) => Some(Command::Recycle),
+            ("n", true, true, false) => Some(Command::NewFolder),
+            ("f2", false, false, false) => Some(Command::Rename),
+            ("f5", false, false, false) => Some(Command::Refresh),
+            ("delete", false, false, false) => Some(Command::Recycle),
+            ("enter", false, false, true) => Some(Command::Details),
+            _ => None,
+        };
+        if let Some(command) = command {
+            if !event.is_held {
+                self.file_command(command, window, cx);
+            }
+            return true;
+        }
+        false
+    }
+    pub fn request_close(&mut self, window: &mut Window, cx: &mut Context<Self>) {
+        self.close_path_tree();
+        if self.files.hub.active() {
+            self.files.close_guard = true;
+            self.files.open = false;
+            self.files.menu = None;
+            cx.notify();
+        } else {
+            window.remove_window();
+        }
+    }
+    pub fn sync_operation_focus(&mut self, window: &mut Window, cx: &mut Context<Self>) {
+        if self.files.refresh_pending && self.files.editor.is_none() {
+            self.files.refresh_pending = false;
+            self.refresh_directory(None, false, cx);
+        }
+        self.files
+            .hub
+            .set_visible(window.is_visible() && !self.session_locked);
+        if self.files.exit_after_cancel && !self.files.hub.active() {
+            window.remove_window();
+            return;
+        }
+        if let Some(editor) = &mut self.files.editor
+            && editor.focus
+        {
+            self.files.focus_grid = false;
+            editor.focus = false;
+            window.focus(&editor.input.focus_handle(cx), cx);
+        } else if self.files.focus_grid {
+            self.files.focus_grid = false;
+            window.focus(&self.focus, cx);
+        }
+    }
+    fn request_operation_page(&mut self) {
+        if !self.files.open || !self.files.expanded {
+            return;
+        }
+        if let Some(id) = self.files.selected
+            && let Some(v) = self.files.hub.view(id)
+        {
+            let signature = (
+                id,
+                self.files.page_after,
+                self.files.failed_only,
+                v.successful + v.failed + v.unknown,
+                v.phase.terminal(),
+            );
+            if self.files.page_requested != Some(signature) {
+                self.files.page_requested = Some(signature);
+                self.files
+                    .hub
+                    .page(id, self.files.page_after, self.files.failed_only);
+            }
+        }
+    }
+    fn text_action(
+        &self,
+        id: &'static str,
+        label: &'static str,
+        click: impl Fn(&ClickEvent, &mut Window, &mut App) + 'static,
+    ) -> Stateful<Div> {
+        let colors = self.colors;
+        let action = Rc::new(click);
+        let keyboard = action.clone();
+        div()
+            .id(id)
+            .h(px(32.))
+            .px(px(12.))
+            .flex()
+            .items_center()
+            .rounded(px(8.))
+            .role(Role::Button)
+            .aria_label(label)
+            .focusable()
+            .tab_stop(true)
+            .hover(move |d| d.bg(colors.color(ColorRole::Hover)))
+            .focus_visible(move |d| d.shadow(vec![colors.focus_ring()]))
+            .on_key_down(move |e, w, cx| {
+                if paint::activation_key(e) {
+                    cx.stop_propagation();
+                    keyboard(&ClickEvent::default(), w, cx);
+                }
+            })
+            .on_click(move |e, w, cx| action(e, w, cx))
+            .child(label)
+    }
+    pub fn operation_entry(&self, cx: &mut Context<Self>) -> AnyElement {
+        let count = self.files.hub.views().len();
+        let colors = self.colors;
+        div()
+            .id("operations-entry")
+            .h(px(32.))
+            .px(px(8.))
+            .rounded(px(8.))
+            .flex()
+            .items_center()
+            .gap(px(4.))
+            .role(Role::Button)
+            .aria_label(format!("文件操作，{count} 项任务"))
+            .tooltip(tooltip(format!("文件操作 · {count} 项任务"), colors))
+            .focusable()
+            .tab_stop(true)
+            .hover(move |d| d.bg(colors.color(ColorRole::Hover)))
+            .focus_visible(move |d| d.shadow(vec![colors.focus_ring()]))
+            .on_click(cx.listener(|this, _, _, cx| {
+                this.files.open = !this.files.open;
+                this.files.selected = None;
+                this.request_operation_page();
+                cx.notify();
+            }))
+            .on_key_down(cx.listener(|this, e: &KeyDownEvent, _, cx| {
+                if paint::activation_key(e) {
+                    this.files.open = !this.files.open;
+                    this.files.selected = None;
+                    cx.stop_propagation();
+                    cx.notify();
+                }
+            }))
+            .child(icon("more", colors))
+            .child(number(count))
+            .into_any_element()
+    }
+    pub fn operation_overlay(&mut self, window: &Window, cx: &mut Context<Self>) -> AnyElement {
+        let colors = self.colors;
+        let mut layer = div().absolute().inset_0().children(self.files.menu.clone());
+        if self.files.open {
+            let content =
+                if let Some(view) = self.files.selected.and_then(|id| self.files.hub.view(id)) {
+                    self.operation_detail(view, window, cx)
+                } else {
+                    self.operation_queue(cx)
+                };
+            layer = layer.child(
+                div()
+                    .absolute()
+                    .right(px(12.))
+                    .bottom(px(36.))
+                    .w(px(400.))
+                    .max_w(px((f32::from(window.viewport_size().width) - 24.).max(1.)))
+                    .child(content),
+            );
+        }
+        if let Some(editor) = &self.files.editor
+            && let Some(error) = &editor.error
+        {
+            let (x, y) = match &editor.kind {
+                EditKind::Path => (80., 44.),
+                EditKind::Rename(d) => {
+                    let top = self.global_point(point(px(12.), px(60.))).1;
+                    (
+                        12. + (d.id % self.columns) as f32
+                            * (self.cell_width + layout::LAYOUT.grid.column_gap),
+                        (60. + (d.id / self.columns) as f64 * layout::row_step() as f64 - top
+                            + 112.) as f32,
+                    )
+                }
+            };
+            layer = layer.child(
+                div()
+                    .absolute()
+                    .left(px(x.clamp(
+                        8.,
+                        (f32::from(window.viewport_size().width) - 288.).max(8.),
+                    )))
+                    .top(px(y.clamp(
+                        44.,
+                        (f32::from(window.viewport_size().height) - 60.).max(44.),
+                    )))
+                    .w(px(280.))
+                    .px(px(8.))
+                    .py(px(12.))
+                    .rounded(px(8.))
+                    .bg(colors.color(ColorRole::Floating))
+                    .border_1()
+                    .border_color(colors.color(ColorRole::Border))
+                    .shadow(vec![colors.shadow()])
+                    .text_size(px(12.))
+                    .text_color(colors.color(ColorRole::Negative))
+                    .child(error.clone()),
+            );
+        }
+        if self.files.close_guard {
+            let count = self
+                .files
+                .hub
+                .views()
+                .iter()
+                .filter(|v| !v.phase.terminal())
+                .count();
+            layer = layer.child(
+                div()
+                    .absolute()
+                    .inset_0()
+                    .flex()
+                    .items_center()
+                    .justify_center()
+                    .bg(colors.color(ColorRole::Canvas).opacity(0.72))
+                    .occlude()
+                    .on_mouse_down(MouseButton::Left, |_, _, cx| cx.stop_propagation())
+                    .child(
+                        div()
+                            .w(px(400.))
+                            .px(px(12.))
+                            .py(px(16.))
+                            .rounded(px(12.))
+                            .bg(colors.color(ColorRole::Floating))
+                            .border_1()
+                            .border_color(colors.color(ColorRole::Border))
+                            .shadow(vec![colors.shadow()])
+                            .child(format!("还有 {count} 项任务"))
+                            .child(
+                                div()
+                                    .mt(px(24.))
+                                    .flex()
+                                    .gap(px(8.))
+                                    .child(self.text_action(
+                                        "continue-operations",
+                                        "继续处理",
+                                        cx.listener(|this, _, window, cx| {
+                                            this.files.close_guard = false;
+                                            window.focus(&this.focus, cx);
+                                            cx.notify();
+                                        }),
+                                    ))
+                                    .child(self.text_action(
+                                        "cancel-and-exit",
+                                        if self.files.exit_after_cancel {
+                                            "取消中"
+                                        } else {
+                                            "取消任务并退出"
+                                        },
+                                        cx.listener(|this, _, _, cx| {
+                                            this.files.exit_after_cancel = true;
+                                            this.files.hub.cancel_all();
+                                            cx.notify();
+                                        }),
+                                    )),
+                            ),
+                    ),
+            );
+        }
+        layer.into_any_element()
+    }
+    fn panel_shell(&self, id: &'static str, cx: &mut Context<Self>) -> Stateful<Div> {
+        let colors = self.colors;
+        div()
+            .id(id)
+            .occlude()
+            .w_full()
+            .px(px(12.))
+            .py(px(16.))
+            .rounded(px(12.))
+            .bg(colors.color(ColorRole::Floating))
+            .border_1()
+            .border_color(colors.color(ColorRole::Border))
+            .shadow(vec![colors.shadow()])
+            .on_mouse_down(MouseButton::Left, |_, _, cx| cx.stop_propagation())
+            .on_mouse_down_out(cx.listener(|this, e: &MouseDownEvent, _, cx| {
+                if e.button == MouseButton::Left {
+                    this.files.open = false;
+                    cx.notify();
+                }
+            }))
+    }
+    fn operation_queue(&self, cx: &mut Context<Self>) -> AnyElement {
+        let colors = self.colors;
+        let views = self.files.hub.views();
+        self.panel_shell("operation-queue", cx)
+            .child(
+                div()
+                    .id("operation-queue-scroll")
+                    .max_h(px(360.))
+                    .overflow_y_scroll()
+                    .children(views.into_iter().rev().map(|v| {
+                        let id = v.id;
+                        let label = format!(
+                            "{} → {}",
+                            v.operation.label(),
+                            v.target
+                                .file_name()
+                                .unwrap_or(v.target.as_os_str())
+                                .to_string_lossy()
+                        );
+                        div()
+                            .id(("queued-task", id))
+                            .w_full()
+                            .py(px(12.))
+                            .px(px(4.))
+                            .rounded(px(8.))
+                            .role(Role::Button)
+                            .aria_label(format!("{label}，{}", phase_label(v.phase)))
+                            .focusable()
+                            .tab_stop(true)
+                            .hover(move |d| d.bg(colors.color(ColorRole::Hover)))
+                            .focus_visible(move |d| d.shadow(vec![colors.focus_ring()]))
+                            .tooltip(tooltip(
+                                format!("{label}\n{}", phase_label(v.phase)),
+                                colors,
+                            ))
+                            .on_click(cx.listener(move |this, _, _, cx| {
+                                this.show_operation(id);
+                                cx.notify();
+                            }))
+                            .on_key_down(cx.listener(move |this, e: &KeyDownEvent, _, cx| {
+                                if paint::activation_key(e) {
+                                    this.show_operation(id);
+                                    cx.stop_propagation();
+                                    cx.notify();
+                                }
+                            }))
+                            .child(div().truncate().child(label))
+                            .child(
+                                div()
+                                    .h(px(2.))
+                                    .mt(px(8.))
+                                    .bg(colors.color(ColorRole::Border))
+                                    .child(
+                                        div()
+                                            .h_full()
+                                            .w(relative(fraction(&v)))
+                                            .bg(colors.color(ColorRole::Accent)),
+                                    ),
+                            )
+                            .child(
+                                div()
+                                    .flex()
+                                    .mt(px(8.))
+                                    .text_size(px(12.))
+                                    .text_color(colors.color(ColorRole::Secondary))
+                                    .child(div().w(relative(0.5)).child(count_label(&v)))
+                                    .child(div().w(relative(0.5)).child(bytes_label(&v))),
+                            )
+                    })),
+            )
+            .into_any_element()
+    }
+    fn operation_detail(&self, v: View, window: &Window, cx: &mut Context<Self>) -> AnyElement {
+        let colors = self.colors;
+        let id = v.id;
+        let terminal = v.phase.terminal();
+        let target = v.target.to_string_lossy().into_owned();
+        let title = v
+            .target
+            .file_name()
+            .unwrap_or(v.target.as_os_str())
+            .to_string_lossy()
+            .into_owned();
+        let action = if terminal {
+            self.button(
+                "close",
+                "关闭已结束任务",
+                cx.listener(move |this, _, window, cx| {
+                    this.files.hub.dismiss(id);
+                    this.files.selected = None;
+                    if this.files.hub.views().is_empty() {
+                        this.files.open = false;
+                    }
+                    window.focus(&this.focus, cx);
+                    cx.notify();
+                }),
+            )
+            .into_any_element()
+        } else {
+            self.text_action(
+                "cancel-operation",
+                if v.phase == Phase::Canceling {
+                    "取消中"
+                } else {
+                    "取消"
+                },
+                cx.listener(move |this, _, _, cx| {
+                    this.files.hub.cancel(id);
+                    cx.notify();
+                }),
+            )
+            .into_any_element()
+        };
+        let mut panel = self
+            .panel_shell("real-operation", cx)
+            .role(Role::Group)
+            .aria_label(format!("{}，{}", v.operation.label(), phase_label(v.phase)))
+            .child(
+                div()
+                    .h(px(32.))
+                    .flex()
+                    .items_center()
+                    .child(
+                        div()
+                            .id("operation-target")
+                            .flex_1()
+                            .min_w_0()
+                            .h_full()
+                            .flex()
+                            .items_center()
+                            .rounded(px(8.))
+                            .role(Role::Button)
+                            .aria_label(format!(
+                                "{} → {target}，{}",
+                                v.operation.label(),
+                                phase_label(v.phase)
+                            ))
+                            .tooltip(tooltip(
+                                format!(
+                                    "{} → {target}\n{}",
+                                    v.operation.label(),
+                                    phase_label(v.phase)
+                                ),
+                                colors,
+                            ))
+                            .focusable()
+                            .tab_stop(true)
+                            .focus_visible(move |d| d.shadow(vec![colors.focus_ring()]))
+                            .on_click(cx.listener(|this, _, _, cx| {
+                                this.files.expanded = !this.files.expanded;
+                                this.request_operation_page();
+                                cx.notify();
+                            }))
+                            .on_key_down(cx.listener(|this, e: &KeyDownEvent, _, cx| {
+                                if paint::activation_key(e) {
+                                    this.files.expanded = !this.files.expanded;
+                                    this.request_operation_page();
+                                    cx.stop_propagation();
+                                    cx.notify();
+                                }
+                            }))
+                            .child(div().flex_1().min_w_0().truncate().child(title))
+                            .child(icon(
+                                if self.files.expanded {
+                                    "collapse"
+                                } else {
+                                    "more"
+                                },
+                                colors,
+                            )),
+                    )
+                    .child(action),
+            )
+            .child(
+                div()
+                    .id("operation-progress")
+                    .mt(px(8.))
+                    .h(px(2.))
+                    .bg(colors.color(ColorRole::Border))
+                    .role(Role::ProgressIndicator)
+                    .aria_label("当前进度")
+                    .aria_numeric_value(fraction(&v) as f64 * 100.)
+                    .aria_min_numeric_value(0.)
+                    .aria_max_numeric_value(100.)
+                    .child(
+                        div()
+                            .h_full()
+                            .w(relative(fraction(&v)))
+                            .bg(colors.color(ColorRole::Accent)),
+                    ),
+            )
+            .child(
+                div()
+                    .flex()
+                    .mt(px(8.))
+                    .text_size(px(12.))
+                    .text_color(colors.color(ColorRole::Secondary))
+                    .child(div().w(relative(0.5)).child(count_label(&v)))
+                    .child(div().w(relative(0.5)).child(bytes_label(&v))),
+            );
+        if self.files.expanded {
+            let animate = window.is_visible()
+                && !self.session_locked
+                && !self.options.reduced_motion
+                && !cx.reduce_motion();
+            let phase = (v.started.elapsed().as_secs_f32() / 1.8).fract();
+            let mut rows = Vec::new();
+            let mut page_next = None;
+            if !self.files.failed_only && self.files.page_after == 0 && !terminal {
+                for active in v.active.iter().take(8) {
+                    let name = active.name.to_string();
+                    rows.push(
+                        div()
+                            .id(("active-operation-file", active.token))
+                            .w_full()
+                            .h(px(28.))
+                            .role(Role::Label)
+                            .aria_label(format!("{name}，{}中", v.operation.label()))
+                            .aria_value(format!("{name}，{}中", v.operation.label()))
+                            .tooltip(tooltip(
+                                format!("{name}\n{}中", v.operation.label()),
+                                colors,
+                            ))
+                            .child(paint::flowing_name(
+                                name,
+                                phase,
+                                animate,
+                                self.flow_cache.clone(),
+                                colors,
+                            ))
+                            .into_any_element(),
+                    );
+                }
+            }
+            let max_rows: usize = if v.error.is_some() { 4 } else { 8 };
+            if let Some(page) = &v.page
+                && page.after == self.files.page_after
+                && page.failed_only == self.files.failed_only
+            {
+                for row in page.rows.iter().take(max_rows.saturating_sub(rows.len())) {
+                    page_next = Some(row.sequence);
+                    let name = row
+                        .path
+                        .file_name()
+                        .unwrap_or(row.path.as_os_str())
+                        .to_string_lossy()
+                        .into_owned();
+                    if !terminal
+                        && v.active
+                            .iter()
+                            .any(|a| a.key == row.root && a.name.as_ref() == name)
+                    {
+                        continue;
+                    }
+                    let state = state_label(row.state);
+                    let full = format!(
+                        "{}\n{state}{}",
+                        row.path.to_string_lossy(),
+                        row.hresult
+                            .filter(|n| *n < 0)
+                            .map(|c| format!("\n{}", operations::service::error_label(c)))
+                            .unwrap_or_default()
+                    );
+                    rows.push(
+                        div()
+                            .id(("operation-file", row.sequence))
+                            .w_full()
+                            .h(px(28.))
+                            .flex()
+                            .items_center()
+                            .text_size(px(13.))
+                            .text_color(colors.color(match row.state {
+                                State::Failed => ColorRole::Negative,
+                                State::Success => ColorRole::Primary,
+                                State::Partial | State::Unknown => ColorRole::Negative,
+                                _ => ColorRole::Secondary,
+                            }))
+                            .role(Role::ListBoxOption)
+                            .aria_label(full.clone())
+                            .tooltip(tooltip(full, colors))
+                            .child(div().truncate().child(name))
+                            .into_any_element(),
+                    );
+                }
+            }
+            panel = panel.child(div().mt(px(16.)).max_h(px(380.)).children(rows));
+            if let Some(error) = v
+                .error
+                .as_ref()
+                .or_else(|| v.page.as_ref().and_then(|p| p.error.as_ref()))
+            {
+                panel = panel.child(
+                    div()
+                        .mt(px(16.))
+                        .text_size(px(12.))
+                        .text_color(colors.color(ColorRole::Negative))
+                        .child(error.to_string()),
+                );
+            }
+            panel = panel.child(
+                div()
+                    .mt(px(8.))
+                    .flex()
+                    .items_center()
+                    .child(self.text_action(
+                        "all-operation-files",
+                        "全部",
+                        cx.listener(|this, _, _, cx| {
+                            this.files.failed_only = false;
+                            this.files.page_after = 0;
+                            this.files.page_history.clear();
+                            this.files.page_requested = None;
+                            this.request_operation_page();
+                            cx.notify();
+                        }),
+                    ))
+                    .child(self.text_action(
+                        "failed-operation-files",
+                        "失败",
+                        cx.listener(|this, _, _, cx| {
+                            this.files.failed_only = true;
+                            this.files.page_after = 0;
+                            this.files.page_history.clear();
+                            this.files.page_requested = None;
+                            this.request_operation_page();
+                            cx.notify();
+                        }),
+                    ))
+                    .child(div().flex_1())
+                    .child(self.button(
+                        "back",
+                        "上一页结果",
+                        cx.listener(|this, _, _, cx| {
+                            if let Some(after) = this.files.page_history.pop() {
+                                this.files.page_after = after;
+                                this.files.page_requested = None;
+                                this.request_operation_page();
+                                cx.notify();
+                            }
+                        }),
+                    ))
+                    .child(self.button(
+                        "more",
+                        "下一页结果",
+                        cx.listener(move |this, _, _, cx| {
+                            if let Some(next) = page_next {
+                                if this.files.page_history.len() >= 128 {
+                                    this.files.page_history.remove(0);
+                                }
+                                this.files.page_history.push(this.files.page_after);
+                                this.files.page_after = next;
+                                this.files.page_requested = None;
+                                this.request_operation_page();
+                                cx.notify();
+                            }
+                        }),
+                    )),
+            );
+        }
+        panel.into_any_element()
+    }
+}
+fn same_location(a: &std::path::Path, b: &std::path::Path) -> bool {
+    fn key(p: &std::path::Path) -> String {
+        let value = p.to_string_lossy().replace('/', "\\");
+        let value = value.strip_prefix("\\\\?\\").unwrap_or(&value);
+        let value = if let Some(unc) = value.strip_prefix("UNC\\") {
+            format!("\\\\{unc}")
+        } else {
+            value.to_owned()
+        };
+        value.trim_end_matches('\\').to_lowercase()
+    }
+    key(a) == key(b)
+}
+#[cfg(test)]
+mod location_tests {
+    use super::same_location;
+    #[test]
+    fn refresh_matches_normal_and_shell_path_spellings() {
+        for (a, b) in [
+            (r"D:/work/资料", r"\\?\D:\work\资料"),
+            (r"\\server\share\文档", r"\\?\UNC\server\share\文档"),
+            (r"C:\Users\Simo\", r"c:/users/simo"),
+        ] {
+            assert!(same_location(a.as_ref(), b.as_ref()));
+        }
+        assert!(!same_location(r"D:\a".as_ref(), r"D:\ab".as_ref()));
+    }
+}
+
+fn phase_label(phase: Phase) -> &'static str {
+    match phase {
+        Phase::Queued => "已排队",
+        Phase::Preparing => "正在准备",
+        Phase::Running => "进行中",
+        Phase::Finishing => "正在确认结果",
+        Phase::Canceling => "正在取消",
+        Phase::Complete => "已完成",
+        Phase::Partial => "部分完成",
+        Phase::Canceled => "已取消",
+        Phase::Failed => "未完成",
+        Phase::Unknown => "结果尚未确认",
+    }
+}
+fn state_label(state: State) -> &'static str {
+    match state {
+        State::Pending | State::Dispatched => "未处理",
+        State::Active => "处理中",
+        State::Provisional => "确认中",
+        State::Success => "已完成",
+        State::Failed => "失败",
+        State::Skipped => "已跳过",
+        State::Canceled => "已取消",
+        State::Partial => "部分完成",
+        State::Unknown => "结果尚未确认",
+        State::NotProcessed => "未处理",
+    }
+}
+fn count_label(v: &View) -> String {
+    let count = if v.phase == Phase::Preparing {
+        v.prepared
+    } else {
+        v.successful
+    };
+    format!(
+        "{} / {} 项",
+        number(count as usize),
+        v.total
+            .map(|n| number(n as usize))
+            .unwrap_or_else(|| "—".into())
+    )
+}
+fn size(n: u64) -> String {
+    let units = ["B", "KB", "MB", "GB", "TB"];
+    let mut value = n as f64;
+    let mut unit = 0;
+    while value >= 1024. && unit < 4 {
+        value /= 1024.;
+        unit += 1;
+    }
+    if unit == 0 {
+        format!("{n} B")
+    } else {
+        format!("{value:.1} {}", units[unit])
+    }
+}
+fn bytes_label(v: &View) -> String {
+    if !v.size_available {
+        return "— / —".into();
+    }
+    format!(
+        "{} / {}",
+        size(v.bytes.saturating_add(v.in_flight)),
+        v.bytes_total.map(size).unwrap_or_else(|| "—".into())
+    )
+}
+fn fraction(v: &View) -> f32 {
+    if v.phase == Phase::Complete {
+        return 1.;
+    }
+    if v.phase == Phase::Preparing {
+        return 0.;
+    }
+    if let Some(total) = v.bytes_total.filter(|n| *n > 0) {
+        ((v.bytes.saturating_add(v.in_flight)) as f64 / total as f64).clamp(0., 1.) as f32
+    } else if let Some(total) = v.total.filter(|n| *n > 0) {
+        (v.successful as f64 / total as f64).clamp(0., 1.) as f32
+    } else {
+        0.
+    }
+}

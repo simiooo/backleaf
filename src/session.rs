@@ -11,7 +11,10 @@ use windows::{
     Win32::{
         Foundation::{HWND, LPARAM, LRESULT, WPARAM},
         System::{
-            LibraryLoader::GetModuleHandleW, RemoteDesktop::*, Threading::GetCurrentThreadId,
+            DataExchange::{AddClipboardFormatListener, RemoveClipboardFormatListener},
+            LibraryLoader::GetModuleHandleW,
+            RemoteDesktop::*,
+            Threading::GetCurrentThreadId,
         },
         UI::WindowsAndMessaging::*,
     },
@@ -74,6 +77,13 @@ unsafe extern "system" fn procedure(
     wparam: WPARAM,
     lparam: LPARAM,
 ) -> LRESULT {
+    if message == WM_CLIPBOARDUPDATE {
+        EVENTS.with_borrow(|tx| {
+            if let Some(tx) = tx {
+                let _ = tx.try_send(Event::ClipboardChanged);
+            }
+        });
+    }
     if message == WM_WTSSESSION_CHANGE {
         match wparam.0 as u32 {
             WTS_SESSION_LOCK | WTS_CONSOLE_DISCONNECT | WTS_REMOTE_DISCONNECT => send(true),
@@ -123,6 +133,7 @@ pub fn monitor(tx: async_channel::Sender<Event>) -> SessionMonitor {
                         return Err(error.into());
                     }
                     thread_id.store(GetCurrentThreadId(), Ordering::Release);
+                    let _ = AddClipboardFormatListener(hwnd);
                     send(locked().unwrap_or(true));
                     let mut message = MSG::default();
                     while !stop_flag.load(Ordering::Acquire)
@@ -132,6 +143,7 @@ pub fn monitor(tx: async_channel::Sender<Event>) -> SessionMonitor {
                         DispatchMessageW(&message);
                     }
                     let _ = WTSUnRegisterSessionNotification(hwnd);
+                    let _ = RemoveClipboardFormatListener(hwnd);
                     let _ = DestroyWindow(hwnd);
                     Ok(())
                 }

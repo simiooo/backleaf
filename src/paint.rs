@@ -289,6 +289,9 @@ impl AssetSource for Assets {
             return Ok(Some(Cow::Owned(data.into_bytes())));
         }
         let data = match path.strip_suffix(".svg").unwrap_or(path) {
+            "location" => {
+                r##"<svg viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg"><path d="M2 4h5l2 2h7v9H2Z" fill="none" stroke="black" stroke-width="1.2"/></svg>"##
+            }
             "back" => {
                 r##"<svg viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg"><path d="m11 4-5 5 5 5" fill="none" stroke="black" stroke-width="1.3"/></svg>"##
             }

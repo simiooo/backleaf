@@ -199,8 +199,9 @@ dependencies = [
 
 [[package]]
 name = "backleaf"
-version = "0.1.0-preview.3"
+version = "0.1.0-preview.4"
 dependencies = [
+ "accesskit",
  "anyhow",
  "async-channel",
  "gpui",
@@ -212,6 +213,7 @@ dependencies = [
  "serde_json",
  "unicode-segmentation",
  "windows",
+ "windows-core",
 ]
 
 [[package]]

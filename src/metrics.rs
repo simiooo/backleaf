@@ -17,6 +17,7 @@ pub struct Options {
     pub height: f32,
     pub theme: Option<bool>,
     pub selection_smoke: bool,
+    pub state_dir: PathBuf,
 }
 impl Options {
     pub fn parse() -> Self {
@@ -32,6 +33,10 @@ impl Options {
             height: 720.,
             theme: None,
             selection_smoke: false,
+            state_dir: std::env::var_os("LOCALAPPDATA")
+                .map(PathBuf::from)
+                .unwrap_or_else(std::env::temp_dir)
+                .join("Backleaf/operations"),
         };
         let mut args = std::env::args().skip(1);
         while let Some(arg) = args.next() {
@@ -41,6 +46,7 @@ impl Options {
                         Some(args.next().expect("fixture count").parse().expect("count"))
                 }
                 "--path" => result.path = Some(args.next().expect("path").into()),
+                "--state-dir" => result.state_dir = args.next().expect("state directory").into(),
                 "--bench-output" => result.output = Some(args.next().expect("output").into()),
                 "--seconds" => result.seconds = args.next().unwrap().parse().unwrap(),
                 "--scroll" => result.scroll = true,

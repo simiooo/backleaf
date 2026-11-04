@@ -29,6 +29,38 @@ impl SelectionMask {
     pub fn bitmap_serialized_bytes(&self) -> usize {
         self.values.serialized_size()
     }
+    /// Stream a frozen selection on a worker without allocating all selected IDs.
+    pub fn ids_from(&self, start: usize, end: usize) -> Box<dyn Iterator<Item = usize> + '_> {
+        if let Some(prefix) = self.inverse {
+            Box::new((start..end.min(prefix)).filter(|id| !self.values.contains(*id as u64)))
+        } else {
+            let mut values = self.values.iter();
+            values.advance_to(start as u64);
+            Box::new(
+                values
+                    .take_while(move |id| *id < end as u64)
+                    .map(|id| id as usize),
+            )
+        }
+    }
+    pub fn count_before(&self, end: usize) -> usize {
+        match self.inverse {
+            Some(prefix) => {
+                let limit = prefix.min(end);
+                limit - self.values.range_cardinality(0..limit as u64) as usize
+            }
+            None => self.values.range_cardinality(0..end as u64) as usize,
+        }
+    }
+    pub fn exclude(&mut self, removed: &RoaringTreemap) {
+        let values = Arc::make_mut(&mut self.values);
+        if let Some(end) = self.inverse {
+            *values |= removed;
+            values.remove_range(end as u64..=u64::MAX);
+        } else {
+            *values -= removed;
+        }
+    }
     fn range(range: Range<usize>) -> Self {
         let mut values = RoaringTreemap::new();
         values.insert_range(range.start as u64..range.end as u64);

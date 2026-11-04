@@ -41,11 +41,23 @@ pub struct Panel {
     pub radius: f32,
 }
 #[derive(Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct Floating {
+    pub padding_x: f32,
+    pub padding_y: f32,
+    pub radius: f32,
+    pub row_height: f32,
+    pub row_padding_x: f32,
+    pub row_radius: f32,
+    pub group_break_height: f32,
+}
+#[derive(Deserialize)]
 pub struct Layout {
     pub grid: Grid,
     pub file: File,
     pub control: Control,
     pub panel: Panel,
+    pub floating: Floating,
 }
 pub static LAYOUT: LazyLock<Layout> = LazyLock::new(|| {
     serde_json::from_str(include_str!("../design/layout-system.json"))

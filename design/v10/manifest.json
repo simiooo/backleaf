@@ -72,7 +72,7 @@
       "key": "64-path-error",
       "name": "64 · v10 路径输入与失效",
       "mode": "Light",
-      "nodes": 102
+      "nodes": 100
     },
     {
       "key": "65-bounded-queue",

@@ -1,6 +1,8 @@
-# 当前修订稿 · v9
+# 当前修订稿 · v11
 
-在 OpenPencil 打开 **[Backleaf-v10.fig](Backleaf-v10.fig)**，共 70 个可编辑页面。前 52 页完整保留 v9，53–70 页为正在实施的菜单与操作设计：[单文件](v10/53-file-menu.png)、[多选](v10/54-multi-menu.png)、[空白](v10/55-blank-menu.png)、[任务](v10/60-progress.png)、[队列](v10/65-bounded-queue.png)。详见 [SIM-954 约束](../docs/file-operations.md)。v10 不是已发布功能清单。
+在 OpenPencil 打开 **[Backleaf-v11.fig](Backleaf-v11.fig)**，共 84 个可编辑页面。71–84 页加入左侧导航、Ant Design / shadcn 面包屑、浮层和 inline 选择计数，详见 [v11 导航规范](../docs/navigation-v11.md)。
+
+历史 [Backleaf-v10.fig](Backleaf-v10.fig)，共 70 个可编辑页面。前 52 页完整保留 v9，53–70 页为正在实施的菜单与操作设计：[单文件](v10/53-file-menu.png)、[多选](v10/54-multi-menu.png)、[空白](v10/55-blank-menu.png)、[任务](v10/60-progress.png)、[队列](v10/65-bounded-queue.png)。详见 [SIM-954 约束](../docs/file-operations.md)。v10 不是已发布功能清单。
 
 已发布 preview.2 对应 **[Backleaf-v9.fig](Backleaf-v9.fig)**，共 52 页。前 44 页保留 v6 流程，45–52 页为状态、颜色、间距和圆角修订：[明色状态](v9/46-light-states.png)、[深色状态](v9/47-dark-states.png)、[文件选择](v9/48-selection.png)、[任务面板](v9/51-task-light.png)。详见 [v9 规则](../docs/visual-system-v9.md)。原 [Backleaf.fig](Backleaf.fig) 是不变的 v6 存档，对应预览位于 [v6](v6/)。v7 已撤回，v8 是被 v9 替代的中间稿。旧的独立 `.fig`、根目录 PNG、`v2`、`v3`、`v4`、`v5` 和 `v5.1` 是历史稿。
 
