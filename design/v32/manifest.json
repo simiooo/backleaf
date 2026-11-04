@@ -1,0 +1,31 @@
+{
+  "version": "v32-shell-context",
+  "retainedPages": 202,
+  "pages": [
+    {
+      "key": "203-shell-entry",
+      "name": "203 · v32 shell-entry",
+      "nodes": 117,
+      "state": "entry"
+    },
+    {
+      "key": "204-shell-native-submenu",
+      "name": "204 · v32 shell-native-submenu",
+      "nodes": 117,
+      "state": "native"
+    },
+    {
+      "key": "205-shell-limit",
+      "name": "205 · v32 shell-limit",
+      "nodes": 117,
+      "state": "limit"
+    },
+    {
+      "key": "206-shell-unavailable",
+      "name": "206 · v32 shell-unavailable",
+      "nodes": 117,
+      "state": "error"
+    }
+  ],
+  "source": "scripts/design/shell-v32.mjs"
+}

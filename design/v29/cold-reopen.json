@@ -1,0 +1,29 @@
+{
+  "masterSha256": "81b218e3debb601f3e1f21d3b40ee31e0e8c8078101a63702adc5f7c209e5a6e",
+  "retainedPages": 186,
+  "pages": 190,
+  "result": "passed",
+  "results": [
+    {
+      "key": "187-index-building",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "188-index-short-chinese",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "189-index-offline",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "190-index-coverage",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    }
+  ],
+  "verifiedAt": "2026-11-04T19:32:00.112Z"
+}

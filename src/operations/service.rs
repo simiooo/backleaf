@@ -50,6 +50,8 @@ pub enum Operation {
     ClipboardCopy,
     ClipboardCut,
     CopyPaths,
+    Compress,
+    Extract,
 }
 impl Operation {
     pub fn label(self) -> &'static str {
@@ -62,6 +64,8 @@ impl Operation {
             Self::ClipboardCopy => "复制到剪贴板",
             Self::ClipboardCut => "剪切",
             Self::CopyPaths => "复制路径",
+            Self::Compress => "压缩",
+            Self::Extract => "解压",
         }
     }
 }
@@ -105,7 +109,9 @@ pub struct View {
     pub removed: Arc<RoaringTreemap>,
 }
 struct Wake {
-    tx: async_channel::Sender<()>,
+    tx: Mutex<Vec<async_channel::Sender<()>>>,
+    clients: Mutex<std::collections::HashMap<u64, bool>>,
+    next_client: AtomicU64,
     started: Instant,
     last: AtomicU64,
     visible: AtomicBool,
@@ -129,7 +135,10 @@ impl Wake {
             if force {
                 self.last.store(now, Ordering::Release);
             }
-            let _ = self.tx.try_send(());
+            self.tx.lock().unwrap().retain(|tx| !tx.is_closed());
+            for tx in self.tx.lock().unwrap().iter() {
+                let _ = tx.try_send(());
+            }
         }
     }
 }
@@ -186,18 +195,89 @@ impl Task {
 struct Gate {
     state: Mutex<(Option<u64>, VecDeque<u64>)>,
     changed: Condvar,
+    named: std::sync::OnceLock<Result<std::os::windows::io::OwnedHandle, String>>,
+    kind: Option<&'static str>,
 }
 struct Permit<'a> {
     gate: &'a Gate,
+    _thread: std::marker::PhantomData<std::rc::Rc<()>>,
 }
 impl Drop for Permit<'_> {
     fn drop(&mut self) {
+        if let Some(Ok(handle)) = self.gate.named.get() {
+            use std::os::windows::io::AsRawHandle;
+            unsafe {
+                let _ = windows::Win32::System::Threading::ReleaseMutex(
+                    windows::Win32::Foundation::HANDLE(handle.as_raw_handle()),
+                );
+            }
+        }
         self.gate.state.lock().unwrap().0 = None;
         self.gate.changed.notify_all();
     }
 }
 impl Gate {
+    fn named(_directory: &Path, kind: &'static str) -> Self {
+        Self {
+            kind: Some(kind),
+            ..Default::default()
+        }
+    }
+    fn kernel(&self) -> anyhow::Result<Option<&std::os::windows::io::OwnedHandle>> {
+        let Some(kind) = self.kind else {
+            return Ok(None);
+        };
+        let result = self.named.get_or_init(|| {
+            (|| -> anyhow::Result<std::os::windows::io::OwnedHandle> {
+                use sha2::{Digest, Sha256};
+                use std::os::windows::io::FromRawHandle;
+                use windows::{
+                    Win32::{
+                        Foundation::HANDLE,
+                        Security::{
+                            GetLengthSid, GetTokenInformation, TOKEN_QUERY, TOKEN_USER, TokenUser,
+                        },
+                        System::Threading::{CreateMutexW, GetCurrentProcess, OpenProcessToken},
+                    },
+                    core::PCWSTR,
+                };
+                let mut token = HANDLE::default();
+                unsafe { OpenProcessToken(GetCurrentProcess(), TOKEN_QUERY, &mut token) }?;
+                let _token = unsafe { std::os::windows::io::OwnedHandle::from_raw_handle(token.0) };
+                let mut needed = 0;
+                unsafe {
+                    let _ = GetTokenInformation(token, TokenUser, None, 0, &mut needed);
+                }
+                anyhow::ensure!(needed > 0 && needed <= 65536, "无法读取账户身份");
+                let mut buffer = vec![0u64; (needed as usize).div_ceil(8)];
+                unsafe {
+                    GetTokenInformation(
+                        token,
+                        TokenUser,
+                        Some(buffer.as_mut_ptr().cast()),
+                        needed,
+                        &mut needed,
+                    )
+                }?;
+                let user = unsafe { &*buffer.as_ptr().cast::<TOKEN_USER>() };
+                let length = unsafe { GetLengthSid(user.User.Sid) } as usize;
+                anyhow::ensure!((8..=1024).contains(&length), "账户身份无效");
+                let sid =
+                    unsafe { std::slice::from_raw_parts(user.User.Sid.0.cast::<u8>(), length) };
+                let name = format!("Global\\Backleaf-{kind}-{:x}", Sha256::digest(sid));
+                let wide = name.encode_utf16().chain(Some(0)).collect::<Vec<_>>();
+                let handle = unsafe { CreateMutexW(None, false, PCWSTR(wide.as_ptr())) }?;
+                Ok(unsafe { std::os::windows::io::OwnedHandle::from_raw_handle(handle.0) })
+            })()
+            .map_err(|e| e.to_string())
+        });
+        result
+            .as_ref()
+            .map(Some)
+            .map_err(|e| anyhow::anyhow!(e.clone()))
+    }
     fn acquire(&self, id: u64, task: &Task) -> anyhow::Result<Permit<'_>> {
+        let kernel = self.kernel()?;
         let mut state = self.state.lock().unwrap();
         state.1.push_back(id);
         loop {
@@ -209,7 +289,39 @@ impl Gate {
             if state.0.is_none() && state.1.front() == Some(&id) {
                 state.1.pop_front();
                 state.0 = Some(id);
-                return Ok(Permit { gate: self });
+                drop(state);
+                if let Some(handle) = kernel {
+                    use std::os::windows::io::AsRawHandle;
+                    loop {
+                        if task.canceled() {
+                            let mut state = self.state.lock().unwrap();
+                            state.0 = None;
+                            self.changed.notify_all();
+                            anyhow::bail!("已取消");
+                        }
+                        let result = unsafe {
+                            windows::Win32::System::Threading::WaitForSingleObject(
+                                windows::Win32::Foundation::HANDLE(handle.as_raw_handle()),
+                                50,
+                            )
+                        };
+                        if result == windows::Win32::Foundation::WAIT_OBJECT_0
+                            || result == windows::Win32::Foundation::WAIT_ABANDONED
+                        {
+                            break;
+                        }
+                        if result != windows::Win32::Foundation::WAIT_TIMEOUT {
+                            let mut state = self.state.lock().unwrap();
+                            state.0 = None;
+                            self.changed.notify_all();
+                            anyhow::bail!("无法取得文件操作锁");
+                        }
+                    }
+                }
+                return Ok(Permit {
+                    gate: self,
+                    _thread: std::marker::PhantomData,
+                });
             }
             state = self
                 .changed
@@ -258,9 +370,39 @@ impl Drop for Shared {
 #[derive(Clone)]
 pub struct Hub {
     shared: Arc<Shared>,
+    client: Arc<Visibility>,
 }
+struct Visibility {
+    id: u64,
+    wake: Weak<Wake>,
+}
+impl Drop for Visibility {
+    fn drop(&mut self) {
+        if let Some(wake) = self.wake.upgrade() {
+            let mut clients = wake.clients.lock().unwrap();
+            clients.remove(&self.id);
+            wake.visible
+                .store(clients.values().any(|v| *v), Ordering::Release);
+        }
+    }
+}
+static HUBS: std::sync::OnceLock<Mutex<std::collections::HashMap<PathBuf, Weak<Shared>>>> =
+    std::sync::OnceLock::new();
+
 impl Hub {
     pub fn new(directory: PathBuf, tx: async_channel::Sender<()>) -> Self {
+        let mut registry = HUBS.get_or_init(Default::default).lock().unwrap();
+        registry.retain(|_, value| value.strong_count() > 0);
+        if let Some(shared) = registry.get(&directory).and_then(Weak::upgrade) {
+            shared.wake.tx.lock().unwrap().push(tx);
+            let id = shared.wake.next_client.fetch_add(1, Ordering::Relaxed);
+            shared.wake.clients.lock().unwrap().insert(id, true);
+            let client = Arc::new(Visibility {
+                id,
+                wake: Arc::downgrade(&shared.wake),
+            });
+            return Self { shared, client };
+        }
         let stamp = SystemTime::now()
             .duration_since(UNIX_EPOCH)
             .unwrap_or_default()
@@ -271,13 +413,15 @@ impl Hub {
             next: AtomicU64::new(1),
             directory: directory.join(format!("session-{}-{stamp}", std::process::id())),
             wake: Arc::new(Wake {
-                tx,
+                tx: Mutex::new(vec![tx]),
+                clients: Mutex::new(std::collections::HashMap::from([(1, true)])),
+                next_client: AtomicU64::new(2),
                 started: Instant::now(),
                 last: AtomicU64::new(0),
                 visible: AtomicBool::new(true),
             }),
-            files: Gate::default(),
-            clipboard: Gate::default(),
+            files: Gate::named(&directory, "files"),
+            clipboard: Gate::named(&directory, "clipboard"),
             own: Mutex::new(None),
             clipboard_intent: AtomicU64::new(0),
             reader: reader.clone(),
@@ -286,7 +430,17 @@ impl Hub {
             .name("backleaf-result-reader".into())
             .spawn(move || read_loop(reader))
             .expect("result reader");
-        Self { shared }
+        registry.insert(directory.clone(), Arc::downgrade(&shared));
+        let recovering = shared.clone();
+        std::thread::Builder::new()
+            .name("backleaf-archive-recovery".into())
+            .spawn(move || recover_archives(recovering, directory))
+            .expect("archive result recovery");
+        let client = Arc::new(Visibility {
+            id: 1,
+            wake: Arc::downgrade(&shared.wake),
+        });
+        Self { shared, client }
     }
     pub fn views(&self) -> Vec<View> {
         self.shared
@@ -310,7 +464,12 @@ impl Hub {
             .cloned()
     }
     pub fn set_visible(&self, visible: bool) {
-        self.shared.wake.visible.store(visible, Ordering::Release);
+        let mut clients = self.shared.wake.clients.lock().unwrap();
+        clients.insert(self.client.id, visible);
+        self.shared
+            .wake
+            .visible
+            .store(clients.values().any(|v| *v), Ordering::Release);
     }
     pub fn active(&self) -> bool {
         self.shared
@@ -437,12 +596,125 @@ impl Hub {
         }
         id
     }
+    pub fn archive(
+        &self,
+        selection: FrozenSelection,
+        kind: super::archive::Kind,
+        parent: PathBuf,
+        name: String,
+        parent_identity: [u8; 33],
+    ) -> anyhow::Result<u64> {
+        let operation = if kind == super::archive::Kind::CreateZip {
+            Operation::Compress
+        } else {
+            Operation::Extract
+        };
+        let task = self.register(operation, parent.join(&name), Some(&selection))?;
+        task.update(true, |v| {
+            v.total = None;
+            v.source_snapshot = None;
+            v.source_mask = None;
+        });
+        Ok(self.launch(task, move |shared, task| {
+            let id = task.view.lock().unwrap().id;
+            let _permit = shared.files.acquire(id, &task)?;
+            let ledger = create_ledger(&task)?;
+            task.update(true, |v| v.phase = Phase::Preparing);
+            let output = super::archive::run(
+                super::archive::Request {
+                    selection,
+                    kind,
+                    parent,
+                    name,
+                    parent_id: parent_identity,
+                },
+                &shared.directory,
+                &ledger,
+                || task.canceled(),
+                |notice| {
+                    match notice.kind.as_str() {
+                        "plan" => task.update(true, |v| {
+                            v.phase = Phase::Running;
+                            v.total = Some(notice.count);
+                            v.bytes_total = Some(notice.bytes);
+                            v.size_available = true;
+                            v.tree = false;
+                        }),
+                        "partial-plan" => task.update(true, |v| {
+                            v.phase = Phase::Running;
+                            v.total = None;
+                            v.bytes_total = None;
+                            v.size_available = false;
+                        }),
+                        "progress" => task.update(false, |v| {
+                            v.successful = notice.done;
+                            v.bytes = notice.bytes;
+                            v.active = if notice.name.is_empty() {
+                                vec![]
+                            } else {
+                                vec![ActiveName {
+                                    key: 0,
+                                    token: notice.done,
+                                    name: notice.name.into(),
+                                }]
+                            };
+                        }),
+                        "finishing" => task.update(true, |v| {
+                            v.phase = Phase::Finishing;
+                            v.active.clear();
+                        }),
+                        _ => {}
+                    }
+                    Ok(())
+                },
+            );
+            match output {
+                Ok(output) => {
+                    task.update(true, |v| {
+                        v.created = Some(Arc::new(output.clone()));
+                        v.phase = Phase::Finishing;
+                    });
+                    if let Err(error) =
+                        ledger.archive_committed(&output, kind == super::archive::Kind::Extract)
+                    {
+                        task.persist_failed.store(true, Ordering::Release);
+                        return Err(error);
+                    }
+                    let counts = ledger.counts()?;
+                    task.counts(&counts);
+                    task.update(true, |v| {
+                        v.phase = Phase::Complete;
+                        v.active.clear();
+                    });
+                    Ok(())
+                }
+                Err(error) => {
+                    let _ = ledger.archive_aborted();
+                    task.update(true, |v| {
+                        v.successful = 0;
+                        v.active.clear();
+                    });
+                    Err(error)
+                }
+            }
+        }))
+    }
     pub fn selection(
         &self,
         selection: FrozenSelection,
         operation: Operation,
         target: PathBuf,
         owner: usize,
+    ) -> anyhow::Result<u64> {
+        self.selection_guarded(selection, operation, target, owner, None)
+    }
+    pub fn selection_guarded(
+        &self,
+        selection: FrozenSelection,
+        operation: Operation,
+        target: PathBuf,
+        owner: usize,
+        guard: Option<super::move_guard::Target>,
     ) -> anyhow::Result<u64> {
         let task = self.register(operation, target.clone(), Some(&selection))?;
         Ok(self.launch(task, move |shared, task| {
@@ -475,6 +747,9 @@ impl Hub {
                 Operation::Recycle => Kind::Recycle,
                 _ => anyhow::bail!("Invalid selection operation"),
             };
+            if let Some(guard) = &guard {
+                super::move_guard::validate_ledger(&ledger, guard, || task.canceled())?;
+            }
             run_files(&shared, &task, ledger, kind, &target, None, owner)?;
             finish(&task);
             Ok(())
@@ -782,6 +1057,109 @@ fn create_ledger(task: &Task) -> anyhow::Result<Ledger> {
     std::fs::create_dir_all(path.parent().unwrap())?;
     Ledger::open(&path)
 }
+fn recover_archives(shared: Arc<Shared>, directory: PathBuf) {
+    let Ok(sessions) = std::fs::read_dir(directory) else {
+        return;
+    };
+    for session in sessions.filter_map(Result::ok).take(512) {
+        if !session
+            .file_name()
+            .to_string_lossy()
+            .starts_with("session-")
+            || !session
+                .file_type()
+                .is_ok_and(|t| t.is_dir() && !t.is_symlink())
+        {
+            continue;
+        }
+        let Ok(files) = std::fs::read_dir(session.path()) else {
+            continue;
+        };
+        for file in files.filter_map(Result::ok).take(128) {
+            let path = file.path();
+            if path.extension().is_none_or(|e| e != "sqlite")
+                || !file.file_name().to_string_lossy().starts_with("task-")
+            {
+                continue;
+            }
+            let result = (|| -> anyhow::Result<()> {
+                let reader = Ledger::read_only(&path)?;
+                let Some(intent) = reader.pending_archive()? else {
+                    return Ok(());
+                };
+                drop(reader);
+                if crate::window_state::active(intent.pid, intent.process_created) {
+                    return Ok(());
+                }
+                let ledger = Ledger::open(&path)?;
+                let target = intent.target.path();
+                let committed = shell::identity::capture(&target)
+                    .is_ok_and(|m| m.identity.encode().as_slice() == intent.identity.as_slice());
+                if committed {
+                    ledger.archive_committed(&target, intent.extracted)?;
+                } else {
+                    ledger.interrupt_unverified()?;
+                }
+                let counts = ledger.counts()?;
+                let mut tasks = shared.tasks.lock().unwrap();
+                if tasks.len() >= 24 {
+                    return Ok(());
+                }
+                let task = Arc::new(Task {
+                    view: Mutex::new(View {
+                        id: shared.next.fetch_add(1, Ordering::Relaxed),
+                        operation: if intent.extracted {
+                            Operation::Extract
+                        } else {
+                            Operation::Compress
+                        },
+                        phase: if committed {
+                            Phase::Complete
+                        } else {
+                            Phase::Unknown
+                        },
+                        started: Instant::now(),
+                        tree: false,
+                        target: Arc::new(target.clone()),
+                        ledger: Arc::new(path.clone()),
+                        total: Some(counts.discovered),
+                        prepared: counts.discovered,
+                        successful: counts.successful,
+                        failed: counts.failed,
+                        unknown: if committed {
+                            counts.unknown
+                        } else {
+                            counts.discovered.saturating_sub(counts.successful)
+                        },
+                        bytes: 0,
+                        in_flight: 0,
+                        size_available: false,
+                        bytes_total: None,
+                        active: vec![],
+                        error: (!committed)
+                            .then(|| Arc::from("归档已中断，请核对目标与暂存结果；未自动重试")),
+                        created: committed.then(|| Arc::new(target)),
+                        page: None,
+                        source_snapshot: None,
+                        source_mask: None,
+                        removed: Arc::new(RoaringTreemap::new()),
+                    }),
+                    cancel: AtomicBool::new(false),
+                    persist_failed: AtomicBool::new(false),
+                    wake: shared.wake.clone(),
+                    page_token: AtomicU64::new(0),
+                });
+                tasks.push(task);
+                drop(tasks);
+                shared.wake.send(true);
+                Ok(())
+            })();
+            if let Err(error) = result {
+                eprintln!("archive result recovery: {error}");
+            }
+        }
+    }
+}
 fn finish(task: &Task) {
     task.update(true, |v| {
         v.active.clear();
@@ -833,6 +1211,13 @@ fn run_files_with_target(
     expected: Option<shell::identity::Identity>,
     owner: usize,
 ) -> anyhow::Result<()> {
+    if matches!(kind, Kind::Move) {
+        let guard = super::move_guard::Target::capture(target.to_owned())?;
+        if let Some(expected) = &expected {
+            anyhow::ensure!(*expected == guard.identity, "目标已改变，请重新选择");
+        }
+        super::move_guard::validate_ledger(&ledger, &guard, || task.canceled())?;
+    }
     let apartment = Apartment::new()?;
     let mut next = 0;
     let id = task.view.lock().unwrap().id;
@@ -1271,5 +1656,85 @@ mod service_tests {
         assert_eq!(progress.in_flight, 31);
         assert!(progress.end(Some(31)));
         assert_eq!(progress.completed, 31);
+    }
+}
+#[cfg(test)]
+mod recovery_tests {
+    use super::*;
+    #[test]
+    fn crash_after_archive_rename_reconciles_identity_without_replaying_writes() {
+        let f = crate::test_support::Fixture::new("archive-recovery");
+        let directory = f.0.join("operations");
+        let session = directory.join("session-dead");
+        std::fs::create_dir_all(&session).unwrap();
+        let stage = f.0.join(".backleaf-1-123.partial");
+        let target = f.0.join("result.zip");
+        std::fs::write(&stage, b"finished archive").unwrap();
+        let id = shell::identity::capture(&stage).unwrap().identity.encode();
+        {
+            let ledger = Ledger::open(&session.join("task-1.sqlite")).unwrap();
+            ledger
+                .add_archive_entry(0, &f.0.join("source.txt"), false, 16)
+                .unwrap();
+            ledger
+                .archive_intent(&super::super::ledger::ArchiveIntent {
+                    target: crate::file_view::WinPath::new(&target),
+                    stage: crate::file_view::WinPath::new(&stage),
+                    identity: id.to_vec(),
+                    extracted: false,
+                    pid: u32::MAX,
+                    process_created: 0,
+                })
+                .unwrap();
+        }
+        std::fs::rename(&stage, &target).unwrap();
+        let (tx, _rx) = async_channel::unbounded();
+        let hub = Hub::new(directory, tx);
+        let deadline = Instant::now() + Duration::from_secs(5);
+        loop {
+            let views = hub.views();
+            if let Some(v) = views.first() {
+                assert_eq!(v.phase, Phase::Complete);
+                assert_eq!(v.successful, 1);
+                assert_eq!(v.created.as_deref(), Some(&target));
+                break;
+            }
+            assert!(Instant::now() < deadline);
+            std::thread::sleep(Duration::from_millis(10));
+        }
+        assert_eq!(std::fs::read(&target).unwrap(), b"finished archive");
+        assert!(!stage.exists());
+    }
+}
+#[cfg(test)]
+mod shared_window_tests {
+    use super::*;
+    #[test]
+    fn windows_share_tasks_and_aggregate_visibility_without_sharing_selections() {
+        let f = crate::test_support::Fixture::new("shared-hub");
+        let (tx1, rx1) = async_channel::unbounded();
+        let (tx2, rx2) = async_channel::unbounded();
+        let a = Hub::new(f.0.join("state"), tx1);
+        let b = Hub::new(f.0.join("state"), tx2);
+        assert!(Arc::ptr_eq(&a.shared, &b.shared));
+        let task = a
+            .register(Operation::Copy, f.0.join("target"), None)
+            .unwrap();
+        let id = task.view.lock().unwrap().id;
+        assert_eq!(b.views().len(), 1);
+        assert_eq!(b.views()[0].id, id);
+        assert!(rx1.try_recv().is_ok());
+        assert!(rx2.try_recv().is_ok());
+        a.set_visible(false);
+        assert!(a.shared.wake.visible.load(Ordering::Acquire));
+        b.set_visible(false);
+        assert!(!a.shared.wake.visible.load(Ordering::Acquire));
+        a.set_visible(true);
+        assert!(b.shared.wake.visible.load(Ordering::Acquire));
+        drop(a);
+        assert!(!b.shared.wake.visible.load(Ordering::Acquire));
+        task.update(true, |v| v.phase = Phase::Complete);
+        b.dismiss(id);
+        assert!(b.views().is_empty());
     }
 }

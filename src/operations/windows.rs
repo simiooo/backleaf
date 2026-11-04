@@ -240,7 +240,20 @@ pub fn perform(
             Collision::Replace => flags |= FOF_NOCONFIRMATION,
         }
         operation.SetOperationFlags(flags)?;
-        operation.SetOwnerWindow(HWND(owner as *mut _))?;
+        let candidate = HWND(owner as *mut _);
+        let mut process_id = 0;
+        windows::Win32::UI::WindowsAndMessaging::GetWindowThreadProcessId(
+            candidate,
+            Some(&mut process_id),
+        );
+        let owner = if windows::Win32::UI::WindowsAndMessaging::IsWindow(Some(candidate)).as_bool()
+            && process_id == windows::Win32::System::Threading::GetCurrentProcessId()
+        {
+            candidate
+        } else {
+            HWND::default()
+        };
+        operation.SetOwnerWindow(owner)?;
         let dialog: IOperationsProgressDialog = ProgressDialog {
             observer: observer.clone(),
         }
@@ -315,7 +328,20 @@ pub fn perform(
                     destination_guard: step
                         .expected_destination
                         .clone()
-                        .map(|id| (step.destination.clone(), id)),
+                        .map(|id| -> Result<_> {
+                            Ok((
+                                step.destination.clone(),
+                                id,
+                                identity::capture(
+                                    &step
+                                        .destination
+                                        .canonicalize()
+                                        .map_err(|e| Error::new(E_INVALIDARG, e.to_string()))?,
+                                )?
+                                .identity,
+                            ))
+                        })
+                        .transpose()?,
                 }
                 .into();
                 let name = name_wide(step.new_name.as_ref());
@@ -448,12 +474,19 @@ struct Sink {
     observer: Arc<dyn Observer>,
     recycle_only: bool,
     guard: Option<(PathBuf, PathBuf, identity::Identity)>,
-    destination_guard: Option<(PathBuf, identity::Identity)>,
+    destination_guard: Option<(PathBuf, identity::Identity, identity::Identity)>,
 }
 impl Sink {
     fn before(&self, flags: u32, source: Ref<IShellItem>) -> Result<()> {
-        if let Some((path, expected)) = &self.destination_guard
-            && identity::capture(path)?.identity != *expected
+        if let Some((path, expected, resolved)) = &self.destination_guard
+            && (identity::capture(path)?.identity != *expected
+                || identity::capture(
+                    &path
+                        .canonicalize()
+                        .map_err(|e| Error::new(E_INVALIDARG, e.to_string()))?,
+                )?
+                .identity
+                    != *resolved)
         {
             return Err(Error::new(
                 TARGET_ID_CHANGED,
@@ -540,6 +573,13 @@ impl IFileOperationProgressSink_Impl for Sink_Impl {
         _dest: Ref<IShellItem>,
         _name: &PCWSTR,
     ) -> Result<()> {
+        if let (Some(source), Some((target, _, _))) =
+            (path_of(item.as_ref()), &self.destination_guard)
+        {
+            super::move_guard::ancestors(target)
+                .and_then(|chain| super::move_guard::check(&source, &chain))
+                .map_err(|e| Error::new(E_INVALIDARG, e.to_string()))?;
+        }
         self.before(flags, item)
     }
     fn PostMoveItem(

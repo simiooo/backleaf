@@ -155,7 +155,7 @@ pub fn file_background(
                     ColorRole::InactiveSelected
                 }
             } else {
-                ColorRole::Canvas
+                ColorRole::Files
             };
             let fill = if state.pressed {
                 colors.overlay(base, ColorRole::Pressed)
@@ -302,6 +302,18 @@ impl AssetSource for Assets {
             return Ok(Some(Cow::Owned(data.into_bytes())));
         }
         let data = match path.strip_suffix(".svg").unwrap_or(path) {
+            "home" => {
+                r##"<svg viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg"><path d="m2 8 7-6 7 6M4 7v9h4v-5h3v5h3V7" fill="none" stroke="black" stroke-width="1.2" stroke-linejoin="round"/></svg>"##
+            }
+            "filter" => {
+                r##"<svg viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg"><path d="M2 4h14M5 9h8M7 14h4" fill="none" stroke="black" stroke-width="1.2" stroke-linecap="round"/></svg>"##
+            }
+            "save" => {
+                r##"<svg viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg"><path d="M5 2.5h8v13l-4-3-4 3Z" fill="none" stroke="black" stroke-width="1.2" stroke-linejoin="round"/></svg>"##
+            }
+            "drive" => {
+                r##"<svg viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg"><rect x="1.5" y="2.5" width="15" height="13" rx="3" fill="none" stroke="black" stroke-width="1.1"/><path d="M2 10.5h14" stroke="black" stroke-width="1"/><circle cx="13" cy="13" r=".8" fill="black"/></svg>"##
+            }
             "search" => {
                 r##"<svg viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg"><circle cx="7.5" cy="7.5" r="5.2" fill="none" stroke="black" stroke-width="1.3"/><path d="m11.5 11.5 4 4" stroke="black" stroke-width="1.3"/></svg>"##
             }

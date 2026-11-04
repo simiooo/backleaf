@@ -92,10 +92,30 @@ pub static CHROME: LazyLock<Chrome> = LazyLock::new(|| {
         .expect("editable chrome specification")
 });
 pub fn content_top() -> f32 {
-    CHROME.bar_height + 16.
+    CHROME.bar_height + SURFACE.margin_y + SCROLL.inset_y
 }
 pub fn grid_reserved_height() -> f32 {
-    CHROME.bar_height + 32.
+    CHROME.bar_height + 2. * (SURFACE.margin_y + SCROLL.inset_y)
+}
+
+#[derive(Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct FileSurface {
+    pub margin_x: f32,
+    pub margin_y: f32,
+    pub padding_x: f32,
+    pub radius: f32,
+    pub shadow_opacity: [f32; 2],
+}
+pub static SURFACE: LazyLock<FileSurface> = LazyLock::new(|| {
+    serde_json::from_str(include_str!("../design/file-surface-system.json"))
+        .expect("editable primary file surface specification")
+});
+pub fn content_left(sidebar: f32) -> f32 {
+    sidebar + SURFACE.margin_x + SURFACE.padding_x
+}
+pub fn content_bottom(height: f32) -> f32 {
+    (height - SURFACE.margin_y - SCROLL.inset_y).max(content_top())
 }
 
 #[derive(Deserialize)]

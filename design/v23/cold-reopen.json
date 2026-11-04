@@ -1,0 +1,54 @@
+{
+  "masterSha256": "9cae78786d11904bb4b194aa26217c41bb39f7fc99f9a07e61527bb30823d531",
+  "retainedPages": 149,
+  "pages": 158,
+  "result": "passed",
+  "results": [
+    {
+      "key": "150-ancestor-context",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "151-current-context",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "152-edit-address",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "153-blur-submit",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "154-error-preserves-draft",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "155-volumes",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "156-narrow",
+      "changedPixels": 0,
+      "totalPixels": 246400
+    },
+    {
+      "key": "157-dark",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "158-drive-disconnected",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    }
+  ],
+  "verifiedAt": "2026-11-04T17:27:14.033Z"
+}

@@ -157,11 +157,11 @@ impl Preparation {
                 self.progress.canceled = true;
                 break;
             }
-            let raw: Vec<u8> =
-                self.input
-                    .query_row("SELECT raw FROM files WHERE id=?1", [id as i64], |row| {
-                        row.get(0)
-                    })?;
+            let (raw, expected): (Vec<u8>, Vec<u8>) = self.input.query_row(
+                "SELECT raw,identity FROM files WHERE id=?1",
+                [id as i64],
+                |row| Ok((row.get(0)?, row.get(1)?)),
+            )?;
             let name = decode_path(&raw);
             anyhow::ensure!(
                 name.components().count() == 1 && !name.is_absolute(),
@@ -176,7 +176,16 @@ impl Preparation {
             if bytes + size > shell::MAX_BATCH_PATH_BYTES {
                 break;
             }
-            let metadata = identity::capture(&path);
+            let metadata = identity::capture(&path).and_then(|metadata| {
+                if metadata.identity.encode().as_slice() == expected.as_slice() {
+                    Ok(metadata)
+                } else {
+                    Err(windows::core::Error::new(
+                        shell::SOURCE_ID_CHANGED,
+                        "源文件已改变",
+                    ))
+                }
+            });
             ledger.add_root(id as u64, &path, metadata.as_ref().ok())?;
             match metadata {
                 Ok(metadata) => {
@@ -223,5 +232,28 @@ impl Preparation {
             .is_none();
         ledger.commit()?;
         Ok(self.progress.clone())
+    }
+}
+#[cfg(test)]
+mod replacement_tests {
+    use super::*;
+    #[test]
+    fn replacing_selected_name_does_not_retarget_operation() {
+        let f = crate::test_support::Fixture::new("replaced");
+        std::fs::create_dir(f.0.join("source")).unwrap();
+        let path = f.0.join("source/file.txt");
+        std::fs::write(&path, b"original").unwrap();
+        let frozen = f.freeze("source");
+        std::fs::rename(&path, f.0.join("kept-original.txt")).unwrap();
+        std::fs::write(&path, b"replacement").unwrap();
+        let ledger = Ledger::open(&f.0.join("task.sqlite")).unwrap();
+        let mut preparation = Preparation::new(frozen, None).unwrap();
+        let p = preparation.advance(&ledger, || false).unwrap();
+        assert!(p.complete);
+        assert_eq!(p.failed, 1);
+        assert!(ledger.identity(0).unwrap().is_none());
+        let rows = ledger.page(0, 10, false).unwrap();
+        assert_eq!(rows[0].hresult, Some(shell::SOURCE_ID_CHANGED.0));
+        assert_eq!(std::fs::read(path).unwrap(), b"replacement");
     }
 }

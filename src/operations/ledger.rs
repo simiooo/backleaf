@@ -64,6 +64,15 @@ pub struct Row {
 pub struct Ledger {
     db: Connection,
 }
+#[derive(serde::Serialize, serde::Deserialize)]
+pub struct ArchiveIntent {
+    pub target: crate::file_view::WinPath,
+    pub stage: crate::file_view::WinPath,
+    pub identity: Vec<u8>,
+    pub extracted: bool,
+    pub pid: u32,
+    pub process_created: u64,
+}
 #[derive(serde::Serialize)]
 pub struct RootRecord {
     pub key: u64,
@@ -74,6 +83,16 @@ pub struct RootRecord {
     pub state: State,
 }
 pub const MAX_PAGE_BYTES: usize = 256 * 1024;
+pub fn read_u64(row: &rusqlite::Row<'_>, column: usize) -> rusqlite::Result<u64> {
+    let value = row.get::<_, i64>(column)?;
+    u64::try_from(value).map_err(|error| {
+        rusqlite::Error::FromSqlConversionFailure(
+            column,
+            rusqlite::types::Type::Integer,
+            Box::new(error),
+        )
+    })
+}
 pub fn encode_path(path: &Path) -> Vec<u8> {
     path.as_os_str()
         .encode_wide()
@@ -190,6 +209,69 @@ impl Ledger {
             self.db.execute_batch("COMMIT")?;
         }
         Ok(())
+    }
+    pub fn archive_aborted(&self) -> anyhow::Result<()> {
+        if !self.db.is_autocommit() {
+            self.db.execute_batch("ROLLBACK")?;
+        }
+        self.db.execute_batch(
+            "UPDATE roots SET state=9 WHERE state<>3;UPDATE results SET state=9 WHERE state<>3;",
+        )?;
+        Ok(())
+    }
+    pub fn add_archive_entry(
+        &self,
+        key: u64,
+        path: &Path,
+        directory: bool,
+        bytes: u64,
+    ) -> anyhow::Result<()> {
+        let raw = encode_path(path);
+        self.db.execute(
+            "INSERT INTO roots(id,path,identity,directory,bytes)VALUES(?1,?2,NULL,?3,?4)",
+            params![key as i64, &raw, directory, bytes as i64],
+        )?;
+        self.db.execute(
+            "INSERT INTO results(root,root_item,path,directory)VALUES(?1,1,?2,?3)",
+            params![key as i64, raw, directory],
+        )?;
+        Ok(())
+    }
+    pub fn archive_reset(&self) -> anyhow::Result<()> {
+        self.db
+            .execute_batch("DELETE FROM results;DELETE FROM roots;")?;
+        Ok(())
+    }
+    pub fn archive_committed(&self, output: &Path, extracted: bool) -> anyhow::Result<()> {
+        self.begin()?;
+        self.db.execute("UPDATE roots SET state=3", [])?;
+        self.db.execute(
+            "UPDATE results SET state=3,hresult=0,created=CASE WHEN ?1 THEN path ELSE ?2 END",
+            params![extracted, encode_path(output)],
+        )?;
+        self.db
+            .execute("DELETE FROM meta WHERE key='archive-intent'", [])?;
+        self.commit()?;
+        Ok(())
+    }
+    pub fn archive_intent(&self, intent: &ArchiveIntent) -> anyhow::Result<()> {
+        self.db.execute(
+            "INSERT OR REPLACE INTO meta VALUES('archive-intent',?1)",
+            [serde_json::to_vec(intent)?],
+        )?;
+        Ok(())
+    }
+    pub fn pending_archive(&self) -> anyhow::Result<Option<ArchiveIntent>> {
+        let json: Option<Vec<u8>> = self
+            .db
+            .query_row(
+                "SELECT value FROM meta WHERE key='archive-intent'",
+                [],
+                |r| r.get(0),
+            )
+            .optional()?;
+        json.map(|v| serde_json::from_slice(&v).map_err(Into::into))
+            .transpose()
     }
     pub fn add_root(
         &self,

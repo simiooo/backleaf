@@ -1,0 +1,49 @@
+{
+  "version": "v24-primary-file-surface",
+  "retainedPages": 158,
+  "pages": [
+    {
+      "key": "159-file-surface",
+      "name": "159 · v24 file-surface",
+      "nodes": 115,
+      "state": "normal"
+    },
+    {
+      "key": "160-surface-dark",
+      "name": "160 · v24 surface-dark",
+      "nodes": 115,
+      "state": "dark"
+    },
+    {
+      "key": "161-surface-narrow",
+      "name": "161 · v24 surface-narrow",
+      "nodes": 115,
+      "state": "narrow"
+    },
+    {
+      "key": "162-surface-details",
+      "name": "162 · v24 surface-details",
+      "nodes": 118,
+      "state": "details"
+    },
+    {
+      "key": "163-surface-marquee",
+      "name": "163 · v24 surface-marquee",
+      "nodes": 117,
+      "state": "marquee"
+    },
+    {
+      "key": "164-surface-scrolled",
+      "name": "164 · v24 surface-scrolled",
+      "nodes": 116,
+      "state": "scrolled"
+    },
+    {
+      "key": "165-surface-maximized",
+      "name": "165 · v24 surface-maximized",
+      "nodes": 115,
+      "state": "maximized"
+    }
+  ],
+  "source": "scripts/design/surface-v24.mjs"
+}

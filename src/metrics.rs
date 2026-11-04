@@ -20,11 +20,17 @@ pub struct Options {
     pub marquee_smoke: bool,
     pub navigation_fixture: usize,
     pub state_dir: PathBuf,
+    pub index_roots: Option<Vec<PathBuf>>,
+    pub restored: Option<crate::window_state::Restored>,
+    pub restore_error: Option<String>,
 }
 impl Options {
     pub fn parse() -> Self {
         let mut result = Self {
             fixture: None,
+            index_roots: None,
+            restored: None,
+            restore_error: None,
             path: None,
             output: None,
             seconds: 12,
@@ -49,6 +55,11 @@ impl Options {
                     result.fixture =
                         Some(args.next().expect("fixture count").parse().expect("count"))
                 }
+                "--index-root" => result
+                    .index_roots
+                    .get_or_insert_with(Vec::new)
+                    .push(args.next().expect("index root").into()),
+                "--no-index" => result.index_roots = Some(Vec::new()),
                 "--path" => result.path = Some(args.next().expect("path").into()),
                 "--state-dir" => result.state_dir = args.next().expect("state directory").into(),
                 "--bench-output" => result.output = Some(args.next().expect("output").into()),

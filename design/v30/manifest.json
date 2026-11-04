@@ -1,0 +1,37 @@
+{
+  "version": "v30-quick-access-drag",
+  "retainedPages": 190,
+  "pages": [
+    {
+      "key": "191-pin-folder",
+      "name": "191 · v30 pin-folder",
+      "nodes": 118,
+      "state": "pin"
+    },
+    {
+      "key": "192-reorder-view",
+      "name": "192 · v30 reorder-view",
+      "nodes": 118,
+      "state": "reorder"
+    },
+    {
+      "key": "193-quick-access-remove",
+      "name": "193 · v30 quick-access-remove",
+      "nodes": 117,
+      "state": "remove"
+    },
+    {
+      "key": "194-quick-access-offline",
+      "name": "194 · v30 quick-access-offline",
+      "nodes": 117,
+      "state": "offline"
+    },
+    {
+      "key": "195-quick-access-conflict",
+      "name": "195 · v30 quick-access-conflict",
+      "nodes": 117,
+      "state": "conflict"
+    }
+  ],
+  "source": "scripts/design/quick-access-v30.mjs"
+}

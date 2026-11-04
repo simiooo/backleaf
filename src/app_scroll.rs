@@ -15,9 +15,15 @@ pub struct Drag {
 impl Backleaf {
     pub fn scroll_geometry(&self, kind: Kind, window: &Window) -> Option<Geometry> {
         let s = &layout::SCROLL;
-        let viewport =
-            (f32::from(window.viewport_size().height) - layout::CHROME.bar_height - 2. * s.inset_y)
-                .max(0.);
+        let viewport = (f32::from(window.viewport_size().height)
+            - layout::CHROME.bar_height
+            - 2. * s.inset_y
+            - if kind == Kind::Files {
+                2. * layout::SURFACE.margin_y
+            } else {
+                0.
+            })
+        .max(0.);
         let (content, offset) = match kind {
             Kind::Files => (
                 self.source.count().div_ceil(self.columns.max(1)) as f64
@@ -26,7 +32,8 @@ impl Backleaf {
                     - f64::from(f32::from(self.scroll.0.borrow().base_handle.offset().y)),
             ),
             Kind::Sidebar => (
-                (self.navigation.common.len() as f32 * (s.sidebar_row_height + s.sidebar_row_gap)
+                ((self.navigation.common.len() + self.navigation.volumes.len()) as f32
+                    * (s.sidebar_row_height + s.sidebar_row_gap)
                     - s.sidebar_row_gap)
                     .max(0.) as f64,
                 -f64::from(f32::from(self.navigation.scroll.offset().y)),
@@ -101,7 +108,14 @@ impl Backleaf {
         self.cancel_marquee();
         self.pressed_id = None;
         let pointer = f32::from(event.position.y);
-        let local = pointer - layout::CHROME.bar_height - layout::SCROLL.inset_y;
+        let local = pointer
+            - layout::CHROME.bar_height
+            - layout::SCROLL.inset_y
+            - if kind == Kind::Files {
+                layout::SURFACE.margin_y
+            } else {
+                0.
+            };
         if local >= g.top && local <= g.top + g.thumb {
             self.scrollbar_drag = Some(Drag {
                 kind,

@@ -1,0 +1,29 @@
+{
+  "masterSha256": "b062f46a682155c7a2c4d767a76fd6ef78f6106e2f57702969c817be1443f201",
+  "retainedPages": 211,
+  "pages": 215,
+  "result": "passed",
+  "results": [
+    {
+      "key": "212-window-a",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "213-window-b",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "214-shared-task-queue",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "215-window-save-conflict",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    }
+  ],
+  "verifiedAt": "2026-11-04T19:36:15.288Z"
+}

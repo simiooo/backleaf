@@ -1,0 +1,449 @@
+{
+  "archive-compatibility.log": {
+    "sha256": "99c8f1afef8503c5d7a7b5260a10962f349ccc3e72836e4811554f181b4d6666",
+    "bytes": 449
+  },
+  "batch-build.log": {
+    "sha256": "9632aa721f77cc7999cd9c980e36c42042d0d425cd1d66ff1ddfbb160ff8c13c",
+    "bytes": 124
+  },
+  "batch-clippy.log": {
+    "sha256": "453f040de093da9ff40de6c35b9539894e377e71f44eb9bfb92007d48a204631",
+    "bytes": 123
+  },
+  "batch-fmt.log": {
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  "batch-licenses.log": {
+    "sha256": "4502a2f0de61a458c330e031895adb8165b1ebb69edf7e0ce4dd611be97f5d1d",
+    "bytes": 48
+  },
+  "batch-tests.log": {
+    "sha256": "acca8d527f3b218d94a1630ce286abaaabe4179212de1bda2c9f84496d2f86b0",
+    "bytes": 7383
+  },
+  "design": [
+    {
+      "version": 24,
+      "proof": {
+        "masterSha256": "101633837e4fb867a7381222a8c7130d9309cf0bdc92caf59fbd56d1673735da",
+        "retainedPages": 158,
+        "pages": 165,
+        "result": "passed",
+        "results": [
+          {
+            "key": "159-file-surface",
+            "changedPixels": 0,
+            "totalPixels": 806400
+          },
+          {
+            "key": "160-surface-dark",
+            "changedPixels": 0,
+            "totalPixels": 806400
+          },
+          {
+            "key": "161-surface-narrow",
+            "changedPixels": 0,
+            "totalPixels": 246400
+          },
+          {
+            "key": "162-surface-details",
+            "changedPixels": 0,
+            "totalPixels": 806400
+          },
+          {
+            "key": "163-surface-marquee",
+            "changedPixels": 0,
+            "totalPixels": 806400
+          },
+          {
+            "key": "164-surface-scrolled",
+            "changedPixels": 0,
+            "totalPixels": 806400
+          },
+          {
+            "key": "165-surface-maximized",
+            "changedPixels": 0,
+            "totalPixels": 1296000
+          }
+        ],
+        "verifiedAt": "2026-11-04T19:28:08.742Z"
+      }
+    },
+    {
+      "version": 25,
+      "proof": {
+        "masterSha256": "f3a13e348c693b8a79094adeeec52f29e1fa2da5b79e525ae8869fe3589ee05d",
+        "retainedPages": 165,
+        "pages": 170,
+        "result": "passed",
+        "results": [
+          {
+            "key": "166-prefix-match",
+            "changedPixels": 0,
+            "totalPixels": 806400
+          },
+          {
+            "key": "167-prefix-no-match",
+            "changedPixels": 0,
+            "totalPixels": 806400
+          },
+          {
+            "key": "168-prefix-timeout",
+            "changedPixels": 0,
+            "totalPixels": 806400
+          },
+          {
+            "key": "169-prefix-input-protected",
+            "changedPixels": 0,
+            "totalPixels": 806400
+          },
+          {
+            "key": "170-prefix-enumerating",
+            "changedPixels": 0,
+            "totalPixels": 806400
+          }
+        ],
+        "verifiedAt": "2026-11-04T19:28:58.293Z"
+      }
+    },
+    {
+      "version": 26,
+      "proof": {
+        "masterSha256": "df186c2a33b31838204e0586b770efabdf1ffb8c5773c272e36cc6336174abae",
+        "retainedPages": 170,
+        "pages": 174,
+        "result": "passed",
+        "results": [
+          {
+            "key": "171-external-changes",
+            "changedPixels": 0,
+            "totalPixels": 806400
+          },
+          {
+            "key": "172-edit-defers-refresh",
+            "changedPixels": 0,
+            "totalPixels": 806400
+          },
+          {
+            "key": "173-directory-unavailable",
+            "changedPixels": 0,
+            "totalPixels": 806400
+          },
+          {
+            "key": "174-refresh-keeps-position",
+            "changedPixels": 0,
+            "totalPixels": 806400
+          }
+        ],
+        "verifiedAt": "2026-11-04T19:29:41.608Z"
+      }
+    },
+    {
+      "version": 27,
+      "proof": {
+        "masterSha256": "1c8be3f7c29718b053f77d032fe74f8c3f67ade2138b9500c87df53108652f0b",
+        "retainedPages": 174,
+        "pages": 179,
+        "result": "passed",
+        "results": [
+          {
+            "key": "175-drag-moving",
+            "changedPixels": 0,
+            "totalPixels": 806400
+          },
+          {
+            "key": "176-drag-invalid-target",
+            "changedPixels": 0,
+            "totalPixels": 806400
+          },
+          {
+            "key": "177-drag-multiselect",
+            "changedPixels": 0,
+            "totalPixels": 806400
+          },
+          {
+            "key": "178-drag-checking",
+            "changedPixels": 0,
+            "totalPixels": 806400
+          },
+          {
+            "key": "179-drag-cancelled",
+            "changedPixels": 0,
+            "totalPixels": 806400
+          }
+        ],
+        "verifiedAt": "2026-11-04T19:30:25.793Z"
+      }
+    },
+    {
+      "version": 28,
+      "proof": {
+        "masterSha256": "64f213b6db1b3c0c5a586acb2263db69fb8f3058b9eea8a96c0315fa9ed5fac2",
+        "retainedPages": 179,
+        "pages": 186,
+        "result": "passed",
+        "results": [
+          {
+            "key": "180-search-filters",
+            "changedPixels": 0,
+            "totalPixels": 806400
+          },
+          {
+            "key": "181-save-view",
+            "changedPixels": 0,
+            "totalPixels": 806400
+          },
+          {
+            "key": "182-unified-view-navigation",
+            "changedPixels": 0,
+            "totalPixels": 806400
+          },
+          {
+            "key": "183-view-unsaved-changes",
+            "changedPixels": 0,
+            "totalPixels": 806400
+          },
+          {
+            "key": "184-view-group-type",
+            "changedPixels": 0,
+            "totalPixels": 806400
+          },
+          {
+            "key": "185-view-save-conflict",
+            "changedPixels": 0,
+            "totalPixels": 806400
+          },
+          {
+            "key": "186-view-no-results",
+            "changedPixels": 0,
+            "totalPixels": 806400
+          }
+        ],
+        "verifiedAt": "2026-11-04T19:31:11.852Z"
+      }
+    },
+    {
+      "version": 29,
+      "proof": {
+        "masterSha256": "81b218e3debb601f3e1f21d3b40ee31e0e8c8078101a63702adc5f7c209e5a6e",
+        "retainedPages": 186,
+        "pages": 190,
+        "result": "passed",
+        "results": [
+          {
+            "key": "187-index-building",
+            "changedPixels": 0,
+            "totalPixels": 806400
+          },
+          {
+            "key": "188-index-short-chinese",
+            "changedPixels": 0,
+            "totalPixels": 806400
+          },
+          {
+            "key": "189-index-offline",
+            "changedPixels": 0,
+            "totalPixels": 806400
+          },
+          {
+            "key": "190-index-coverage",
+            "changedPixels": 0,
+            "totalPixels": 806400
+          }
+        ],
+        "verifiedAt": "2026-11-04T19:32:00.112Z"
+      }
+    },
+    {
+      "version": 30,
+      "proof": {
+        "masterSha256": "4df035a74cbc99f233be1ba22da0e3824d008f85befce74872dcc397cfdcbad1",
+        "retainedPages": 190,
+        "pages": 195,
+        "result": "passed",
+        "results": [
+          {
+            "key": "191-pin-folder",
+            "changedPixels": 0,
+            "totalPixels": 806400
+          },
+          {
+            "key": "192-reorder-view",
+            "changedPixels": 0,
+            "totalPixels": 806400
+          },
+          {
+            "key": "193-quick-access-remove",
+            "changedPixels": 0,
+            "totalPixels": 806400
+          },
+          {
+            "key": "194-quick-access-offline",
+            "changedPixels": 0,
+            "totalPixels": 806400
+          },
+          {
+            "key": "195-quick-access-conflict",
+            "changedPixels": 0,
+            "totalPixels": 806400
+          }
+        ],
+        "verifiedAt": "2026-11-04T19:32:47.621Z"
+      }
+    },
+    {
+      "version": 31,
+      "proof": {
+        "masterSha256": "b5c39067726d3282ad7141d252ac31077695a7570fb0c3696d2258a9b884a61f",
+        "retainedPages": 195,
+        "pages": 202,
+        "result": "passed",
+        "results": [
+          {
+            "key": "196-archive-menu",
+            "changedPixels": 0,
+            "totalPixels": 806400
+          },
+          {
+            "key": "197-archive-name",
+            "changedPixels": 0,
+            "totalPixels": 806400
+          },
+          {
+            "key": "198-archive-running",
+            "changedPixels": 0,
+            "totalPixels": 806400
+          },
+          {
+            "key": "199-archive-cancel",
+            "changedPixels": 0,
+            "totalPixels": 806400
+          },
+          {
+            "key": "200-archive-name-conflict",
+            "changedPixels": 0,
+            "totalPixels": 806400
+          },
+          {
+            "key": "201-archive-damaged",
+            "changedPixels": 0,
+            "totalPixels": 806400
+          },
+          {
+            "key": "202-archive-multiple",
+            "changedPixels": 0,
+            "totalPixels": 806400
+          }
+        ],
+        "verifiedAt": "2026-11-04T19:33:34.307Z"
+      }
+    },
+    {
+      "version": 32,
+      "proof": {
+        "masterSha256": "881aa5380a21510f3ebc4ddfaad3cc0a09f1dc61a9fb453dd588eaa03cf40094",
+        "retainedPages": 202,
+        "pages": 206,
+        "result": "passed",
+        "results": [
+          {
+            "key": "203-shell-entry",
+            "changedPixels": 0,
+            "totalPixels": 806400
+          },
+          {
+            "key": "204-shell-native-submenu",
+            "changedPixels": 0,
+            "totalPixels": 806400
+          },
+          {
+            "key": "205-shell-limit",
+            "changedPixels": 0,
+            "totalPixels": 806400
+          },
+          {
+            "key": "206-shell-unavailable",
+            "changedPixels": 0,
+            "totalPixels": 806400
+          }
+        ],
+        "verifiedAt": "2026-11-04T19:34:21.882Z"
+      }
+    },
+    {
+      "version": 33,
+      "proof": {
+        "masterSha256": "1c67bff21d670c6ee0fdf344acd534c8f3b28259987779d4a45dbf228686e5c0",
+        "retainedPages": 206,
+        "pages": 211,
+        "result": "passed",
+        "results": [
+          {
+            "key": "207-restore-path",
+            "changedPixels": 0,
+            "totalPixels": 806400
+          },
+          {
+            "key": "208-restore-search",
+            "changedPixels": 0,
+            "totalPixels": 806400
+          },
+          {
+            "key": "209-restore-offline",
+            "changedPixels": 0,
+            "totalPixels": 806400
+          },
+          {
+            "key": "210-restore-failed-save",
+            "changedPixels": 0,
+            "totalPixels": 806400
+          },
+          {
+            "key": "211-restore-relative-date",
+            "changedPixels": 0,
+            "totalPixels": 806400
+          }
+        ],
+        "verifiedAt": "2026-11-04T19:35:15.977Z"
+      }
+    },
+    {
+      "version": 34,
+      "proof": {
+        "masterSha256": "b062f46a682155c7a2c4d767a76fd6ef78f6106e2f57702969c817be1443f201",
+        "retainedPages": 211,
+        "pages": 215,
+        "result": "passed",
+        "results": [
+          {
+            "key": "212-window-a",
+            "changedPixels": 0,
+            "totalPixels": 806400
+          },
+          {
+            "key": "213-window-b",
+            "changedPixels": 0,
+            "totalPixels": 806400
+          },
+          {
+            "key": "214-shared-task-queue",
+            "changedPixels": 0,
+            "totalPixels": 806400
+          },
+          {
+            "key": "215-window-save-conflict",
+            "changedPixels": 0,
+            "totalPixels": 806400
+          }
+        ],
+        "verifiedAt": "2026-11-04T19:36:15.288Z"
+      }
+    }
+  ],
+  "verified_at": "2026-11-04T19:42:42.523385+00:00",
+  "visible_ui": "Blocked: Windows lock screen observed. Accessibility tree is not visual acceptance.",
+  "performance": "Not measured on this batch. Previous release measurements are not reused.",
+  "test_scope": "73 local Release tests including real Win32 file identity, native archive subprocess and fixed upstream archive corpus; not NVDA/mixed-DPI/visible input validation."
+}

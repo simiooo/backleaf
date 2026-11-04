@@ -1,12 +1,24 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
+mod app_archive;
+mod app_drag;
 mod app_navigation;
 mod app_operations;
+mod app_quick_drag;
+mod app_restore;
 mod app_scroll;
 mod app_search;
+mod app_views;
+mod app_watch;
+mod directory_snapshot;
+mod drag;
 mod file_geometry;
 mod file_icons;
+mod file_view;
+mod index;
+mod index_watch;
 mod input;
 mod layout;
+mod locations;
 mod marquee_scroll;
 mod marquee_smoke;
 mod menu;
@@ -16,6 +28,7 @@ mod native_icons;
 mod navigation;
 mod operations;
 mod paint;
+mod quick_access;
 mod scrollbar;
 mod search;
 mod search_motion;
@@ -23,8 +36,14 @@ mod selectable;
 mod selection;
 mod selection_smoke;
 mod session;
+mod shell_menu;
 mod task_panel;
+#[cfg(test)]
+mod test_support;
 mod theme;
+mod typeahead;
+mod watcher;
+mod window_state;
 
 use gpui::{prelude::*, *};
 use metrics::{Metrics, Options};
@@ -51,6 +70,12 @@ struct Backleaf {
     search: app_search::SearchUi,
     navigation: app_navigation::NavigationUi,
     files: app_operations::FileOperations,
+    drag: app_drag::DragUi,
+    views: app_views::ViewsUi,
+    archive: app_archive::ArchiveUi,
+    restore: app_restore::RestoreUi,
+    index: Option<index::Service>,
+    index_status: index::Status,
     native_owner_handle: usize,
     colors: &'static Palette,
     session_locked: bool,
@@ -58,6 +83,7 @@ struct Backleaf {
     grid: Entity<FileGrid>,
     options: Options,
     source: Source,
+    watch: app_watch::WatchUi,
     path: PathBuf,
     history: Vec<PathBuf>,
     generation: u64,
@@ -70,6 +96,7 @@ struct Backleaf {
     selection_worker: SelectionWorker,
     marquee: Option<Marquee>,
     keyboard_focus: bool,
+    typeahead: typeahead::State,
     hovered_id: Option<usize>,
     pressed_id: Option<usize>,
     suppress_click: bool,
@@ -128,7 +155,7 @@ impl Render for FileGrid {
     }
 }
 impl Backleaf {
-    fn new(options: Options, window: &mut Window, cx: &mut Context<Self>) -> Self {
+    fn new(mut options: Options, window: &mut Window, cx: &mut Context<Self>) -> Self {
         let colors = options
             .theme
             .map(theme::palette)
@@ -140,8 +167,21 @@ impl Backleaf {
             _observer: cx.observe(&owner, |_, _, cx| cx.notify()),
         });
         let (tx, rx) = async_channel::bounded(8);
-        let navigation = app_navigation::NavigationUi::new(navigation::Worker::new(tx.clone()), cx);
-        let search = app_search::SearchUi::new(search::Worker::new(tx.clone()));
+        let mut navigation = app_navigation::NavigationUi::new(
+            navigation::Worker::new(tx.clone()),
+            tx.clone(),
+            options.fixture.is_none(),
+            options.state_dir.clone(),
+            cx,
+        );
+        navigation.window_active = window.is_window_active() && window.is_visible();
+        if let Some(worker) = &navigation.volume_worker {
+            worker.set_active(navigation.window_active);
+        }
+        let search = app_search::SearchUi::new(search::Worker::with_state_dir(
+            tx.clone(),
+            options.state_dir.clone(),
+        ));
         let application_icons = native_icons::Cache::new(tx.clone());
         let (operation_tx, operation_rx) = async_channel::bounded(1);
         let hub = operations::service::Hub::new(options.state_dir.clone(), operation_tx);
@@ -160,12 +200,8 @@ impl Backleaf {
         window.on_window_should_close(cx, move |window, cx| {
             close_owner
                 .update(cx, |this, cx| {
-                    if this.files.hub.active() || this.rename_editing() {
-                        this.request_close(window, cx);
-                        false
-                    } else {
-                        true
-                    }
+                    this.request_close(window, cx);
+                    false
                 })
                 .unwrap_or(true)
         });
@@ -206,6 +242,85 @@ impl Backleaf {
                 .map(PathBuf::from)
                 .unwrap_or_else(|| PathBuf::from("C:\\"))
         });
+        let restored = options.restored.take();
+        let state_enabled = options.fixture.is_none() && options.output.is_none();
+        let window_id = restored.as_ref().map(|r| r.id.clone()).unwrap_or_else(|| {
+            format!(
+                "{}-{}",
+                window_state::instance(),
+                std::time::SystemTime::now()
+                    .duration_since(std::time::UNIX_EPOCH)
+                    .unwrap()
+                    .as_nanos()
+            )
+        });
+        let restore = app_restore::RestoreUi {
+            store: state_enabled.then(|| {
+                window_state::Store::new(options.state_dir.clone(), window_id, tx.clone())
+            }),
+            revision: restored.as_ref().map_or(0, |r| r.revision),
+            last: restored.as_ref().map(|r| r.state.clone()),
+            pending_search: restored.as_ref().and_then(|r| r.state.search.clone()),
+            closing: None,
+            ready_close: false,
+            closed: false,
+            close_requested: false,
+            restored: restored.is_some(),
+            failed: false,
+            initial_error: options.restore_error.take(),
+        };
+        let quit = cx.on_app_quit(|this, cx| {
+            let (sender, receiver) = async_channel::bounded(1);
+            if let Some(store) = &this.restore.store
+                && !this.restore.closed
+                && let Some(mut state) = this.restore.last.clone()
+            {
+                state.path = file_view::WinPath::new(&this.path);
+                if this.search.open {
+                    let mut definition = this.search.definition.clone();
+                    if let Some(input) = &this.search.input
+                        && !input.read(cx).is_composing()
+                    {
+                        definition.query = input.read(cx).value();
+                    }
+                    state.search = Some(window_state::SearchState {
+                        definition,
+                        saved: this.search.saved.clone(),
+                    });
+                } else {
+                    state.search = None;
+                }
+                this.restore.revision += 1;
+                store.save(
+                    this.restore.revision,
+                    state,
+                    this.restore.closing.is_some(),
+                    Some(sender),
+                );
+            }
+            async move {
+                let _ = receiver.recv().await;
+            }
+        });
+        let index = options.fixture.is_none().then(|| {
+            index::Service::new(
+                options.state_dir.clone(),
+                options
+                    .index_roots
+                    .clone()
+                    .or_else(|| options.output.as_ref().map(|_| Vec::new())),
+                tx.clone(),
+            )
+        });
+        let drag = app_drag::DragUi::new(drag::Worker::new(tx.clone()));
+        let watch = app_watch::WatchUi {
+            monitor: options
+                .fixture
+                .is_none()
+                .then(|| watcher::Monitor::new(path.clone(), 1, tx.clone())),
+            applied: 1,
+            ..Default::default()
+        };
         let source = if let Some(count) = options.fixture {
             Source::fixture(count)
         } else {
@@ -221,7 +336,11 @@ impl Backleaf {
             }
         })
         .detach();
-        let visibility = cx.observe_window_visibility(window, |this, visibility, _, cx| {
+        let visibility = cx.observe_window_visibility(window, |this, visibility, window, cx| {
+            this.navigation.window_active = visibility.is_visible() && window.is_window_active();
+            if let Some(worker) = &this.navigation.volume_worker {
+                worker.set_active(this.navigation.window_active && !this.session_locked);
+            }
             if !visibility.is_visible() {
                 this.finish_marquee(cx);
                 this.pressed_id = None;
@@ -256,6 +375,32 @@ impl Backleaf {
             })
             .detach();
         }
+        cx.spawn(async move |this, cx| {
+            let mut day = chrono::Local::now().format("%Y-%m-%d%z").to_string();
+            loop {
+                cx.background_executor()
+                    .timer(Duration::from_secs(60))
+                    .await;
+                let now = chrono::Local::now().format("%Y-%m-%d%z").to_string();
+                if this
+                    .update(cx, |this, cx| {
+                        if now != day
+                            && this.search.open
+                            && this.search.definition.modified_days.is_some()
+                            && this.navigation.window_active
+                        {
+                            this.refresh_search();
+                            cx.notify();
+                        }
+                    })
+                    .is_err()
+                {
+                    break;
+                }
+                day = now;
+            }
+        })
+        .detach();
         let panel =
             options.fixture.is_some() && (options.navigation_fixture == 0 || options.flow > 0);
         let flow_cache = Rc::new(RefCell::new(FlowCache::default()));
@@ -274,7 +419,14 @@ impl Backleaf {
             cx.notify();
         });
         let activated = cx.observe_window_activation(window, |this, window, cx| {
+            this.navigation.window_active = window.is_window_active() && window.is_visible();
+            if let Some(worker) = &this.navigation.volume_worker {
+                worker.set_active(this.navigation.window_active && !this.session_locked);
+            }
             if !window.is_window_active() {
+                this.reset_typeahead();
+                this.cancel_file_drag();
+                this.navigation.drag = None;
                 if this.marquee.is_some() {
                     this.metrics
                         .borrow_mut()
@@ -286,6 +438,10 @@ impl Backleaf {
                 this.finish_marquee(cx);
                 this.pressed_id = None;
                 this.hovered_id = None;
+            }
+            if window.is_window_active() {
+                this.mark_directory_dirty(cx);
+                this.refresh_search();
             }
             cx.notify();
         });
@@ -321,6 +477,12 @@ impl Backleaf {
         }
         Self {
             application_icons,
+            drag,
+            index,
+            index_status: index::Status::default(),
+            views: app_views::ViewsUi::default(),
+            archive: app_archive::ArchiveUi::default(),
+            restore,
             search,
             navigation,
             files: app_operations::FileOperations::new(hub),
@@ -331,6 +493,7 @@ impl Backleaf {
             grid,
             options,
             source,
+            watch,
             path,
             history: vec![],
             generation: 1,
@@ -343,6 +506,7 @@ impl Backleaf {
             selection_worker,
             marquee: None,
             keyboard_focus: false,
+            typeahead: typeahead::State::default(),
             hovered_id: None,
             pressed_id: None,
             suppress_click: false,
@@ -367,7 +531,7 @@ impl Backleaf {
             benchmark_step: 0,
             last_motion_frame: 0,
             metrics,
-            _subscriptions: vec![visibility, closed, activated, appearance],
+            _subscriptions: vec![visibility, closed, activated, appearance, quit],
         }
     }
     fn write_report(&self) {
@@ -397,10 +561,81 @@ impl Backleaf {
             return;
         }
         match event {
+            Event::ShellMenuClosed(result) => {
+                if let Err(error) = result {
+                    self.navigation_error(error, cx);
+                }
+                self.mark_directory_dirty(cx);
+                self.refresh_search();
+            }
+            Event::IndexError(error) => self.navigation_error(error, cx),
+            Event::IndexStatus(status) => {
+                let changed = status.revision != self.index_status.revision;
+                self.index_status = status;
+                if changed
+                    && self.search.open
+                    && self.search.definition.indexed
+                    && self.search.started
+                {
+                    self.refresh_search();
+                }
+                cx.notify();
+            }
+            Event::WindowStateSaved {
+                revision,
+                closed,
+                result,
+            } => self.save_state_result(revision, closed, result, cx),
+            Event::ArchivePrepared { token, result } => self.accept_archive(token, result, cx),
+            Event::QuickAccess(notice) => self.accept_quick_access(notice, cx),
+            Event::DragTarget {
+                generation,
+                token,
+                result,
+            } if generation == self.generation && token == self.drag.token => {
+                if let Some(g) = self.drag.gesture.as_mut() {
+                    g.target = Some(result);
+                }
+                cx.notify();
+            }
+            Event::DirectoryDirty { generation, epoch } if generation == self.generation => {
+                if epoch != self.watch.applied {
+                    self.mark_directory_dirty(cx);
+                }
+            }
+            Event::IdentityRestored { generation, id }
+                if generation == self.generation && !self.watch_stale() =>
+            {
+                if let Some(id) = id {
+                    self.selection.select(id, false, false);
+                }
+                cx.notify();
+            }
+            Event::PrefixLocated {
+                generation,
+                token,
+                id,
+            } if generation == self.generation
+                && token == self.typeahead.token
+                && self.typeahead.pending
+                && self.files.editor.is_none()
+                && !self.search.open =>
+            {
+                self.typeahead.pending = false;
+                if let Some(id) = id.filter(|id| !self.files.removed.contains(*id as u64)) {
+                    self.selection.select(id, false, false);
+                    self.keyboard_focus = true;
+                    self.scroll_global(id / self.columns, ScrollStrategy::Nearest, false);
+                }
+                cx.notify();
+            }
             Event::Search(notice) => self.accept_search(notice, cx),
             Event::Navigation(notice) => self.accept_navigation(notice, cx),
             Event::ApplicationIconsChanged => cx.notify(),
             Event::Session { locked } => {
+                if let Some(worker) = &self.navigation.volume_worker {
+                    worker.set_active(!locked && self.navigation.window_active);
+                }
                 if locked {
                     self.finish_marquee(cx);
                 }
@@ -440,7 +675,10 @@ impl Backleaf {
                     *finished = done;
                 }
                 if error.is_some() {
+                    self.restore.failed = self.restore.restored;
                     self.error = error;
+                } else if done {
+                    self.restore.failed = false;
                 }
                 cx.notify();
             }
@@ -508,6 +746,9 @@ impl Backleaf {
         if self.defer_navigation(path.clone(), push, cx) {
             return;
         }
+        self.reset_typeahead();
+        self.cancel_file_drag();
+        self.navigation.drag = None;
         self.cancel_marquee();
         self.scrollbar_drag = None;
         self.close_search();
@@ -523,6 +764,8 @@ impl Backleaf {
         self.navigation.rows.clear();
         self.navigation.token += 1;
         self.files.menu = None;
+        self.navigation.menu = None;
+        self.navigation.pending = None;
         self.files.removed.clear();
         self.detail_token += 1;
         self.details = None;
@@ -539,10 +782,23 @@ impl Backleaf {
         self.error = None;
         self.scroll = UniformListScrollHandle::new();
         self.origin_row = 0;
+        self.watch = app_watch::WatchUi {
+            monitor: Some(watcher::Monitor::new(
+                self.path.clone(),
+                self.generation,
+                self.tx.clone(),
+            )),
+            applied: 1,
+            ..Default::default()
+        };
         self.source = Source::directory(self.path.clone(), self.generation, self.tx.clone());
         cx.notify();
     }
     fn request_detail(&mut self, id: usize, open: bool, cx: &mut Context<Self>) {
+        if self.watch_stale() {
+            self.mark_directory_dirty(cx);
+            return;
+        }
         self.panel = false;
         self.detail_token += 1;
         self.detail_pending = true;
@@ -587,7 +843,7 @@ impl Backleaf {
     fn global_point(&self, p: Point<Pixels>) -> (f64, f64) {
         let offset = -f32::from(self.scroll.0.borrow().base_handle.offset().y) as f64;
         (
-            f32::from(p.x) as f64 - 12. - self.sidebar_width() as f64,
+            f64::from(f32::from(p.x) - layout::content_left(self.sidebar_width())),
             self.origin_row as f64 * layout::row_step() as f64 + offset + f32::from(p.y) as f64
                 - f64::from(layout::content_top()),
         )
@@ -596,9 +852,13 @@ impl Backleaf {
         let (x, y) = self.global_point(p);
         if x < 0.
             || y < 0.
-            || f32::from(p.x) >= self.sidebar_width() + self.grid_width(window) - 12.
+            || f32::from(p.x)
+                >= self.sidebar_width() + self.grid_width(window)
+                    - layout::SURFACE.margin_x
+                    - layout::SURFACE.padding_x
+                    - layout::SCROLL.gutter
             || f32::from(p.y) < layout::content_top()
-            || f32::from(p.y) > f32::from(window.viewport_size().height) - 16.
+            || f32::from(p.y) > layout::content_bottom(f32::from(window.viewport_size().height))
         {
             return None;
         }
@@ -642,12 +902,54 @@ impl Backleaf {
             self.selection = m.base;
         }
     }
+    fn reset_typeahead(&mut self) {
+        self.typeahead.reset();
+        self.source.prefix(self.typeahead.token, None);
+    }
+    fn typeahead_key(
+        &mut self,
+        event: &KeyDownEvent,
+        window: &Window,
+        cx: &mut Context<Self>,
+    ) -> bool {
+        let m = event.keystroke.modifiers;
+        if !self.focus.is_focused(window)
+            || self.files.editor.is_some()
+            || self.search.open
+            || self.navigation.open
+            || self.files.menu.is_some()
+            || self.selection_busy()
+            || m.control
+            || m.alt
+            || m.platform
+            || event.prefer_character_input
+            || event.is_held
+            || typeahead::native_composing(self.native_owner_handle)
+        {
+            return false;
+        }
+        let Some(text) = event.keystroke.key_char.as_deref().or_else(|| {
+            (event.keystroke.key.chars().count() == 1).then_some(event.keystroke.key.as_str())
+        }) else {
+            return false;
+        };
+        if text == " " && !self.typeahead.continuing(Instant::now()) {
+            return false;
+        }
+        if let Some((token, prefix)) = self.typeahead.push(text, Instant::now()) {
+            self.source.prefix(token, Some(prefix));
+            cx.notify();
+            return true;
+        }
+        false
+    }
     fn begin_marquee(
         &mut self,
         event: &MouseDownEvent,
         window: &mut Window,
         cx: &mut Context<Self>,
     ) {
+        self.reset_typeahead();
         if self.rename_editing() {
             if self.hit_file(event.position, window).is_none() {
                 self.selection = Selection::default();
@@ -663,6 +965,7 @@ impl Backleaf {
         self.keyboard_focus = false;
         if let Some(id) = self.hit_file(event.position, window) {
             self.pressed_id = Some(id);
+            self.begin_file_drag(id, event);
             cx.notify();
             return;
         }
@@ -697,12 +1000,17 @@ impl Backleaf {
         }
         let pointer = point(
             m.pointer.x.clamp(
-                px(self.sidebar_width()),
-                px(self.sidebar_width() + self.grid_width(window)),
+                px(layout::content_left(self.sidebar_width())),
+                px(self.sidebar_width() + self.grid_width(window)
+                    - layout::SURFACE.margin_x
+                    - layout::SURFACE.padding_x
+                    - layout::SCROLL.gutter),
             ),
             m.pointer.y.clamp(
-                px(layout::CHROME.bar_height),
-                window.viewport_size().height - px(16.),
+                px(layout::content_top()),
+                px(layout::content_bottom(f32::from(
+                    window.viewport_size().height,
+                ))),
             ),
         );
         let band = GridBand::from_rect(
@@ -787,7 +1095,9 @@ impl Backleaf {
         marquee_scroll::edge_at(
             f64::from(f32::from(m.pointer.y)),
             f64::from(layout::content_top()),
-            f64::from(f32::from(window.viewport_size().height)) - 16.,
+            f64::from(layout::content_bottom(f32::from(
+                window.viewport_size().height,
+            ))),
             g.offset,
             g.maximum,
         )
@@ -825,6 +1135,63 @@ impl Backleaf {
         self.update_marquee_band(window, cx);
     }
     fn key(&mut self, event: &KeyDownEvent, window: &mut Window, cx: &mut Context<Self>) {
+        if self.restore.closing.is_some() {
+            cx.stop_propagation();
+            return;
+        }
+        if event.keystroke.modifiers.control
+            && !event.keystroke.modifiers.shift
+            && event.keystroke.key == "n"
+            && self.options.fixture.is_none()
+        {
+            if !event.is_held {
+                let mut options = self.options.clone();
+                options.output = None;
+                options.restored = None;
+                options.path = Some(self.path.clone());
+                options.width = f32::from(window.viewport_size().width);
+                options.height = f32::from(window.viewport_size().height);
+                let mut state = self.capture_window_state(window, cx);
+                state.bounds[0] += 24.;
+                state.bounds[1] += 24.;
+                state.maximized = false;
+                options.restored = Some(window_state::Restored {
+                    id: format!(
+                        "{}-{}",
+                        window_state::instance(),
+                        std::time::SystemTime::now()
+                            .duration_since(std::time::UNIX_EPOCH)
+                            .unwrap()
+                            .as_nanos()
+                    ),
+                    revision: 0,
+                    state,
+                });
+                open_backleaf_window(options, cx);
+            }
+            cx.stop_propagation();
+            return;
+        }
+        if event.keystroke.modifiers.control && event.keystroke.key == "q" {
+            self.request_close(window, cx);
+            cx.stop_propagation();
+            return;
+        }
+
+        if event.keystroke.key == "escape" && self.navigation.drag.is_some() {
+            self.navigation.drag = None;
+            self.navigation.suppress_click = true;
+            cx.stop_propagation();
+            cx.notify();
+            return;
+        }
+        if event.keystroke.key == "escape" && self.drag.gesture.is_some() {
+            self.cancel_file_drag();
+            self.pressed_id = None;
+            cx.stop_propagation();
+            cx.notify();
+            return;
+        }
         if self.search_key(event, window, cx) {
             cx.stop_propagation();
             return;
@@ -833,6 +1200,10 @@ impl Backleaf {
             return;
         }
         if self.navigation_key(event, window, cx) {
+            cx.stop_propagation();
+            return;
+        }
+        if self.typeahead_key(event, window, cx) {
             cx.stop_propagation();
             return;
         }
@@ -853,6 +1224,7 @@ impl Backleaf {
             return;
         }
         self.metrics.borrow_mut().input("key");
+        self.reset_typeahead();
         if key == "tab" && !modifiers.control && !modifiers.alt {
             self.keyboard_focus = true;
             if modifiers.shift {
@@ -1010,7 +1382,12 @@ impl Backleaf {
             selected: self.is_selected(id),
             active,
             focused: focused && self.keyboard_focus && grid_focused,
-            hovered: active && self.hovered_id == Some(id) && self.marquee.is_none(),
+            hovered: active
+                && (self.hovered_id == Some(id)
+                    || self.drag.gesture.as_ref().is_some_and(|g| {
+                        g.active && g.target_id == Some(id) && matches!(g.target, Some(Ok(_)))
+                    }))
+                && self.marquee.is_none(),
             pressed: active && self.pressed_id == Some(id),
         };
         let colors = self.colors;
@@ -1061,7 +1438,10 @@ impl Backleaf {
             }))
             .on_mouse_move(
                 cx.listener(move |this, event: &MouseMoveEvent, window, cx| {
-                    if this.marquee.is_some() || this.scrollbar_drag.is_some() {
+                    if this.marquee.is_some()
+                        || this.scrollbar_drag.is_some()
+                        || this.drag.gesture.as_ref().is_some_and(|g| g.active)
+                    {
                         return;
                     }
                     let next = if this.hit_file(event.position, window) == Some(id) {
@@ -1380,7 +1760,9 @@ impl Backleaf {
             && window.is_visible();
         let selecting =
             !self.session_locked && window.is_visible() && self.marquee_velocity(window) != 0.;
-        if self.clock_pending || !(animate || scripted || selecting) {
+        if self.clock_pending
+            || !(animate || scripted || selecting || self.quick_drag_velocity(window) != 0.)
+        {
             return;
         }
         self.clock_pending = true;
@@ -1404,6 +1786,7 @@ impl Backleaf {
                 }
                 if window.is_visible() && !this.session_locked {
                     this.step_marquee(window, cx);
+                    this.step_quick_drag(window, cx);
                     let motion = this.panel
                         && this.task.read(cx).expanded
                         && this.options.flow > 0
@@ -1445,7 +1828,7 @@ impl Backleaf {
         let grid_width = (width
             - self.sidebar_width()
             - self.inline_details_width(window)
-            - 24.
+            - 2. * (layout::SURFACE.margin_x + layout::SURFACE.padding_x)
             - layout::SCROLL.gutter)
             .max(layout::LAYOUT.grid.minimum_cell_width);
         let columns = ((grid_width + gap) / (layout::LAYOUT.grid.minimum_cell_width + gap))
@@ -1510,8 +1893,8 @@ impl Backleaf {
             .role(Role::ListBox)
             .aria_label("文件")
             .size_full()
-            .pl(px(12.))
-            .pr(px(12. + layout::SCROLL.gutter))
+            .pl(px(layout::SURFACE.padding_x))
+            .pr(px(layout::SURFACE.padding_x + layout::SCROLL.gutter))
             .py(px(layout::SCROLL.inset_y))
             .on_mouse_down(MouseButton::Left, cx.listener(Self::begin_marquee))
             .on_mouse_down(
@@ -1573,6 +1956,7 @@ impl Backleaf {
         div()
             .id("details")
             .w(px(320.))
+            .bg(self.colors.color(ColorRole::Canvas))
             .flex_none()
             .h_full()
             .border_l_1()
@@ -1681,6 +2065,10 @@ impl Backleaf {
 impl Render for Backleaf {
     fn render(&mut self, window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
         self.sync_operation_focus(window, cx);
+        self.sync_watcher(window, cx);
+        self.sync_view_focus(window, cx);
+        self.sync_archive_focus(window, cx);
+        self.sync_restore(window, cx);
         self.application_icons.sync(
             self.generation,
             !self.session_locked && window.is_visible(),
@@ -1730,21 +2118,27 @@ impl Render for Backleaf {
                     .global_point(point(px(12.), px(layout::content_top())))
                     .1;
                 let a = point(
-                    px((m.anchor.0 + 12. + self.sidebar_width() as f64) as f32),
+                    px((m.anchor.0 + f64::from(layout::content_left(self.sidebar_width()))) as f32),
                     px((m.anchor.1 - top + f64::from(layout::content_top())) as f32),
                 );
                 let left = f32::from(a.x.min(m.pointer.x)).clamp(
-                    self.sidebar_width(),
-                    self.sidebar_width() + self.grid_width(window),
+                    layout::content_left(self.sidebar_width()),
+                    self.sidebar_width() + self.grid_width(window)
+                        - layout::SURFACE.margin_x
+                        - layout::SURFACE.padding_x
+                        - layout::SCROLL.gutter,
                 );
                 let right = f32::from(a.x.max(m.pointer.x)).clamp(
-                    self.sidebar_width(),
-                    self.sidebar_width() + self.grid_width(window),
+                    layout::content_left(self.sidebar_width()),
+                    self.sidebar_width() + self.grid_width(window)
+                        - layout::SURFACE.margin_x
+                        - layout::SURFACE.padding_x
+                        - layout::SCROLL.gutter,
                 );
-                let top =
-                    f32::from(a.y.min(m.pointer.y)).clamp(layout::CHROME.bar_height, height - 16.);
-                let bottom =
-                    f32::from(a.y.max(m.pointer.y)).clamp(layout::CHROME.bar_height, height - 16.);
+                let top = f32::from(a.y.min(m.pointer.y))
+                    .clamp(layout::content_top(), layout::content_bottom(height));
+                let bottom = f32::from(a.y.max(m.pointer.y))
+                    .clamp(layout::content_top(), layout::content_bottom(height));
                 Bounds::new(
                     point(px(left), px(top)),
                     size(px(right - left), px(bottom - top)),
@@ -1760,7 +2154,7 @@ impl Render for Backleaf {
             .size_full()
             .flex()
             .flex_col()
-            .bg(colors.color(ColorRole::Canvas))
+            .bg(colors.color(ColorRole::Chrome))
             .font_family("Microsoft YaHei UI")
             .text_size(px(13.))
             .text_color(colors.color(ColorRole::Primary))
@@ -1785,26 +2179,70 @@ impl Render for Backleaf {
                     .when(self.sidebar_width() > 0., |d| {
                         d.child(self.sidebar(window, cx))
                     })
-                    .child(if window.is_a11y_active() {
+                    .child(
                         div()
                             .w(px(self.grid_width(window)))
-                            .h(px((height - layout::CHROME.bar_height).max(0.)))
-                            .child(self.grid.clone())
-                            .into_any_element()
-                    } else {
-                        self.grid
-                            .clone()
-                            .cached(
-                                StyleRefinement::default()
-                                    .w(px(self.grid_width(window)))
-                                    .h(px((height - layout::CHROME.bar_height).max(0.))),
-                            )
-                            .into_any_element()
-                    })
+                            .h_full()
+                            .flex_none()
+                            .px(px(layout::SURFACE.margin_x))
+                            .py(px(layout::SURFACE.margin_y))
+                            .child(
+                                div()
+                                    .size_full()
+                                    .relative()
+                                    .rounded(px(layout::SURFACE.radius))
+                                    .bg(colors.color(ColorRole::Files))
+                                    .shadow(colors.file_surface_shadows())
+                                    .child(
+                                        div()
+                                            .size_full()
+                                            .rounded(px(layout::SURFACE.radius))
+                                            .overflow_hidden()
+                                            .child(if window.is_a11y_active() {
+                                                self.grid.clone().into_any_element()
+                                            } else {
+                                                self.grid
+                                                    .clone()
+                                                    .cached(
+                                                        StyleRefinement::default()
+                                                            .w(px((self.grid_width(window)
+                                                                - 2. * layout::SURFACE.margin_x)
+                                                                .max(0.)))
+                                                            .h(px((height
+                                                                - layout::CHROME.bar_height
+                                                                - 2. * layout::SURFACE.margin_y)
+                                                                .max(0.))),
+                                                    )
+                                                    .into_any_element()
+                                            }),
+                                    ),
+                            ),
+                    )
                     .when(
                         self.details.is_some() && self.inline_details_width(window) > 0.,
                         |d| d.child(self.details_panel(cx)),
                     ),
+            )
+            .child(
+                canvas(
+                    |_, _, _| (),
+                    move |_, _, window, _| {
+                        if let Some(bounds) = overlay {
+                            window.paint_quad(quad(
+                                bounds,
+                                px(0.),
+                                colors.color(ColorRole::Focus).opacity(0.08),
+                                px(1.),
+                                colors.color(ColorRole::Focus),
+                                BorderStyle::Solid,
+                            ));
+                        }
+                    },
+                )
+                .absolute()
+                .left_0()
+                .top_0()
+                .size(px(1.)),
             )
             .when(
                 self.selection.count() > 0 || self.marquee.is_some() || self.error.is_some(),
@@ -1813,8 +2251,8 @@ impl Render for Backleaf {
                         div()
                             .id("selection-status-float")
                             .absolute()
-                            .left(px(self.sidebar_width() + 12.))
-                            .bottom(px(12.))
+                            .left(px(layout::content_left(self.sidebar_width())))
+                            .bottom(px(layout::SURFACE.margin_y + 12.))
                             .max_w(px((self.grid_width(window) - 24.).max(1.)))
                             .h(px(layout::SCROLL.status_height))
                             .px(px(layout::SCROLL.status_padding_x))
@@ -1868,34 +2306,30 @@ impl Render for Backleaf {
                         .child(self.task.clone()),
                 )
             })
+            .child(self.drag_overlay(window))
+            .child(self.quick_drag_overlay(window))
             .child(self.operation_overlay(window, cx))
+            .child(self.navigation_overlay(window))
             .when(self.navigation.open, |d| {
                 d.child(self.path_overlay(window, cx))
             })
             .when(self.search.open, |d| {
                 d.child(self.search_overlay(window, cx))
             })
+            .child(self.view_popovers(cx))
+            .child(self.archive_popup(cx))
+            .child(self.restore_failure(cx))
             .child(
                 canvas(
                     |_, _, _| (),
                     move |_, _, window, _cx| {
-                        if let Some(bounds) = overlay {
-                            window.paint_quad(quad(
-                                bounds,
-                                px(0.),
-                                colors.color(ColorRole::Focus).opacity(0.08),
-                                px(1.),
-                                colors.color(ColorRole::Focus),
-                                BorderStyle::Solid,
-                            ));
-                        }
                         let downer = owner.clone();
                         window.on_mouse_event(move |_: &MouseDownEvent, phase, _, cx| {
                             if phase == DispatchPhase::Capture
                                 && let Some(view) = downer.upgrade()
-                                && view.read(cx).keyboard_focus
                             {
                                 view.update(cx, |this, cx| {
+                                    this.reset_typeahead();
                                     this.keyboard_focus = false;
                                     cx.notify();
                                 });
@@ -1940,10 +2374,22 @@ impl Render for Backleaf {
                             if phase == DispatchPhase::Capture
                                 && let Some(view) = mover.upgrade()
                                 && (view.read(cx).marquee.is_some()
-                                    || view.read(cx).scrollbar_drag.is_some())
+                                    || view.read(cx).scrollbar_drag.is_some()
+                                    || view.read(cx).drag.gesture.is_some()
+                                    || view.read(cx).navigation.drag.is_some())
                             {
                                 view.update(cx, |this, cx| {
-                                    if this.scrollbar_drag.is_some() {
+                                    if this.navigation.drag.is_some() {
+                                        this.move_quick_drag(event, cx);
+                                        if this.navigation.drag.as_ref().is_some_and(|g| g.active) {
+                                            cx.stop_propagation();
+                                        }
+                                    } else if this.drag.gesture.is_some() {
+                                        this.move_file_drag(event, window, cx);
+                                        if this.drag.gesture.as_ref().is_some_and(|g| g.active) {
+                                            cx.stop_propagation();
+                                        }
+                                    } else if this.scrollbar_drag.is_some() {
                                         this.drag_scrollbar(event, window, cx);
                                         cx.stop_propagation();
                                     } else {
@@ -1959,9 +2405,13 @@ impl Render for Backleaf {
                                 && let Some(view) = upper.upgrade()
                                 && (view.read(cx).marquee.is_some()
                                     || view.read(cx).pressed_id.is_some()
-                                    || view.read(cx).scrollbar_drag.is_some())
+                                    || view.read(cx).scrollbar_drag.is_some()
+                                    || view.read(cx).drag.gesture.is_some()
+                                    || view.read(cx).navigation.drag.is_some())
                             {
                                 view.update(cx, |this, cx| {
+                                    this.finish_quick_drag(event, cx);
+                                    this.finish_file_drag(event, window, cx);
                                     this.scrollbar_drag = None;
                                     this.pressed_id = None;
                                     if this.marquee.is_some() {
@@ -2024,6 +2474,45 @@ fn configure_native_corners(window: &Window, dark: bool) {
         }
     }
 }
+fn open_backleaf_window(options: Options, cx: &mut App) {
+    let mut bounds = Bounds::centered(None, size(px(options.width), px(options.height)), cx);
+    if let Some(saved) = &options.restored {
+        let r = saved.state.bounds;
+        let proposed = Bounds::new(
+            point(px(r[0]), px(r[1])),
+            size(px(r[2].max(560.)), px(r[3].max(440.))),
+        );
+        let fits = cx.displays().iter().any(|d| {
+            let b = d.bounds();
+            r[0] + 64. > f32::from(b.left())
+                && r[0] < f32::from(b.right()) - 64.
+                && r[1] + 32. > f32::from(b.top())
+                && r[1] < f32::from(b.bottom()) - 32.
+        });
+        if fits {
+            bounds = proposed;
+        }
+    }
+    let window_bounds = if options.restored.as_ref().is_some_and(|r| r.state.maximized) {
+        WindowBounds::Maximized(bounds)
+    } else {
+        WindowBounds::Windowed(bounds)
+    };
+    cx.open_window(
+        WindowOptions {
+            window_bounds: Some(window_bounds),
+            titlebar: Some(TitlebarOptions {
+                title: Some("拾径 · Backleaf".into()),
+                appears_transparent: true,
+                ..Default::default()
+            }),
+            window_min_size: Some(size(px(560.), px(440.))),
+            ..Default::default()
+        },
+        move |window, cx| cx.new(|cx| Backleaf::new(options, window, cx)),
+    )
+    .expect("Backleaf window");
+}
 fn main() {
     let arguments: Vec<_> = std::env::args_os().collect();
     if arguments.len() == 3 && arguments[1] == "--session-status-file" {
@@ -2034,6 +2523,29 @@ fn main() {
         return;
     }
     let options = Options::parse();
+    let mut startup = Vec::new();
+    if options.fixture.is_none() && options.path.is_none() && options.output.is_none() {
+        match window_state::load(&options.state_dir) {
+            Ok(saved) => {
+                for state in saved {
+                    let mut current = options.clone();
+                    current.path = Some(state.state.path.path());
+                    current.width = state.state.bounds[2].max(560.);
+                    current.height = state.state.bounds[3].max(440.);
+                    current.restored = Some(state);
+                    startup.push(current);
+                }
+            }
+            Err(_) => {
+                let mut current = options.clone();
+                current.restore_error = Some("无法读取上次窗口状态".into());
+                startup.push(current);
+            }
+        }
+    }
+    if startup.is_empty() {
+        startup.push(options);
+    }
     Application::with_platform(Rc::new(
         gpui_windows::WindowsPlatform::new(false).expect("Windows graphics initialization"),
     ))
@@ -2046,21 +2558,9 @@ fn main() {
             }
         })
         .detach();
-        let bounds = Bounds::centered(None, size(px(options.width), px(options.height)), cx);
-        cx.open_window(
-            WindowOptions {
-                window_bounds: Some(WindowBounds::Windowed(bounds)),
-                titlebar: Some(TitlebarOptions {
-                    title: Some("拾径 · Backleaf".into()),
-                    appears_transparent: true,
-                    ..Default::default()
-                }),
-                window_min_size: Some(size(px(560.), px(440.))),
-                ..Default::default()
-            },
-            move |window, cx| cx.new(|cx| Backleaf::new(options, window, cx)),
-        )
-        .expect("Backleaf window");
+        for options in startup {
+            open_backleaf_window(options, cx);
+        }
         cx.activate(true);
     });
 }

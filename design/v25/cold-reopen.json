@@ -1,0 +1,34 @@
+{
+  "masterSha256": "f3a13e348c693b8a79094adeeec52f29e1fa2da5b79e525ae8869fe3589ee05d",
+  "retainedPages": 165,
+  "pages": 170,
+  "result": "passed",
+  "results": [
+    {
+      "key": "166-prefix-match",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "167-prefix-no-match",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "168-prefix-timeout",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "169-prefix-input-protected",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "170-prefix-enumerating",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    }
+  ],
+  "verifiedAt": "2026-11-04T19:28:58.293Z"
+}

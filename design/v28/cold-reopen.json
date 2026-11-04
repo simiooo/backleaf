@@ -1,0 +1,44 @@
+{
+  "masterSha256": "64f213b6db1b3c0c5a586acb2263db69fb8f3058b9eea8a96c0315fa9ed5fac2",
+  "retainedPages": 179,
+  "pages": 186,
+  "result": "passed",
+  "results": [
+    {
+      "key": "180-search-filters",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "181-save-view",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "182-unified-view-navigation",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "183-view-unsaved-changes",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "184-view-group-type",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "185-view-save-conflict",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "186-view-no-results",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    }
+  ],
+  "verifiedAt": "2026-11-04T19:31:11.852Z"
+}

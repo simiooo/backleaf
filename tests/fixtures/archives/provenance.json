@@ -1,0 +1,28 @@
+{
+  "repository": "https://github.com/libarchive/libarchive",
+  "commit": "2774b74cb7269c9b5fa89e7d876b11d5a729c421",
+  "test_only": true,
+  "files": [
+    {
+      "name": "test_read_format_7zip_lzma1.7z",
+      "source": "https://raw.githubusercontent.com/libarchive/libarchive/2774b74cb7269c9b5fa89e7d876b11d5a729c421/libarchive/test/test_read_format_7zip_lzma1.7z.uu",
+      "encoded_sha256": "4107a5daf0c06d229dde339829b63c83e3f55777c371c8b315ff647a17413fa1",
+      "sha256": "cd4595cf136ed9857088103e0f16f41b0028ac8a93a6070450c45d55f0d04d74",
+      "bytes": 1491
+    },
+    {
+      "name": "test_read_format_rar_binary_data.rar",
+      "source": "https://raw.githubusercontent.com/libarchive/libarchive/2774b74cb7269c9b5fa89e7d876b11d5a729c421/libarchive/test/test_read_format_rar_binary_data.rar.uu",
+      "encoded_sha256": "93fd0f03a0b6759ad685c9eaeacf361a446f2f83ef295bfcaf8d17af577d554a",
+      "sha256": "fccf458e9a70e1d5b814cfbad81de52092ff865c07c82471b9ef68d8f1bc129f",
+      "bytes": 1081705
+    },
+    {
+      "name": "test_read_format_rar5_compressed.rar",
+      "source": "https://raw.githubusercontent.com/libarchive/libarchive/2774b74cb7269c9b5fa89e7d876b11d5a729c421/libarchive/test/test_read_format_rar5_compressed.rar.uu",
+      "encoded_sha256": "7a87af5035430d2307f9a183b2da8a71c95b3c0a5b8e8d1f172ef3343d4b8620",
+      "sha256": "68f9d7e2662cd5bc5607ba9c6bf1edbf121cf3b08011a7d8643091791750a7c8",
+      "bytes": 436
+    }
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "version": "v31-archives",
+  "retainedPages": 195,
+  "pages": [
+    {
+      "key": "196-archive-menu",
+      "name": "196 · v31 archive-menu",
+      "nodes": 122,
+      "state": "menu"
+    },
+    {
+      "key": "197-archive-name",
+      "name": "197 · v31 archive-name",
+      "nodes": 119,
+      "state": "name"
+    },
+    {
+      "key": "198-archive-running",
+      "name": "198 · v31 archive-running",
+      "nodes": 122,
+      "state": "running"
+    },
+    {
+      "key": "199-archive-cancel",
+      "name": "199 · v31 archive-cancel",
+      "nodes": 122,
+      "state": "cancel"
+    },
+    {
+      "key": "200-archive-name-conflict",
+      "name": "200 · v31 archive-name-conflict",
+      "nodes": 120,
+      "state": "conflict"
+    },
+    {
+      "key": "201-archive-damaged",
+      "name": "201 · v31 archive-damaged",
+      "nodes": 117,
+      "state": "damaged"
+    },
+    {
+      "key": "202-archive-multiple",
+      "name": "202 · v31 archive-multiple",
+      "nodes": 122,
+      "state": "multiple"
+    }
+  ],
+  "source": "scripts/design/archive-v31.mjs"
+}

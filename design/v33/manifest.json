@@ -1,0 +1,37 @@
+{
+  "version": "v33-startup-restore",
+  "retainedPages": 206,
+  "pages": [
+    {
+      "key": "207-restore-path",
+      "name": "207 · v33 restore-path",
+      "nodes": 115,
+      "state": "path"
+    },
+    {
+      "key": "208-restore-search",
+      "name": "208 · v33 restore-search",
+      "nodes": 117,
+      "state": "search"
+    },
+    {
+      "key": "209-restore-offline",
+      "name": "209 · v33 restore-offline",
+      "nodes": 117,
+      "state": "offline"
+    },
+    {
+      "key": "210-restore-failed-save",
+      "name": "210 · v33 restore-failed-save",
+      "nodes": 117,
+      "state": "save-error"
+    },
+    {
+      "key": "211-restore-relative-date",
+      "name": "211 · v33 restore-relative-date",
+      "nodes": 117,
+      "state": "date"
+    }
+  ],
+  "source": "scripts/design/restore-v33.mjs"
+}

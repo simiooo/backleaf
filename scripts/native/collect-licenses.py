@@ -32,6 +32,12 @@ for pkg in sorted(metadata['packages'],key=lambda x:(x['name'],x['version'])):
             (dest/'ATTRIBUTION.txt').write_text(pkg['name']+' '+pkg['version']+'\nDeclared license: '+pkg['license']+'\nSelected license: Apache-2.0\nAuthors: '+', '.join(pkg.get('authors',[]))+'\nRepository: '+str(pkg.get('repository'))+'\n',encoding='utf-8')
         else:missing.append(f"{pkg['name']} {pkg['version']}")
     packages.append({'name':pkg['name'],'version':pkg['version'],'license':pkg.get('license'),'selected_license':selected,'notice_source':source,'repository':pkg.get('repository'),'authors':pkg.get('authors',[]),'license_files':[f.name for f in files]})
+engine=pathlib.Path('assets/archive-engine')
+engine_out=out/'7-Zip-26.05';engine_out.mkdir(exist_ok=True)
+for name in ['LICENSE-7zip.txt','7z2605-src.tar.xz','provenance.json']:
+    shutil.copyfile(engine/name,engine_out/name)
+(engine_out/'RELINKING.txt').write_text('The unmodified 7-Zip dynamic library is distributed at lib/7z.dll. You may replace this x64 library with an ABI-compatible modified build without rebuilding Backleaf. Backleaf loads this explicit adjacent path and holds a read handle while the archive helper runs. Complete upstream source and license texts accompany this notice. Backleaf source and build instructions: https://github.com/simiooo/backleaf .\n',encoding='utf-8')
+packages.append({'name':'7-Zip','version':'26.05','license':'LGPL-2.1-or-later; BSD-3-Clause; unRAR restriction','license_files':['LICENSE-7zip.txt'],'corresponding_source':'7z2605-src.tar.xz','provenance':'provenance.json','repository':'https://github.com/ip7z/7zip'})
 (out/'manifest.json').write_text(json.dumps(packages,indent=2,ensure_ascii=False),encoding='utf-8')
 (out/'README.txt').write_text('Third-party dependencies of the Windows Backleaf preview.\nGPUI packages are Apache-2.0. Zed application crates are not linked.\nSee each package folder and manifest.json for notices and license choices.\n',encoding='utf-8')
 print(json.dumps({'packages':len(packages),'missing_license_files':missing}))

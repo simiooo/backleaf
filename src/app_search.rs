@@ -6,32 +6,37 @@ use crate::{
 use std::collections::BTreeMap;
 
 pub struct SearchUi {
-    worker: Worker,
+    pub(super) worker: Worker,
+    pub definition: crate::file_view::FileView,
+    pub saved: Option<crate::quick_access::Entry>,
     pub open: bool,
-    motion: crate::search_motion::SearchMotion,
-    closing_text: String,
-    input: Option<Entity<TextInput>>,
-    subscription: Option<Subscription>,
-    token: u64,
-    serial: u64,
-    requested: Range<usize>,
-    rows: BTreeMap<usize, Row>,
-    count: usize,
-    scanned: usize,
-    unavailable: usize,
-    skipped: usize,
-    done: bool,
-    started: bool,
-    query: String,
-    root: PathBuf,
-    error: Option<String>,
-    selected: Option<usize>,
-    scroll: UniformListScrollHandle,
+    pub(super) motion: crate::search_motion::SearchMotion,
+    pub(super) closing_text: String,
+    pub(super) input: Option<Entity<TextInput>>,
+    pub(super) subscription: Option<Subscription>,
+    pub(super) token: u64,
+    pub(super) serial: u64,
+    pub(super) requested: Range<usize>,
+    pub(super) rows: BTreeMap<usize, Row>,
+    pub(super) count: usize,
+    pub(super) scanned: usize,
+    pub(super) unavailable: usize,
+    pub(super) skipped: usize,
+    pub(super) done: bool,
+    pub(super) started: bool,
+    pub(super) query: String,
+    pub(super) root: PathBuf,
+    pub(super) error: Option<String>,
+    pub(super) selected: Option<usize>,
+    pub(super) scroll: UniformListScrollHandle,
+    pub columns: usize,
 }
 impl SearchUi {
     pub fn new(worker: Worker) -> Self {
         Self {
             worker,
+            definition: crate::file_view::FileView::new(std::path::Path::new(".")),
+            saved: None,
             open: false,
             motion: crate::search_motion::SearchMotion::default(),
             closing_text: String::new(),
@@ -52,6 +57,7 @@ impl SearchUi {
             error: None,
             selected: None,
             scroll: UniformListScrollHandle::new(),
+            columns: 1,
         }
     }
 }
@@ -64,6 +70,20 @@ impl SearchUi {
     }
 }
 impl Backleaf {
+    pub fn refresh_search(&mut self) {
+        if !self.search.open || self.search.query.trim().is_empty() {
+            return;
+        }
+        self.search.token += 1;
+        self.search.rows.clear();
+        self.search.requested = 0..0;
+        self.search.count = 0;
+        self.search.done = false;
+        self.search.error = None;
+        self.search
+            .worker
+            .search_view(self.search.token, self.search.definition.clone());
+    }
     pub fn close_search(&mut self) {
         self.search.open = false;
         self.search.motion.retarget(
@@ -84,6 +104,7 @@ impl Backleaf {
         if self.defer_search(cx) {
             return;
         }
+        self.reset_typeahead();
         self.close_path_tree();
         self.cancel_marquee();
         self.files.menu = None;
@@ -103,6 +124,8 @@ impl Backleaf {
         self.search.closing_text.clear();
         self.files.focus_grid = false;
         self.search.root = self.path.clone();
+        self.search.definition = crate::file_view::FileView::new(&self.path);
+        self.search.saved = None;
         self.search.query.clear();
         self.search.started = false;
         self.search.count = 0;
@@ -166,7 +189,7 @@ impl Backleaf {
         self.search.input = Some(input);
         cx.notify();
     }
-    fn start_search(&mut self, value: String, cx: &mut Context<Self>) {
+    pub fn start_search(&mut self, value: String, cx: &mut Context<Self>) {
         let query = value.trim().to_owned();
         self.search.token += 1;
         self.search.worker.cancel(self.search.token);
@@ -180,13 +203,12 @@ impl Backleaf {
         self.search.error = None;
         self.search.scroll = UniformListScrollHandle::new();
         self.search.query = query.clone();
-        self.search.started = !query.is_empty();
+        self.search.definition.query = query.clone();
+        self.search.started = true;
         self.search.done = false;
-        if !query.is_empty() {
-            self.search
-                .worker
-                .search(self.search.token, self.search.root.clone(), query);
-        }
+        self.search
+            .worker
+            .search_view(self.search.token, self.search.definition.clone());
         cx.notify();
     }
     pub fn accept_search(&mut self, notice: Notice, cx: &mut Context<Self>) {
@@ -204,6 +226,11 @@ impl Backleaf {
                 error,
             } if token == self.search.token => {
                 let grew = count != self.search.count;
+                if done && !self.search.done {
+                    self.search.rows.clear();
+                    self.search.selected = None;
+                    self.search.requested = 0..0;
+                }
                 self.search.count = count;
                 self.search.scanned = scanned;
                 self.search.unavailable = unavailable;
@@ -225,7 +252,7 @@ impl Backleaf {
         }
         cx.notify();
     }
-    fn reveal_search_result(&mut self, cx: &mut Context<Self>) {
+    pub fn reveal_search_result(&mut self, cx: &mut Context<Self>) {
         if let Some(row) = self
             .search
             .selected
@@ -265,16 +292,26 @@ impl Backleaf {
         {
             return false;
         }
+        if self.view_inputs_focused(window, cx) {
+            return false;
+        }
         if key == "escape" {
-            self.close_search();
-            window.focus(&self.focus, cx);
-            cx.notify();
+            self.close_search_checked(window, cx);
             return true;
         }
         if m.alt || m.platform {
             return false;
         }
         match key {
+            "f5" => {
+                if self.search.definition.indexed
+                    && let Some(index) = &self.index
+                    && let Err(error) = index.send(crate::index::Action::Rescan)
+                {
+                    self.navigation_error(error, cx);
+                }
+                self.refresh_search();
+            }
             "down" | "up" if !m.control => {
                 if self.search.count > 0 {
                     let next = if key == "down" {
@@ -287,7 +324,9 @@ impl Backleaf {
                             .map_or(self.search.count - 1, |id| id.saturating_sub(1))
                     };
                     self.search.selected = Some(next);
-                    self.search.scroll.scroll_to_item(next, ScrollStrategy::Top);
+                    self.search
+                        .scroll
+                        .scroll_to_item(next / self.search.columns.max(1), ScrollStrategy::Top);
                 }
             }
             "enter" => self.reveal_search_result(cx),
@@ -426,10 +465,19 @@ impl Backleaf {
         let colors = self.colors;
         let width = (f32::from(window.viewport_size().width) - 156.).clamp(240., 560.);
         let height = (f32::from(window.viewport_size().height) - 192.).clamp(48., 384.);
-        let scope = format!(
-            "{} · 含子文件夹",
-            navigation::display_name(&self.search.root)
-        );
+        let scope = if self.search.definition.indexed {
+            "已索引位置".into()
+        } else {
+            format!(
+                "{}{}",
+                navigation::display_name(&self.search.root),
+                if self.search.definition.recursive {
+                    " · 含子文件夹"
+                } else {
+                    ""
+                }
+            )
+        };
         let status = if let Some(error) = &self.search.error {
             error.clone()
         } else if !self.search.started {
@@ -441,6 +489,29 @@ impl Backleaf {
         } else {
             format!("{} 项", number(self.search.count))
         };
+        let index_status = if self.search.definition.indexed {
+            if let Some(error) = &self.index_status.error {
+                format!(" · 索引不可用：{error}")
+            } else {
+                format!(
+                    " · 已索引 {} 项{}{}",
+                    number(self.index_status.count),
+                    if self.index_status.building {
+                        " · 正在建立索引"
+                    } else {
+                        ""
+                    },
+                    if self.index_status.unavailable > 0 {
+                        format!(" · {} 个位置不可访问", self.index_status.unavailable)
+                    } else {
+                        String::new()
+                    }
+                )
+            }
+        } else {
+            String::new()
+        };
+        let status = format!("{status}{index_status}");
         let status = format!(
             "{status}{}{}",
             if self.search.unavailable > 0 {
@@ -454,90 +525,7 @@ impl Backleaf {
                 String::new()
             }
         );
-        let list = uniform_list(
-            "search-results",
-            self.search.count,
-            cx.processor(move |this, range: Range<usize>, _window, cx| {
-                if range.len() == 1 && this.search.count > 1 && height > 48. {
-                    return vec![div().h(px(48.)).w_full().into_any_element()];
-                }
-                let requested = range.start..range.end.min(range.start.saturating_add(32));
-                if this.search.requested != requested {
-                    this.search.requested = requested.clone();
-                    this.search.serial += 1;
-                    this.search
-                        .worker
-                        .page(this.search.token, this.search.serial, requested);
-                }
-                range
-                    .map(|id| {
-                        let row = this.search.rows.get(&id);
-                        let name = row.map_or("…", |r| r.name.as_str()).to_owned();
-                        let path = row
-                            .map(|r| navigation::display_path(&r.path))
-                            .unwrap_or_default();
-                        let parent = row.map(|r| r.parent.clone()).unwrap_or_default();
-                        let ready = row.is_some();
-                        let artwork = row.map_or(crate::file_icons::FileIcon::Generic, |r| {
-                            crate::file_icons::FileIcon::for_name(
-                                r.path.file_name().unwrap_or_default(),
-                                r.directory,
-                            )
-                        });
-                        let native = if artwork == crate::file_icons::FileIcon::Application {
-                            row.and_then(|r| this.application_icons.image(r.path.clone()))
-                        } else {
-                            None
-                        };
-                        let outlined =
-                            native.is_none() && artwork != crate::file_icons::FileIcon::Folder;
-                        let artwork = native.unwrap_or_else(|| artwork.asset(colors.dark).into());
-                        div()
-                            .id(("search-result", id))
-                            .h(px(48.))
-                            .w_full()
-                            .px(px(8.))
-                            .flex()
-                            .items_center()
-                            .gap(px(8.))
-                            .rounded(px(8.))
-                            .when(this.search.selected == Some(id), |d| {
-                                d.bg(colors.color(ColorRole::Hover))
-                            })
-                            .hover(move |d| d.bg(colors.color(ColorRole::Hover)))
-                            .role(Role::Button)
-                            .aria_label(format!("在文件夹中显示 {name}，{path}"))
-                            .tooltip(tooltip(path, colors))
-                            .on_click(cx.listener(move |this, _, _, cx| {
-                                if ready {
-                                    this.search.selected = Some(id);
-                                    this.reveal_search_result(cx);
-                                }
-                            }))
-                            .child(paint::file_artwork(artwork, 24., outlined, colors))
-                            .child(
-                                div()
-                                    .flex_1()
-                                    .min_w_0()
-                                    .flex()
-                                    .flex_col()
-                                    .child(div().truncate().child(name))
-                                    .child(
-                                        div()
-                                            .truncate()
-                                            .text_size(px(12.))
-                                            .text_color(colors.color(ColorRole::Secondary))
-                                            .child(parent),
-                                    ),
-                            )
-                            .child(icon("reveal", colors))
-                            .into_any_element()
-                    })
-                    .collect()
-            }),
-        )
-        .h(px(height.min(self.search.count as f32 * 48.)))
-        .track_scroll(&self.search.scroll);
+        let list = self.search_results(width, height, cx);
         div()
             .absolute()
             .top(px(layout::CHROME.bar_height))
@@ -548,71 +536,68 @@ impl Backleaf {
             .on_mouse_down(
                 MouseButton::Left,
                 cx.listener(|this, _, window, cx| {
-                    this.close_search();
-                    window.focus(&this.focus, cx);
+                    this.close_search_checked(window, cx);
                     cx.stop_propagation();
                     cx.notify();
                 }),
             )
-            .when(
-                self.search.started || self.search.error.is_some(),
-                |overlay| {
-                    overlay.child(
-                        div()
-                            .id("search-popover")
-                            .absolute()
-                            .top(px(4.))
-                            .right(px(144.))
-                            .w(px(width))
-                            .px(px(12.))
-                            .py(px(16.))
-                            .flex()
-                            .flex_col()
-                            .gap(px(12.))
-                            .rounded(px(12.))
-                            .bg(colors.color(ColorRole::Floating))
-                            .border_1()
-                            .border_color(colors.color(ColorRole::Border))
-                            .shadow(vec![colors.shadow()])
-                            .occlude()
-                            .on_mouse_down(MouseButton::Left, |_, _, cx| cx.stop_propagation())
-                            .child(
+            .when(true, |overlay| {
+                overlay.child(
+                    div()
+                        .id("search-popover")
+                        .absolute()
+                        .top(px(4.))
+                        .right(px(144.))
+                        .w(px(width))
+                        .px(px(12.))
+                        .py(px(16.))
+                        .flex()
+                        .flex_col()
+                        .gap(px(12.))
+                        .rounded(px(12.))
+                        .bg(colors.color(ColorRole::Floating))
+                        .border_1()
+                        .border_color(colors.color(ColorRole::Border))
+                        .shadow(vec![colors.shadow()])
+                        .occlude()
+                        .on_mouse_down(MouseButton::Left, |_, _, cx| cx.stop_propagation())
+                        .child(self.view_toolbar(cx))
+                        .child(
+                            div()
+                                .id("search-scope")
+                                .truncate()
+                                .text_size(px(12.))
+                                .text_color(colors.color(ColorRole::Secondary))
+                                .role(Role::Label)
+                                .aria_value(scope.clone())
+                                .tooltip(tooltip(
+                                    self.search.root.to_string_lossy().into_owned(),
+                                    colors,
+                                ))
+                                .child(scope),
+                        )
+                        .when(self.search.count > 0, |d| d.child(list))
+                        .when(!status.is_empty(), |d| {
+                            d.child(
                                 div()
-                                    .id("search-scope")
-                                    .truncate()
+                                    .id("search-status")
                                     .text_size(px(12.))
-                                    .text_color(colors.color(ColorRole::Secondary))
-                                    .role(Role::Label)
-                                    .aria_value(scope.clone())
-                                    .tooltip(tooltip(
-                                        self.search.root.to_string_lossy().into_owned(),
-                                        colors,
+                                    .text_color(colors.color(
+                                        if self.search.error.is_some()
+                                            || self.search.unavailable > 0
+                                        {
+                                            ColorRole::Negative
+                                        } else {
+                                            ColorRole::Secondary
+                                        },
                                     ))
-                                    .child(scope),
+                                    .role(Role::Label)
+                                    .aria_value(status.clone())
+                                    .child(status),
                             )
-                            .when(self.search.count > 0, |d| d.child(list))
-                            .when(!status.is_empty(), |d| {
-                                d.child(
-                                    div()
-                                        .id("search-status")
-                                        .text_size(px(12.))
-                                        .text_color(colors.color(
-                                            if self.search.error.is_some()
-                                                || self.search.unavailable > 0
-                                            {
-                                                ColorRole::Negative
-                                            } else {
-                                                ColorRole::Secondary
-                                            },
-                                        ))
-                                        .role(Role::Label)
-                                        .aria_value(status.clone())
-                                        .child(status),
-                                )
-                            }),
-                    )
-                },
-            )
+                        }),
+                )
+            })
             .into_any_element()
     }
 }

@@ -10,7 +10,8 @@ def sha(path):
 if git('status','--porcelain'):
     raise SystemExit('Commit the source and design before recording a build')
 paths=git('ls-files','src','Cargo.toml','Cargo.lock','rust-toolchain.toml',
-          'design/color-system.json','design/layout-system.json').splitlines()
+          'build.rs','assets','design/color-system.json','design/layout-system.json',
+          'design/file-surface-system.json','design/chrome-system.json','design/scroll-system.json','design/marquee-scroll-system.json').splitlines()
 version=next(line.split('"')[1] for line in (root/'Cargo.toml').read_text('utf-8').splitlines() if line.startswith('version = '))
 binary=root/'target/release/backleaf.exe'
 manifest={
@@ -20,7 +21,7 @@ manifest={
     'compiler':subprocess.check_output(['rustc','--version'],cwd=root,text=True).strip(),
     'profile':'release; --locked','exe_sha256':sha(binary),'exe_bytes':binary.stat().st_size,
     'inputs':[{'path':p,'sha256':sha(root/p)} for p in paths],
-    'check_logs':[{'path':f'{name}.log','sha256':sha(root/f'.local/v9-native/{name}.log')} for name in ['fmt','clippy','tests','build']],
+    'check_logs':[{'path':f'{name}.log','sha256':sha(root/f'.local/batch-{name}.log')} for name in ['fmt','clippy','tests','build']],
     'check_scope':'Source checks and CPU model tests only; visible native/staging acceptance is recorded separately.'
 }
 output=root/'.local/native-build-manifest.json'

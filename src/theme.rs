@@ -6,6 +6,7 @@ use std::sync::OnceLock;
 #[repr(usize)]
 pub enum Role {
     Canvas,
+    Files,
     Chrome,
     Floating,
     InputRest,
@@ -32,8 +33,9 @@ pub enum Role {
     Negative,
     Positive,
 }
-const ROLES: [(Role, &str); 26] = [
+const ROLES: [(Role, &str); 27] = [
     (Role::Canvas, "surface/canvas"),
+    (Role::Files, "surface/files"),
     (Role::Chrome, "surface/chrome"),
     (Role::Floating, "surface/floating"),
     (Role::InputRest, "surface/input-rest"),
@@ -62,7 +64,7 @@ const ROLES: [(Role, &str); 26] = [
 ];
 pub struct Palette {
     pub dark: bool,
-    values: [u32; 26],
+    values: [u32; 27],
 }
 impl Palette {
     fn load(dark: bool) -> Self {
@@ -70,7 +72,7 @@ impl Palette {
             serde_json::from_str(include_str!("../design/color-system.json"))
                 .expect("design color system");
         let mode = &source["modes"][if dark { "Dark" } else { "Light" }];
-        let mut values = [0; 26];
+        let mut values = [0; 27];
         for (role, key) in ROLES {
             let value = mode[key]
                 .as_str()
@@ -104,6 +106,23 @@ impl Palette {
             spread_radius: px(0.),
             inset: false,
         }
+    }
+    pub fn file_surface_shadows(&self) -> Vec<BoxShadow> {
+        [(1., 2.), (2., 8.)]
+            .into_iter()
+            .zip(crate::layout::SURFACE.shadow_opacity)
+            .map(|((y, blur), a)| {
+                let mut color = self.color(Role::Shadow);
+                color.a = a;
+                BoxShadow {
+                    color,
+                    offset: point(px(0.), px(y)),
+                    blur_radius: px(blur),
+                    spread_radius: px(0.),
+                    inset: false,
+                }
+            })
+            .collect()
     }
     pub fn focus_ring(&self) -> BoxShadow {
         BoxShadow {

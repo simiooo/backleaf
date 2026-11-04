@@ -7,10 +7,12 @@ use std::{
     },
     thread,
 };
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Location {
     pub title: String,
     pub path: PathBuf,
+    pub volume: bool,
+    pub entry: Option<crate::quick_access::Entry>,
 }
 #[derive(Clone, Debug)]
 pub struct TreeRow {
@@ -21,6 +23,8 @@ pub struct TreeRow {
 }
 pub enum Notice {
     Common(Vec<Location>),
+    Volumes(Result<Vec<Location>, String>),
+    Clipboard(Result<(), String>),
     Tree {
         token: u64,
         rows: Vec<TreeRow>,
@@ -205,7 +209,7 @@ pub fn breadcrumbs(
         vec![Some(root), None, parent.map(PathBuf::from), Some(current)]
     }
 }
-fn common_locations() -> Vec<Location> {
+pub fn common_locations() -> Vec<Location> {
     use windows::{
         Win32::{
             System::Com::CoTaskMemFree,
@@ -235,6 +239,8 @@ fn common_locations() -> Vec<Location> {
             result.map(|p| Location {
                 title: title.into(),
                 path: p.into(),
+                volume: false,
+                entry: None,
             })
         })
         .collect()

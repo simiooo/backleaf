@@ -1,0 +1,44 @@
+{
+  "masterSha256": "b5c39067726d3282ad7141d252ac31077695a7570fb0c3696d2258a9b884a61f",
+  "retainedPages": 195,
+  "pages": 202,
+  "result": "passed",
+  "results": [
+    {
+      "key": "196-archive-menu",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "197-archive-name",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "198-archive-running",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "199-archive-cancel",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "200-archive-name-conflict",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "201-archive-damaged",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "202-archive-multiple",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    }
+  ],
+  "verifiedAt": "2026-11-04T19:33:34.307Z"
+}

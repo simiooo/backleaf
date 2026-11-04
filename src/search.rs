@@ -18,6 +18,7 @@ pub struct Row {
     pub path: PathBuf,
     pub parent: String,
     pub directory: bool,
+    pub group_heading: Option<String>,
 }
 pub enum Notice {
     Progress {
@@ -38,14 +39,15 @@ pub enum Notice {
 struct Request {
     token: u64,
     root: PathBuf,
-    query: String,
+    definition: crate::file_view::FileView,
 }
 struct Shared {
     request: Mutex<Option<Request>>,
     page: Mutex<Option<(u64, u64, Range<usize>)>>,
     changed: Condvar,
-    stop: AtomicBool,
-    latest: AtomicU64,
+    stop: Arc<AtomicBool>,
+    latest: Arc<AtomicU64>,
+    state_dir: PathBuf,
 }
 pub struct Worker(Arc<Shared>);
 impl Drop for Worker {
@@ -56,13 +58,27 @@ impl Drop for Worker {
     }
 }
 impl Worker {
+    #[cfg(test)]
     pub fn new(tx: async_channel::Sender<crate::model::Event>) -> Self {
+        Self::with_state_dir(
+            tx,
+            std::env::var_os("LOCALAPPDATA")
+                .map(PathBuf::from)
+                .unwrap_or_else(std::env::temp_dir)
+                .join("Backleaf"),
+        )
+    }
+    pub fn with_state_dir(
+        tx: async_channel::Sender<crate::model::Event>,
+        state_dir: PathBuf,
+    ) -> Self {
         let shared = Arc::new(Shared {
             request: Mutex::new(None),
             page: Mutex::new(None),
             changed: Condvar::new(),
-            stop: AtomicBool::new(false),
-            latest: AtomicU64::new(0),
+            stop: Arc::new(AtomicBool::new(false)),
+            latest: Arc::new(AtomicU64::new(0)),
+            state_dir,
         });
         let state = shared.clone();
         std::thread::Builder::new()
@@ -98,10 +114,29 @@ impl Worker {
             .expect("search worker");
         Self(shared)
     }
+    #[cfg(test)]
     pub fn search(&self, token: u64, root: PathBuf, query: String) {
         self.0.latest.store(token, Ordering::Release);
         *self.0.page.lock().unwrap() = None;
-        *self.0.request.lock().unwrap() = Some(Request { token, root, query });
+        *self.0.request.lock().unwrap() = Some(Request {
+            token,
+            definition: {
+                let mut d = crate::file_view::FileView::new(&root);
+                d.query = query.clone();
+                d
+            },
+            root,
+        });
+        self.0.changed.notify_one();
+    }
+    pub fn search_view(&self, token: u64, definition: crate::file_view::FileView) {
+        self.0.latest.store(token, Ordering::Release);
+        *self.0.page.lock().unwrap() = None;
+        *self.0.request.lock().unwrap() = Some(Request {
+            token,
+            root: definition.root.path(),
+            definition,
+        });
         self.0.changed.notify_one();
     }
     pub fn cancel(&self, token: u64) {
@@ -146,6 +181,7 @@ fn decode(raw: &[u8]) -> PathBuf {
     )
     .into()
 }
+#[cfg(test)]
 fn matches(name: &str, query: &str) -> bool {
     name.to_lowercase().contains(query)
 }
@@ -165,98 +201,235 @@ fn scan(
         r.token
     )));
     let mut db = Connection::open(&file.0)?;
-    db.execute_batch("PRAGMA journal_mode=MEMORY; PRAGMA synchronous=OFF; PRAGMA cache_size=-512; CREATE TABLE frontier(id INTEGER PRIMARY KEY,path BLOB NOT NULL); CREATE TABLE results(id INTEGER PRIMARY KEY,name TEXT NOT NULL,path BLOB NOT NULL,directory INTEGER NOT NULL);")?;
+    let latest = s.latest.clone();
+    let stop = s.stop.clone();
+    let token = r.token;
+    db.progress_handler(
+        2048,
+        Some(move || stop.load(Ordering::Acquire) || latest.load(Ordering::Acquire) != token),
+    )?;
+    db.execute_batch("PRAGMA journal_mode=MEMORY; PRAGMA synchronous=OFF; PRAGMA cache_size=-512; CREATE TABLE frontier(id INTEGER PRIMARY KEY,path BLOB NOT NULL); CREATE TABLE results(id INTEGER PRIMARY KEY,name TEXT NOT NULL,path BLOB UNIQUE NOT NULL,directory INTEGER NOT NULL,grp TEXT NOT NULL,modified INTEGER,bytes INTEGER); PRAGMA temp_store=FILE;")?;
     // Root may itself be a Known Folder redirection; never recurse through child reparse points.
-    let root = r.root.canonicalize()?;
-    let mut entries = Some(std::fs::read_dir(&root)?);
+    let root = if r.definition.indexed {
+        r.root.clone()
+    } else {
+        r.root.canonicalize()?
+    };
+    let mut indexed = if r.definition.indexed {
+        Some(crate::index::open(&s.state_dir)?)
+    } else {
+        None
+    };
+    if let Some(index) = &mut indexed {
+        let latest = s.latest.clone();
+        let stop = s.stop.clone();
+        let token = r.token;
+        index.progress_handler(
+            2048,
+            Some(move || stop.load(Ordering::Acquire) || latest.load(Ordering::Acquire) != token),
+        )?;
+    }
+    let mut index_cursor = 0i64;
+    let mut entries = if indexed.is_none() {
+        Some(std::fs::read_dir(&root)?)
+    } else {
+        None
+    };
     let mut count = 0usize;
     let mut scanned = 0usize;
     let mut unavailable = 0usize;
     let mut skipped = 0usize;
     let mut done = false;
     let mut last = Instant::now() - Duration::from_secs(1);
-    let query = r.query.trim().to_lowercase();
+    r.definition.validate().map_err(anyhow::Error::msg)?;
+    let now = std::time::SystemTime::now();
+    let mut sorted = false;
     while current(s, r.token) && !tx.is_closed() {
         if !done {
             let batch = db.transaction()?;
-            for _ in 0..256 {
-                if !current(s, r.token) {
-                    return Ok(());
+            if let Some(index) = &indexed {
+                let candidates = crate::index::query_batch(
+                    index,
+                    &r.definition.query,
+                    index_cursor,
+                    r.definition.recursive,
+                )?;
+                done = candidates.is_empty();
+                for candidate in candidates {
+                    if !current(s, r.token) {
+                        return Ok(());
+                    }
+                    index_cursor = candidate.id;
+                    scanned += 1;
+                    let metadata =
+                        match crate::operations::windows::identity::capture(&candidate.path) {
+                            Ok(m)
+                                if m.identity.encode().as_slice()
+                                    == candidate.identity.as_slice() =>
+                            {
+                                m
+                            }
+                            _ => {
+                                unavailable += 1;
+                                continue;
+                            }
+                        };
+                    let file_metadata = r
+                        .definition
+                        .metadata_needed()
+                        .then(|| std::fs::metadata(&candidate.path).ok())
+                        .flatten();
+                    if r.definition.accepts(
+                        &candidate.path,
+                        &candidate.name,
+                        candidate.directory,
+                        file_metadata.as_ref(),
+                        now,
+                    ) {
+                        let inserted = batch.execute(
+                            "INSERT OR IGNORE INTO results VALUES(?1,?2,?3,?4,?5,?6,?7)",
+                            params![
+                                count as i64,
+                                candidate.name,
+                                encode(&candidate.path),
+                                candidate.directory,
+                                r.definition.group_key(
+                                    &candidate.path,
+                                    candidate.directory,
+                                    Some(metadata.modified)
+                                ),
+                                metadata.modified as i64,
+                                metadata.bytes.map(|n| n as i64)
+                            ],
+                        )?;
+                        count += inserted;
+                    }
                 }
-                let next = entries.as_mut().and_then(Iterator::next);
-                match next {
-                    Some(Ok(entry)) => {
-                        scanned += 1;
-                        let name = entry.file_name().to_string_lossy().into_owned();
-                        let path = entry.path();
-                        let kind = entry.file_type();
-                        if matches(&name, &query) {
-                            batch.execute(
-                                "INSERT INTO results VALUES(?1,?2,?3,?4)",
-                                params![
-                                    count as i64,
-                                    name,
-                                    encode(&path),
-                                    kind.as_ref().is_ok_and(|k| k.is_dir())
-                                ],
-                            )?;
-                            count += 1;
-                        }
-                        match kind {
-                            Ok(kind) if kind.is_dir() => {
-                                use std::os::windows::fs::MetadataExt;
-                                match entry.metadata() {
-                                    Ok(metadata) if metadata.file_attributes() & 0x400 == 0 => {
-                                        batch.execute(
-                                            "INSERT INTO frontier(path) VALUES(?1)",
-                                            [encode(&path)],
-                                        )?;
+            } else {
+                for _ in 0..256 {
+                    if !current(s, r.token) {
+                        return Ok(());
+                    }
+                    let next = entries.as_mut().and_then(Iterator::next);
+                    match next {
+                        Some(Ok(entry)) => {
+                            scanned += 1;
+                            let name = entry.file_name().to_string_lossy().into_owned();
+                            let path = entry.path();
+                            let kind = entry.file_type();
+                            let metadata = r
+                                .definition
+                                .metadata_needed()
+                                .then(|| entry.metadata().ok())
+                                .flatten();
+                            let directory = kind.as_ref().is_ok_and(|k| k.is_dir());
+                            if r.definition
+                                .accepts(&path, &name, directory, metadata.as_ref(), now)
+                            {
+                                batch.execute(
+                                    "INSERT INTO results VALUES(?1,?2,?3,?4,?5,?6,?7)",
+                                    params![
+                                        count as i64,
+                                        name,
+                                        encode(&path),
+                                        directory,
+                                        r.definition.group_key(
+                                            &path,
+                                            directory,
+                                            metadata
+                                                .as_ref()
+                                                .and_then(|m| m.modified().ok())
+                                                .and_then(|t| t
+                                                    .duration_since(std::time::UNIX_EPOCH)
+                                                    .ok())
+                                                .map(|t| t.as_secs())
+                                        ),
+                                        metadata
+                                            .as_ref()
+                                            .and_then(|m| m.modified().ok())
+                                            .and_then(|t| t
+                                                .duration_since(std::time::UNIX_EPOCH)
+                                                .ok())
+                                            .map(|t| t.as_secs() as i64),
+                                        metadata
+                                            .as_ref()
+                                            .filter(|m| !m.is_dir())
+                                            .map(|m| m.len() as i64)
+                                    ],
+                                )?;
+                                count += 1;
+                            }
+                            match kind {
+                                Ok(kind) if kind.is_dir() && r.definition.recursive => {
+                                    use std::os::windows::fs::MetadataExt;
+                                    match entry.metadata() {
+                                        Ok(metadata) if metadata.file_attributes() & 0x400 == 0 => {
+                                            batch.execute(
+                                                "INSERT INTO frontier(path) VALUES(?1)",
+                                                [encode(&path)],
+                                            )?;
+                                        }
+                                        Ok(_) => skipped += 1,
+                                        Err(_) => unavailable += 1,
                                     }
-                                    Ok(_) => skipped += 1,
-                                    Err(_) => unavailable += 1,
                                 }
+                                Ok(kind) if kind.is_symlink() => skipped += 1,
+                                Err(_) => unavailable += 1,
+                                _ => {}
                             }
-                            Ok(kind) if kind.is_symlink() => skipped += 1,
-                            Err(_) => unavailable += 1,
-                            _ => {}
                         }
-                    }
-                    Some(Err(_)) => {
-                        scanned += 1;
-                        unavailable += 1;
-                    }
-                    None => {
-                        let next = batch
-                            .query_row(
-                                "SELECT id,path FROM frontier ORDER BY id LIMIT 1",
-                                [],
-                                |row| Ok((row.get::<_, i64>(0)?, row.get::<_, Vec<u8>>(1)?)),
-                            )
-                            .optional()?;
-                        if let Some((id, path)) = next {
-                            batch.execute("DELETE FROM frontier WHERE id=?1", [id])?;
-                            match std::fs::read_dir(decode(&path)) {
-                                Ok(dir) => entries = Some(dir),
-                                Err(_) => {
-                                    entries = None;
-                                    unavailable += 1;
+                        Some(Err(_)) => {
+                            scanned += 1;
+                            unavailable += 1;
+                        }
+                        None => {
+                            let next = batch
+                                .query_row(
+                                    "SELECT id,path FROM frontier ORDER BY id LIMIT 1",
+                                    [],
+                                    |row| Ok((row.get::<_, i64>(0)?, row.get::<_, Vec<u8>>(1)?)),
+                                )
+                                .optional()?;
+                            if let Some((id, path)) = next {
+                                batch.execute("DELETE FROM frontier WHERE id=?1", [id])?;
+                                match std::fs::read_dir(decode(&path)) {
+                                    Ok(dir) => entries = Some(dir),
+                                    Err(_) => {
+                                        entries = None;
+                                        unavailable += 1;
+                                    }
                                 }
+                            } else {
+                                done = true;
+                                break;
                             }
-                        } else {
-                            done = true;
-                            break;
                         }
                     }
                 }
             }
             batch.commit()?;
         }
+        if done && !sorted {
+            let sort = match r.definition.sort {
+                crate::file_view::Sort::Name => "name COLLATE NOCASE",
+                crate::file_view::Sort::Modified => "modified",
+                crate::file_view::Sort::Size => "bytes",
+            };
+            let direction = if r.definition.descending {
+                "DESC"
+            } else {
+                "ASC"
+            };
+            let order = format!("grp,directory DESC,{sort} {direction},path");
+            db.execute_batch(&format!("CREATE TABLE ordered AS SELECT row_number() OVER(ORDER BY {order})-1 AS id,name,path,directory,grp,modified,bytes FROM results; DROP TABLE results; ALTER TABLE ordered RENAME TO results; CREATE UNIQUE INDEX search_page ON results(id);"))?;
+            sorted = true;
+        }
         let page = s.page.lock().unwrap().take();
         if let Some((token, serial, range)) = page
             && token == r.token
         {
             let mut statement = db.prepare_cached(
-                "SELECT id,name,path,directory FROM results WHERE id>=?1 AND id<?2 ORDER BY id LIMIT 32",
+                "SELECT id,name,path,directory,CASE WHEN grp<>coalesce((SELECT grp FROM results prior WHERE prior.id=results.id-1),'') THEN grp END FROM results WHERE id>=?1 AND id<?2 ORDER BY id LIMIT 32",
             )?;
             let mut rows = Vec::new();
             for row in
@@ -274,6 +447,7 @@ fn scan(
                         path,
                         parent,
                         directory: row.get(3)?,
+                        group_heading: row.get(4)?,
                     })
                 })?
             {

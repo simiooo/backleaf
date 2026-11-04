@@ -33,6 +33,37 @@ pub struct Detail {
 }
 pub enum Event {
     ApplicationIconsChanged,
+    WindowStateSaved {
+        revision: u64,
+        closed: bool,
+        result: Result<(), String>,
+    },
+    ShellMenuClosed(Result<(), String>),
+    ArchivePrepared {
+        token: u64,
+        result: Result<crate::app_archive::Prepared, String>,
+    },
+    IndexStatus(crate::index::Status),
+    IndexError(String),
+    QuickAccess(crate::quick_access::Notice),
+    DragTarget {
+        generation: u64,
+        token: u64,
+        result: Result<crate::operations::move_guard::Target, String>,
+    },
+    DirectoryDirty {
+        generation: u64,
+        epoch: u64,
+    },
+    IdentityRestored {
+        generation: u64,
+        id: Option<usize>,
+    },
+    PrefixLocated {
+        generation: u64,
+        token: u64,
+        id: Option<usize>,
+    },
     Search(crate::search::Notice),
     Navigation(crate::navigation::Notice),
     Located {
@@ -71,6 +102,9 @@ pub(crate) struct Pending {
     detail: Option<(u64, usize)>,
     locate: Option<(u64, std::ffi::OsString)>,
     cut: Option<PathBuf>,
+    prefix: Option<(u64, String)>,
+    prefix_latest: u64,
+    restore: Option<(std::ffi::OsString, [u8; 33])>,
 }
 pub enum Source {
     Fixture {
@@ -146,8 +180,8 @@ impl Source {
                 if let Ok(metadata)=crate::operations::windows::identity::capture(&canonical_parent){let _=lease.parent_identity.set(metadata.identity.encode());}
                 let _=lease.parent.set(canonical_parent);
                 let mut db = Connection::open(db_path)?;
-                db.execute_batch("PRAGMA journal_mode=MEMORY; PRAGMA synchronous=OFF; PRAGMA cache_size=-8192; CREATE TABLE files(id INTEGER PRIMARY KEY, short TEXT NOT NULL, raw BLOB NOT NULL, dir INTEGER NOT NULL, bytes INTEGER);")?;
-                let mut entries = std::fs::read_dir(lease.parent.get().expect("snapshot parent"))?;
+                db.execute_batch("PRAGMA journal_mode=MEMORY; PRAGMA synchronous=OFF; PRAGMA cache_size=-8192; CREATE TABLE files(id INTEGER PRIMARY KEY, short TEXT NOT NULL, raw BLOB NOT NULL, dir INTEGER NOT NULL, bytes INTEGER, folded TEXT NOT NULL, identity BLOB NOT NULL); CREATE INDEX files_prefix ON files(folded,id);")?;
+                let mut entries = crate::directory_snapshot::Reader::new(lease.parent.get().expect("snapshot parent"))?;
                 let mut count = 0;
                 let mut done = false;
                 let mut last_notice = std::time::Instant::now();
@@ -156,15 +190,15 @@ impl Source {
                     if !done {
                         let batch = db.transaction()?;
                         {
-                            let mut insert = batch.prepare_cached("INSERT INTO files VALUES(?1,?2,?3,?4,?5)")?;
+                            let mut insert = batch.prepare_cached("INSERT INTO files VALUES(?1,?2,?3,?4,?5,?6,?7)")?;
                             for _ in 0..512 {
                                 match entries.next() {
                                     Some(Ok(entry)) => {
-                                        let name = entry.file_name();
-                                        let kind = entry.file_type().ok();
-                                        let directory = kind.is_some_and(|t| t.is_dir());
+                                        let name = entry.name;
+                                        if crate::operations::archive::temporary_name(&name){continue;}
+                                        let directory = entry.directory;
                                         // No per-file metadata IO during enumeration. Sizes are requested in details.
-                                        insert.execute(params![count as i64, short_name(&name.to_string_lossy(), 256), encode_name(&name), directory, Option::<i64>::None])?;
+                                        insert.execute(params![count as i64, short_name(&name.to_string_lossy(), 256), encode_name(&name), directory, entry.bytes.map(|n|n as i64), name.to_string_lossy().to_lowercase(),entry.identity.as_slice()])?;
                                         count += 1;
                                     },
                                     Some(Err(error)) => { let _ = tx.send_blocking(Event::Count { generation, count, done: false, error: Some(error.to_string()) }); },
@@ -179,17 +213,42 @@ impl Source {
                         }
                     }
                     let (page, detail, locate, cut) = { let mut lock = p.lock().unwrap(); (lock.page.take(), lock.detail.take(),lock.locate.take(),lock.cut.clone()) };
+                    let restore=p.lock().unwrap().restore.take();
+                    if let Some((name,expected))=restore {
+                        let id=db.query_row("SELECT id FROM files WHERE raw=?1",[encode_name(&name)],|r|r.get::<_,i64>(0)).optional()?;
+                        if id.is_some() || done {
+                            let same=crate::operations::windows::identity::capture(&path.join(&name)).ok().is_some_and(|m|m.identity.encode()==expected);
+                            let _=tx.send_blocking(Event::IdentityRestored{generation,id:id.filter(|_|same).map(|id|id as usize)});
+                        } else {p.lock().unwrap().restore=Some((name,expected));}
+                    }
+                    let prefix = p.lock().unwrap().prefix.take();
+                    if let Some((token, text)) = prefix {
+                        // Indexed full names, not the visible/truncated labels. The worker owns this
+                        // connection and enumeration; a first match cannot be displaced by later IDs.
+                        let upper = crate::typeahead::successor(&text);
+                        let shared=p.clone();let stopped=s.clone();
+                        db.progress_handler(2048,Some(move || stopped.load(Ordering::Relaxed) || shared.lock().unwrap().prefix_latest != token))?;
+                        let result = db.query_row("SELECT min(id) FROM files INDEXED BY files_prefix WHERE folded>=?1 AND (?2 IS NULL OR folded<?2)",params![text,upper],|r|r.get::<_,Option<i64>>(0));
+                        db.progress_handler(0,None::<fn()->bool>)?;
+                        if let Ok(id)=result {
+                            let mut lock=p.lock().unwrap();
+                            if lock.prefix_latest==token {
+                                if id.is_some() || done { drop(lock);let _=tx.send_blocking(Event::PrefixLocated{generation,token,id:id.map(|v|v as usize)}); }
+                                else { lock.prefix=Some((token,text)); }
+                            }
+                        }
+                    }
                     if let Some((token,name))=locate{
                         let id=db.query_row("SELECT id FROM files WHERE raw=?1",[encode_name(&name)],|r|r.get::<_,i64>(0)).optional()?;
                         if id.is_some()||done{let _=tx.send_blocking(Event::Located{generation,token,id:id.map(|v|v as usize)});}else{let mut pending=p.lock().unwrap();if pending.locate.is_none(){pending.locate=Some((token,name));}}
                     }
                     if let Some((token, id)) = detail {
                         let result = (|| -> anyhow::Result<Detail> {
-                            let raw: Vec<u8> = db.query_row("SELECT raw FROM files WHERE id=?1", [id as i64], |r| r.get(0))?;
+                            let (raw,expected):(Vec<u8>,Vec<u8>)=db.query_row("SELECT raw,identity FROM files WHERE id=?1",[id as i64],|r|Ok((r.get(0)?,r.get(1)?)))?;
                             let name = decode_name(&raw);
                             let full = path.join(&name);
                             let metadata = std::fs::metadata(&full)?;
-                            let identity=crate::operations::windows::identity::capture(&full).ok().map(|m|m.identity.encode());
+                            let actual=crate::operations::windows::identity::capture(&full)?;anyhow::ensure!(actual.identity.encode().as_slice()==expected.as_slice(),"文件已改变，请刷新后重试");let identity=Some(actual.identity.encode());
                             Ok(Detail { id, name: name.to_string_lossy().into_owned(), path: full, directory: metadata.is_dir(), bytes: (!metadata.is_dir()).then_some(metadata.len()),identity })
                         })().map_err(|e| e.to_string());
                         if tx.send_blocking(Event::Detail { generation, token, value: result }).is_err() { break; }
@@ -265,6 +324,33 @@ impl Source {
         } = self
         {
             pending.lock().unwrap().locate = Some((token, name));
+            worker.unpark();
+        }
+    }
+    pub fn finished(&self) -> bool {
+        match self {
+            Self::Fixture { .. } => true,
+            Self::Directory { done, .. } => *done,
+        }
+    }
+    pub fn restore_identity(&self, name: std::ffi::OsString, identity: [u8; 33]) {
+        if let Self::Directory {
+            pending, worker, ..
+        } = self
+        {
+            pending.lock().unwrap().restore = Some((name, identity));
+            worker.unpark();
+        }
+    }
+    pub fn prefix(&self, token: u64, text: Option<String>) {
+        if let Self::Directory {
+            pending, worker, ..
+        } = self
+        {
+            let mut p = pending.lock().unwrap();
+            p.prefix_latest = token;
+            p.prefix = text.map(|text| (token, text));
+            drop(p);
             worker.unpark();
         }
     }
@@ -354,7 +440,7 @@ fn encode_name(name: &std::ffi::OsStr) -> Vec<u8> {
     name.encode_wide().flat_map(u16::to_le_bytes).collect()
 }
 #[cfg(windows)]
-fn decode_name(raw: &[u8]) -> std::ffi::OsString {
+pub(crate) fn decode_name(raw: &[u8]) -> std::ffi::OsString {
     use std::os::windows::ffi::OsStringExt;
     std::ffi::OsString::from_wide(
         &raw.as_chunks::<2>()

@@ -18,8 +18,12 @@ if (Test-Path -LiteralPath $bundle) {throw 'Candidate bundle already exists; use
 New-Item -ItemType Directory -Path $bundle -Force | Out-Null
 New-Item -ItemType Directory -Path (Split-Path -Parent $artifact) -Force | Out-Null
 Copy-Item -LiteralPath (Join-Path $projectRoot 'target/release/backleaf.exe') -Destination (Join-Path $bundle 'Backleaf.exe')
+New-Item -ItemType Directory -Path (Join-Path $bundle 'lib') | Out-Null
+Copy-Item -LiteralPath (Join-Path $projectRoot 'assets/archive-engine/7z.dll') -Destination (Join-Path $bundle 'lib/7z.dll')
 Copy-Item -LiteralPath (Join-Path $projectRoot 'docs/native-preview-readme.txt') -Destination (Join-Path $bundle 'README.txt')
 Copy-Item -LiteralPath (Join-Path $projectRoot 'LICENSE') -Destination (Join-Path $bundle 'LICENSE')
+Copy-Item -LiteralPath (Join-Path $projectRoot 'design/Backleaf-v34.fig') -Destination (Join-Path $bundle 'Backleaf-v34.fig')
+Copy-Item -LiteralPath (Join-Path $projectRoot 'assets/brand/backleaf-logo.png') -Destination (Join-Path $bundle 'Logo.png')
 Copy-Item -LiteralPath (Join-Path $projectRoot '.local/native-build-manifest.json') -Destination (Join-Path $bundle 'build.json')
 Copy-Item -LiteralPath (Join-Path $projectRoot '.local/native-licenses') -Destination (Join-Path $bundle 'licenses') -Recurse
 $exeHash=(Get-FileHash -LiteralPath (Join-Path $bundle 'Backleaf.exe') -Algorithm SHA256).Hash.ToLowerInvariant()

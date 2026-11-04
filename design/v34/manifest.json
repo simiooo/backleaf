@@ -1,0 +1,31 @@
+{
+  "version": "v34-independent-windows",
+  "retainedPages": 211,
+  "pages": [
+    {
+      "key": "212-window-a",
+      "name": "212 · v34 window-a",
+      "nodes": 117,
+      "state": "a"
+    },
+    {
+      "key": "213-window-b",
+      "name": "213 · v34 window-b",
+      "nodes": 117,
+      "state": "b"
+    },
+    {
+      "key": "214-shared-task-queue",
+      "name": "214 · v34 shared-task-queue",
+      "nodes": 117,
+      "state": "queue"
+    },
+    {
+      "key": "215-window-save-conflict",
+      "name": "215 · v34 window-save-conflict",
+      "nodes": 117,
+      "state": "conflict"
+    }
+  ],
+  "source": "scripts/design/windows-v34.mjs"
+}

@@ -1,0 +1,49 @@
+{
+  "version": "v28-saved-file-views",
+  "retainedPages": 179,
+  "pages": [
+    {
+      "key": "180-search-filters",
+      "name": "180 · v28 search-filters",
+      "nodes": 137,
+      "state": "filters"
+    },
+    {
+      "key": "181-save-view",
+      "name": "181 · v28 save-view",
+      "nodes": 122,
+      "state": "save"
+    },
+    {
+      "key": "182-unified-view-navigation",
+      "name": "182 · v28 unified-view-navigation",
+      "nodes": 119,
+      "state": "navigation"
+    },
+    {
+      "key": "183-view-unsaved-changes",
+      "name": "183 · v28 view-unsaved-changes",
+      "nodes": 122,
+      "state": "modified"
+    },
+    {
+      "key": "184-view-group-type",
+      "name": "184 · v28 view-group-type",
+      "nodes": 122,
+      "state": "grouped"
+    },
+    {
+      "key": "185-view-save-conflict",
+      "name": "185 · v28 view-save-conflict",
+      "nodes": 120,
+      "state": "conflict"
+    },
+    {
+      "key": "186-view-no-results",
+      "name": "186 · v28 view-no-results",
+      "nodes": 117,
+      "state": "empty"
+    }
+  ],
+  "source": "scripts/design/fileview-v28.mjs"
+}

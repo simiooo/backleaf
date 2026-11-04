@@ -1,0 +1,44 @@
+{
+  "masterSha256": "101633837e4fb867a7381222a8c7130d9309cf0bdc92caf59fbd56d1673735da",
+  "retainedPages": 158,
+  "pages": 165,
+  "result": "passed",
+  "results": [
+    {
+      "key": "159-file-surface",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "160-surface-dark",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "161-surface-narrow",
+      "changedPixels": 0,
+      "totalPixels": 246400
+    },
+    {
+      "key": "162-surface-details",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "163-surface-marquee",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "164-surface-scrolled",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "165-surface-maximized",
+      "changedPixels": 0,
+      "totalPixels": 1296000
+    }
+  ],
+  "verifiedAt": "2026-11-04T19:28:08.742Z"
+}

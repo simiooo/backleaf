@@ -1,0 +1,37 @@
+{
+  "version": "v25-typeahead",
+  "retainedPages": 165,
+  "pages": [
+    {
+      "key": "166-prefix-match",
+      "name": "166 · v25 prefix-match",
+      "nodes": 115,
+      "state": "match"
+    },
+    {
+      "key": "167-prefix-no-match",
+      "name": "167 · v25 prefix-no-match",
+      "nodes": 115,
+      "state": "no-match"
+    },
+    {
+      "key": "168-prefix-timeout",
+      "name": "168 · v25 prefix-timeout",
+      "nodes": 115,
+      "state": "timeout"
+    },
+    {
+      "key": "169-prefix-input-protected",
+      "name": "169 · v25 prefix-input-protected",
+      "nodes": 107,
+      "state": "input"
+    },
+    {
+      "key": "170-prefix-enumerating",
+      "name": "170 · v25 prefix-enumerating",
+      "nodes": 115,
+      "state": "enumerating"
+    }
+  ],
+  "source": "scripts/design/typeahead-v25.mjs"
+}

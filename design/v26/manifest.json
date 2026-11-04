@@ -1,0 +1,31 @@
+{
+  "version": "v26-external-changes",
+  "retainedPages": 170,
+  "pages": [
+    {
+      "key": "171-external-changes",
+      "name": "171 · v26 external-changes",
+      "nodes": 115,
+      "state": "updated"
+    },
+    {
+      "key": "172-edit-defers-refresh",
+      "name": "172 · v26 edit-defers-refresh",
+      "nodes": 117,
+      "state": "editing"
+    },
+    {
+      "key": "173-directory-unavailable",
+      "name": "173 · v26 directory-unavailable",
+      "nodes": 117,
+      "state": "unavailable"
+    },
+    {
+      "key": "174-refresh-keeps-position",
+      "name": "174 · v26 refresh-keeps-position",
+      "nodes": 115,
+      "state": "scrolled"
+    }
+  ],
+  "source": "scripts/design/watcher-v26.mjs"
+}

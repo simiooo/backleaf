@@ -1,0 +1,37 @@
+{
+  "version": "v27-internal-drag",
+  "retainedPages": 174,
+  "pages": [
+    {
+      "key": "175-drag-moving",
+      "name": "175 · v27 drag-moving",
+      "nodes": 117,
+      "state": "valid"
+    },
+    {
+      "key": "176-drag-invalid-target",
+      "name": "176 · v27 drag-invalid-target",
+      "nodes": 117,
+      "state": "invalid"
+    },
+    {
+      "key": "177-drag-multiselect",
+      "name": "177 · v27 drag-multiselect",
+      "nodes": 117,
+      "state": "multi"
+    },
+    {
+      "key": "178-drag-checking",
+      "name": "178 · v27 drag-checking",
+      "nodes": 117,
+      "state": "checking"
+    },
+    {
+      "key": "179-drag-cancelled",
+      "name": "179 · v27 drag-cancelled",
+      "nodes": 115,
+      "state": "cancelled"
+    }
+  ],
+  "source": "scripts/design/drag-v27.mjs"
+}

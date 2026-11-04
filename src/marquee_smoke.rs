@@ -72,8 +72,8 @@ pub(super) fn schedule(window: &Window, cx: &mut Context<Backleaf>) {
                 this.panel=this.options.flow>0;
                 this.selection.select(this.columns-1,false,false);
                 window.focus(&this.focus,cx);
-                this.begin_marquee(&MouseDownEvent{position:point(px(6.),px(layout::content_top()+8.)),button:MouseButton::Left,click_count:1,modifiers:Modifiers{control:additive,..Default::default()},..Default::default()},window,cx);
-                pointer(this,window,cx,f32::from(window.viewport_size().height)-16.,additive);
+                this.begin_marquee(&MouseDownEvent{position:point(px(layout::content_left(this.sidebar_width())-4.),px(layout::content_top()+8.)),button:MouseButton::Left,click_count:1,modifiers:Modifiers{control:additive,..Default::default()},..Default::default()},window,cx);
+                pointer(this,window,cx,layout::content_bottom(f32::from(window.viewport_size().height)),additive);
                 Ok((count,additive,if count>=1_000_000{28.}else if count>=100_000{18.}else{8.}))
             }).map_err(|_|"window-dropped")??;
             let mut samples=Vec::new();let started=Instant::now();

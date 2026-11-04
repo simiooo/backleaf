@@ -1,0 +1,12 @@
+{
+  "marginX": 6,
+  "marginY": 8,
+  "paddingX": 12,
+  "radius": 16,
+  "shadowOpacity": [0.016, 0.024],
+  "rules": [
+    "One static neutral primary surface; no glow or per-file shadow.",
+    "Paint shadow outside the clipped surface. File content and scrollbar stay inside corner-safe insets.",
+    "Pointer, marquee, keyboard anchors and scrollbar share the same surface margins."
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "masterSha256": "1c8be3f7c29718b053f77d032fe74f8c3f67ade2138b9500c87df53108652f0b",
+  "retainedPages": 174,
+  "pages": 179,
+  "result": "passed",
+  "results": [
+    {
+      "key": "175-drag-moving",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "176-drag-invalid-target",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "177-drag-multiselect",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "178-drag-checking",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "179-drag-cancelled",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    }
+  ],
+  "verifiedAt": "2026-11-04T19:30:25.793Z"
+}

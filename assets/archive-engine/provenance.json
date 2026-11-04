@@ -1,0 +1,12 @@
+{
+  "version": "26.05",
+  "origin": "https://github.com/ip7z/7zip/releases/tag/26.05",
+  "upstream_msi_sha256": "3fe4ab99fa15629c652944309a2b2bc6e41fc933fc6b63f5df1ebcf3aea68263",
+  "source_sha256": "0b6080b8c3e7a579161d2d495224c0e51c467576cb4c7048b0ab485ef44cc22e",
+  "files": {
+    "7z.dll": "78bf6b668d75801e3aa180b4ccb16e6d8395fba80dec8a065055bb6f8dfabb82",
+    "7z2605-src.tar.xz": "0b6080b8c3e7a579161d2d495224c0e51c467576cb4c7048b0ab485ef44cc22e",
+    "LICENSE-7zip.txt": "519ac0a4bded9c18ea02e0afb71f663d8c47373bd9facd3ac96a79f51d77765d"
+  },
+  "license": "Unmodified 7z.dll; LGPL-2.1-or-later with listed BSD and unRAR restrictions. Corresponding complete upstream source accompanies the distribution."
+}

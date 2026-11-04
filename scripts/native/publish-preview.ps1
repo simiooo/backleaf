@@ -15,7 +15,9 @@ foreach($line in Get-Content .local/ci/SHA256SUMS.txt) {
 if ($files.Count -ne 2 -or @($files|Where-Object Extension -eq '.zip').Count -ne 1 -or @($files|Where-Object Extension -eq '.fig').Count -ne 1) { throw 'Expected exactly ZIP and design checksums' }
 $archive=[IO.Compression.ZipFile]::OpenRead(($files|Where-Object Extension -eq '.zip').FullName)
 try {
-    foreach($pair in @(@('Backleaf.exe',$metadata.exe_sha256),@(($files|Where-Object Extension -eq '.fig').Name,$metadata.design_sha256))) {
+    $required=@(@('Backleaf.exe',$metadata.exe_sha256),@(($files|Where-Object Extension -eq '.fig').Name,$metadata.design_sha256))
+    if($metadata.archive_library_sha256){$required+=,@('lib/7z.dll',$metadata.archive_library_sha256)}
+    foreach($pair in $required) {
         $entry=$archive.GetEntry($pair[0]);if(!$entry){throw 'Required packaged asset missing'}
         $stream=$entry.Open()
         try{$hash=[Convert]::ToHexString([Security.Cryptography.SHA256]::HashData($stream)).ToLowerInvariant()}finally{$stream.Dispose()}

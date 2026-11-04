@@ -1,0 +1,9 @@
+   Compiling backleaf v0.1.0-preview.12 (D:\work\backleaf)
+    Finished `release` profile [optimized] target(s) in 19.15s
+     Running unittests src\main.rs (target\release\deps\backleaf-84bf859869d4da6e.exe)
+
+running 1 test
+test operations::archive::compatibility_tests::official_corpus_extracts_7z_rar4_and_rar5_with_verified_content ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 70 filtered out; finished in 0.32s
+

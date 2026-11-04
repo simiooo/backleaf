@@ -1,0 +1,29 @@
+{
+  "masterSha256": "881aa5380a21510f3ebc4ddfaad3cc0a09f1dc61a9fb453dd588eaa03cf40094",
+  "retainedPages": 202,
+  "pages": 206,
+  "result": "passed",
+  "results": [
+    {
+      "key": "203-shell-entry",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "204-shell-native-submenu",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "205-shell-limit",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "206-shell-unavailable",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    }
+  ],
+  "verifiedAt": "2026-11-04T19:34:21.882Z"
+}

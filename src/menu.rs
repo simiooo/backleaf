@@ -17,6 +17,15 @@ pub enum Command {
     Details,
     NewFolder,
     Refresh,
+    EditPath,
+    Compress,
+    Extract,
+    ShellActions,
+    PinQuickAccess,
+    RemoveQuickAccess,
+    RenameQuickView,
+    MoveQuickUp,
+    MoveQuickDown,
 }
 impl Command {
     fn label(self, folder: bool) -> &'static str {
@@ -37,6 +46,15 @@ impl Command {
             Self::Details => "详情",
             Self::NewFolder => "新建文件夹",
             Self::Refresh => "刷新",
+            Self::EditPath => "编辑路径",
+            Self::Compress => "压缩为 ZIP…",
+            Self::Extract => "解压到…",
+            Self::ShellActions => "其他应用操作…",
+            Self::PinQuickAccess => "固定到侧栏",
+            Self::RemoveQuickAccess => "移除入口",
+            Self::RenameQuickView => "重命名视图",
+            Self::MoveQuickUp => "上移",
+            Self::MoveQuickDown => "下移",
         }
     }
     fn shortcut(self) -> &'static str {
@@ -51,6 +69,11 @@ impl Command {
             Self::Details => "Alt+Enter",
             Self::NewFolder => "Ctrl+Shift+N",
             Self::Refresh => "F5",
+            Self::EditPath => "Ctrl+L",
+            Self::Compress | Self::Extract | Self::ShellActions => "",
+            Self::PinQuickAccess | Self::RemoveQuickAccess | Self::RenameQuickView => "",
+            Self::MoveQuickUp => "Alt+↑",
+            Self::MoveQuickDown => "Alt+↓",
         }
     }
 }
@@ -70,6 +93,7 @@ pub struct FileMenu {
     rows: Vec<Option<Entry>>,
     current: usize,
     keyboard: bool,
+    breadcrumb: bool,
 }
 impl EventEmitter<MenuEvent> for FileMenu {}
 impl Focusable for FileMenu {
@@ -112,8 +136,19 @@ impl FileMenu {
                 commands.push(Some(CopyPath));
             }
             commands.extend([None, Some(Rename), Some(Recycle), None, Some(Details)]);
+            if folder {
+                commands.push(Some(PinQuickAccess));
+            }
             commands
         };
+        let mut commands = commands;
+        if selected > 0 {
+            commands.extend([None, Some(Compress)]);
+            if !folder {
+                commands.push(Some(Extract));
+            }
+        }
+        commands.extend([None, Some(ShellActions)]);
         let rows = commands
             .into_iter()
             .map(|command| {
@@ -143,6 +178,59 @@ impl FileMenu {
             rows,
             current,
             keyboard,
+            breadcrumb: false,
+        }
+    }
+    pub fn breadcrumb(
+        colors: &'static Palette,
+        anchor: Point<Pixels>,
+        keyboard: bool,
+        cx: &mut Context<Self>,
+    ) -> Self {
+        Self {
+            colors,
+            focus: cx.focus_handle().tab_stop(true),
+            anchor,
+            folder: true,
+            rows: vec![
+                Some(Entry {
+                    command: Command::CopyPath,
+                    disabled: None,
+                }),
+                Some(Entry {
+                    command: Command::EditPath,
+                    disabled: None,
+                }),
+            ],
+            current: 0,
+            keyboard,
+            breadcrumb: true,
+        }
+    }
+    pub fn custom(
+        colors: &'static Palette,
+        anchor: Point<Pixels>,
+        commands: Vec<Command>,
+        keyboard: bool,
+        cx: &mut Context<Self>,
+    ) -> Self {
+        Self {
+            colors,
+            focus: cx.focus_handle().tab_stop(true),
+            anchor,
+            folder: false,
+            rows: commands
+                .into_iter()
+                .map(|command| {
+                    Some(Entry {
+                        command,
+                        disabled: None,
+                    })
+                })
+                .collect(),
+            current: 0,
+            keyboard,
+            breadcrumb: false,
         }
     }
     fn activate(&mut self, index: usize, cx: &mut Context<Self>) {
@@ -159,6 +247,7 @@ impl FileMenu {
             return;
         }
         let command = match (key, m.control, m.shift, m.alt) {
+            ("l", true, false, false) if self.breadcrumb => Some(Command::EditPath),
             ("c", true, true, false) => Some(Command::CopyPath),
             ("c", true, false, false) => Some(Command::Copy),
             ("x", true, false, false) => Some(Command::Cut),
@@ -238,8 +327,11 @@ impl Render for FileMenu {
             })
             .sum::<f32>()
             + f.padding_y * 2.;
-        let x = f32::from(self.anchor.x)
-            .clamp(8., (f32::from(window.viewport_size().width) - 268.).max(8.));
+        let width = if self.breadcrumb { 188. } else { 260. };
+        let x = f32::from(self.anchor.x).clamp(
+            8.,
+            (f32::from(window.viewport_size().width) - width - 8.).max(8.),
+        );
         let y = f32::from(self.anchor.y).clamp(
             8.,
             (f32::from(window.viewport_size().height) - height - 8.).max(8.),
@@ -247,13 +339,17 @@ impl Render for FileMenu {
         div()
             .id("file-context-menu")
             .role(Role::Menu)
-            .aria_label("文件菜单")
+            .aria_label(if self.breadcrumb {
+                "路径菜单"
+            } else {
+                "文件菜单"
+            })
             .track_focus(&self.focus)
             .tab_stop(true)
             .absolute()
             .left(px(x))
             .top(px(y))
-            .w(px(260.))
+            .w(px(width))
             .px(px(f.padding_x))
             .py(px(f.padding_y))
             .flex()
@@ -272,11 +368,17 @@ impl Render for FileMenu {
                 }
             }))
             .on_mouse_down(MouseButton::Left, |_, _, cx| cx.stop_propagation())
+            .max_h(px((f32::from(window.viewport_size().height) - 24.).max(48.)))
+            .overflow_y_scroll()
             .children(self.rows.iter().enumerate().map(|(i, row)| {
                 if let Some(entry) = row {
                     let disabled = entry.disabled.is_some();
                     let selected = self.current == i;
-                    let label = entry.command.label(self.folder);
+                    let label = if self.breadcrumb && entry.command == Command::CopyPath {
+                        "复制文件路径"
+                    } else {
+                        entry.command.label(self.folder)
+                    };
                     div()
                         .id(("menu-row", i))
                         .role(Role::MenuItem)
@@ -323,7 +425,11 @@ impl Render for FileMenu {
                                 } else {
                                     ColorRole::Secondary
                                 }))
-                                .child(entry.command.shortcut()),
+                                .child(if self.breadcrumb {
+                                    ""
+                                } else {
+                                    entry.command.shortcut()
+                                }),
                         )
                         .into_any_element()
                 } else {

@@ -20,6 +20,9 @@ pub struct Metadata {
     pub directory: bool,
     pub bytes: Option<u64>,
     pub reparse: bool,
+    pub modified: u64,
+    pub modified_raw: u64,
+    pub attributes: u32,
 }
 struct Handle(HANDLE);
 impl Drop for Handle {
@@ -46,11 +49,18 @@ pub fn capture(path: &Path) -> Result<Metadata> {
             FILE_FLAG_BACKUP_SEMANTICS | FILE_FLAG_OPEN_REPARSE_POINT,
             None,
         )?);
+        capture_handle(handle.0)
+    }
+}
+/// # Safety
+/// The caller must keep a valid readable file/directory handle alive for this call.
+pub unsafe fn capture_handle(handle: HANDLE) -> Result<Metadata> {
+    unsafe {
         let mut basic = BY_HANDLE_FILE_INFORMATION::default();
-        GetFileInformationByHandle(handle.0, &mut basic)?;
+        GetFileInformationByHandle(handle, &mut basic)?;
         let mut extended = FILE_ID_INFO::default();
         let result = GetFileInformationByHandleEx(
-            handle.0,
+            handle,
             FileIdInfo,
             (&mut extended as *mut FILE_ID_INFO).cast(),
             std::mem::size_of::<FILE_ID_INFO>() as u32,
@@ -88,6 +98,13 @@ pub fn capture(path: &Path) -> Result<Metadata> {
             bytes: (!directory)
                 .then_some((basic.nFileSizeHigh as u64) << 32 | basic.nFileSizeLow as u64),
             reparse: basic.dwFileAttributes & FILE_ATTRIBUTE_REPARSE_POINT.0 != 0,
+            modified: (((basic.ftLastWriteTime.dwHighDateTime as u64) << 32
+                | basic.ftLastWriteTime.dwLowDateTime as u64)
+                / 10_000_000)
+                .saturating_sub(11_644_473_600),
+            attributes: basic.dwFileAttributes,
+            modified_raw: ((basic.ftLastWriteTime.dwHighDateTime as u64) << 32)
+                | basic.ftLastWriteTime.dwLowDateTime as u64,
         })
     }
 }

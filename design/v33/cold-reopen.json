@@ -1,0 +1,34 @@
+{
+  "masterSha256": "1c67bff21d670c6ee0fdf344acd534c8f3b28259987779d4a45dbf228686e5c0",
+  "retainedPages": 206,
+  "pages": 211,
+  "result": "passed",
+  "results": [
+    {
+      "key": "207-restore-path",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "208-restore-search",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "209-restore-offline",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "210-restore-failed-save",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "211-restore-relative-date",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    }
+  ],
+  "verifiedAt": "2026-11-04T19:35:15.977Z"
+}
