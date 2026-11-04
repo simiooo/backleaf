@@ -1,0 +1,22 @@
+{
+  "version": "0.1.0-preview.6",
+  "source_commit": "ea34992b79d195ef2fcd1fd7098c4794db756c41",
+  "deployed_at": "2026-11-04T20:14:00.6840234+08:00",
+  "exe": "D:\\work\\backleaf\\.local\\staging\\feedback-preview.6-ea34992b\\Backleaf.exe",
+  "exe_sha256": "bdb8dc8ed6d543ba5c0ed2d2e9b4f1dbf4cdf2e4fdff15c04a5c4ff729fbab89",
+  "design_sha256": "9f39535327f131d208b579b9efbdc79d44761706dedd9ab10480f9c46f243edc",
+  "session": {
+    "locked": false,
+    "error": null
+  },
+  "cli_smoke_passed": true,
+  "interactive_smoke": "passed: activated exact staging executable; Ctrl+F opened raised input; raw key 1 arrived; query completed with expected no matches in isolated two-entry fixture; raw x preedit + Enter committed query and returned exactly b.txt; b preedit + Esc cancelled composition while search remained open and focused",
+  "interactive_checked_at": "2026-11-04T20:15:36.546337+08:00",
+  "interactive_evidence": [
+    "staging-preview6-input.png",
+    "staging-preview6-input.uia.txt",
+    "staging-preview6-ime-enter.png",
+    "staging-preview6-ime-enter.uia.txt",
+    "staging-preview6-ime-escape.uia.txt"
+  ]
+}

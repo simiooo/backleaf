@@ -1,0 +1,22 @@
+{
+  "verified_at": "2026-11-04T20:23:55.932345+08:00",
+  "version": "0.1.0-preview.6",
+  "source_commit": "ea34992b79d195ef2fcd1fd7098c4794db756c41",
+  "ci_run_url": "https://github.com/simiooo/backleaf/actions/runs/41827367814",
+  "ci_conclusion": "success",
+  "release_url": "https://github.com/simiooo/backleaf/releases/tag/test-v0.1.0-preview.6-ea34992b",
+  "published_at": "2026-11-04T12:21:43Z",
+  "zip_name": "Backleaf-0.1.0-preview.6-ea34992b-win-x64.zip",
+  "zip_sha256": "eea02831a20d540c2270265d611b90cf86973769e945855cb293b0b244ca6d33",
+  "ci_exe_sha256": "a11eb5ce04948622db2a9591705c6509fd84162eb07cad97519e6bb7e6d0b2c3",
+  "design_sha256": "9f39535327f131d208b579b9efbdc79d44761706dedd9ab10480f9c46f243edc",
+  "zip_entries": 513,
+  "release_server_digests_match": true,
+  "release_bytes_match_ci_artifact": true,
+  "packaged_exe_and_design_match_build_metadata": true,
+  "logo_matches_project": true,
+  "tests_passed": 30,
+  "ci_unzipped_cli_smoke_passed": true,
+  "downloaded_executable_executed": false,
+  "local_interactive_evidence": "local-staging-preview6.json"
+}

@@ -1,0 +1,16 @@
+    Updating crates.io index
+   Compiling ztracing v0.1.0 (D:\a\backleaf\backleaf\vendor\zed\crates\ztracing)
+   Compiling ztracing_macro v0.1.0 (D:\a\backleaf\backleaf\vendor\zed\crates\ztracing_macro)
+    Checking gpui_util v0.1.0 (D:\a\backleaf\backleaf\vendor\zed\crates\gpui_util)
+   Compiling gpui v0.2.2 (D:\a\backleaf\backleaf\vendor\zed\crates\gpui)
+   Compiling derive_refineable v0.1.0 (D:\a\backleaf\backleaf\vendor\zed\crates\refineable\derive_refineable)
+    Checking scheduler v0.1.0 (D:\a\backleaf\backleaf\vendor\zed\crates\scheduler)
+    Checking refineable v0.1.0 (D:\a\backleaf\backleaf\vendor\zed\crates\refineable)
+    Checking collections v0.1.0 (D:\a\backleaf\backleaf\vendor\zed\crates\collections)
+    Checking gpui_shared_string v0.1.0 (D:\a\backleaf\backleaf\vendor\zed\crates\gpui_shared_string)
+    Checking http_client v0.1.0 (D:\a\backleaf\backleaf\vendor\zed\crates\http_client)
+    Checking sum_tree v0.1.0 (D:\a\backleaf\backleaf\vendor\zed\crates\sum_tree)
+   Compiling gpui_windows v0.1.0 (D:\a\backleaf\backleaf\vendor\zed\crates\gpui_windows)
+   Compiling gpui_macros v0.1.0 (D:\a\backleaf\backleaf\vendor\zed\crates\gpui_macros)
+   Compiling backleaf v0.1.0-preview.6 (D:\a\backleaf\backleaf)
+    Finished `release` profile [optimized] target(s) in 43.41s
