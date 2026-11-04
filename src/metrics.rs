@@ -16,6 +16,7 @@ pub struct Options {
     pub width: f32,
     pub height: f32,
     pub theme: Option<bool>,
+    pub selection_smoke: bool,
 }
 impl Options {
     pub fn parse() -> Self {
@@ -30,6 +31,7 @@ impl Options {
             width: 1120.,
             height: 720.,
             theme: None,
+            selection_smoke: false,
         };
         let mut args = std::env::args().skip(1);
         while let Some(arg) = args.next() {
@@ -53,8 +55,17 @@ impl Options {
                         _ => panic!("theme must be light or dark"),
                     })
                 }
+                "--selection-smoke" => result.selection_smoke = true,
                 _ => panic!("unknown argument {arg}"),
             }
+        }
+        if result.selection_smoke {
+            assert!(
+                result.fixture.is_some_and(|count| count >= 100_000) && result.output.is_some(),
+                "selection smoke requires a large fixture and report path"
+            );
+            result.flow = 0;
+            result.scroll = false;
         }
         result
     }
@@ -96,6 +107,7 @@ pub struct Report {
     pub selection_pending: bool,
     pub theme_dark: bool,
     pub scripted_scroll: bool,
+    pub synthetic_selection_script: bool,
     pub flow_limit: usize,
     pub reduced_motion: bool,
     pub logical_viewport: [f32; 2],
@@ -241,6 +253,7 @@ impl Metrics {
             selection_pending: false,
             theme_dark: false,
             scripted_scroll: options.scroll,
+            synthetic_selection_script: options.selection_smoke,
             flow_limit: options.flow,
             reduced_motion: options.reduced_motion,
             logical_viewport: self.viewport,

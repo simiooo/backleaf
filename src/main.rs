@@ -5,6 +5,7 @@ mod model;
 mod paint;
 mod selectable;
 mod selection;
+mod selection_smoke;
 mod session;
 mod task_panel;
 mod theme;
@@ -250,6 +251,9 @@ impl Backleaf {
             }
             cx.notify();
         });
+        if options.selection_smoke {
+            selection_smoke::schedule(window, cx);
+        }
         Self {
             colors,
             session_locked: true,
