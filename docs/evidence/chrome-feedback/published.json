@@ -1,0 +1,23 @@
+{
+  "source_commit": "4dff861841899f63a6fdc234c021efc4147f77b5",
+  "version": "0.1.0-preview.7",
+  "release_url": "https://github.com/simiooo/backleaf/releases/tag/test-v0.1.0-preview.7-4dff8618",
+  "published_at_utc": "2026-11-04T14:52:59Z",
+  "ci_run_url": "https://github.com/simiooo/backleaf/actions/runs/41850944339",
+  "zip_sha256": "e265bd034d5fa244a7e188f9895140fb4c010affa3e25f5cfcc620f9503421b7",
+  "ci_exe_sha256": "db4edd61a00bbcd56017eceeb3c92fee8badb67bdaa76b8e645d643903050d76",
+  "design_sha256": "f2c47cdf0e1c7b8a66effbd92fa13cc76d9e3568d2d0cb3881c6a3ad185e0896",
+  "local_graphical_exe_sha256": "309717936f22bed5e0344904f74dc34fe87171c3d924c0f1cf7d77924e39572c",
+  "local_deployed_at": "2026-11-04T22:42:14.9002021+08:00",
+  "local_binary_same_as_ci": false,
+  "verification": {
+    "server_digests": true,
+    "release_equals_ci_artifact": true,
+    "zip_embedded_assets": true,
+    "tests_38": true,
+    "ci_packaged_cli_smoke": true,
+    "local_visible_smoke": true,
+    "downloaded_executable_executed": false
+  },
+  "boundaries": "CI bytes verified statically; visible native smoke and performance belong to the separately hashed trusted local build. External CRUD sync, saved searches/global index/restore are pending."
+}

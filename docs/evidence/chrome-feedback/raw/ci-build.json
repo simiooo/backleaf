@@ -1,0 +1,12 @@
+{
+  "version": "0.1.0-preview.7",
+  "source_commit": "4dff861841899f63a6fdc234c021efc4147f77b5",
+  "gpui_revision": "d36a70661471ec64dce230798121d554930d5c60",
+  "built_at_utc": "2026-11-04T14:52:31.2382039Z",
+  "exe_sha256": "db4edd61a00bbcd56017eceeb3c92fee8badb67bdaa76b8e645d643903050d76",
+  "design_sha256": "f2c47cdf0e1c7b8a66effbd92fa13cc76d9e3568d2d0cb3881c6a3ad185e0896",
+  "ci_run_url": "https://github.com/simiooo/backleaf/actions/runs/41850944339",
+  "scope": "Local recursive filename search, native navigation and context menus; file operations experimental; saved search/global index/restore pending",
+  "interactive_smoke": "not run on hosted CI; local scope is recorded separately",
+  "cli_smoke_passed": true
+}

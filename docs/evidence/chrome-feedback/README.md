@@ -21,3 +21,11 @@ raw/search-open.png、search-closing.png、search-closed.png为同一真实GPUI�
 最终框选控制器回归通过：此前固定850ms假设未确保窗口在前台且跨过3968行重定位阈值，诊断记录出现false。测试改为等待实际激活、从生产阈值行开始并等待真实重定位，保留原生产阈值不变；selection-controller.json中系统快捷键保留、边缘滚动、rebase、Esc撤回、追加选择全部true。它是原生窗口内的合成控制器事件，不冒充OS鼠标拖动。
 
 最终sidebar候选30971793重新执行同两组12s压测并通过全部有界断言：1024-real-exe-scroll scene CPU p95 4.345ms，工作集峰79.33MiB；10m-scroll-flow8 scene CPU p95 5.112ms，工作集峰74.90MiB。最终报告为final-*.json；旧cdbf报告保留作阶段记录。
+
+最终30971793候选的减少动态效果模式也经真实Ctrl+F/Esc检查：直接展开/收起终点，输入焦点返回应用；45秒原生报告reduced_motion=true、animation_requests=0、hidden_animation_requests=0。截图和报告位于raw/reduced-motion-*。
+
+## 工程交付
+
+preview.7已于2026-11-04 22:52:59+08发布：[测试包](https://github.com/simiooo/backleaf/releases/tag/test-v0.1.0-preview.7-4dff8618)。源码`4dff861841899f63a6fdc234c021efc4147f77b5`，CI [41850944339](https://github.com/simiooo/backleaf/actions/runs/41850944339)成功，38测试通过，解压后CLI冒烟通过。下载Release四项资产的服务端digest、CI artifact与Release逐字节对比、ZIP内EXE/Logo/可编辑v18设计及源码版本一致性检查均通过。ZIP SHA256 `e265bd034d5fa244a7e188f9895140fb4c010affa3e25f5cfcc620f9503421b7`。
+
+本机可见冒烟/性能使用可信本地构建30971793，CI EXE为db4edd61，分别记录，未执行下载的远端EXE。CI不作为可见桌面测试；CI构建清单与本机输入清单保留。外部CRUD自动同步、保存搜索、全局持久索引与启动恢复未包含在本次完成范围。
