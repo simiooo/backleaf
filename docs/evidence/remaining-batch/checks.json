@@ -450,5 +450,22 @@
     "Prefix range upper bound no longer hidden behind an OR; first display-order Unicode prefix matching tested.",
     "Idle index writes and writer lock retries reduced.",
     "Restore group atomically claimed in an IMMEDIATE transaction before opening windows; duplicate instance cannot reuse claimed window IDs."
-  ]
+  ],
+  "ci-build.log": {
+    "sha256": "5be2fdcb8634cdccf6c7a389a86fff43e799ac792ddb296daeffea12714f44a5",
+    "bytes": 130
+  },
+  "ci-clippy.log": {
+    "sha256": "4eeafacdab42996212a60acfc7e3715805c08a8e5692ec7dde4614d73f71a967",
+    "bytes": 1313
+  },
+  "ci-fmt.log": {
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  "ci-tests.log": {
+    "sha256": "c94d8b7d4910a734c81bb874a7895d6d9e9e04b17732c25c4e9e3e59704c8f70",
+    "bytes": 8418
+  },
+  "delivery": "delivery.json"
 }

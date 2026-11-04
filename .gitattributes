@@ -17,3 +17,6 @@ docs/evidence/scroll-feedback/raw/* -text whitespace=cr-at-eol,-blank-at-eof
 docs/evidence/hit-target/raw/* -text whitespace=cr-at-eol,-blank-at-eof
 
 docs/evidence/marquee-acceleration/raw/* -text whitespace=cr-at-eol,-blank-at-eof
+
+# Preserve this batch's exact validation and artifact-proof bytes.
+docs/evidence/remaining-batch/** -text whitespace=cr-at-eol,-blank-at-eof

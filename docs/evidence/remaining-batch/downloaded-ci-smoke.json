@@ -1,0 +1,13 @@
+{
+  "session": {
+    "locked": true,
+    "error": null
+  },
+  "zip_sha256": "ff410d8dbbf5db1c85cd757b30cf773de61957dbc653f4a1b7dd4267e7bdd1ff",
+  "source": "abb4e1c7a6debf00e8f9cf0691fd40c608512bc2",
+  "installation": "D:\\work\\backleaf\\.local\\ci-verify-abb\\.local\\ci\\local-installed",
+  "exe_sha256": "ce7df8053a7bf30047972a689592918d1f2da2b141c8ff09e5c4b6df2271ac5c",
+  "cli_smoke_passed": true,
+  "verified_at": "2026-11-05T04:05:41.1079319+08:00",
+  "interactive_smoke_passed": false
+}

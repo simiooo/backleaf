@@ -1,0 +1,64 @@
+{
+  "assets": [
+    {
+      "apiUrl": "https://api.github.com/repos/simiooo/backleaf/releases/assets/710754968",
+      "contentType": "application/zip",
+      "createdAt": "2026-11-04T20:04:36Z",
+      "digest": "sha256:ff410d8dbbf5db1c85cd757b30cf773de61957dbc653f4a1b7dd4267e7bdd1ff",
+      "downloadCount": 0,
+      "id": "RA_kwDOVhcVes4qXUKY",
+      "label": "",
+      "name": "Backleaf-0.1.0-preview.12-abb4e1c7-win-x64.zip",
+      "size": 14552730,
+      "state": "uploaded",
+      "updatedAt": "2026-11-04T20:04:37Z",
+      "url": "https://github.com/simiooo/backleaf/releases/download/test-v0.1.0-preview.12-abb4e1c7/Backleaf-0.1.0-preview.12-abb4e1c7-win-x64.zip"
+    },
+    {
+      "apiUrl": "https://api.github.com/repos/simiooo/backleaf/releases/assets/710755087",
+      "contentType": "application/octet-stream",
+      "createdAt": "2026-11-04T20:04:39Z",
+      "digest": "sha256:b062f46a682155c7a2c4d767a76fd6ef78f6106e2f57702969c817be1443f201",
+      "downloadCount": 0,
+      "id": "RA_kwDOVhcVes4qXUMP",
+      "label": "",
+      "name": "Backleaf-v34.fig",
+      "size": 1588203,
+      "state": "uploaded",
+      "updatedAt": "2026-11-04T20:04:39Z",
+      "url": "https://github.com/simiooo/backleaf/releases/download/test-v0.1.0-preview.12-abb4e1c7/Backleaf-v34.fig"
+    },
+    {
+      "apiUrl": "https://api.github.com/repos/simiooo/backleaf/releases/assets/710755267",
+      "contentType": "application/json",
+      "createdAt": "2026-11-04T20:04:42Z",
+      "digest": "sha256:30d46ab9b7ae3a915324af03c7efbec544ab0241c7e0bdbfa47c7893a0f64f03",
+      "downloadCount": 0,
+      "id": "RA_kwDOVhcVes4qXUPD",
+      "label": "",
+      "name": "build.json",
+      "size": 964,
+      "state": "uploaded",
+      "updatedAt": "2026-11-04T20:04:43Z",
+      "url": "https://github.com/simiooo/backleaf/releases/download/test-v0.1.0-preview.12-abb4e1c7/build.json"
+    },
+    {
+      "apiUrl": "https://api.github.com/repos/simiooo/backleaf/releases/assets/710755182",
+      "contentType": "text/plain; charset=utf-8",
+      "createdAt": "2026-11-04T20:04:40Z",
+      "digest": "sha256:d2cb74c8d8fa4da804b54dbbfd3d566fc2c5167cfc68e1f606be913c163d9ac8",
+      "downloadCount": 0,
+      "id": "RA_kwDOVhcVes4qXUNu",
+      "label": "",
+      "name": "SHA256SUMS.txt",
+      "size": 198,
+      "state": "uploaded",
+      "updatedAt": "2026-11-04T20:04:41Z",
+      "url": "https://github.com/simiooo/backleaf/releases/download/test-v0.1.0-preview.12-abb4e1c7/SHA256SUMS.txt"
+    }
+  ],
+  "isPrerelease": true,
+  "publishedAt": "2026-11-04T20:04:45Z",
+  "targetCommitish": "abb4e1c7a6debf00e8f9cf0691fd40c608512bc2",
+  "url": "https://github.com/simiooo/backleaf/releases/tag/test-v0.1.0-preview.12-abb4e1c7"
+}
