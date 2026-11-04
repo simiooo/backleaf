@@ -86,7 +86,10 @@ impl Render for TaskPanel {
                                 cx.notify();
                             }))
                             .child(div().flex_1().truncate().child("文档 · 渲染样本"))
-                            .child(icon(if self.expanded { "collapse" } else { "more" })),
+                            .child(icon(
+                                if self.expanded { "collapse" } else { "more" },
+                                colors,
+                            )),
                     )
                     .child(
                         div()

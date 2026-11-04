@@ -932,7 +932,7 @@ impl Backleaf {
                 }
             })
             .on_click(move |event, window, cx| action(event, window, cx))
-            .child(icon(id))
+            .child(icon(id, colors))
     }
     fn titlebar(&self, cx: &mut Context<Self>) -> AnyElement {
         let colors = self.colors;
@@ -1022,7 +1022,7 @@ impl Backleaf {
                             WindowControlArea::Close => window.remove_window(),
                             _ => {}
                         })
-                        .child(icon(name))
+                        .child(icon(name, colors))
                 }),
             )
             .into_any_element()

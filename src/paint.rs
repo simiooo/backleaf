@@ -321,10 +321,11 @@ impl AssetSource for Assets {
         Ok(vec![])
     }
 }
-pub fn icon(name: &'static str) -> Svg {
+pub fn icon(name: &'static str, colors: &'static Palette) -> Svg {
     svg()
         .path(name)
         .size(px(crate::layout::LAYOUT.control.icon_size))
+        .text_color(colors.color(ColorRole::Secondary))
 }
 
 pub struct Tip(pub String, pub &'static Palette);
