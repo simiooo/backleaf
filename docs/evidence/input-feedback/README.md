@@ -6,8 +6,14 @@
 
 `rename-blur-menu.png` / `.uia.txt` 保留菜单接续证据。箭头点击展开与再次点击收起通过；hover 自动展开及面包屑 tooltip 的处理器已从源代码移除，文件 tooltip 绑定于独立名称区域。常规字重用于所有选中态，维持名称度量。
 
-最初失焦实测暴露混合路径分隔符被 Shell 拒绝（E_INVALIDARG），原文件与输入均保留；修复后同一个原生行为测试覆盖规范和混合分隔符，校验实际文件内容、旧路径消失与成功账本。最终格式、Release Clippy `-D warnings`、30 个 Release 行为测试通过。两次后续视觉修正仅调整错误浮层横坐标及移除目录菜单 tooltip；最终构建与 staging 的映射另见 `raw/local-staging.json`，不混淆交互构建哈希与最终 CI 哈希。
+`diagnostic-before-shell-fix.json` 对应最初的诊断构建。最初失焦实测暴露混合路径分隔符被 Shell 拒绝（E_INVALIDARG），原文件与输入均保留；修复后同一个原生行为测试覆盖规范和混合分隔符，校验实际文件内容、旧路径消失与成功账本。最终格式、Release Clippy `-D warnings`、30 个 Release 行为测试通过。两次后续视觉修正仅调整错误浮层横坐标及移除目录菜单 tooltip；最终构建与 staging 的映射另见 `raw/local-staging.json`，不混淆交互构建哈希与最终 CI 哈希。
 
-preview.4 的 CI 41816485817 已完成构建/打包/解压 CLI 冒烟，但上传校验文件遇到 GitHub 502，发布撤回，未将其作为可用搜索版本交付。preview.5 使用草稿发布、资产上传重试和服务端 digest 校验。CI 与发布入口、最终版本、时间、校验记录将在 `raw/release.json` 中记录；CI 执行的 CLI 冒烟与本机可见窗口分别列证。
+preview.4 的 CI 41816485817 已完成构建/打包/解压 CLI 冒烟，但上传校验文件遇到 GitHub 502，发布撤回，未将其作为可用搜索版本交付。preview.5 因后续输入法 Enter/Esc 问题而取消 CI，未发布。preview.6 保留草稿发布、资产上传重试和服务端 digest 校验。CI 与发布入口、最终版本、时间、校验记录将在 `raw/release.json` 中记录；CI 执行的 CLI 冒烟与本机可见窗口分别列证。
 
 本次不宣称整个 SIM-954 / SIM-920 完成。Explorer 文件剪贴板互操作、失败项重试、全局持久索引、保存搜索和恢复仍保留原验收事项；目录末行被选择计数覆盖的尾部滚动避让已登记，尚未包含本次修正。
+
+对最终源码重新编译的 Shell 探针通过 12 种隔离案例，并单独通过 >260 UTF-16 单元路径复制及内容相等检查。原始结果摘要为 `feedback-shell*.json`；取消、缺失源、子项失败和源身份替换的结果按预期分类，未将其当全部成功。
+
+同一最终 EXE 的深色启动也经过可见窗口检查：Ctrl+F 后输入框使用独立的 input-active 表面与阴影，真实数字键可写入。截图 `dark-active-input.png` 与 `dark-build.json` 标记该次检查。
+
+preview.6 补充真实按键 x+Enter 的查询更新和组合期 Esc 保持搜索开启，见 `ime-enter*` / `ime-escape.uia.txt`。最终候选失焦检查使用 `ime-retain-build.json` 所示构建：未确认 b 被系统撤回时，保留 b.txt 原输入并显示保护提示，磁盘仍为 a.txt；确认后再次右键正常提交 b.txt 并打开目标文件夹菜单，见 `ime-safe-blur-menu*`。此边界仍有明确限制，未列为全输入法自动完成通过。

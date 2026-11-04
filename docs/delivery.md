@@ -7,7 +7,7 @@ Scope: SIM-919. Constraints: SIM-934. One engineering unit is active at a time.
 | accepted | SIM-921 | User accepted v6 as the implementation baseline on 2026-11-04 |
 | accepted | SIM-948 | v6 feedback incorporated and accepted as baseline |
 | review_queue | SIM-953 | v9 selection/state redesign, rubber-band and keyboard selection; installed-window smoke and 13 native runs passed; preview.2 published |
-| focus_issue | SIM-954 | v13 keyboard / focus / rename-blur and navigation feedback, preview.5; broader Explorer and retry gates remain |
+| focus_issue | SIM-954 | v13 keyboard / focus / rename-blur and navigation feedback, preview.6; broader Explorer and retry gates remain |
 | review_queue | SIM-951 | Native GPUI preview deployed and published; unlocked performance and installed-window smoke passed |
 | review_queue | SIM-935 | Technical plan only; native rendering now progresses through SIM-951, broader Windows validation remains open |
 | ready_resume | SIM-920 | v12 local recursive filename search committed at 2055d260; keyboard fix proceeds through 954; saved views remain |

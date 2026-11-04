@@ -13,6 +13,7 @@ use roaring::RoaringTreemap;
 use std::{collections::HashSet, ffi::OsString};
 
 pub struct FileOperations {
+    ime_completion_inflight: bool,
     after_edit: Option<AfterEdit>,
     menu_after_locate: Option<(u64, Point<Pixels>, PathBuf)>,
     ready_menu: Option<(Point<Pixels>, usize)>,
@@ -79,6 +80,7 @@ pub struct Editor {
 impl FileOperations {
     pub fn new(hub: Hub) -> Self {
         Self {
+            ime_completion_inflight: false,
             after_edit: None,
             menu_after_locate: None,
             ready_menu: None,
@@ -483,6 +485,9 @@ impl Backleaf {
                 match event {
                     InputEvent::Blur(value) => {
                         if this.rename_editing() {
+                            if this.files.ime_completion_inflight {
+                                return;
+                            }
                             if let Some(editor) = &mut this.files.editor {
                                 editor.blurred = true;
                             }
@@ -508,7 +513,16 @@ impl Backleaf {
                                     });
                                 }
                             }
-                            this.submit_editor(value.clone(), cx);
+                            if this
+                                .files
+                                .editor
+                                .as_ref()
+                                .is_some_and(|e| e.input.read(cx).is_composing())
+                            {
+                                this.commit_rename_blur(cx);
+                            } else {
+                                this.submit_editor(value.clone(), cx);
+                            }
                             this.restore_rename_error_focus();
                         }
                     }
@@ -975,6 +989,61 @@ impl Backleaf {
         if editor.input.read(cx).is_composing() {
             let input = editor.input.clone();
             input.update(cx, |input, _| input.wait_for_composition_blur());
+            if let Some(editor) = &mut self.files.editor {
+                editor.focus = true;
+                editor.blurred = true;
+            }
+            if !self.files.ime_completion_inflight {
+                self.files.ime_completion_inflight = true;
+                let owner = self.native_owner_handle;
+                let input_id = input.entity_id();
+                let before = input.read(cx).value();
+                let without = input.read(cx).without_composition();
+                cx.spawn(async move |this, cx| {
+                    let current = this
+                        .update(cx, |this, cx| {
+                            this.files.editor.as_ref().is_some_and(|e| {
+                                e.input.entity_id() == input_id && e.input.read(cx).is_composing()
+                            })
+                        })
+                        .unwrap_or(false);
+                    // IMM can reenter GPUI. Call it outside App/Window::update, with
+                    // the original editor retained and its focus restored for this frame.
+                    let completed = current && crate::input::complete_native_composition(owner);
+                    cx.background_executor()
+                        .timer(Duration::from_millis(80))
+                        .await;
+                    let _ = this.update(cx, |this, cx| {
+                        this.files.ime_completion_inflight = false;
+                        let Some(editor) = this
+                            .files
+                            .editor
+                            .as_mut()
+                            .filter(|e| e.input.entity_id() == input_id && e.pending.is_none())
+                        else {
+                            return;
+                        };
+                        let discarded = without.as_ref().is_some_and(|without| {
+                            *without == editor.input.read(cx).value() && *without != before
+                        });
+                        if !completed || editor.input.read(cx).is_composing() || discarded {
+                            if discarded {
+                                editor.input.update(cx, |input, cx| {
+                                    input.restore_unconfirmed_composition(before, cx)
+                                });
+                            }
+                            editor.error = Some("请先完成输入法候选，再重试".into());
+                            editor.focus = true;
+                            this.files.after_edit = None;
+                        } else {
+                            this.commit_rename_blur(cx);
+                        }
+                        cx.notify();
+                    });
+                })
+                .detach();
+            }
+            cx.notify();
             return;
         }
         let value = editor.input.read(cx).value();
@@ -1003,6 +1072,18 @@ impl Backleaf {
             self.files.editor_subscription = None;
             false
         }
+    }
+    pub fn commit_rename_selection(&mut self, cx: &mut Context<Self>) {
+        let name = self
+            .selection
+            .focus
+            .filter(|id| self.selection.contains(*id))
+            .and_then(|id| self.cache.get(&id).map(|item| item.os_name.clone()));
+        self.files.after_edit = Some(AfterEdit::Select {
+            name,
+            parent: self.path.clone(),
+        });
+        self.commit_rename_blur(cx);
     }
     pub fn defer_path_tree(&mut self, ancestors: bool, cx: &mut Context<Self>) -> bool {
         if !self.rename_editing() {

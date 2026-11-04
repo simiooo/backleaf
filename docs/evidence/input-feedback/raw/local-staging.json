@@ -1,0 +1,12 @@
+{
+  "pid": 9532,
+  "source_commit": "0d349ccfcb4cb8174e3903cc7afc22bc3d872757",
+  "cli_smoke_passed": true,
+  "sha256": "5e0a69c9823c9482fe4b552ac3bc296d7c705eb7434745c30ef50a0e1df59c61",
+  "staged_at": "2026-11-04T19:36:38.2589479+08:00",
+  "session": {
+    "locked": false,
+    "error": null
+  },
+  "exe": "D:\\work\\backleaf\\.local\\staging\\feedback-preview.5-0d349cc\\Backleaf.exe"
+}

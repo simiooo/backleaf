@@ -1,4 +1,4 @@
-拾径 / Backleaf 0.1.0-preview.5
+拾径 / Backleaf 0.1.0-preview.6
 
 拾径 / Backleaf Windows x64 便携测试版。解压 ZIP，运行 `Backleaf.exe`。
 
@@ -17,3 +17,5 @@ F2 重命名；Ctrl+C/X/V 复制/剪切/粘贴；Ctrl+Shift+C 复制路径；Del
 渲染样本：Backleaf.exe --fixture 1000000 --flow 8，样本不执行文件命令。
 
 本版修复真实键盘搜索输入；重命名支持失焦保存并接续目标右键菜单；选择文件名保持常规字重，完整名称 tooltip 只由文件名区域触发。输入框以表面与阴影表达激活层级。
+
+输入法候选未确认就离开重命名时，若系统撤回组合文字，本版会保留输入并提示先确认候选；不会提交被截断的名称。Enter/Esc 在搜索中优先交给正在组合的输入法。

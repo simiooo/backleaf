@@ -1,0 +1,44 @@
+Window: "拾径 · Backleaf", App: Backleaf.exe.
+	0 区域 拾径 · Backleaf Secondary Actions: Raise
+		1 标题栏 (settable, string) Value: 拾径 · Backleaf
+			2 菜单栏 系统 ID: MenuBar
+				3 菜单项 系统
+			4 按钮 最小化
+			5 按钮 最大化
+			6 按钮 关闭
+		7 应用程序 拾径 Backleaf
+			8 按钮 后退
+			9 按钮 上一级
+			10 导航 当前位置 D:\work\backleaf\.local\feedback-ime-retain/files
+				11 链接 前往 D:\
+				12 按钮 显示折叠的上级路径
+				13 链接 前往 D:\work\backleaf\.local\feedback-ime-retain
+				14 文本 D:\work\backleaf\.local\feedback-ime-retain/files
+				15 按钮 浏览当前目录层级
+			33 按钮 文件操作，1 项任务
+			16 按钮 搜索文件名，Ctrl+F
+			17 按钮 最小化
+			18 按钮 最大化或还原
+			19 按钮 关闭
+			20 导航 快捷访问
+				21 按钮 个人文件夹，C:\Users\qq651
+				22 按钮 桌面，C:\Users\qq651\Desktop
+				23 按钮 下载，C:\Users\qq651\Downloads
+				24 按钮 文档，C:\Users\qq651\Documents
+				25 按钮 图片，C:\Users\qq651\Pictures
+				26 按钮 音乐，C:\Users\qq651\Music
+				27 按钮 视频，C:\Users\qq651\Videos
+			28 列表 文件
+				34 选项 (selectable) b.txt
+				35 选项 (selectable) 目标
+			31 文本 已选 1 项
+			36 菜单 文件菜单
+				37 菜单项 打开
+				38 菜单项 复制
+				39 菜单项 剪切
+				40 菜单项 粘贴到文件夹
+				41 菜单项 重命名
+				42 菜单项 移至回收站
+				43 菜单项 详情
+
+The focused UI element is 36 菜单 文件菜单.

@@ -1,0 +1,7 @@
+{
+  "file": "b.txt",
+  "sha256": "9f0dddef6c241f2c64f51447aca58eb268a112608a8d95005fcff7950332454e",
+  "expected_utf8": "composition-retain-fixture\r\n",
+  "old_name_absent": true,
+  "target_is_directory": true
+}

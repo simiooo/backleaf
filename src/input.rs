@@ -54,7 +54,23 @@ impl TextInput {
         self.content.to_string()
     }
     pub fn is_composing(&self) -> bool {
-        self.marked_range.is_some()
+        self.marked_range.as_ref().is_some_and(|r| !r.is_empty())
+    }
+    pub fn without_composition(&self) -> Option<String> {
+        self.marked_range
+            .as_ref()
+            .filter(|r| !r.is_empty())
+            .map(|r| self.content[..r.start].to_owned() + &self.content[r.end..])
+    }
+    pub fn restore_unconfirmed_composition(&mut self, value: String, cx: &mut Context<Self>) {
+        self.content = value.into();
+        self.marked_range = None;
+        self.selected_range = 0..self.content.len();
+        self.selection_reversed = false;
+        self.blur_pending = false;
+        self.notify_input = true;
+        self.epoch += 1;
+        cx.notify();
     }
     pub fn set_placeholder(&mut self, value: &'static str) {
         self.placeholder = value.into();
@@ -396,7 +412,9 @@ impl EntityInputHandler for TextInput {
     }
 
     fn unmark_text(&mut self, window: &mut Window, cx: &mut Context<Self>) {
-        self.marked_range = None;
+        if self.marked_range.take().is_some() {
+            cx.emit(InputEvent::Changed);
+        }
         self.finish_pending_blur(cx);
         window.notify_text_input_changed(&self.focus_handle);
         cx.notify();
@@ -753,7 +771,11 @@ impl Render for TextInput {
             self.blur_subscription = Some(cx.on_blur(&self.focus_handle, window, |this, _, cx| {
                 if this.enabled {
                     this.blur_pending = true;
-                    this.finish_pending_blur(cx);
+                    if this.marked_range.is_some() {
+                        cx.emit(InputEvent::Blur(this.content.to_string()));
+                    } else {
+                        this.finish_pending_blur(cx);
+                    }
                 }
                 cx.notify();
             }));
@@ -903,6 +925,32 @@ impl TextInput {
             self.blur_pending = false;
             cx.emit(InputEvent::Blur(self.content.to_string()));
         }
+    }
+}
+// Run on the UI executor outside an App/Window update: IMM delivers completion
+// synchronously through GPUI's current input adapter. Never complete another window.
+pub fn complete_native_composition(owner: usize) -> bool {
+    use windows::Win32::{
+        Foundation::HWND,
+        UI::Input::{
+            Ime::{
+                CPS_COMPLETE, ImmGetContext, ImmNotifyIME, ImmReleaseContext, NI_COMPOSITIONSTR,
+            },
+            KeyboardAndMouse::GetFocus,
+        },
+    };
+    let window = HWND(owner as *mut std::ffi::c_void);
+    unsafe {
+        if GetFocus() != window {
+            return false;
+        }
+        let context = ImmGetContext(window);
+        if context.is_invalid() {
+            return false;
+        }
+        let completed = ImmNotifyIME(context, NI_COMPOSITIONSTR, CPS_COMPLETE, 0).as_bool();
+        let _ = ImmReleaseContext(window, context);
+        completed
     }
 }
 pub fn bind_keys(cx: &mut App) {

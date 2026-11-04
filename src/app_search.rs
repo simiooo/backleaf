@@ -231,6 +231,14 @@ impl Backleaf {
         if !self.search.open {
             return false;
         }
+        if self
+            .search
+            .input
+            .as_ref()
+            .is_some_and(|input| input.read(cx).is_composing())
+        {
+            return false;
+        }
         if key == "escape" {
             self.close_search();
             window.focus(&self.focus, cx);
@@ -242,14 +250,6 @@ impl Backleaf {
         }
         match key {
             "down" | "up" if !m.control => {
-                if self
-                    .search
-                    .input
-                    .as_ref()
-                    .is_some_and(|input| input.read(cx).is_composing())
-                {
-                    return false;
-                }
                 if self.search.count > 0 {
                     let next = if key == "down" {
                         self.search

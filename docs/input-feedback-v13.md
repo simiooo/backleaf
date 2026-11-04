@@ -12,4 +12,6 @@ Meta 的公开 [ColorScheme](https://developers.meta.com/horizon/reference/metav
 
 实际 Windows Shell 拒绝某些含 `/` 的 DOS 解析路径；适配层在调用 Shell 前统一分隔符，并在解析后复核文件身份，不放宽设备命名空间、末尾点/空格及源文件身份保护。依据 [Microsoft 文件路径约定](https://learn.microsoft.com/en-us/windows/win32/fileio/naming-a-file)，并通过同一文件先使用规范路径、再用混合分隔符重命名、内容和账本校验验证。
 
-发布脚本改为先建草稿、逐资产重试上传、逐项校验服务端摘要后公开。原 CI 的构建和解压冒烟成功，但发布遇到 GitHub 502；该有输入缺陷的 preview.4 未完成发布。本次以 preview.5 重新构建验证。保留只恢复已有合格 CI 产物的独立工作流，不在恢复阶段执行下载的程序。
+发布脚本改为先建草稿、逐资产重试上传、逐项校验服务端摘要后公开。原 CI 的构建和解压冒烟成功，但发布遇到 GitHub 502；该有输入缺陷的 preview.4 未完成发布。preview.5 进一步发现输入法 Enter/Esc 被搜索导航截获，已取消该 CI；本次以 preview.6 重新构建验证。保留只恢复已有合格 CI 产物的独立工作流，不在恢复阶段执行下载的程序。
+
+输入法组合期间，搜索不消费 Enter/Esc/方向键；unmark 后触发查询更新。重命名失焦在应用更新之外请求本窗口 IMM 完成组合，等待稳定后提交；若系统撤回组合文本，恢复原可见值并保留编辑器，提示先确认候选，禁止将被撤回的半个文件名写入磁盘。目前未确认候选直接失焦仍需此保护提示，不宣称所有输入法自动确认均已通过。依据 [ImmNotifyIME](https://learn.microsoft.com/en-us/windows/win32/api/imm/nf-imm-immnotifyime) 的 CPS_COMPLETE 语义，并保留本窗口焦点检查。

@@ -609,6 +609,13 @@ impl Backleaf {
         window: &mut Window,
         cx: &mut Context<Self>,
     ) {
+        if self.rename_editing() {
+            if self.hit_file(event.position, window).is_none() {
+                self.selection = Selection::default();
+                self.commit_rename_selection(cx);
+            }
+            return;
+        }
         if self.selection_busy() {
             return;
         }
@@ -974,9 +981,16 @@ impl Backleaf {
                 }
                 this.metrics.borrow_mut().input("pointer-select");
                 this.keyboard_focus = event.mouse_position().is_none();
-                window.focus(&this.focus, cx);
+                if !this.rename_editing() {
+                    window.focus(&this.focus, cx);
+                }
                 let m = event.modifiers();
                 this.selection.select(id, m.control, m.shift);
+                if this.rename_editing() {
+                    this.commit_rename_selection(cx);
+                    cx.notify();
+                    return;
+                }
                 if event.click_count() == 2 {
                     this.request_detail(id, true, cx);
                 }
@@ -991,7 +1005,9 @@ impl Backleaf {
                     if !this.selection.contains(id) {
                         this.selection.select(id, false, false);
                     }
-                    window.focus(&this.focus, cx);
+                    if !this.rename_editing() {
+                        window.focus(&this.focus, cx);
+                    }
                     this.open_menu(event.position, Some(id), false, window, cx);
                     cx.stop_propagation();
                 }),

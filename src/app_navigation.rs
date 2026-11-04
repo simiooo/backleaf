@@ -204,7 +204,9 @@ impl Backleaf {
                                         move |this, _, window, cx| {
                                             this.close_path_tree();
                                             this.navigate(path.clone(), true, cx);
-                                            window.focus(&this.focus, cx);
+                                            if !this.rename_editing() {
+                                                window.focus(&this.focus, cx);
+                                            }
                                         }
                                     }))
                                     .on_key_down(cx.listener(
@@ -212,7 +214,9 @@ impl Backleaf {
                                             if paint::activation_key(event) {
                                                 this.close_path_tree();
                                                 this.navigate(path.clone(), true, cx);
-                                                window.focus(&this.focus, cx);
+                                                if !this.rename_editing() {
+                                                    window.focus(&this.focus, cx);
+                                                }
                                                 cx.stop_propagation();
                                             }
                                         },
@@ -382,7 +386,9 @@ impl Backleaf {
                                     move |this, _, window, cx| {
                                         this.close_path_tree();
                                         this.navigate(path.clone(), true, cx);
-                                        window.focus(&this.focus, cx);
+                                        if !this.rename_editing() {
+                                            window.focus(&this.focus, cx);
+                                        }
                                         cx.stop_propagation();
                                     }
                                 }))
@@ -391,7 +397,9 @@ impl Backleaf {
                                         if paint::activation_key(event) {
                                             this.close_path_tree();
                                             this.navigate(path.clone(), true, cx);
-                                            window.focus(&this.focus, cx);
+                                            if !this.rename_editing() {
+                                                window.focus(&this.focus, cx);
+                                            }
                                             cx.stop_propagation();
                                         }
                                     },
@@ -569,7 +577,9 @@ impl Backleaf {
                             .on_click(cx.listener(move |this, _, window, cx| {
                                 this.close_path_tree();
                                 this.navigate(path.clone(), true, cx);
-                                window.focus(&this.focus, cx);
+                                if !this.rename_editing() {
+                                    window.focus(&this.focus, cx);
+                                }
                                 cx.stop_propagation();
                             }))
                             .child(div().truncate().child(row.title.clone()))
