@@ -1,0 +1,8 @@
+{
+  "phase": "query_100000_results",
+  "captured_at": "2026-11-04T18:48:40.8075252+08:00",
+  "working_set": 81788928,
+  "private_bytes": 100397056,
+  "cpu_seconds": 5.125,
+  "peak_working_set": 83337216
+}

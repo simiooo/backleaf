@@ -16,6 +16,7 @@ use unicode_segmentation::UnicodeSegmentation;
 pub struct Item {
     pub id: usize,
     pub name: String,
+    pub os_name: std::ffi::OsString,
     pub label: String,
     pub directory: bool,
     pub bytes: Option<u64>,
@@ -200,7 +201,7 @@ impl Source {
                             let raw:Vec<u8>=r.get(4)?;
                             let full=lease.parent.get().unwrap().join(decode_name(&raw));
                             let cut=cut_db.as_ref().is_some_and(|db|cut_matches(db,&full));
-                            Ok(Item { id: r.get::<_, i64>(0)? as usize, name, label, directory: r.get(2)?, bytes: r.get::<_,Option<i64>>(3)?.map(|n|n as u64),cut })
+                            Ok(Item { id: r.get::<_, i64>(0)? as usize, os_name:decode_name(&raw), name, label, directory: r.get(2)?, bytes: r.get::<_,Option<i64>>(3)?.map(|n|n as u64),cut })
                         })?.collect::<Result<Vec<_>, _>>()?;
                         if tx.send_blocking(Event::Page { generation, serial, items }).is_err() { break; }
                     }
@@ -326,6 +327,7 @@ pub fn fixture_item(id: usize) -> Item {
     };
     Item {
         id,
+        os_name: name.clone().into(),
         label: short_name(&name, 96),
         name,
         directory: id % 13 == 2,

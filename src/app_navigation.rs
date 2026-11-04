@@ -6,10 +6,7 @@ pub struct NavigationUi {
     pub rows: Vec<TreeRow>,
     pub open: bool,
     pub pinned: bool,
-    pub over_path: bool,
-    pub over_tree: bool,
     pub token: u64,
-    pub hover_token: u64,
     pub current: usize,
     pub truncated: bool,
     pub error: Option<String>,
@@ -23,10 +20,7 @@ impl NavigationUi {
             rows: vec![],
             open: false,
             pinned: false,
-            over_path: false,
-            over_tree: false,
             token: 0,
-            hover_token: 0,
             current: 0,
             truncated: false,
             error: None,
@@ -70,7 +64,6 @@ impl Backleaf {
     pub fn close_path_tree(&mut self) {
         self.navigation.open = false;
         self.navigation.pinned = false;
-        self.navigation.hover_token += 1;
     }
     pub fn show_path_tree(
         &mut self,
@@ -78,6 +71,9 @@ impl Backleaf {
         window: Option<&mut Window>,
         cx: &mut Context<Self>,
     ) {
+        if self.defer_path_tree(false, cx) {
+            return;
+        }
         if self.options.fixture.is_some()
             || self.files.editor.is_some()
             || self.files.close_guard
@@ -97,32 +93,6 @@ impl Backleaf {
             window.focus(&self.navigation.focus, cx);
         }
         cx.notify();
-    }
-    pub fn path_hover(&mut self, over: bool, tree: bool, cx: &mut Context<Self>) {
-        if tree {
-            self.navigation.over_tree = over;
-        } else {
-            self.navigation.over_path = over;
-        }
-        self.navigation.hover_token += 1;
-        let token = self.navigation.hover_token;
-        cx.spawn(async move |this, cx| {
-            cx.background_executor()
-                .timer(Duration::from_millis(if over { 180 } else { 260 }))
-                .await;
-            let _ = this.update(cx, |this, cx| {
-                if token != this.navigation.hover_token {
-                    return;
-                }
-                if this.navigation.over_path || this.navigation.over_tree {
-                    this.show_path_tree(false, None, cx);
-                } else if !this.navigation.pinned {
-                    this.close_path_tree();
-                    cx.notify();
-                }
-            });
-        })
-        .detach();
     }
     pub fn navigation_key(
         &mut self,
@@ -223,7 +193,6 @@ impl Backleaf {
                                     .aria_selected(selected)
                                     .focusable()
                                     .tab_stop(true)
-                                    .tooltip(tooltip(navigation::display_path(&path), colors))
                                     .when(selected, |d| {
                                         d.bg(colors.color(ColorRole::Selected))
                                             .text_color(colors.color(ColorRole::OnSelected))
@@ -331,21 +300,18 @@ impl Backleaf {
             .id("path")
             .min_w_0()
             .max_w(px(available))
-            .h(px(32.))
+            .h(px(36.))
+            .px(px(4.))
+            .py(px(4.))
+            .bg(colors.color(ColorRole::Canvas))
             .flex()
             .items_center()
-            .rounded(px(8.))
+            .rounded(px(10.))
             .role(Role::Navigation)
             .aria_label(format!("当前位置 {path}"))
             .when(self.navigation.open, |d| {
-                d.bg(colors.color(ColorRole::Floating))
-                    .shadow(vec![colors.shadow()])
+                d.shadow(vec![colors.inline_shadow()])
             })
-            .hover(move |d| {
-                d.bg(colors.color(ColorRole::Floating))
-                    .shadow(vec![colors.shadow()])
-            })
-            .on_hover(cx.listener(|this, over, _, cx| this.path_hover(*over, false, cx)))
             .on_click(cx.listener(|this, event: &ClickEvent, window, cx| {
                 if event.click_count() == 2 {
                     this.close_path_tree();
@@ -361,7 +327,7 @@ impl Backleaf {
                         div()
                             .w(px(16.))
                             .flex_none()
-                            .h(px(32.))
+                            .h(px(28.))
                             .flex()
                             .items_center()
                             .justify_center()
@@ -379,7 +345,7 @@ impl Backleaf {
                                 .id("current-directory-crumb")
                                 .max_w(px(current_width))
                                 .min_w_0()
-                                .h(px(32.))
+                                .h(px(28.))
                                 .px(px(4.))
                                 .flex()
                                 .items_center()
@@ -387,7 +353,6 @@ impl Backleaf {
                                 .aria_label(format!("当前位置 {full}"))
                                 .aria_value(full.clone())
                                 .text_color(colors.color(ColorRole::Primary))
-                                .tooltip(tooltip(full, colors))
                                 .child(div().truncate().child(label))
                                 .into_any_element(),
                         );
@@ -395,7 +360,7 @@ impl Backleaf {
                         elements.push(
                             div()
                                 .id(("ancestor-crumb", i))
-                                .h(px(32.))
+                                .h(px(28.))
                                 .max_w(px(120.))
                                 .min_w_0()
                                 .px(px(4.))
@@ -412,7 +377,6 @@ impl Backleaf {
                                         .text_color(colors.color(ColorRole::Primary))
                                 })
                                 .focus_visible(move |d| d.shadow(vec![colors.focus_ring()]))
-                                .tooltip(tooltip(full, colors))
                                 .on_click(cx.listener({
                                     let path = path.clone();
                                     move |this, _, window, cx| {
@@ -440,8 +404,8 @@ impl Backleaf {
                     elements.push(
                         div()
                             .id("crumb-overflow")
-                            .w(px(32.))
-                            .h(px(32.))
+                            .w(px(28.))
+                            .h(px(28.))
                             .flex_none()
                             .rounded(px(8.))
                             .flex()
@@ -470,18 +434,56 @@ impl Backleaf {
                 }
                 elements
             }))
-            .child(self.button(
-                "more",
-                "浏览当前目录层级",
-                cx.listener(|this, _, window, cx| {
-                    this.navigation.rows.clear();
-                    this.show_path_tree(true, Some(window), cx);
-                    cx.stop_propagation();
-                }),
-            ))
+            .child(
+                div()
+                    .id("path-dropdown-arrow")
+                    .w(px(28.))
+                    .h(px(28.))
+                    .flex_none()
+                    .flex()
+                    .items_center()
+                    .justify_center()
+                    .rounded(px(8.))
+                    .role(Role::Button)
+                    .aria_label("浏览当前目录层级")
+                    .aria_expanded(self.navigation.open)
+                    .focusable()
+                    .tab_stop(true)
+                    .hover(move |d| d.bg(colors.color(ColorRole::Hover)))
+                    .focus_visible(move |d| {
+                        d.bg(colors.color(ColorRole::InputActive))
+                            .shadow(colors.input_shadows())
+                    })
+                    .on_click(cx.listener(|this, _, window, cx| {
+                        if this.navigation.open {
+                            this.close_path_tree();
+                            cx.notify();
+                        } else {
+                            this.navigation.rows.clear();
+                            this.show_path_tree(true, Some(window), cx);
+                        }
+                        cx.stop_propagation();
+                    }))
+                    .on_key_down(cx.listener(|this, event: &KeyDownEvent, window, cx| {
+                        if paint::activation_key(event) {
+                            if this.navigation.open {
+                                this.close_path_tree();
+                                cx.notify();
+                            } else {
+                                this.navigation.rows.clear();
+                                this.show_path_tree(true, Some(window), cx);
+                            }
+                            cx.stop_propagation();
+                        }
+                    }))
+                    .child(icon("more", colors)),
+            )
             .into_any_element()
     }
-    fn show_ancestor_menu(&mut self, window: &mut Window, cx: &mut Context<Self>) {
+    pub fn show_ancestor_menu(&mut self, window: &mut Window, cx: &mut Context<Self>) {
+        if self.defer_path_tree(true, cx) {
+            return;
+        }
         self.navigation.token += 1;
         let mut bytes = 0;
         let mut rows = Vec::new();
@@ -530,7 +532,6 @@ impl Backleaf {
             .track_focus(&self.navigation.focus)
             .role(Role::Tree)
             .aria_label("当前位置导航")
-            .on_hover(cx.listener(|this, over, _, cx| this.path_hover(*over, true, cx)))
             .on_mouse_down(MouseButton::Left, |_, _, cx| cx.stop_propagation())
             .on_mouse_down_out(cx.listener(|this, event: &MouseDownEvent, _, cx| {
                 if event.button == MouseButton::Left && f32::from(event.position.y) > 44. {
@@ -565,7 +566,6 @@ impl Backleaf {
                                 d.bg(colors.color(ColorRole::Hover))
                             })
                             .hover(move |d| d.bg(colors.color(ColorRole::Hover)))
-                            .tooltip(tooltip(navigation::display_path(&path), colors))
                             .on_click(cx.listener(move |this, _, window, cx| {
                                 this.close_path_tree();
                                 this.navigate(path.clone(), true, cx);

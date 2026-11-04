@@ -1,0 +1,12 @@
+{
+  "cli_smoke_passed": true,
+  "visible_ui_same_hash": true,
+  "source_commit": "2055d26079872053a6aac6cda8ff490649dae0bb",
+  "staged_at": "2026-11-04T18:59:09.2366456+08:00",
+  "session": {
+    "locked": false,
+    "error": null
+  },
+  "exe_sha256": "ad182cd27220b99fa3a6bef6fdd23aef2e4d3cff44463616d4443421508ab1ea",
+  "path": "D:\\work\\backleaf\\.local\\staging\\search-preview.4-2055d260"
+}

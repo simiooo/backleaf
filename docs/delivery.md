@@ -7,17 +7,17 @@ Scope: SIM-919. Constraints: SIM-934. One engineering unit is active at a time.
 | accepted | SIM-921 | User accepted v6 as the implementation baseline on 2026-11-04 |
 | accepted | SIM-948 | v6 feedback incorporated and accepted as baseline |
 | review_queue | SIM-953 | v9 selection/state redesign, rubber-band and keyboard selection; installed-window smoke and 13 native runs passed; preview.2 published |
-| ready_resume | SIM-954 | Native menus / commands committed at 95b9d0a; Explorer interoperability and failure retry gates remain; claim released at safe checkpoint |
+| focus_issue | SIM-954 | v13 keyboard / focus / rename-blur and navigation feedback, preview.5; broader Explorer and retry gates remain |
 | review_queue | SIM-951 | Native GPUI preview deployed and published; unlocked performance and installed-window smoke passed |
 | review_queue | SIM-935 | Technical plan only; native rendering now progresses through SIM-951, broader Windows validation remains open |
-| focus_issue | SIM-920 | v12 persistent titlebar search entry and local recursive filename search; saved views remain |
+| ready_resume | SIM-920 | v12 local recursive filename search committed at 2055d260; keyboard fix proceeds through 954; saved views remain |
 | candidate after dependencies | SIM-922 | SQLite index, refresh, short Chinese queries, benchmark and coverage |
 | candidate after dependencies | SIM-937 | Directory/search restore and failure recovery |
 | cross-cutting | SIM-938 | Independent windows, stale-result rejection, coordinated shared state |
 
 `in_review` means engineering evidence is ready for product acceptance. It does not imply that real users have validated usability or that untested hardware, IMEs or filesystems have passed.
 
-SIM-953 engineering delivery is in product review and its claim is released. Only SIM-920 is claimed; focus_operation is delivering the visible search entry and bounded local recursive filename search after OpenPencil verification. SIM-954 has a safe source checkpoint and released claim following the user’s search feedback. Saved views, persistent indexing and restore remain incomplete under SIM-920 / SIM-922 / SIM-937. SIM-951 is in the product review queue. The [file operation contract](file-operations.md) records current scope; v9 selection rules remain in visual-system-v9.md.
+SIM-953 engineering delivery is in product review and its claim is released. Only SIM-954 is claimed; focus_operation is the v13 product-feedback correction of shared keyboard / input focus, rename blur and navigation. SIM-920 has a safe source checkpoint and released claim. Saved views, persistent indexing and restore remain incomplete under SIM-920 / SIM-922 / SIM-937. SIM-951 is in the product review queue. The [file operation contract](file-operations.md) records current scope; v9 selection rules remain in visual-system-v9.md.
 
 2026-11-03: SIM-921 v5.1 adds eight scale states to the compact baseline, for a 38-page editable master. The design covers million-item selections, a bounded 24-task queue and ten thousand failures. The isolated metadata/queue probe verifies 100,000 and 1,000,000 records, UTF-16 long paths, retained results, bounded payloads and paged reads. See [performance contract and evidence](bulk-performance.md).
 

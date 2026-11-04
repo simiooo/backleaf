@@ -1,0 +1,54 @@
+{
+  "masterSha256": "9f39535327f131d208b579b9efbdc79d44761706dedd9ab10480f9c46f243edc",
+  "retainedPages": 92,
+  "pages": 101,
+  "result": "passed",
+  "results": [
+    {
+      "key": "93-crumb-rest",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "94-crumb-arrow",
+      "changedPixels": 0,
+      "totalPixels": 815360
+    },
+    {
+      "key": "95-search-active",
+      "changedPixels": 0,
+      "totalPixels": 815040
+    },
+    {
+      "key": "96-path-active",
+      "changedPixels": 0,
+      "totalPixels": 813120
+    },
+    {
+      "key": "97-rename-active",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "98-rename-blur-menu",
+      "changedPixels": 13,
+      "totalPixels": 806400
+    },
+    {
+      "key": "99-rename-error",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "100-filename-tooltip",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "101-dark-input",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    }
+  ],
+  "verifiedAt": "2026-11-04T11:19:27.334Z"
+}

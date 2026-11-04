@@ -23,6 +23,8 @@ jobs:
           toolchain: '1.99.1'
           components: rustfmt, clippy
       - uses: Swatinem/rust-cache@v2
+        with:
+          cache-on-failure: true
       - name: Check and build
         shell: pwsh
         run: |
@@ -49,6 +51,4 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          $metadata = Get-Content .local/ci/release.json -Raw | ConvertFrom-Json
-          gh release create $metadata.tag --target $env:GITHUB_SHA --prerelease --title $metadata.title --notes-file docs/native-test-release.md .local/ci/*.zip .local/ci/*.fig .local/ci/SHA256SUMS.txt .local/ci/build.json
-          if ($LASTEXITCODE) { throw 'Release publication failed' }
+          ./scripts/native/publish-preview.ps1 -ExpectedSource $env:GITHUB_SHA

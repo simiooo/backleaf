@@ -5,3 +5,5 @@ docs/evidence/native/unlocked/*.png binary
 docs/evidence/native-selection/** -text whitespace=cr-at-eol
 
 docs/evidence/search-entry/raw/* -text whitespace=cr-at-eol,-blank-at-eof
+
+docs/evidence/input-feedback/raw/* -text whitespace=cr-at-eol,-blank-at-eof

@@ -8,6 +8,8 @@ pub enum Role {
     Canvas,
     Chrome,
     Floating,
+    InputRest,
+    InputActive,
     Primary,
     Secondary,
     Disabled,
@@ -29,10 +31,12 @@ pub enum Role {
     Negative,
     Positive,
 }
-const ROLES: [(Role, &str); 23] = [
+const ROLES: [(Role, &str); 25] = [
     (Role::Canvas, "surface/canvas"),
     (Role::Chrome, "surface/chrome"),
     (Role::Floating, "surface/floating"),
+    (Role::InputRest, "surface/input-rest"),
+    (Role::InputActive, "surface/input-active"),
     (Role::Primary, "content/primary"),
     (Role::Secondary, "content/secondary"),
     (Role::Disabled, "content/disabled"),
@@ -56,7 +60,7 @@ const ROLES: [(Role, &str); 23] = [
 ];
 pub struct Palette {
     pub dark: bool,
-    values: [u32; 23],
+    values: [u32; 25],
 }
 impl Palette {
     fn load(dark: bool) -> Self {
@@ -64,7 +68,7 @@ impl Palette {
             serde_json::from_str(include_str!("../design/color-system.json"))
                 .expect("design color system");
         let mode = &source["modes"][if dark { "Dark" } else { "Light" }];
-        let mut values = [0; 23];
+        let mut values = [0; 25];
         for (role, key) in ROLES {
             let value = mode[key]
                 .as_str()
@@ -116,6 +120,24 @@ impl Palette {
             spread_radius: px(crate::layout::LAYOUT.control.focus_width),
             inset: false,
         }
+    }
+    pub fn input_shadows(&self) -> Vec<BoxShadow> {
+        vec![
+            BoxShadow {
+                color: self.color(Role::Shadow),
+                offset: point(px(0.), px(1.)),
+                blur_radius: px(2.),
+                spread_radius: px(1.),
+                inset: false,
+            },
+            BoxShadow {
+                color: self.color(Role::Shadow),
+                offset: point(px(0.), px(4.)),
+                blur_radius: px(12.),
+                spread_radius: px(0.),
+                inset: false,
+            },
+        ]
     }
 }
 pub fn palette(dark: bool) -> &'static Palette {

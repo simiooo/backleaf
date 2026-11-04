@@ -152,7 +152,13 @@ fn parsing_name(path: &Path) -> Result<Vec<u16>> {
             "Shell cannot safely address this path",
         ));
     }
-    Ok(value.into_iter().chain(Some(0)).collect())
+    // Unlike CreateFileW, the Shell parser rejects ordinary DOS paths with '/'.
+    // Identity is checked again after parsing, so this never silently changes a target.
+    Ok(value
+        .into_iter()
+        .map(|c| if c == b'/' as u16 { b'\\' as u16 } else { c })
+        .chain(Some(0))
+        .collect())
 }
 /// Standard CF_HDROP paths use the same spelling as Shell items; the returned path includes NUL.
 pub fn clipboard_path(path: &Path) -> Result<Vec<u16>> {

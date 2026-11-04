@@ -1,0 +1,49 @@
+name: Recover Windows preview publication
+on:
+  workflow_dispatch:
+    inputs:
+      source_run:
+        description: Existing Windows test package run with successful build and smoke
+        required: true
+permissions:
+  contents: write
+  actions: read
+concurrency:
+  group: recover-windows-preview-${{ inputs.source_run }}
+  cancel-in-progress: false
+jobs:
+  publish:
+    runs-on: windows-2025
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify source run and download existing artifact
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SOURCE_RUN: ${{ inputs.source_run }}
+        run: |
+          $ErrorActionPreference='Stop'
+          if($env:SOURCE_RUN -notmatch '^\d+$'){throw 'Invalid run ID'}
+          $run=gh api "repos/$env:GITHUB_REPOSITORY/actions/runs/$env:SOURCE_RUN" | ConvertFrom-Json
+          if($LASTEXITCODE -or $run.status -ne 'completed' -or $run.head_branch -ne 'staging' -or $run.head_repository.full_name -ne $env:GITHUB_REPOSITORY -or $run.path -ne '.github/workflows/windows-preview.yml'){throw 'Unexpected source run provenance'}
+          $details=gh run view $env:SOURCE_RUN --json jobs | ConvertFrom-Json
+          if($LASTEXITCODE){throw 'Cannot inspect source job'}
+          $job=@($details.jobs|Where-Object name -eq 'package')
+          if($job.Count -ne 1){throw 'Missing unique package job'}
+          foreach($name in @('Check and build','Package and smoke','Run actions/upload-artifact@v4')){
+            $step=@($job[0].steps|Where-Object name -eq $name)
+            if($step.Count -ne 1 -or $step[0].conclusion -ne 'success'){throw "Source gate did not pass: $name"}
+          }
+          gh run download $env:SOURCE_RUN --name windows-build-evidence --dir .local/ci
+          if($LASTEXITCODE){throw 'Artifact download failed'}
+          git show "$($run.head_sha):docs/native-test-release.md" | Set-Content .local/ci/release-notes.md -Encoding utf8
+          if($LASTEXITCODE){throw 'Source release notes unavailable'}
+          "EXPECTED_SOURCE=$($run.head_sha)" | Add-Content $env:GITHUB_ENV
+      - name: Verify and publish the original CI bytes
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: ./scripts/native/publish-preview.ps1 -ExpectedSource $env:EXPECTED_SOURCE -NotesFile .local/ci/release-notes.md

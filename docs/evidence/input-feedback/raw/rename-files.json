@@ -1,0 +1,16 @@
+{
+  "a_old_absent": true,
+  "b_old_absent": true,
+  "renamed_files": [
+    {
+      "name": "A-renamed.txt",
+      "sha256": "65ff14ca892177b8f75c98c375aaea7046bf0b83860bbe5b0723ccc218ebe21b",
+      "expected_bytes_equal": true
+    },
+    {
+      "name": "B-renamed.txt",
+      "sha256": "2949d0d59c85cb073e6e056cb591a54b8f6f02587eed799d070da73e5f70e323",
+      "expected_bytes_equal": true
+    }
+  ]
+}

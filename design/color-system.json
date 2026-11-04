@@ -24,7 +24,9 @@
       "icon/folder-stroke": "#58758D",
       "icon/paper-fill": "#FAFCFE",
       "status/negative": "#B32624",
-      "status/positive": "#246B45"
+      "status/positive": "#246B45",
+      "surface/input-rest": "#F3F5F7",
+      "surface/input-active": "#FFFFFF"
     },
     "Dark": {
       "surface/canvas": "#161D25",
@@ -49,7 +51,9 @@
       "icon/folder-stroke": "#BAD0E3",
       "icon/paper-fill": "#27323E",
       "status/negative": "#FFB4AB",
-      "status/positive": "#8AD5AC"
+      "status/positive": "#8AD5AC",
+      "surface/input-rest": "#1C252F",
+      "surface/input-active": "#344454"
     }
   },
   "rules": {

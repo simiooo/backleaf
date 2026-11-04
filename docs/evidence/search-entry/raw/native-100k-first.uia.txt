@@ -1,0 +1,91 @@
+Window: "拾径 · Backleaf", App: Backleaf.exe.
+	0 区域 拾径 · Backleaf Secondary Actions: Raise
+		1 标题栏 (settable, string) Value: 拾径 · Backleaf
+			2 菜单栏 系统 ID: MenuBar
+				3 菜单项 系统
+			4 按钮 最小化
+			5 按钮 最大化
+			6 按钮 关闭
+		7 应用程序 拾径 Backleaf
+			8 按钮 后退
+			9 按钮 上一级
+			10 导航 当前位置 D:/work/backleaf/.local/native-fixture
+				11 链接 前往 D:/
+				12 按钮 显示折叠的上级路径
+				13 链接 前往 D:/work/backleaf/.local
+				14 文本 D:/work/backleaf/.local/native-fixture
+				15 按钮 浏览当前目录层级
+			16 按钮 搜索文件名，Ctrl+F
+			17 按钮 最小化
+			18 按钮 最大化或还原
+			19 按钮 关闭
+			20 导航 快捷访问
+				21 按钮 个人文件夹，C:\Users\qq651
+				22 按钮 桌面，C:\Users\qq651\Desktop
+				23 按钮 下载，C:\Users\qq651\Downloads
+				24 按钮 文档，C:\Users\qq651\Documents
+				25 按钮 图片，C:\Users\qq651\Pictures
+				26 按钮 音乐，C:\Users\qq651\Music
+				27 按钮 视频，C:\Users\qq651\Videos
+			28 列表 文件
+				29 选项 (selectable) .backleaf-render-fixture
+				30 选项 (selectable) archive_00000001.txt
+				31 选项 (selectable) archive_00000002.txt
+				32 选项 (selectable) archive_00000003.txt
+				33 选项 (selectable) archive_00000004.txt
+				34 选项 (selectable) archive_00000005.txt
+				35 选项 (selectable) archive_00000006.txt
+				36 选项 (selectable) archive_00000007.txt
+				37 选项 (selectable) archive_00000008.txt
+				38 选项 (selectable) archive_00000009.txt
+				39 选项 (selectable) archive_00000010.txt
+				40 选项 (selectable) archive_00000011.txt
+				41 选项 (selectable) archive_00000012.txt
+				42 选项 (selectable) archive_00000013.txt
+				43 选项 (selectable) archive_00000014.txt
+				44 选项 (selectable) archive_00000015.txt
+				45 选项 (selectable) archive_00000016.txt
+				46 选项 (selectable) archive_00000017.txt
+				47 选项 (selectable) archive_00000018.txt
+				48 选项 (selectable) archive_00000019.txt
+				49 选项 (selectable) archive_00000020.txt
+				50 选项 (selectable) archive_00000021.txt
+				51 选项 (selectable) archive_00000022.txt
+				52 选项 (selectable) archive_00000023.txt
+				53 选项 (selectable) archive_00000024.txt
+				54 选项 (selectable) archive_00000025.txt
+				55 选项 (selectable) archive_00000026.txt
+				56 选项 (selectable) archive_00000027.txt
+				57 选项 (selectable) archive_00000028.txt
+				58 选项 (selectable) archive_00000029.txt
+				59 选项 (selectable) archive_00000030.txt
+				60 选项 (selectable) archive_00000031.txt
+				61 选项 (selectable) archive_00000032.txt
+				62 选项 (selectable) archive_00000033.txt
+				63 选项 (selectable) archive_00000034.txt
+				64 选项 (selectable) archive_00000035.txt
+				65 选项 (selectable) archive_00000036.txt
+				66 选项 (selectable) archive_00000037.txt
+				67 选项 (selectable) archive_00000038.txt
+				68 选项 (selectable) archive_00000039.txt
+				69 选项 (selectable) archive_00000040.txt
+				70 选项 (selectable) archive_00000041.txt
+				71 选项 (selectable) archive_00000042.txt
+				72 选项 (selectable) archive_00000043.txt
+				73 选项 (selectable) archive_00000044.txt
+				74 选项 (selectable) archive_00000045.txt
+				75 选项 (selectable) archive_00000046.txt
+				76 选项 (selectable) archive_00000047.txt
+			77 编辑 (settable, string) 搜索文件名 Value: .txt
+			78 文本 native-fixture · 含子文件夹
+			79 按钮 在文件夹中显示 archive_00000001.txt，D:\work\backleaf\.local\native-fixture\archive_00000001.txt
+			80 按钮 在文件夹中显示 archive_00000002.txt，D:\work\backleaf\.local\native-fixture\archive_00000002.txt
+			81 按钮 在文件夹中显示 archive_00000003.txt，D:\work\backleaf\.local\native-fixture\archive_00000003.txt
+			82 按钮 在文件夹中显示 archive_00000004.txt，D:\work\backleaf\.local\native-fixture\archive_00000004.txt
+			83 按钮 在文件夹中显示 archive_00000005.txt，D:\work\backleaf\.local\native-fixture\archive_00000005.txt
+			84 按钮 在文件夹中显示 archive_00000006.txt，D:\work\backleaf\.local\native-fixture\archive_00000006.txt
+			85 按钮 在文件夹中显示 archive_00000007.txt，D:\work\backleaf\.local\native-fixture\archive_00000007.txt
+			86 按钮 在文件夹中显示 archive_00000008.txt，D:\work\backleaf\.local\native-fixture\archive_00000008.txt
+			87 文本 100,000 项
+
+The focused UI element is 77 编辑 (settable, string) 搜索文件名 Value: .txt.

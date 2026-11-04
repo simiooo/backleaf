@@ -147,7 +147,7 @@ impl Backleaf {
         window.on_window_should_close(cx, move |window, cx| {
             close_owner
                 .update(cx, |this, cx| {
-                    if this.files.hub.active() {
+                    if this.files.hub.active() || this.rename_editing() {
                         this.request_close(window, cx);
                         false
                     } else {
@@ -261,6 +261,7 @@ impl Backleaf {
         });
         let activated = cx.observe_window_activation(window, |this, window, cx| {
             if !window.is_window_active() {
+                this.commit_rename_blur(cx);
                 this.finish_marquee(cx);
                 this.pressed_id = None;
                 this.hovered_id = None;
@@ -470,6 +471,9 @@ impl Backleaf {
     }
     fn navigate(&mut self, path: PathBuf, push: bool, cx: &mut Context<Self>) {
         if self.files.close_guard {
+            return;
+        }
+        if self.defer_navigation(path.clone(), push, cx) {
             return;
         }
         self.cancel_marquee();
@@ -754,6 +758,9 @@ impl Backleaf {
             cx.stop_propagation();
             return;
         }
+        if self.search.open {
+            return;
+        }
         if self.navigation_key(event, window, cx) {
             cx.stop_propagation();
             return;
@@ -944,9 +951,6 @@ impl Backleaf {
             .px(px(l.file.visual_padding_x))
             .pt(px(l.file.visual_padding_top))
             .pb(px(l.file.visual_padding_bottom))
-            .when(self.marquee.is_none(), |d| {
-                d.tooltip(tooltip(name.clone(), colors))
-            })
             .on_hover(cx.listener(move |this, hovered, _, cx| {
                 let next = if *hovered {
                     Some(id)
@@ -1015,9 +1019,14 @@ impl Backleaf {
             )
             .child(
                 div()
+                    .id(("filename-tooltip", id))
                     .w_full()
                     .h(px(36.))
                     .flex_none()
+                    .when(
+                        self.marquee.is_none() && item.is_some() && editor.is_none(),
+                        |d| d.tooltip(tooltip(name.clone(), colors)),
+                    )
                     .when_some(editor.clone(), |d, input| {
                         d.flex()
                             .justify_center()

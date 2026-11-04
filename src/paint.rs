@@ -51,11 +51,7 @@ fn grid_layout(
     if let std::collections::hash_map::Entry::Vacant(entry) = cache.lines.entry(key) {
         let text: SharedString = label.into();
         let mut font = font("Microsoft YaHei UI");
-        font.weight = if state.selected {
-            FontWeight::SEMIBOLD
-        } else {
-            FontWeight::NORMAL
-        };
+        font.weight = FontWeight::NORMAL;
         let font_size = px(12.);
         let runs = [TextRun {
             len: text.len(),

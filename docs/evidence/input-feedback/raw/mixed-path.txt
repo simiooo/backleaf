@@ -1,0 +1,21 @@
+   Compiling backleaf v0.1.0-preview.5 (D:\work\backleaf)
+warning: method `identity` is never used
+   --> src\operations\ledger.rs:217:12
+    |
+101 | impl Ledger {
+    | ----------- method in this implementation
+...
+217 |     pub fn identity(&self, key: u64) -> anyhow::Result<Option<shell::identity::Identity>> {
+    |            ^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `backleaf` (bin "backleaf" test) generated 1 warning
+    Finished `release` profile [optimized] target(s) in 13.44s
+     Running unittests src\main.rs (target\release\deps\backleaf-11eed09bdcab0261.exe)
+
+running 1 test
+test operations::service::service_tests::native_rename_completes_with_durable_result_and_preserved_bytes ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 29 filtered out; finished in 0.46s
+

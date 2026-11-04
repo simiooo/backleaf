@@ -1,0 +1,62 @@
+{
+  "version": "v13-feedback",
+  "retainedPages": 92,
+  "pages": [
+    {
+      "key": "93-crumb-rest",
+      "name": "93 · v13 crumb-rest",
+      "mode": "Light",
+      "nodes": 145
+    },
+    {
+      "key": "94-crumb-arrow",
+      "name": "94 · v13 crumb-arrow",
+      "mode": "Light",
+      "nodes": 155
+    },
+    {
+      "key": "95-search-active",
+      "name": "95 · v13 search-active",
+      "mode": "Light",
+      "nodes": 150
+    },
+    {
+      "key": "96-path-active",
+      "name": "96 · v13 path-active",
+      "mode": "Light",
+      "nodes": 148
+    },
+    {
+      "key": "97-rename-active",
+      "name": "97 · v13 rename-active",
+      "mode": "Light",
+      "nodes": 163
+    },
+    {
+      "key": "98-rename-blur-menu",
+      "name": "98 · v13 rename-blur-menu",
+      "mode": "Light",
+      "nodes": 197
+    },
+    {
+      "key": "99-rename-error",
+      "name": "99 · v13 rename-error",
+      "mode": "Light",
+      "nodes": 165
+    },
+    {
+      "key": "100-filename-tooltip",
+      "name": "100 · v13 filename-tooltip",
+      "mode": "Light",
+      "nodes": 147
+    },
+    {
+      "key": "101-dark-input",
+      "name": "101 · v13 dark-input",
+      "mode": "Dark",
+      "nodes": 154
+    }
+  ],
+  "source": "scripts/design/feedback-v13.mjs",
+  "status": "Implementation proposal; native operation validation pending"
+}

@@ -1213,6 +1213,38 @@ mod service_tests {
         let ledger = Ledger::read_only(&view.ledger).unwrap();
         assert_eq!(ledger.counts().unwrap().successful, 1);
         drop(ledger);
+        let dos = PathBuf::from(
+            root.to_string_lossy()
+                .trim_start_matches(r"\\?\")
+                .to_owned(),
+        );
+        let mixed = PathBuf::from(dos.to_string_lossy().replace('\\', "/")).join("renamed.txt");
+        let identity = shell::identity::capture(&mixed).unwrap().identity;
+        let mixed_id = hub
+            .direct(
+                mixed.clone(),
+                dos,
+                "mixed-renamed.txt".into(),
+                Some(identity),
+                false,
+                0,
+            )
+            .unwrap();
+        let deadline = Instant::now() + Duration::from_secs(15);
+        let mixed_view = loop {
+            let view = hub.view(mixed_id).unwrap();
+            if view.phase.terminal() {
+                break view;
+            }
+            assert!(Instant::now() < deadline);
+            std::thread::sleep(Duration::from_millis(5));
+        };
+        assert_eq!(mixed_view.phase, Phase::Complete, "{:?}", mixed_view.error);
+        assert!(!mixed.exists());
+        assert_eq!(
+            std::fs::read(root.join("mixed-renamed.txt")).unwrap(),
+            content
+        );
         drop(hub);
         let resolved = root.canonicalize().unwrap();
         assert!(

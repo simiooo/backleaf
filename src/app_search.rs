@@ -61,7 +61,10 @@ impl Backleaf {
         self.search.rows.clear();
     }
     pub fn open_search(&mut self, window: &mut Window, cx: &mut Context<Self>) {
-        if self.files.close_guard || self.files.editor.is_some() || self.options.fixture.is_some() {
+        if self.files.close_guard || self.options.fixture.is_some() {
+            return;
+        }
+        if self.defer_search(cx) {
             return;
         }
         self.close_path_tree();
@@ -91,6 +94,7 @@ impl Backleaf {
         });
         self.search.subscription = Some(cx.subscribe(&input, |this, _, event: &InputEvent, cx| {
             match event {
+                InputEvent::Blur(_) => {}
                 InputEvent::Cancel => {
                     this.close_search();
                     this.files.focus_grid = true;
@@ -234,7 +238,7 @@ impl Backleaf {
             return true;
         }
         if m.alt || m.platform {
-            return true;
+            return false;
         }
         match key {
             "down" | "up" if !m.control => {
@@ -244,7 +248,7 @@ impl Backleaf {
                     .as_ref()
                     .is_some_and(|input| input.read(cx).is_composing())
                 {
-                    return true;
+                    return false;
                 }
                 if self.search.count > 0 {
                     let next = if key == "down" {
@@ -268,7 +272,7 @@ impl Backleaf {
                     window.focus_next(cx);
                 }
             }
-            _ => {}
+            _ => return false,
         }
         cx.notify();
         true
@@ -276,7 +280,7 @@ impl Backleaf {
     pub fn search_entry(&self, window: &Window, cx: &mut Context<Self>) -> AnyElement {
         let colors = self.colors;
         let compact = f32::from(window.viewport_size().width) < 900.;
-        let available = self.files.editor.is_none() && !self.files.close_guard;
+        let available = !self.files.close_guard;
         div()
             .id("search-entry")
             .h(px(32.))

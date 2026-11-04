@@ -1,0 +1,74 @@
+Window: "拾径 · Backleaf", App: Backleaf.exe.
+	0 区域 拾径 · Backleaf Secondary Actions: Raise
+		1 标题栏 (settable, string) Value: 拾径 · Backleaf
+			2 菜单栏 系统 ID: MenuBar
+				3 菜单项 系统
+			4 按钮 最小化
+			5 按钮 最大化
+			6 按钮 关闭
+		7 应用程序 拾径 Backleaf
+			8 按钮 后退
+			9 按钮 上一级
+			10 导航 当前位置 D:\work\backleaf\.local\native-fixture
+				11 链接 前往 D:\
+				12 按钮 显示折叠的上级路径
+				13 链接 前往 D:\work\backleaf\.local
+				14 文本 D:\work\backleaf\.local\native-fixture
+				15 按钮 浏览当前目录层级
+			16 按钮 搜索文件名，Ctrl+F
+			17 按钮 最小化
+			18 按钮 最大化或还原
+			19 按钮 关闭
+			20 导航 快捷访问
+				21 按钮 个人文件夹，C:\Users\qq651
+				22 按钮 桌面，C:\Users\qq651\Desktop
+				23 按钮 下载，C:\Users\qq651\Downloads
+				24 按钮 文档，C:\Users\qq651\Documents
+				25 按钮 图片，C:\Users\qq651\Pictures
+				26 按钮 音乐，C:\Users\qq651\Music
+				27 按钮 视频，C:\Users\qq651\Videos
+			28 列表 文件
+				144 选项 (selectable) 文件_00095950_项目资料_👩🏽‍💻.txt
+				145 选项 (selectable) 文件_00096051_项目资料_👩🏽‍💻.txt
+				146 选项 (selectable) 文件_00096152_项目资料_👩🏽‍💻.txt
+				147 选项 (selectable) 文件_00096253_项目资料_👩🏽‍💻.txt
+				148 选项 (selectable) 文件_00096354_项目资料_👩🏽‍💻.txt
+				149 选项 (selectable) 文件_00096455_项目资料_👩🏽‍💻.txt
+				150 选项 (selectable) 文件_00096556_项目资料_👩🏽‍💻.txt
+				151 选项 (selectable) 文件_00096657_项目资料_👩🏽‍💻.txt
+				152 选项 (selectable) 文件_00096758_项目资料_👩🏽‍💻.txt
+				153 选项 (selectable) 文件_00096859_项目资料_👩🏽‍💻.txt
+				154 选项 (selectable) 文件_00096960_项目资料_👩🏽‍💻.txt
+				155 选项 (selectable) 文件_00097061_项目资料_👩🏽‍💻.txt
+				156 选项 (selectable) 文件_00097162_项目资料_👩🏽‍💻.txt
+				157 选项 (selectable) 文件_00097263_项目资料_👩🏽‍💻.txt
+				158 选项 (selectable) 文件_00097364_项目资料_👩🏽‍💻.txt
+				159 选项 (selectable) 文件_00097465_项目资料_👩🏽‍💻.txt
+				160 选项 (selectable) 文件_00097566_项目资料_👩🏽‍💻.txt
+				161 选项 (selectable) 文件_00097667_项目资料_👩🏽‍💻.txt
+				162 选项 (selectable) 文件_00097768_项目资料_👩🏽‍💻.txt
+				163 选项 (selectable) 文件_00097869_项目资料_👩🏽‍💻.txt
+				164 选项 (selectable) 文件_00097970_项目资料_👩🏽‍💻.txt
+				165 选项 (selectable) 文件_00098071_项目资料_👩🏽‍💻.txt
+				166 选项 (selectable) 文件_00098172_项目资料_👩🏽‍💻.txt
+				167 选项 (selectable) 文件_00098273_项目资料_👩🏽‍💻.txt
+				168 选项 (selectable) 文件_00098374_项目资料_👩🏽‍💻.txt
+				169 选项 (selectable) 文件_00098475_项目资料_👩🏽‍💻.txt
+				170 选项 (selectable) 文件_00098576_项目资料_👩🏽‍💻.txt
+				171 选项 (selectable) 文件_00098677_项目资料_👩🏽‍💻.txt
+				172 选项 (selectable) 文件_00098778_项目资料_👩🏽‍💻.txt
+				173 选项 (selectable) 文件_00098879_项目资料_👩🏽‍💻.txt
+				174 选项 (selectable) 文件_00098980_项目资料_👩🏽‍💻.txt
+				175 选项 (selectable) 文件_00099081_项目资料_👩🏽‍💻.txt
+				176 选项 (selectable) 文件_00099182_项目资料_👩🏽‍💻.txt
+				177 选项 (selectable) 文件_00099283_项目资料_👩🏽‍💻.txt
+				178 选项 (selectable) 文件_00099384_项目资料_👩🏽‍💻.txt
+				179 选项 (selectable) 文件_00099485_项目资料_👩🏽‍💻.txt
+				180 选项 (selectable) 文件_00099586_项目资料_👩🏽‍💻.txt
+				181 选项 (selectable) 文件_00099687_项目资料_👩🏽‍💻.txt
+				182 选项 (selectable) 文件_00099788_项目资料_👩🏽‍💻.txt
+				183 选项 (selectable) 文件_00099889_项目资料_👩🏽‍💻.txt
+				184 选项 (selectable) 文件_00099990_项目资料_👩🏽‍💻.txt
+			185 文本 已选 1 项
+
+The focused UI element is 184 选项 (selectable) 文件_00099990_项目资料_👩🏽‍💻.txt.

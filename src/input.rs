@@ -36,6 +36,8 @@ pub struct TextInput {
     epoch: u64,
     paste_pending: bool,
     notify_input: bool,
+    blur_subscription: Option<Subscription>,
+    blur_pending: bool,
     focus_handle: FocusHandle,
     content: SharedString,
     placeholder: SharedString,
@@ -395,6 +397,7 @@ impl EntityInputHandler for TextInput {
 
     fn unmark_text(&mut self, window: &mut Window, cx: &mut Context<Self>) {
         self.marked_range = None;
+        self.finish_pending_blur(cx);
         window.notify_text_input_changed(&self.focus_handle);
         cx.notify();
     }
@@ -426,6 +429,7 @@ impl EntityInputHandler for TextInput {
         self.selected_range = range.start + new_text.len()..range.start + new_text.len();
         self.selection_reversed = false;
         self.marked_range.take();
+        self.finish_pending_blur(cx);
         window.notify_text_input_changed(&self.focus_handle);
         cx.notify();
     }
@@ -745,6 +749,16 @@ impl Render for TextInput {
             window.notify_text_input_changed(&self.focus_handle);
         }
         let colors = self.colors;
+        if self.blur_subscription.is_none() {
+            self.blur_subscription = Some(cx.on_blur(&self.focus_handle, window, |this, _, cx| {
+                if this.enabled {
+                    this.blur_pending = true;
+                    this.finish_pending_blur(cx);
+                }
+                cx.notify();
+            }));
+        }
+        let active = window.is_window_active() && self.focus_handle.is_focused(window);
         let accessible_input = cx.entity().downgrade();
         div()
             .id("native-input")
@@ -769,15 +783,14 @@ impl Render for TextInput {
             .flex()
             .items_center()
             .overflow_hidden()
-            .bg(colors.color(ColorRole::Canvas))
-            .border_2()
-            .border_color(colors.color(
-                if window.is_window_active() && self.focus_handle.is_focused(window) {
-                    ColorRole::Focus
-                } else {
-                    ColorRole::Border
-                },
-            ))
+            .bg(colors.color(if active {
+                ColorRole::InputActive
+            } else {
+                ColorRole::InputRest
+            }))
+            .border_1()
+            .border_color(colors.color(ColorRole::Border))
+            .when(active, |d| d.shadow(colors.input_shadows()))
             .rounded(px(8.))
             .text_size(px(13.))
             .line_height(px(20.))
@@ -832,6 +845,7 @@ impl Focusable for TextInput {
 
 #[derive(Clone, Debug)]
 pub enum InputEvent {
+    Blur(String),
     Submit(String),
     Cancel,
     Changed,
@@ -863,6 +877,8 @@ impl TextInput {
             epoch: 0,
             paste_pending: false,
             notify_input: false,
+            blur_subscription: None,
+            blur_pending: false,
             focus_handle: cx.focus_handle().tab_stop(true),
             content: value.into(),
             placeholder: "".into(),
@@ -878,6 +894,15 @@ impl TextInput {
         self.selected_range = 0..self.content.len();
         self.selection_reversed = false;
         cx.notify();
+    }
+    pub fn wait_for_composition_blur(&mut self) {
+        self.blur_pending = true;
+    }
+    fn finish_pending_blur(&mut self, cx: &mut Context<Self>) {
+        if self.enabled && self.blur_pending && self.marked_range.is_none() {
+            self.blur_pending = false;
+            cx.emit(InputEvent::Blur(self.content.to_string()));
+        }
     }
 }
 pub fn bind_keys(cx: &mut App) {
