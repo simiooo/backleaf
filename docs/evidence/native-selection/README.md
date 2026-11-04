@@ -5,6 +5,7 @@
 - [staging.json](staging.json)：安装/发布状态、源版本、EXE 和 ZIP 哈希、时间。
 - [build.json](build.json)：编译器、源输入哈希、固定 GPUI 版本和检查日志哈希。
 - [manifest.json](manifest.json)：逐份证据 SHA256。
+- [published.json](published.json)：实际 prerelease、标签提交和 GitHub 资产摘要；本次未下载执行远端安装包。
 - [summary.json](summary.json)：13 组原生验证摘要，零样本时间使用 null。
 - [reports](reports/)：11 组元数据渲染、实际 100,001 项目录和控制器集成。
 - [ui-smoke.json](ui-smoke.json)：实际窗口动作、UIA、系统菜单、长文本和恢复检查。
@@ -14,3 +15,5 @@
 截图为测试窗口的原始捕获，可能包含自动化工具的鼠标提示。`short-selected.jpg`、`dark-flow.jpg`、`long-details.jpg`、`ten-million.jpg` 记录内容包裹背景、深色流光、完整详情和千万项末尾。
 
 CPU 场景时间不是 GPU 呈现或输入到光子延迟；合成任务进度不执行文件复制。控制器脚本在真实 GPUI 窗口中驱动事件和重绘，不冒充操作系统指针长按。门槛沿用 [渲染契约](../../native-render-validation.md)，结果见 [选择验证](../../native-selection-validation.md)。
+
+原始报告和日志保留字节，不经过 Git 换行转换。运行 `python scripts/native/verify-selection-evidence.py --git-revision HEAD` 同时校验工作区文件与提交中的原始字节。

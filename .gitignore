@@ -3,6 +3,10 @@
 /.local/
 node_modules/
 *.log
+!docs/evidence/native-selection/checks/fmt.log
+!docs/evidence/native-selection/checks/clippy.log
+!docs/evidence/native-selection/checks/tests.log
+!docs/evidence/native-selection/checks/build.log
 *.dmp
 *.sqlite*
 *.db*

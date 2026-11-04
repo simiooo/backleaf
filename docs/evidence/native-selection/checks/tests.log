@@ -1,0 +1,20 @@
+   Compiling backleaf v0.1.0-preview.2 (D:\work\backleaf)
+    Finished `release` profile [optimized] target(s) in 6.69s
+     Running unittests src\main.rs (target\release\deps\backleaf-ea7dad300959ae24.exe)
+
+running 11 tests
+test model::tests::million_selection_is_constant_space_and_toggle_preserves_count ... ok
+test selection::tests::all_and_exceptions_do_not_scale_with_ten_million_items ... ok
+test selection::tests::cancelled_bitmap_build_cannot_commit_a_partial_selection ... ok
+test model::tests::utf16_name_roundtrip_does_not_replace_unpaired_surrogates ... ok
+test model::tests::truncation_keeps_graphemes_and_raw_value ... ok
+test selection::tests::additive_band_preserves_all_exceptions_and_disjoint_items ... ok
+test selection::tests::control_shift_extends_without_losing_disjoint_selection ... ok
+test selection::tests::rectangle_matches_independent_item_truth_including_partial_last_row ... ok
+test selection::tests::worker_wakes_after_idle_and_delivers_the_latest_requested_band ... ok
+partial selection: 3636364 items, 1254620 bitmap serialized bytes, 59.694 ms (CPU model only)
+test selection::tests::ten_million_partial_column_selection_has_exact_count_and_bounded_encoding ... ok
+test model::tests::directory_snapshot_pages_and_details_keep_real_identity ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 3.04s
+

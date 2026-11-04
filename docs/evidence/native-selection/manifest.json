@@ -2,7 +2,7 @@
   "source_commit": "d28e5af81f787fb8257cdce1d484caac667e30c9",
   "exe_sha256": "66056e377e68532ca80777b57c0fe957ca972f434b71446ff1b27e8bbb0d647f",
   "artifact_sha256": "340269e668c51992c7e605b84c1c87847020f181a73b222406fb5b091e1b3afb",
-  "verified_at_utc": "2026-11-04T06:13:20.993277+00:00",
+  "verified_at_utc": "2026-11-04T06:25:57.585854+00:00",
   "files": [
     {
       "path": "reports/1k-scroll.json",
@@ -143,6 +143,26 @@
       "path": "hardware.json",
       "sha256": "2e1a0f361a8e28495d7b6b444bb2074183883cadcf5cb4be7498d4634411f1a1",
       "bytes": 701
+    },
+    {
+      "path": "staging.json",
+      "sha256": "2fc3490d58b404161c00b2bdffdf8aa75aa7cf753582c289be59fb16e8fe4f33",
+      "bytes": 1098
+    },
+    {
+      "path": "summary.json",
+      "sha256": "ec789bc2fe4dd24447c2f6b3ac469b43077ff23cc2ea1cf9cefcf6351ebf9668",
+      "bytes": 4803
+    },
+    {
+      "path": "published.json",
+      "sha256": "00073d272a6b8ea4e371a64a388e199565744675608f29993abefbe6cb35ad96",
+      "bytes": 1711
+    },
+    {
+      "path": "README.md",
+      "sha256": "b0de0b48b25c8de6ff4f1b3e67562860a35323dae6a503560e512b8a48a9eab0",
+      "bytes": 1933
     }
   ]
 }

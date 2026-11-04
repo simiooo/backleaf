@@ -1,3 +1,5 @@
 # Native measurement manifests hash the exact report bytes.
 docs/evidence/native/unlocked/*.json -text
 docs/evidence/native/unlocked/*.png binary
+# Preserve the measured bytes across Git storage and Windows checkouts.
+docs/evidence/native-selection/** -text whitespace=cr-at-eol

@@ -14,6 +14,9 @@
     "locked": false,
     "error": null
   },
-  "status": "verified candidate; publication metadata added separately",
-  "verified_at_utc": "2026-11-04T06:13:20.993277+00:00"
+  "status": "published staging prerelease; product acceptance pending",
+  "verified_at_utc": "2026-11-04T06:13:20.993277+00:00",
+  "release_url": "https://github.com/simiooo/backleaf/releases/tag/native-v0.1.0-preview.2-20261104",
+  "published_at_utc": "2026-11-04T06:19:58Z",
+  "publication_evidence": "published.json"
 }

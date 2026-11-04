@@ -1,0 +1,36 @@
+{
+  "release_url": "https://github.com/simiooo/backleaf/releases/tag/native-v0.1.0-preview.2-20261104",
+  "tag": "native-v0.1.0-preview.2-20261104",
+  "target_commit": "d28e5af81f787fb8257cdce1d484caac667e30c9",
+  "tag_commit": "d28e5af81f787fb8257cdce1d484caac667e30c9",
+  "published_at_utc": "2026-11-04T06:19:58Z",
+  "is_draft": false,
+  "is_prerelease": true,
+  "assets": [
+    {
+      "name": "Backleaf-0.1.0-preview.2-candidate-d28e5af8-win-x64.zip",
+      "size": 7265996,
+      "digest": "sha256:340269e668c51992c7e605b84c1c87847020f181a73b222406fb5b091e1b3afb",
+      "url": "https://github.com/simiooo/backleaf/releases/download/native-v0.1.0-preview.2-20261104/Backleaf-0.1.0-preview.2-candidate-d28e5af8-win-x64.zip",
+      "state": "uploaded"
+    },
+    {
+      "name": "Backleaf-v9.fig",
+      "size": 599276,
+      "digest": "sha256:0fea7e1a6d99d94a07f1db6c77e6960e08c02153beb53e613e372b33f1e3740c",
+      "url": "https://github.com/simiooo/backleaf/releases/download/native-v0.1.0-preview.2-20261104/Backleaf-v9.fig",
+      "state": "uploaded"
+    },
+    {
+      "name": "native-v9-SHA256SUMS.txt",
+      "size": 206,
+      "digest": "sha256:52cdde277345a74d72b4637aff1df9eaea490f02903ce26dd389af74077101e3",
+      "url": "https://github.com/simiooo/backleaf/releases/download/native-v0.1.0-preview.2-20261104/native-v9-SHA256SUMS.txt",
+      "state": "uploaded"
+    }
+  ],
+  "uploaded_asset_digests_match": true,
+  "downloaded_bytes_verified": false,
+  "validation_scope": "GitHub server asset digests match local package/design/checksums; visible smoke used locally extracted identical candidate.",
+  "verified_at_utc": "2026-11-04T06:25:57.585854+00:00"
+}
