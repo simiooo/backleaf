@@ -111,7 +111,7 @@ fn grid_layout(
     );
     lines
 }
-/// One continuous state surface follows the measured content; the click target stays fixed.
+/// The same measured rounded surface is used for pointer hit testing.
 pub fn file_background(
     id: usize,
     label: String,
@@ -143,13 +143,11 @@ pub fn file_background(
                 return;
             }
             let l = &crate::layout::LAYOUT;
-            let width = (l.grid.icon_size.max(name_width) + l.file.visual_padding_x * 2.)
-                .min(f32::from(bounds.size.width));
-            let height = l.file.visual_padding_top
-                + l.grid.icon_size
-                + l.file.icon_name_gap
-                + name_height
-                + l.file.visual_padding_bottom;
+            let surface = crate::file_geometry::surface(
+                f32::from(bounds.size.width),
+                name_width,
+                name_height,
+            );
             let base = if state.selected {
                 if state.active {
                     ColorRole::Selected
@@ -168,8 +166,11 @@ pub fn file_background(
             };
             window.paint_quad(quad(
                 Bounds::new(
-                    point(bounds.center().x - px(width / 2.), bounds.top()),
-                    size(px(width), px(height)),
+                    point(
+                        bounds.left() + px(surface.left),
+                        bounds.top() + px(surface.top),
+                    ),
+                    size(px(surface.width), px(surface.height)),
                 ),
                 px(l.file.radius),
                 fill,

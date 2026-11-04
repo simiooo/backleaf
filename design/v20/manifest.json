@@ -1,0 +1,38 @@
+{
+  "version": "v20-content-sized-file-hit",
+  "retainedPages": 137,
+  "pages": [
+    {
+      "key": "138-short-selected",
+      "name": "138 · v20 short-selected",
+      "nodes": 97
+    },
+    {
+      "key": "139-blank-cleared",
+      "name": "139 · v20 blank-cleared",
+      "nodes": 94
+    },
+    {
+      "key": "140-long-selected",
+      "name": "140 · v20 long-selected",
+      "nodes": 97
+    },
+    {
+      "key": "141-rename-input",
+      "name": "141 · v20 rename-input",
+      "nodes": 98
+    },
+    {
+      "key": "142-narrow-hits",
+      "name": "142 · v20 narrow-hits",
+      "nodes": 97
+    },
+    {
+      "key": "143-dark-hits",
+      "name": "143 · v20 dark-hits",
+      "nodes": 97
+    }
+  ],
+  "tokens": "design/layout-system.json",
+  "source": "scripts/design/chrome-v20.mjs"
+}

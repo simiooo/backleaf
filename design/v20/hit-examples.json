@@ -1,0 +1,329 @@
+{
+  "policy": "Only measured rounded identity surface is clickable; stable cell whitespace remains blank; rename input owns its own pointer events; tooltip only covers measured caption",
+  "examples": [
+    {
+      "scene": "138-short-selected",
+      "name": "文档",
+      "cellWidth": 105.5,
+      "cellHeight": 112,
+      "surfaceWidth": 60,
+      "surfaceHeight": 92,
+      "blankOutside": true
+    },
+    {
+      "scene": "138-short-selected",
+      "name": "notes.md",
+      "cellWidth": 105.5,
+      "cellHeight": 112,
+      "surfaceWidth": 64,
+      "surfaceHeight": 92,
+      "blankOutside": true
+    },
+    {
+      "scene": "138-short-selected",
+      "name": "项目归档_完整名称与补充资料_2026.pdf",
+      "cellWidth": 105.5,
+      "cellHeight": 112,
+      "surfaceWidth": 105.5,
+      "surfaceHeight": 108,
+      "blankOutside": true
+    },
+    {
+      "scene": "138-short-selected",
+      "name": "山川.png",
+      "cellWidth": 105.5,
+      "cellHeight": 112,
+      "surfaceWidth": 60,
+      "surfaceHeight": 92,
+      "blankOutside": true
+    },
+    {
+      "scene": "138-short-selected",
+      "name": "src",
+      "cellWidth": 105.5,
+      "cellHeight": 112,
+      "surfaceWidth": 60,
+      "surfaceHeight": 92,
+      "blankOutside": true
+    },
+    {
+      "scene": "138-short-selected",
+      "name": "index.ts",
+      "cellWidth": 105.5,
+      "cellHeight": 112,
+      "surfaceWidth": 64,
+      "surfaceHeight": 92,
+      "blankOutside": true
+    },
+    {
+      "scene": "139-blank-cleared",
+      "name": "文档",
+      "cellWidth": 105.5,
+      "cellHeight": 112,
+      "surfaceWidth": 60,
+      "surfaceHeight": 92,
+      "blankOutside": true
+    },
+    {
+      "scene": "139-blank-cleared",
+      "name": "notes.md",
+      "cellWidth": 105.5,
+      "cellHeight": 112,
+      "surfaceWidth": 64,
+      "surfaceHeight": 92,
+      "blankOutside": true
+    },
+    {
+      "scene": "139-blank-cleared",
+      "name": "项目归档_完整名称与补充资料_2026.pdf",
+      "cellWidth": 105.5,
+      "cellHeight": 112,
+      "surfaceWidth": 105.5,
+      "surfaceHeight": 108,
+      "blankOutside": true
+    },
+    {
+      "scene": "139-blank-cleared",
+      "name": "山川.png",
+      "cellWidth": 105.5,
+      "cellHeight": 112,
+      "surfaceWidth": 60,
+      "surfaceHeight": 92,
+      "blankOutside": true
+    },
+    {
+      "scene": "139-blank-cleared",
+      "name": "src",
+      "cellWidth": 105.5,
+      "cellHeight": 112,
+      "surfaceWidth": 60,
+      "surfaceHeight": 92,
+      "blankOutside": true
+    },
+    {
+      "scene": "139-blank-cleared",
+      "name": "index.ts",
+      "cellWidth": 105.5,
+      "cellHeight": 112,
+      "surfaceWidth": 64,
+      "surfaceHeight": 92,
+      "blankOutside": true
+    },
+    {
+      "scene": "140-long-selected",
+      "name": "文档",
+      "cellWidth": 105.5,
+      "cellHeight": 112,
+      "surfaceWidth": 60,
+      "surfaceHeight": 92,
+      "blankOutside": true
+    },
+    {
+      "scene": "140-long-selected",
+      "name": "notes.md",
+      "cellWidth": 105.5,
+      "cellHeight": 112,
+      "surfaceWidth": 64,
+      "surfaceHeight": 92,
+      "blankOutside": true
+    },
+    {
+      "scene": "140-long-selected",
+      "name": "项目归档_完整名称与补充资料_2026.pdf",
+      "cellWidth": 105.5,
+      "cellHeight": 112,
+      "surfaceWidth": 105.5,
+      "surfaceHeight": 108,
+      "blankOutside": true
+    },
+    {
+      "scene": "140-long-selected",
+      "name": "山川.png",
+      "cellWidth": 105.5,
+      "cellHeight": 112,
+      "surfaceWidth": 60,
+      "surfaceHeight": 92,
+      "blankOutside": true
+    },
+    {
+      "scene": "140-long-selected",
+      "name": "src",
+      "cellWidth": 105.5,
+      "cellHeight": 112,
+      "surfaceWidth": 60,
+      "surfaceHeight": 92,
+      "blankOutside": true
+    },
+    {
+      "scene": "140-long-selected",
+      "name": "index.ts",
+      "cellWidth": 105.5,
+      "cellHeight": 112,
+      "surfaceWidth": 64,
+      "surfaceHeight": 92,
+      "blankOutside": true
+    },
+    {
+      "scene": "141-rename-input",
+      "name": "文档",
+      "cellWidth": 105.5,
+      "cellHeight": 112,
+      "surfaceWidth": 60,
+      "surfaceHeight": 92,
+      "blankOutside": true
+    },
+    {
+      "scene": "141-rename-input",
+      "name": "notes.md",
+      "cellWidth": 105.5,
+      "cellHeight": 112,
+      "surfaceWidth": 64,
+      "surfaceHeight": 92,
+      "blankOutside": true
+    },
+    {
+      "scene": "141-rename-input",
+      "name": "项目归档_完整名称与补充资料_2026.pdf",
+      "cellWidth": 105.5,
+      "cellHeight": 112,
+      "surfaceWidth": 105.5,
+      "surfaceHeight": 108,
+      "blankOutside": true
+    },
+    {
+      "scene": "141-rename-input",
+      "name": "山川.png",
+      "cellWidth": 105.5,
+      "cellHeight": 112,
+      "surfaceWidth": 60,
+      "surfaceHeight": 92,
+      "blankOutside": true
+    },
+    {
+      "scene": "141-rename-input",
+      "name": "src",
+      "cellWidth": 105.5,
+      "cellHeight": 112,
+      "surfaceWidth": 60,
+      "surfaceHeight": 92,
+      "blankOutside": true
+    },
+    {
+      "scene": "141-rename-input",
+      "name": "index.ts",
+      "cellWidth": 105.5,
+      "cellHeight": 112,
+      "surfaceWidth": 64,
+      "surfaceHeight": 92,
+      "blankOutside": true
+    },
+    {
+      "scene": "142-narrow-hits",
+      "name": "文档",
+      "cellWidth": 108,
+      "cellHeight": 112,
+      "surfaceWidth": 60,
+      "surfaceHeight": 92,
+      "blankOutside": true
+    },
+    {
+      "scene": "142-narrow-hits",
+      "name": "notes.md",
+      "cellWidth": 108,
+      "cellHeight": 112,
+      "surfaceWidth": 64,
+      "surfaceHeight": 92,
+      "blankOutside": true
+    },
+    {
+      "scene": "142-narrow-hits",
+      "name": "项目归档_完整名称与补充资料_2026.pdf",
+      "cellWidth": 108,
+      "cellHeight": 112,
+      "surfaceWidth": 108,
+      "surfaceHeight": 108,
+      "blankOutside": true
+    },
+    {
+      "scene": "142-narrow-hits",
+      "name": "山川.png",
+      "cellWidth": 108,
+      "cellHeight": 112,
+      "surfaceWidth": 60,
+      "surfaceHeight": 92,
+      "blankOutside": true
+    },
+    {
+      "scene": "142-narrow-hits",
+      "name": "src",
+      "cellWidth": 108,
+      "cellHeight": 112,
+      "surfaceWidth": 60,
+      "surfaceHeight": 92,
+      "blankOutside": true
+    },
+    {
+      "scene": "142-narrow-hits",
+      "name": "index.ts",
+      "cellWidth": 108,
+      "cellHeight": 112,
+      "surfaceWidth": 64,
+      "surfaceHeight": 92,
+      "blankOutside": true
+    },
+    {
+      "scene": "143-dark-hits",
+      "name": "文档",
+      "cellWidth": 105.5,
+      "cellHeight": 112,
+      "surfaceWidth": 60,
+      "surfaceHeight": 92,
+      "blankOutside": true
+    },
+    {
+      "scene": "143-dark-hits",
+      "name": "notes.md",
+      "cellWidth": 105.5,
+      "cellHeight": 112,
+      "surfaceWidth": 64,
+      "surfaceHeight": 92,
+      "blankOutside": true
+    },
+    {
+      "scene": "143-dark-hits",
+      "name": "项目归档_完整名称与补充资料_2026.pdf",
+      "cellWidth": 105.5,
+      "cellHeight": 112,
+      "surfaceWidth": 105.5,
+      "surfaceHeight": 108,
+      "blankOutside": true
+    },
+    {
+      "scene": "143-dark-hits",
+      "name": "山川.png",
+      "cellWidth": 105.5,
+      "cellHeight": 112,
+      "surfaceWidth": 60,
+      "surfaceHeight": 92,
+      "blankOutside": true
+    },
+    {
+      "scene": "143-dark-hits",
+      "name": "src",
+      "cellWidth": 105.5,
+      "cellHeight": 112,
+      "surfaceWidth": 60,
+      "surfaceHeight": 92,
+      "blankOutside": true
+    },
+    {
+      "scene": "143-dark-hits",
+      "name": "index.ts",
+      "cellWidth": 105.5,
+      "cellHeight": 112,
+      "surfaceWidth": 64,
+      "surfaceHeight": 92,
+      "blankOutside": true
+    }
+  ]
+}

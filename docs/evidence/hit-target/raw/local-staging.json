@@ -1,0 +1,11 @@
+{
+  "exe": "D:\\work\\backleaf\\.local\\staging\\hit-preview.9\\Backleaf.exe",
+  "pid": 41080,
+  "fixture": "D:\\work\\backleaf\\.local\\hit-fixtures\\976da26a",
+  "deployed_at": "2026-11-04T23:49:13.5341903+08:00",
+  "session": {
+    "locked": false,
+    "error": null
+  },
+  "sha256": "976da26a3cf24031fb0a785bc28d5da2d8ca2c0c426d5987d53d7cf85916aa6d"
+}

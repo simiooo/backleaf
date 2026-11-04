@@ -1,0 +1,39 @@
+{
+  "masterSha256": "f739d30583052de7b9835ea137fb16bc2fae62533968984ec64b6d07fe7c119c",
+  "retainedPages": 137,
+  "pages": 143,
+  "result": "passed",
+  "results": [
+    {
+      "key": "138-short-selected",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "139-blank-cleared",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "140-long-selected",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "141-rename-input",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "142-narrow-hits",
+      "changedPixels": 0,
+      "totalPixels": 246400
+    },
+    {
+      "key": "143-dark-hits",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    }
+  ],
+  "verifiedAt": "2026-11-04T15:49:21.605Z"
+}

@@ -1,0 +1,75 @@
+{
+  "application_icons": {
+    "cache_entries": 0,
+    "cache_peak": 0,
+    "queue_peak": 0,
+    "result_peak": 0,
+    "extracted": 0,
+    "unavailable": 0
+  },
+  "session_initially_locked": false,
+  "session_locked_at_end": false,
+  "accessibility_active": false,
+  "version": "0.1.0-preview.9",
+  "gpui_revision": "d36a70661471ec64dce230798121d554930d5c60",
+  "backend": "GPUI / Win32 / Direct3D 11 / DirectWrite",
+  "dataset": "generated metadata fixture (same native grid); navigation fixture entries=0",
+  "item_count": 1000000,
+  "selected_count": 18,
+  "selection_bitmap_serialized_bytes": 47,
+  "selection_pending": false,
+  "theme_dark": false,
+  "scripted_scroll": false,
+  "synthetic_selection_script": true,
+  "flow_limit": 0,
+  "reduced_motion": false,
+  "logical_viewport": [
+    1120.0,
+    720.0
+  ],
+  "scale_factor": 1.25,
+  "duration_seconds": 6.0176218,
+  "scene_cpu": {
+    "samples": 36,
+    "p50_ms": 2.7337,
+    "p95_ms": 4.8389,
+    "p99_ms": 5.2284999999999995,
+    "max_ms": 5.2284999999999995
+  },
+  "frame_callback_interval": {
+    "samples": 36,
+    "p50_ms": 9.0464,
+    "p95_ms": 803.8865,
+    "p99_ms": 1314.8947,
+    "max_ms": 1314.8947
+  },
+  "input_handler_to_scene": {
+    "samples": 1,
+    "p50_ms": 11.8363,
+    "p95_ms": 11.8363,
+    "p99_ms": 11.8363,
+    "max_ms": 11.8363
+  },
+  "frames": 36,
+  "grid_builds": 37,
+  "label_layout_builds": 196,
+  "label_cache_peak": 96,
+  "visible_cells_peak": 60,
+  "cached_items_peak": 100,
+  "flow_layout_builds": 0,
+  "animation_requests": 18,
+  "max_pending_frame_callbacks": 1,
+  "hidden_animation_requests": 0,
+  "peak_working_set_mib": 75.96484375,
+  "private_bytes_mib": 86.7890625,
+  "cpu_seconds": 0.65625,
+  "cpu_one_core_percent": 10.90547099520279,
+  "events": [
+    "0.010s session-unlocked requests=0 frames=0",
+    "1.512s key",
+    "1.512s selection-smoke system-shortcut-pass=true",
+    "1.512s selection-smoke scope=synthetic-controller-events-real-window-not-OS-input",
+    "3.446s selection-smoke invalid=activation-lost"
+  ],
+  "measurement_notes": "Native release executable, real GPUI layout/paint and D3D11 window. Scene CPU is render start through final canvas paint; callback intervals are not GPU fence/present latency. Input measurement starts in the native event handler. Fixtures are metadata, not real copied files. Warmup: 1 second; first initialization and memory remain in wall-time/peak."
+}

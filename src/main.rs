@@ -3,6 +3,7 @@ mod app_navigation;
 mod app_operations;
 mod app_scroll;
 mod app_search;
+mod file_geometry;
 mod file_icons;
 mod input;
 mod layout;
@@ -602,7 +603,13 @@ impl Backleaf {
         }
         let dx = x - col as f64 * (self.cell_width as f64 + layout::LAYOUT.grid.column_gap as f64);
         let dy = y - row as f64 * layout::row_step() as f64;
-        (dx < self.cell_width as f64 && dy < layout::LAYOUT.grid.cell_height as f64).then_some(id)
+        if !self.cache.contains_key(&id) {
+            return None;
+        }
+        let (name_width, name_height) = self.labels.borrow().extents.get(&id).copied()?;
+        crate::file_geometry::surface(self.cell_width, name_width, name_height)
+            .rounded_contains(dx as f32, dy as f32, layout::LAYOUT.file.radius)
+            .then_some(id)
     }
     fn selection_busy(&self) -> bool {
         self.marquee
@@ -982,6 +989,13 @@ impl Backleaf {
             .as_ref()
             .filter(|e| matches!(&e.kind,app_operations::EditKind::Rename(d)if d.id==id))
             .map(|e| e.input.clone());
+        let caption_hit = self
+            .labels
+            .borrow()
+            .extents
+            .get(&id)
+            .copied()
+            .map(|(w, h)| crate::file_geometry::caption(width, w, h));
         div()
             .id(SharedString::from(format!("file-{}-{id}", self.generation)))
             .role(Role::ListBoxOption)
@@ -999,8 +1013,9 @@ impl Backleaf {
             .px(px(l.file.visual_padding_x))
             .pt(px(l.file.visual_padding_top))
             .pb(px(l.file.visual_padding_bottom))
-            .on_hover(cx.listener(move |this, hovered, _, cx| {
-                let next = if *hovered {
+            .on_hover(cx.listener(move |this, hovered, window, cx| {
+                let next = if *hovered && this.hit_file(window.mouse_position(), window) == Some(id)
+                {
                     Some(id)
                 } else if this.hovered_id == Some(id) {
                     None
@@ -1012,6 +1027,24 @@ impl Backleaf {
                     cx.notify();
                 }
             }))
+            .on_mouse_move(
+                cx.listener(move |this, event: &MouseMoveEvent, window, cx| {
+                    if this.marquee.is_some() || this.scrollbar_drag.is_some() {
+                        return;
+                    }
+                    let next = if this.hit_file(event.position, window) == Some(id) {
+                        Some(id)
+                    } else if this.hovered_id == Some(id) {
+                        None
+                    } else {
+                        this.hovered_id
+                    };
+                    if next != this.hovered_id {
+                        this.hovered_id = next;
+                        cx.notify();
+                    }
+                }),
+            )
             .on_click(cx.listener(move |this, event: &ClickEvent, window, cx| {
                 if this.selection_busy()
                     || (event.mouse_position().is_some()
@@ -1070,12 +1103,28 @@ impl Backleaf {
             .child(
                 div()
                     .id(("filename-tooltip", id))
+                    .relative()
                     .w_full()
                     .h(px(36.))
                     .flex_none()
                     .when(
                         self.marquee.is_none() && item.is_some() && editor.is_none(),
-                        |d| d.tooltip(tooltip(name.clone(), colors)),
+                        |d| {
+                            d.when_some(caption_hit, |d, bounds| {
+                                d.child(
+                                    div()
+                                        .id(("filename-tooltip-hit", id))
+                                        .absolute()
+                                        .top_0()
+                                        .left(px((bounds.left - l.file.visual_padding_x).max(0.)))
+                                        .w(px(bounds
+                                            .width
+                                            .min((width - 2. * l.file.visual_padding_x).max(0.))))
+                                        .h(px(bounds.height.min(36.)))
+                                        .tooltip(tooltip(name.clone(), colors)),
+                                )
+                            })
+                        },
                     )
                     .when_some(editor.clone(), |d, input| {
                         d.flex()

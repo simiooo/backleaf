@@ -1,0 +1,40 @@
+[
+  {
+    "source_exe_sha256": "976da26a3cf24031fb0a785bc28d5da2d8ca2c0c426d5987d53d7cf85916aa6d",
+    "started_at": "2026-11-04T23:56:46.9206688+08:00",
+    "working_set_peak_mib": 72.890625,
+    "case": "1024-real-exe-scroll",
+    "frame_callback_p95_ms": 10.3985,
+    "scene_p95_ms": 4.1400999999999994,
+    "report_sha256": "89b14e9e4b00a6eb8912a4bd6815b86749e73d085cf541ad89aeb959df303580",
+    "application_icons": {
+      "cache_entries": 128,
+      "cache_peak": 128,
+      "queue_peak": 32,
+      "result_peak": 5,
+      "extracted": 1462,
+      "unavailable": 1032
+    },
+    "cached_items_peak": 72,
+    "visible_cells_peak": 40
+  },
+  {
+    "source_exe_sha256": "976da26a3cf24031fb0a785bc28d5da2d8ca2c0c426d5987d53d7cf85916aa6d",
+    "started_at": "2026-11-04T23:56:59.7285004+08:00",
+    "working_set_peak_mib": 76.63671875,
+    "case": "10m-scroll-flow8",
+    "frame_callback_p95_ms": 34.1664,
+    "scene_p95_ms": 4.2106,
+    "report_sha256": "1264d5cbba961f0f473b608d65ca55bb2b551735c8a01a71874385cc36ab7180",
+    "application_icons": {
+      "cache_entries": 0,
+      "cache_peak": 0,
+      "queue_peak": 0,
+      "result_peak": 0,
+      "extracted": 0,
+      "unavailable": 0
+    },
+    "cached_items_peak": 90,
+    "visible_cells_peak": 50
+  }
+]
