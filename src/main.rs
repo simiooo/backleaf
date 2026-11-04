@@ -676,6 +676,17 @@ impl Backleaf {
         let key = event.keystroke.key.as_str();
         let modifiers = event.keystroke.modifiers;
         self.metrics.borrow_mut().input("key");
+        if key == "tab" && !modifiers.control && !modifiers.alt {
+            self.keyboard_focus = true;
+            if modifiers.shift {
+                window.focus_prev(cx);
+            } else {
+                window.focus_next(cx);
+            }
+            cx.stop_propagation();
+            cx.notify();
+            return;
+        }
         if key == "escape" && self.marquee.is_some() {
             self.cancel_marquee();
             window.focus(&self.focus, cx);
@@ -794,10 +805,11 @@ impl Backleaf {
         let folder = item.as_ref().is_some_and(|x| x.directory);
         let active = window.is_window_active();
         let focused = self.selection.focus == Some(id);
+        let grid_focused = self.focus.is_focused(window);
         let state = FileState {
             selected: self.is_selected(id),
             active,
-            focused: focused && self.keyboard_focus,
+            focused: focused && self.keyboard_focus && grid_focused,
             hovered: active && self.hovered_id == Some(id) && self.marquee.is_none(),
             pressed: active && self.pressed_id == Some(id),
         };
@@ -808,7 +820,7 @@ impl Backleaf {
             .role(Role::ListBoxOption)
             .aria_label(name.clone())
             .aria_selected(state.selected)
-            .when(focused, |d| d.aria_active_descendant())
+            .when(focused && grid_focused, |d| d.aria_active_descendant())
             .relative()
             .w(px(width))
             .h(px(l.grid.cell_height))
@@ -1387,6 +1399,7 @@ impl Render for Backleaf {
             .role(Role::Application)
             .aria_label("拾径 Backleaf")
             .track_focus(&self.focus)
+            .tab_stop(true)
             .relative()
             .size_full()
             .flex()

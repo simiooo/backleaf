@@ -51,6 +51,7 @@ impl Render for Selectable {
         div()
             .id("selectable")
             .track_focus(&self.focus)
+            .tab_stop(true)
             .role(Role::Label)
             .aria_value(self.text.clone())
             .w_full()
