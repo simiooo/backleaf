@@ -940,7 +940,7 @@ impl Render for Backleaf {
                             .min_w_0()
                             .truncate()
                             .role(Role::Label)
-                            .aria_label(status.clone())
+                            .aria_value(status.clone())
                             .tooltip(tooltip(status.clone()))
                             .child(status),
                     ),

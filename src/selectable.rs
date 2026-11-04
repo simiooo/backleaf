@@ -48,7 +48,7 @@ impl Render for Selectable {
             .id("selectable")
             .track_focus(&self.focus)
             .role(Role::Label)
-            .aria_label(self.text.clone())
+            .aria_value(self.text.clone())
             .w_full()
             .min_w_0()
             .cursor(CursorStyle::IBeam)
