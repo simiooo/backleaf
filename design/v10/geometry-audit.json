@@ -1,0 +1,1042 @@
+{
+  "method": "actual cold-opened node geometry",
+  "checks": [
+    {
+      "name": "70 editable pages, 52 retained",
+      "pass": true
+    },
+    {
+      "name": "Menu surface padding 4/8, radius12",
+      "pass": true
+    },
+    {
+      "name": "Menu rows repeat height32, radius8, paddingX8",
+      "pass": true
+    },
+    {
+      "name": "Task panels fit 380px and repeat 12/16 insets",
+      "pass": true
+    },
+    {
+      "name": "Target, progress, counts and filenames share x12",
+      "pass": true
+    },
+    {
+      "name": "Count and byte columns have a stable 188px width",
+      "pass": true
+    },
+    {
+      "name": "Completed track is full width",
+      "pass": true
+    },
+    {
+      "name": "Queue surface fits 360px and has no per-task cards",
+      "pass": true
+    }
+  ],
+  "records": [
+    {
+      "page": "53 · v10 文件菜单",
+      "name": "Context menu / file",
+      "width": 260,
+      "height": 288,
+      "radius": 12,
+      "padding": [
+        8,
+        4,
+        8,
+        4
+      ]
+    },
+    {
+      "page": "53 · v10 文件菜单",
+      "name": "Menu row / 打开",
+      "width": 252,
+      "height": 32,
+      "radius": 8,
+      "padding": [
+        0,
+        8,
+        0,
+        8
+      ]
+    },
+    {
+      "page": "53 · v10 文件菜单",
+      "name": "Menu row / 复制",
+      "width": 252,
+      "height": 32,
+      "radius": 8,
+      "padding": [
+        0,
+        8,
+        0,
+        8
+      ]
+    },
+    {
+      "page": "53 · v10 文件菜单",
+      "name": "Menu row / 剪切",
+      "width": 252,
+      "height": 32,
+      "radius": 8,
+      "padding": [
+        0,
+        8,
+        0,
+        8
+      ]
+    },
+    {
+      "page": "53 · v10 文件菜单",
+      "name": "Menu row / 复制路径",
+      "width": 252,
+      "height": 32,
+      "radius": 8,
+      "padding": [
+        0,
+        8,
+        0,
+        8
+      ]
+    },
+    {
+      "page": "53 · v10 文件菜单",
+      "name": "Menu row / 重命名",
+      "width": 252,
+      "height": 32,
+      "radius": 8,
+      "padding": [
+        0,
+        8,
+        0,
+        8
+      ]
+    },
+    {
+      "page": "53 · v10 文件菜单",
+      "name": "Menu row / 移至回收站",
+      "width": 252,
+      "height": 32,
+      "radius": 8,
+      "padding": [
+        0,
+        8,
+        0,
+        8
+      ]
+    },
+    {
+      "page": "53 · v10 文件菜单",
+      "name": "Menu row / 详情",
+      "width": 252,
+      "height": 32,
+      "radius": 8,
+      "padding": [
+        0,
+        8,
+        0,
+        8
+      ]
+    },
+    {
+      "page": "54 · v10 多选菜单",
+      "name": "Context menu / multi",
+      "width": 260,
+      "height": 192,
+      "radius": 12,
+      "padding": [
+        8,
+        4,
+        8,
+        4
+      ]
+    },
+    {
+      "page": "54 · v10 多选菜单",
+      "name": "Menu row / 复制",
+      "width": 252,
+      "height": 32,
+      "radius": 8,
+      "padding": [
+        0,
+        8,
+        0,
+        8
+      ]
+    },
+    {
+      "page": "54 · v10 多选菜单",
+      "name": "Menu row / 剪切",
+      "width": 252,
+      "height": 32,
+      "radius": 8,
+      "padding": [
+        0,
+        8,
+        0,
+        8
+      ]
+    },
+    {
+      "page": "54 · v10 多选菜单",
+      "name": "Menu row / 复制路径",
+      "width": 252,
+      "height": 32,
+      "radius": 8,
+      "padding": [
+        0,
+        8,
+        0,
+        8
+      ]
+    },
+    {
+      "page": "54 · v10 多选菜单",
+      "name": "Menu row / 重命名",
+      "width": 252,
+      "height": 32,
+      "radius": 8,
+      "padding": [
+        0,
+        8,
+        0,
+        8
+      ]
+    },
+    {
+      "page": "54 · v10 多选菜单",
+      "name": "Menu row / 移至回收站",
+      "width": 252,
+      "height": 32,
+      "radius": 8,
+      "padding": [
+        0,
+        8,
+        0,
+        8
+      ]
+    },
+    {
+      "page": "55 · v10 空白菜单与禁用",
+      "name": "Context menu / blank",
+      "width": 260,
+      "height": 128,
+      "radius": 12,
+      "padding": [
+        8,
+        4,
+        8,
+        4
+      ]
+    },
+    {
+      "page": "55 · v10 空白菜单与禁用",
+      "name": "Menu row / 新建文件夹",
+      "width": 252,
+      "height": 32,
+      "radius": 8,
+      "padding": [
+        0,
+        8,
+        0,
+        8
+      ]
+    },
+    {
+      "page": "55 · v10 空白菜单与禁用",
+      "name": "Menu row / 粘贴",
+      "width": 252,
+      "height": 32,
+      "radius": 8,
+      "padding": [
+        0,
+        8,
+        0,
+        8
+      ]
+    },
+    {
+      "page": "55 · v10 空白菜单与禁用",
+      "name": "Menu row / 刷新",
+      "width": 252,
+      "height": 32,
+      "radius": 8,
+      "padding": [
+        0,
+        8,
+        0,
+        8
+      ]
+    },
+    {
+      "page": "56 · v10 文件夹菜单",
+      "name": "Context menu / folder",
+      "width": 260,
+      "height": 288,
+      "radius": 12,
+      "padding": [
+        8,
+        4,
+        8,
+        4
+      ]
+    },
+    {
+      "page": "56 · v10 文件夹菜单",
+      "name": "Menu row / 打开",
+      "width": 252,
+      "height": 32,
+      "radius": 8,
+      "padding": [
+        0,
+        8,
+        0,
+        8
+      ]
+    },
+    {
+      "page": "56 · v10 文件夹菜单",
+      "name": "Menu row / 复制",
+      "width": 252,
+      "height": 32,
+      "radius": 8,
+      "padding": [
+        0,
+        8,
+        0,
+        8
+      ]
+    },
+    {
+      "page": "56 · v10 文件夹菜单",
+      "name": "Menu row / 剪切",
+      "width": 252,
+      "height": 32,
+      "radius": 8,
+      "padding": [
+        0,
+        8,
+        0,
+        8
+      ]
+    },
+    {
+      "page": "56 · v10 文件夹菜单",
+      "name": "Menu row / 粘贴到文件夹",
+      "width": 252,
+      "height": 32,
+      "radius": 8,
+      "padding": [
+        0,
+        8,
+        0,
+        8
+      ]
+    },
+    {
+      "page": "56 · v10 文件夹菜单",
+      "name": "Menu row / 重命名",
+      "width": 252,
+      "height": 32,
+      "radius": 8,
+      "padding": [
+        0,
+        8,
+        0,
+        8
+      ]
+    },
+    {
+      "page": "56 · v10 文件夹菜单",
+      "name": "Menu row / 移至回收站",
+      "width": 252,
+      "height": 32,
+      "radius": 8,
+      "padding": [
+        0,
+        8,
+        0,
+        8
+      ]
+    },
+    {
+      "page": "56 · v10 文件夹菜单",
+      "name": "Menu row / 详情",
+      "width": 252,
+      "height": 32,
+      "radius": 8,
+      "padding": [
+        0,
+        8,
+        0,
+        8
+      ]
+    },
+    {
+      "page": "59 · v10 待剪切与键盘菜单",
+      "name": "Context menu / multi",
+      "width": 260,
+      "height": 192,
+      "radius": 12,
+      "padding": [
+        8,
+        4,
+        8,
+        4
+      ]
+    },
+    {
+      "page": "59 · v10 待剪切与键盘菜单",
+      "name": "Menu row / 复制",
+      "width": 252,
+      "height": 32,
+      "radius": 8,
+      "padding": [
+        0,
+        8,
+        0,
+        8
+      ]
+    },
+    {
+      "page": "59 · v10 待剪切与键盘菜单",
+      "name": "Menu row / 剪切",
+      "width": 252,
+      "height": 32,
+      "radius": 8,
+      "padding": [
+        0,
+        8,
+        0,
+        8
+      ]
+    },
+    {
+      "page": "59 · v10 待剪切与键盘菜单",
+      "name": "Menu row / 复制路径",
+      "width": 252,
+      "height": 32,
+      "radius": 8,
+      "padding": [
+        0,
+        8,
+        0,
+        8
+      ]
+    },
+    {
+      "page": "59 · v10 待剪切与键盘菜单",
+      "name": "Menu row / 重命名",
+      "width": 252,
+      "height": 32,
+      "radius": 8,
+      "padding": [
+        0,
+        8,
+        0,
+        8
+      ]
+    },
+    {
+      "page": "59 · v10 待剪切与键盘菜单",
+      "name": "Menu row / 移至回收站",
+      "width": 252,
+      "height": 32,
+      "radius": 8,
+      "padding": [
+        0,
+        8,
+        0,
+        8
+      ]
+    },
+    {
+      "page": "60 · v10 真实任务进行与失败详情",
+      "name": "Operation panel / copy / running",
+      "width": 400,
+      "height": 330,
+      "radius": 12,
+      "padding": [
+        16,
+        12,
+        16,
+        12
+      ],
+      "axes": [
+        12,
+        12,
+        12,
+        12
+      ],
+      "progressWidth": 158
+    },
+    {
+      "page": "60 · v10 真实任务进行与失败详情",
+      "name": "Count column",
+      "width": 188,
+      "height": 16,
+      "radius": 0,
+      "padding": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "page": "60 · v10 真实任务进行与失败详情",
+      "name": "Bytes column",
+      "width": 188,
+      "height": 16,
+      "radius": 0,
+      "padding": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "page": "60 · v10 真实任务进行与失败详情",
+      "name": "Operation panel / copy / preparing",
+      "width": 400,
+      "height": 98,
+      "radius": 12,
+      "padding": [
+        16,
+        12,
+        16,
+        12
+      ],
+      "axes": [
+        12,
+        12,
+        12
+      ],
+      "progressWidth": 44
+    },
+    {
+      "page": "60 · v10 真实任务进行与失败详情",
+      "name": "Count column",
+      "width": 188,
+      "height": 16,
+      "radius": 0,
+      "padding": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "page": "60 · v10 真实任务进行与失败详情",
+      "name": "Bytes column",
+      "width": 188,
+      "height": 16,
+      "radius": 0,
+      "padding": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "page": "61 · v10 删除进行与取消后",
+      "name": "Operation panel / recycle / running",
+      "width": 400,
+      "height": 338,
+      "radius": 12,
+      "padding": [
+        16,
+        12,
+        16,
+        12
+      ],
+      "axes": [
+        12,
+        12,
+        12,
+        12
+      ],
+      "progressWidth": 158
+    },
+    {
+      "page": "61 · v10 删除进行与取消后",
+      "name": "Count column",
+      "width": 188,
+      "height": 16,
+      "radius": 0,
+      "padding": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "page": "61 · v10 删除进行与取消后",
+      "name": "Bytes column",
+      "width": 188,
+      "height": 16,
+      "radius": 0,
+      "padding": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "page": "61 · v10 删除进行与取消后",
+      "name": "Operation panel / recycle / canceled",
+      "width": 400,
+      "height": 330,
+      "radius": 12,
+      "padding": [
+        16,
+        12,
+        16,
+        12
+      ],
+      "axes": [
+        12,
+        12,
+        12,
+        12
+      ],
+      "progressWidth": 158
+    },
+    {
+      "page": "61 · v10 删除进行与取消后",
+      "name": "Count column",
+      "width": 188,
+      "height": 16,
+      "radius": 0,
+      "padding": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "page": "61 · v10 删除进行与取消后",
+      "name": "Bytes column",
+      "width": 188,
+      "height": 16,
+      "radius": 0,
+      "padding": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "page": "63 · v10 深色真实任务",
+      "name": "Operation panel / copy / running",
+      "width": 400,
+      "height": 330,
+      "radius": 12,
+      "padding": [
+        16,
+        12,
+        16,
+        12
+      ],
+      "axes": [
+        12,
+        12,
+        12,
+        12
+      ],
+      "progressWidth": 158
+    },
+    {
+      "page": "63 · v10 深色真实任务",
+      "name": "Count column",
+      "width": 188,
+      "height": 16,
+      "radius": 0,
+      "padding": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "page": "63 · v10 深色真实任务",
+      "name": "Bytes column",
+      "width": 188,
+      "height": 16,
+      "radius": 0,
+      "padding": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "page": "63 · v10 深色真实任务",
+      "name": "Operation panel / copy / complete",
+      "width": 400,
+      "height": 98,
+      "radius": 12,
+      "padding": [
+        16,
+        12,
+        16,
+        12
+      ],
+      "axes": [
+        12,
+        12,
+        12
+      ],
+      "progressWidth": 376
+    },
+    {
+      "page": "63 · v10 深色真实任务",
+      "name": "Count column",
+      "width": 188,
+      "height": 16,
+      "radius": 0,
+      "padding": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "page": "63 · v10 深色真实任务",
+      "name": "Bytes column",
+      "width": 188,
+      "height": 16,
+      "radius": 0,
+      "padding": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "page": "65 · v10 有界任务队列",
+      "name": "Queue / one floating surface",
+      "width": 400,
+      "height": 344,
+      "radius": 12,
+      "padding": [
+        16,
+        12,
+        16,
+        12
+      ]
+    },
+    {
+      "page": "65 · v10 有界任务队列",
+      "name": "Count column",
+      "width": 188,
+      "height": 16,
+      "radius": 0,
+      "padding": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "page": "65 · v10 有界任务队列",
+      "name": "Bytes column",
+      "width": 188,
+      "height": 16,
+      "radius": 0,
+      "padding": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "page": "65 · v10 有界任务队列",
+      "name": "Count column",
+      "width": 188,
+      "height": 16,
+      "radius": 0,
+      "padding": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "page": "65 · v10 有界任务队列",
+      "name": "Bytes column",
+      "width": 188,
+      "height": 16,
+      "radius": 0,
+      "padding": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "page": "65 · v10 有界任务队列",
+      "name": "Count column",
+      "width": 188,
+      "height": 16,
+      "radius": 0,
+      "padding": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "page": "65 · v10 有界任务队列",
+      "name": "Bytes column",
+      "width": 188,
+      "height": 16,
+      "radius": 0,
+      "padding": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "page": "65 · v10 有界任务队列",
+      "name": "Count column",
+      "width": 188,
+      "height": 16,
+      "radius": 0,
+      "padding": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "page": "65 · v10 有界任务队列",
+      "name": "Bytes column",
+      "width": 188,
+      "height": 16,
+      "radius": 0,
+      "padding": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "page": "66 · v10 取消等待与部分结果",
+      "name": "Operation panel / copy / canceling",
+      "width": 400,
+      "height": 338,
+      "radius": 12,
+      "padding": [
+        16,
+        12,
+        16,
+        12
+      ],
+      "axes": [
+        12,
+        12,
+        12,
+        12
+      ],
+      "progressWidth": 158
+    },
+    {
+      "page": "66 · v10 取消等待与部分结果",
+      "name": "Count column",
+      "width": 188,
+      "height": 16,
+      "radius": 0,
+      "padding": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "page": "66 · v10 取消等待与部分结果",
+      "name": "Bytes column",
+      "width": 188,
+      "height": 16,
+      "radius": 0,
+      "padding": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "page": "66 · v10 取消等待与部分结果",
+      "name": "Operation panel / copy / canceled",
+      "width": 400,
+      "height": 330,
+      "radius": 12,
+      "padding": [
+        16,
+        12,
+        16,
+        12
+      ],
+      "axes": [
+        12,
+        12,
+        12,
+        12
+      ],
+      "progressWidth": 158
+    },
+    {
+      "page": "66 · v10 取消等待与部分结果",
+      "name": "Count column",
+      "width": 188,
+      "height": 16,
+      "radius": 0,
+      "padding": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "page": "66 · v10 取消等待与部分结果",
+      "name": "Bytes column",
+      "width": 188,
+      "height": 16,
+      "radius": 0,
+      "padding": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "page": "70 · v10 深色文件夹菜单",
+      "name": "Context menu / folder",
+      "width": 260,
+      "height": 288,
+      "radius": 12,
+      "padding": [
+        8,
+        4,
+        8,
+        4
+      ]
+    },
+    {
+      "page": "70 · v10 深色文件夹菜单",
+      "name": "Menu row / 打开",
+      "width": 252,
+      "height": 32,
+      "radius": 8,
+      "padding": [
+        0,
+        8,
+        0,
+        8
+      ]
+    },
+    {
+      "page": "70 · v10 深色文件夹菜单",
+      "name": "Menu row / 复制",
+      "width": 252,
+      "height": 32,
+      "radius": 8,
+      "padding": [
+        0,
+        8,
+        0,
+        8
+      ]
+    },
+    {
+      "page": "70 · v10 深色文件夹菜单",
+      "name": "Menu row / 剪切",
+      "width": 252,
+      "height": 32,
+      "radius": 8,
+      "padding": [
+        0,
+        8,
+        0,
+        8
+      ]
+    },
+    {
+      "page": "70 · v10 深色文件夹菜单",
+      "name": "Menu row / 粘贴到文件夹",
+      "width": 252,
+      "height": 32,
+      "radius": 8,
+      "padding": [
+        0,
+        8,
+        0,
+        8
+      ]
+    },
+    {
+      "page": "70 · v10 深色文件夹菜单",
+      "name": "Menu row / 重命名",
+      "width": 252,
+      "height": 32,
+      "radius": 8,
+      "padding": [
+        0,
+        8,
+        0,
+        8
+      ]
+    },
+    {
+      "page": "70 · v10 深色文件夹菜单",
+      "name": "Menu row / 移至回收站",
+      "width": 252,
+      "height": 32,
+      "radius": 8,
+      "padding": [
+        0,
+        8,
+        0,
+        8
+      ]
+    },
+    {
+      "page": "70 · v10 深色文件夹菜单",
+      "name": "Menu row / 详情",
+      "width": 252,
+      "height": 32,
+      "radius": 8,
+      "padding": [
+        0,
+        8,
+        0,
+        8
+      ]
+    }
+  ]
+}

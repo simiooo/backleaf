@@ -1,5 +1,7 @@
 # 重建设计文件
 
+SIM-954 菜单和操作设计：`bun operations-v10.mjs`、`bun operations-v10.mjs --verify`、`bun audit-operations.mjs`。输出 `design/Backleaf-v10.fig`，保留 v9 的52页，追加18页，不覆盖已发布的 v9。
+
 当前状态与几何修订：`bun visual-v9.mjs`、`bun visual-v9.mjs --verify`、`bun audit-geometry.mjs v9 --compact`。输出独立的 `design/Backleaf-v9.fig`（保留 v6 的 44 页，追加 8 页）和 `design/v9` 证据；不覆盖原 v6。原生代码从 `design/color-system.json` 和 `design/layout-system.json` 读取相同规格。
 
 工具固定为 OpenPencil CLI 0.17.0-beta.1，使用其原生场景图、变量、自动布局、字体测量与 `.fig` IO。Bun 执行包内 TypeScript；没有把截图当作可编辑页面。

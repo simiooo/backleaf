@@ -7,7 +7,7 @@ Scope: SIM-919. Constraints: SIM-934. One engineering unit is active at a time.
 | accepted | SIM-921 | User accepted v6 as the implementation baseline on 2026-11-04 |
 | accepted | SIM-948 | v6 feedback incorporated and accepted as baseline |
 | review_queue | SIM-953 | v9 selection/state redesign, rubber-band and keyboard selection; installed-window smoke and 13 native runs passed; preview.2 published |
-| ready_queue | SIM-954 | Real file/blank-space menus, Shell file operations and common shortcuts after SIM-953 delivery |
+| focus_issue | SIM-954 | OpenPencil v10 menus and operation states; native Shell integration and verification in progress |
 | review_queue | SIM-951 | Native GPUI preview deployed and published; unlocked performance and installed-window smoke passed |
 | review_queue | SIM-935 | Technical plan only; native rendering now progresses through SIM-951, broader Windows validation remains open |
 | candidate after dependencies | SIM-920 | Search semantics and one saved-search/folder quick access list |
@@ -17,7 +17,7 @@ Scope: SIM-919. Constraints: SIM-934. One engineering unit is active at a time.
 
 `in_review` means engineering evidence is ready for product acceptance. It does not imply that real users have validated usability or that untested hardware, IMEs or filesystems have passed.
 
-SIM-953 engineering delivery is ready for product review. SIM-954 is next ready; SIM-920 / SIM-922 / SIM-937 remain design/specification work awaiting implementation and dependency qualification. SIM-951 is in the product review queue. User feedback continues to refine the implementation baseline; v9 is recorded in visual-system-v9.md.
+SIM-953 engineering delivery is in product review and its claim is released. Only SIM-954 is claimed; focus_operation is implementing menus and actual Windows file commands after OpenPencil design verification. SIM-920 / SIM-922 / SIM-937 remain design/specification work awaiting implementation and dependency qualification. SIM-951 is in the product review queue. The [file operation contract](file-operations.md) records current scope; v9 selection rules remain in visual-system-v9.md.
 
 2026-11-03: SIM-921 v5.1 adds eight scale states to the compact baseline, for a 38-page editable master. The design covers million-item selections, a bounded 24-task queue and ten thousand failures. The isolated metadata/queue probe verifies 100,000 and 1,000,000 records, UTF-16 long paths, retained results, bounded payloads and paged reads. See [performance contract and evidence](bulk-performance.md).
 

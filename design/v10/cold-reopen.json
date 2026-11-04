@@ -1,0 +1,99 @@
+{
+  "masterSha256": "d9ff3150118c8bd578c4eb71f24ad16c1d5adc1b1b440a9d899adbdc43d25858",
+  "retainedPages": 52,
+  "pages": 70,
+  "result": "passed",
+  "results": [
+    {
+      "key": "53-file-menu",
+      "changedPixels": 62,
+      "totalPixels": 806400
+    },
+    {
+      "key": "54-multi-menu",
+      "changedPixels": 62,
+      "totalPixels": 806400
+    },
+    {
+      "key": "55-blank-menu",
+      "changedPixels": 46,
+      "totalPixels": 806400
+    },
+    {
+      "key": "56-folder-menu",
+      "changedPixels": 142,
+      "totalPixels": 806400
+    },
+    {
+      "key": "57-rename",
+      "changedPixels": 108,
+      "totalPixels": 806400
+    },
+    {
+      "key": "58-new-folder",
+      "changedPixels": 109,
+      "totalPixels": 806400
+    },
+    {
+      "key": "59-cut",
+      "changedPixels": 136,
+      "totalPixels": 806400
+    },
+    {
+      "key": "60-progress",
+      "changedPixels": 129,
+      "totalPixels": 806400
+    },
+    {
+      "key": "61-delete-canceled",
+      "changedPixels": 269,
+      "totalPixels": 806400
+    },
+    {
+      "key": "62-conflict",
+      "changedPixels": 23,
+      "totalPixels": 806400
+    },
+    {
+      "key": "63-dark-progress",
+      "changedPixels": 127,
+      "totalPixels": 806400
+    },
+    {
+      "key": "64-path-error",
+      "changedPixels": 152,
+      "totalPixels": 806400
+    },
+    {
+      "key": "65-bounded-queue",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "66-canceling",
+      "changedPixels": 250,
+      "totalPixels": 806400
+    },
+    {
+      "key": "67-close-active",
+      "changedPixels": 11,
+      "totalPixels": 806400
+    },
+    {
+      "key": "68-clipboard-limit",
+      "changedPixels": 26,
+      "totalPixels": 806400
+    },
+    {
+      "key": "69-rename-error",
+      "changedPixels": 42,
+      "totalPixels": 806400
+    },
+    {
+      "key": "70-dark-menu",
+      "changedPixels": 40,
+      "totalPixels": 806400
+    }
+  ],
+  "verifiedAt": "2026-11-04T06:43:15.688Z"
+}

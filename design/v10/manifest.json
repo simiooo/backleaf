@@ -1,0 +1,116 @@
+{
+  "version": "v10-operations",
+  "retainedPages": 52,
+  "pages": [
+    {
+      "key": "53-file-menu",
+      "name": "53 · v10 文件菜单",
+      "mode": "Light",
+      "nodes": 133
+    },
+    {
+      "key": "54-multi-menu",
+      "name": "54 · v10 多选菜单",
+      "mode": "Light",
+      "nodes": 121
+    },
+    {
+      "key": "55-blank-menu",
+      "name": "55 · v10 空白菜单与禁用",
+      "mode": "Light",
+      "nodes": 113
+    },
+    {
+      "key": "56-folder-menu",
+      "name": "56 · v10 文件夹菜单",
+      "mode": "Light",
+      "nodes": 133
+    },
+    {
+      "key": "57-rename",
+      "name": "57 · v10 重命名输入",
+      "mode": "Light",
+      "nodes": 99
+    },
+    {
+      "key": "58-new-folder",
+      "name": "58 · v10 新建文件夹输入",
+      "mode": "Light",
+      "nodes": 99
+    },
+    {
+      "key": "59-cut",
+      "name": "59 · v10 待剪切与键盘菜单",
+      "mode": "Light",
+      "nodes": 121
+    },
+    {
+      "key": "60-progress",
+      "name": "60 · v10 真实任务进行与失败详情",
+      "mode": "Light",
+      "nodes": 49
+    },
+    {
+      "key": "61-delete-canceled",
+      "name": "61 · v10 删除进行与取消后",
+      "mode": "Light",
+      "nodes": 68
+    },
+    {
+      "key": "62-conflict",
+      "name": "62 · v10 同名冲突决策",
+      "mode": "Light",
+      "nodes": 16
+    },
+    {
+      "key": "63-dark-progress",
+      "name": "63 · v10 深色真实任务",
+      "mode": "Dark",
+      "nodes": 49
+    },
+    {
+      "key": "64-path-error",
+      "name": "64 · v10 路径输入与失效",
+      "mode": "Light",
+      "nodes": 102
+    },
+    {
+      "key": "65-bounded-queue",
+      "name": "65 · v10 有界任务队列",
+      "mode": "Light",
+      "nodes": 62
+    },
+    {
+      "key": "66-canceling",
+      "name": "66 · v10 取消等待与部分结果",
+      "mode": "Light",
+      "nodes": 68
+    },
+    {
+      "key": "67-close-active",
+      "name": "67 · v10 关闭时仍有任务",
+      "mode": "Light",
+      "nodes": 9
+    },
+    {
+      "key": "68-clipboard-limit",
+      "name": "68 · v10 剪贴板准备失败",
+      "mode": "Light",
+      "nodes": 12
+    },
+    {
+      "key": "69-rename-error",
+      "name": "69 · v10 重命名错误保留输入",
+      "mode": "Light",
+      "nodes": 101
+    },
+    {
+      "key": "70-dark-menu",
+      "name": "70 · v10 深色文件夹菜单",
+      "mode": "Dark",
+      "nodes": 133
+    }
+  ],
+  "source": "scripts/design/operations-v10.mjs",
+  "status": "Implementation proposal; native operation validation pending"
+}
