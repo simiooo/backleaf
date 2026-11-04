@@ -496,6 +496,44 @@ impl Clipboard {
         }
         Ok(Self::sequence())
     }
+    pub fn write_text(&self, text: &[u16], expected_sequence: u32) -> anyhow::Result<()> {
+        anyhow::ensure!(
+            !text.contains(&0) && text.len() <= 32767,
+            "路径文字过长或格式无效"
+        );
+        let mut block = Global::new((text.len() + 1) * 2)?;
+        let pointer = unsafe { GlobalLock(block.0) }.cast::<u16>();
+        anyhow::ensure!(!pointer.is_null(), "无法准备剪贴板文字");
+        let unlock = Unlock(block.0);
+        unsafe {
+            std::ptr::copy_nonoverlapping(text.as_ptr(), pointer, text.len());
+            pointer.add(text.len()).write(0);
+        }
+        drop(unlock);
+        let previous = unsafe { OleGetClipboard() }.ok();
+        let opened = self.open(|| false)?;
+        anyhow::ensure!(
+            Self::sequence() == expected_sequence,
+            "剪贴板已改变，请重试"
+        );
+        let result = (|| -> windows::core::Result<()> {
+            unsafe {
+                EmptyClipboard()?;
+                SetClipboardData(CF_UNICODETEXT.0 as u32, Some(block.handle()))?;
+                block.disown();
+            }
+            Ok(())
+        })();
+        drop(opened);
+        if let Err(error) = result {
+            if let Some(previous) = previous {
+                unsafe { OleSetClipboard(&previous) }
+                    .map_err(|_| anyhow::anyhow!("无法写入或恢复剪贴板"))?;
+            }
+            return Err(error.into());
+        }
+        Ok(())
+    }
     pub fn write_text_paths(
         &self,
         ledger: &Ledger,

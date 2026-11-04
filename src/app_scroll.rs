@@ -26,7 +26,8 @@ impl Backleaf {
                     - f64::from(f32::from(self.scroll.0.borrow().base_handle.offset().y)),
             ),
             Kind::Sidebar => (
-                (self.navigation.common.len() as f32 * (s.sidebar_row_height + s.sidebar_row_gap)
+                ((self.navigation.common.len() + self.navigation.volumes.len()) as f32
+                    * (s.sidebar_row_height + s.sidebar_row_gap)
                     - s.sidebar_row_gap)
                     .max(0.) as f64,
                 -f64::from(f32::from(self.navigation.scroll.offset().y)),

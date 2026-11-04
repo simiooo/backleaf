@@ -7,6 +7,7 @@ mod file_geometry;
 mod file_icons;
 mod input;
 mod layout;
+mod locations;
 mod menu;
 mod metrics;
 mod model;
@@ -137,7 +138,12 @@ impl Backleaf {
             _observer: cx.observe(&owner, |_, _, cx| cx.notify()),
         });
         let (tx, rx) = async_channel::bounded(8);
-        let navigation = app_navigation::NavigationUi::new(navigation::Worker::new(tx.clone()), cx);
+        let navigation = app_navigation::NavigationUi::new(
+            navigation::Worker::new(tx.clone()),
+            tx.clone(),
+            options.fixture.is_none(),
+            cx,
+        );
         let search = app_search::SearchUi::new(search::Worker::new(tx.clone()));
         let application_icons = native_icons::Cache::new(tx.clone());
         let (operation_tx, operation_rx) = async_channel::bounded(1);
@@ -157,7 +163,7 @@ impl Backleaf {
         window.on_window_should_close(cx, move |window, cx| {
             close_owner
                 .update(cx, |this, cx| {
-                    if this.files.hub.active() || this.rename_editing() {
+                    if this.files.hub.active() || this.files.editor.is_some() {
                         this.request_close(window, cx);
                         false
                     } else {
@@ -271,6 +277,9 @@ impl Backleaf {
             cx.notify();
         });
         let activated = cx.observe_window_activation(window, |this, window, cx| {
+            if let Some(worker) = &this.navigation.volume_worker {
+                worker.set_active(window.is_window_active() && !this.session_locked);
+            }
             if !window.is_window_active() {
                 this.scrollbar_drag = None;
                 this.navigation.hovered = false;
@@ -390,6 +399,9 @@ impl Backleaf {
             Event::Navigation(notice) => self.accept_navigation(notice, cx),
             Event::ApplicationIconsChanged => cx.notify(),
             Event::Session { locked } => {
+                if let Some(worker) = &self.navigation.volume_worker {
+                    worker.set_active(!locked);
+                }
                 if locked {
                     self.finish_marquee(cx);
                 }
@@ -512,6 +524,8 @@ impl Backleaf {
         self.navigation.rows.clear();
         self.navigation.token += 1;
         self.files.menu = None;
+        self.navigation.menu = None;
+        self.navigation.pending = None;
         self.files.removed.clear();
         self.detail_token += 1;
         self.details = None;
@@ -1833,6 +1847,7 @@ impl Render for Backleaf {
                 )
             })
             .child(self.operation_overlay(window, cx))
+            .child(self.navigation_overlay(window))
             .when(self.navigation.open, |d| {
                 d.child(self.path_overlay(window, cx))
             })

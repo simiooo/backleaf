@@ -55,7 +55,13 @@ enum AfterEdit {
     },
     Close,
     Search,
-    EditPath,
+    EditPathAt(PathBuf),
+    Location(PathBuf),
+    BreadcrumbMenu {
+        path: PathBuf,
+        position: Point<Pixels>,
+        keyboard: bool,
+    },
     PathTree(bool),
 }
 #[derive(Clone, Copy, PartialEq, Eq)]
@@ -74,6 +80,7 @@ pub struct Editor {
     pub kind: EditKind,
     pub error: Option<String>,
     pending: Option<u64>,
+    resolving: bool,
     token: u64,
     pub focus: bool,
     blurred: bool,
@@ -261,7 +268,8 @@ impl Backleaf {
         cx: &mut Context<Self>,
     ) {
         self.close_path_tree();
-        if self.rename_editing() {
+        self.navigation.menu = None;
+        if self.files.editor.is_some() {
             let name = if let Some(id) = id {
                 let Some(item) = self.cache.get(&id) else {
                     self.error = Some("文件尚未加载，请重试".into());
@@ -345,7 +353,14 @@ impl Backleaf {
             .focus
             .filter(|id| self.selection.contains(*id));
         let result: Result<Option<u64>, String> = (|| match command {
+            Command::EditPath => {
+                self.edit_path(window, cx);
+                Ok(None)
+            }
             Command::Refresh => {
+                if let Some(worker) = &self.navigation.volume_worker {
+                    worker.refresh();
+                }
                 self.refresh_directory(None, false, cx);
                 Ok(None)
             }
@@ -525,6 +540,13 @@ impl Backleaf {
                                 this.submit_editor(value.clone(), cx);
                             }
                             this.restore_rename_error_focus();
+                        } else if this
+                            .files
+                            .editor
+                            .as_ref()
+                            .is_some_and(|e| matches!(e.kind, EditKind::Path))
+                        {
+                            this.commit_rename_blur(cx);
                         }
                     }
                     InputEvent::Cancel => {
@@ -543,7 +565,9 @@ impl Backleaf {
                     InputEvent::Error(error) => {
                         if let Some(editor) = &mut this.files.editor {
                             editor.error = Some(error.clone());
+                            editor.focus = true;
                         }
+                        this.files.after_edit = None;
                     }
                     InputEvent::Changed => {
                         if let Some(editor) = &mut this.files.editor {
@@ -555,6 +579,7 @@ impl Backleaf {
                 cx.notify();
             }));
         self.files.menu = None;
+        self.navigation.menu = None;
         self.panel = false;
         self.files.open = false;
         let focus = window.is_none();
@@ -566,6 +591,7 @@ impl Backleaf {
             kind,
             error: None,
             pending: None,
+            resolving: false,
             token: 0,
             focus,
             blurred: false,
@@ -574,8 +600,12 @@ impl Backleaf {
         cx.notify();
     }
     pub fn edit_path(&mut self, window: &mut Window, cx: &mut Context<Self>) {
+        self.edit_path_at(self.path.clone(), window, cx);
+    }
+    pub fn edit_path_at(&mut self, path: PathBuf, window: &mut Window, cx: &mut Context<Self>) {
+        self.navigation.pending = None;
         if self.rename_editing() {
-            self.files.after_edit = Some(AfterEdit::EditPath);
+            self.files.after_edit = Some(AfterEdit::EditPathAt(path));
             self.commit_rename_blur(cx);
             return;
         }
@@ -599,7 +629,7 @@ impl Backleaf {
         {
             return;
         }
-        let value = self.path.to_string_lossy().into_owned();
+        let value = navigation::display_path(&path);
         let len = value.len();
         self.start_editor(value, 0..len, EditKind::Path, Some(window), cx);
     }
@@ -607,47 +637,28 @@ impl Backleaf {
         let Some(editor) = self.files.editor.as_mut() else {
             return;
         };
-        if editor.pending.is_some() {
+        if editor.pending.is_some() || editor.resolving {
             return;
         }
         match &editor.kind {
             EditKind::Path => {
+                if value == navigation::display_path(&self.path) {
+                    self.files.editor = None;
+                    self.files.editor_subscription = None;
+                    self.files.focus_grid = true;
+                    return;
+                }
                 self.detail_token += 1;
                 editor.token = self.detail_token;
+                editor.resolving = true;
+                editor.error = None;
                 let token = editor.token;
-                let tx = self.tx.clone();
                 let base = self.path.clone();
                 editor.input.update(cx, |input, cx| {
                     input.enabled = false;
                     cx.notify();
                 });
-                let _ = std::thread::Builder::new()
-                    .name("backleaf-location".into())
-                    .spawn(move || {
-                        let value = (|| -> Result<PathBuf, String> {
-                            let text = value.trim_matches('"');
-                            if text.is_empty() {
-                                return Err("请输入位置".into());
-                            }
-                            let path = PathBuf::from(text);
-                            let path = if path.is_absolute() {
-                                path
-                            } else {
-                                base.join(path)
-                            };
-                            match std::fs::read_dir(&path) {
-                                Ok(_) => Ok(path),
-                                Err(error) => Err(match error.kind() {
-                                    std::io::ErrorKind::NotFound => "找不到此位置",
-                                    std::io::ErrorKind::PermissionDenied => "无权访问此位置",
-                                    std::io::ErrorKind::NotADirectory => "此位置不是文件夹",
-                                    _ => "无法打开此位置",
-                                }
-                                .into()),
-                            }
-                        })();
-                        let _ = tx.send_blocking(Event::PathResolved { token, value });
-                    });
+                self.navigation.resolver.resolve(token, base, value);
             }
             EditKind::Rename(detail) => {
                 if let Err(error) = operations::windows::names::validate(&value) {
@@ -770,7 +781,9 @@ impl Backleaf {
                         self.files.focus_grid = true;
                     }
                     Err(error) => {
+                        self.files.after_edit = None;
                         if let Some(editor) = &mut self.files.editor {
+                            editor.resolving = false;
                             editor.error = Some(error.clone());
                             editor.focus = true;
                             editor.input.update(cx, |i, cx| {
@@ -779,6 +792,18 @@ impl Backleaf {
                             });
                         }
                     }
+                }
+                cx.notify();
+                true
+            }
+            Event::PathResolved { token, value } if self.navigation.pending == Some(*token) => {
+                self.navigation.pending = None;
+                match value {
+                    Ok(path) => {
+                        self.navigate(path.clone(), true, cx);
+                        self.files.focus_grid = true;
+                    }
+                    Err(error) => self.navigation_error(error.clone(), cx),
                 }
                 cx.notify();
                 true
@@ -876,7 +901,7 @@ impl Backleaf {
         false
     }
     pub fn request_close(&mut self, window: &mut Window, cx: &mut Context<Self>) {
-        if self.rename_editing() {
+        if self.files.editor.is_some() {
             self.files.after_edit = Some(AfterEdit::Close);
             self.commit_rename_blur(cx);
             return;
@@ -913,8 +938,20 @@ impl Backleaf {
                     self.open_search(window, cx);
                     return;
                 }
-                AfterEdit::EditPath => {
-                    self.edit_path(window, cx);
+                AfterEdit::Location(path) => {
+                    self.request_location(path, cx);
+                    return;
+                }
+                AfterEdit::EditPathAt(path) => {
+                    self.edit_path_at(path, window, cx);
+                    return;
+                }
+                AfterEdit::BreadcrumbMenu {
+                    path,
+                    position,
+                    keyboard,
+                } => {
+                    self.show_crumb_menu(path, position, keyboard, window, cx);
                     return;
                 }
                 AfterEdit::PathTree(ancestors) => {
@@ -997,10 +1034,19 @@ impl Backleaf {
             .files
             .editor
             .as_ref()
-            .filter(|e| matches!(e.kind, EditKind::Rename(_)) && e.pending.is_none())
+            .filter(|e| e.pending.is_none() && !e.resolving)
         else {
             return;
         };
+        if editor.input.read(cx).is_pasting() {
+            editor
+                .input
+                .update(cx, |input, _| input.wait_for_composition_blur());
+            if let Some(editor) = &mut self.files.editor {
+                editor.blurred = true;
+            }
+            return;
+        }
         if editor.input.read(cx).is_composing() {
             let input = editor.input.clone();
             input.update(cx, |input, _| input.wait_for_composition_blur());
@@ -1070,7 +1116,7 @@ impl Backleaf {
         cx.notify();
     }
     pub fn defer_navigation(&mut self, path: PathBuf, push: bool, cx: &mut Context<Self>) -> bool {
-        if !self.rename_editing() {
+        if self.files.editor.is_none() {
             return false;
         }
         self.files.after_edit = Some(AfterEdit::Navigate(path, push));
@@ -1078,7 +1124,7 @@ impl Backleaf {
         true
     }
     pub fn defer_search(&mut self, cx: &mut Context<Self>) -> bool {
-        if self.rename_editing() {
+        if self.files.editor.is_some() {
             self.files.after_edit = Some(AfterEdit::Search);
             self.commit_rename_blur(cx);
             true
@@ -1101,10 +1147,36 @@ impl Backleaf {
         self.commit_rename_blur(cx);
     }
     pub fn defer_path_tree(&mut self, ancestors: bool, cx: &mut Context<Self>) -> bool {
-        if !self.rename_editing() {
+        if self.files.editor.is_none() {
             return false;
         }
         self.files.after_edit = Some(AfterEdit::PathTree(ancestors));
+        self.commit_rename_blur(cx);
+        true
+    }
+    pub fn defer_crumb_menu(
+        &mut self,
+        path: PathBuf,
+        position: Point<Pixels>,
+        keyboard: bool,
+        cx: &mut Context<Self>,
+    ) -> bool {
+        if self.files.editor.is_none() {
+            return false;
+        }
+        self.files.after_edit = Some(AfterEdit::BreadcrumbMenu {
+            path,
+            position,
+            keyboard,
+        });
+        self.commit_rename_blur(cx);
+        true
+    }
+    pub fn defer_location(&mut self, path: PathBuf, cx: &mut Context<Self>) -> bool {
+        if self.files.editor.is_none() {
+            return false;
+        }
+        self.files.after_edit = Some(AfterEdit::Location(path));
         self.commit_rename_blur(cx);
         true
     }
@@ -1215,6 +1287,7 @@ impl Backleaf {
                 };
             layer = layer.child(
                 div()
+                    .id("operation-detail-overlay")
                     .absolute()
                     .right(px(12.))
                     .bottom(px(36.))
@@ -1246,6 +1319,7 @@ impl Backleaf {
             };
             layer = layer.child(
                 div()
+                    .id("editor-error-toast")
                     .absolute()
                     .left(px(x.clamp(
                         8.,
@@ -1266,6 +1340,7 @@ impl Backleaf {
                     .shadow(vec![colors.shadow()])
                     .text_size(px(12.))
                     .text_color(colors.color(ColorRole::Negative))
+                    .role(Role::Alert)
                     .child(error.clone()),
             );
         }

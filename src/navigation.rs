@@ -7,10 +7,11 @@ use std::{
     },
     thread,
 };
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Location {
     pub title: String,
     pub path: PathBuf,
+    pub volume: bool,
 }
 #[derive(Clone, Debug)]
 pub struct TreeRow {
@@ -21,6 +22,8 @@ pub struct TreeRow {
 }
 pub enum Notice {
     Common(Vec<Location>),
+    Volumes(Result<Vec<Location>, String>),
+    Clipboard(Result<(), String>),
     Tree {
         token: u64,
         rows: Vec<TreeRow>,
@@ -235,6 +238,7 @@ fn common_locations() -> Vec<Location> {
             result.map(|p| Location {
                 title: title.into(),
                 path: p.into(),
+                volume: false,
             })
         })
         .collect()

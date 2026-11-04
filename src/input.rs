@@ -57,6 +57,9 @@ impl TextInput {
     pub fn is_composing(&self) -> bool {
         self.marked_range.as_ref().is_some_and(|r| !r.is_empty())
     }
+    pub fn is_pasting(&self) -> bool {
+        self.paste_pending
+    }
     pub fn without_composition(&self) -> Option<String> {
         self.marked_range
             .as_ref()
@@ -207,6 +210,7 @@ impl TextInput {
                 let _ = this.update(cx, |this, cx| {
                     this.paste_pending = false;
                     if this.epoch != epoch || !this.enabled {
+                        this.finish_pending_blur(cx);
                         return;
                     }
                     match value {
@@ -216,6 +220,7 @@ impl TextInput {
                                 + &text
                                 + &this.content[range.end..];
                             if value.encode_utf16().count() > this.max_utf16 {
+                                this.blur_pending = false;
                                 cx.emit(InputEvent::Error("粘贴的文字过长".into()));
                                 return;
                             }
@@ -227,10 +232,14 @@ impl TextInput {
                             this.epoch += 1;
                             this.notify_input = true;
                             cx.emit(InputEvent::Changed);
+                            this.finish_pending_blur(cx);
                             cx.notify();
                         }
-                        Ok(None) => {}
-                        Err(error) => cx.emit(InputEvent::Error(error)),
+                        Ok(None) => this.finish_pending_blur(cx),
+                        Err(error) => {
+                            this.blur_pending = false;
+                            cx.emit(InputEvent::Error(error));
+                        }
                     }
                 });
             }
@@ -772,7 +781,7 @@ impl Render for TextInput {
             self.blur_subscription = Some(cx.on_blur(&self.focus_handle, window, |this, _, cx| {
                 if this.enabled {
                     this.blur_pending = true;
-                    if this.marked_range.is_some() {
+                    if this.marked_range.is_some() && !this.paste_pending {
                         cx.emit(InputEvent::Blur(this.content.to_string()));
                     } else {
                         this.finish_pending_blur(cx);
@@ -828,7 +837,11 @@ impl Render for TextInput {
                 if event.keystroke.key == "enter" && this.marked_range.is_none() {
                     cx.stop_propagation();
                     if this.enabled && !event.is_held {
-                        cx.emit(InputEvent::Submit(this.content.to_string()));
+                        if this.paste_pending {
+                            this.blur_pending = true;
+                        } else {
+                            cx.emit(InputEvent::Submit(this.content.to_string()));
+                        }
                     }
                 } else if event.keystroke.key == "escape" && this.marked_range.is_none() {
                     cx.stop_propagation();
@@ -925,7 +938,7 @@ impl TextInput {
         self.blur_pending = true;
     }
     fn finish_pending_blur(&mut self, cx: &mut Context<Self>) {
-        if self.enabled && self.blur_pending && self.marked_range.is_none() {
+        if self.enabled && self.blur_pending && self.marked_range.is_none() && !self.paste_pending {
             self.blur_pending = false;
             cx.emit(InputEvent::Blur(self.content.to_string()));
         }

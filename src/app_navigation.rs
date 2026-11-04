@@ -2,6 +2,14 @@ use super::*;
 use crate::navigation::{Location, Notice, TreeRow, Worker};
 pub struct NavigationUi {
     pub worker: Worker,
+    pub resolver: crate::locations::Resolver,
+    pub volume_worker: Option<crate::locations::Volumes>,
+    pub volumes: Vec<Location>,
+    pub menu: Option<Entity<crate::menu::FileMenu>>,
+    pub pending: Option<u64>,
+    menu_subscription: Option<Subscription>,
+    toast: Option<String>,
+    toast_timer: Option<Task<()>>,
     pub common: Vec<Location>,
     pub rows: Vec<TreeRow>,
     pub open: bool,
@@ -15,9 +23,22 @@ pub struct NavigationUi {
     pub hovered: bool,
 }
 impl NavigationUi {
-    pub fn new(worker: Worker, cx: &mut Context<Backleaf>) -> Self {
+    pub fn new(
+        worker: Worker,
+        tx: async_channel::Sender<Event>,
+        real: bool,
+        cx: &mut Context<Backleaf>,
+    ) -> Self {
         Self {
             worker,
+            resolver: crate::locations::Resolver::new(tx.clone()),
+            volume_worker: real.then(|| crate::locations::Volumes::new(tx)),
+            volumes: vec![],
+            menu: None,
+            pending: None,
+            menu_subscription: None,
+            toast: None,
+            toast_timer: None,
             common: vec![],
             rows: vec![],
             open: false,
@@ -33,6 +54,112 @@ impl NavigationUi {
     }
 }
 impl Backleaf {
+    pub fn request_location(&mut self, path: PathBuf, cx: &mut Context<Self>) {
+        if self.defer_location(path.clone(), cx) {
+            return;
+        }
+        self.close_path_tree();
+        self.navigation.menu = None;
+        self.detail_token += 1;
+        self.navigation.pending = Some(self.detail_token);
+        self.navigation
+            .resolver
+            .resolve_exact(self.detail_token, path);
+        cx.notify();
+    }
+    pub fn navigation_error(&mut self, message: String, cx: &mut Context<Self>) {
+        self.navigation.toast = Some(message);
+        self.navigation.toast_timer = Some(cx.spawn(async move |this, cx| {
+            cx.background_executor().timer(Duration::from_secs(5)).await;
+            let _ = this.update(cx, |this, cx| {
+                this.navigation.toast = None;
+                cx.notify();
+            });
+        }));
+        cx.notify();
+    }
+    pub fn show_crumb_menu(
+        &mut self,
+        path: PathBuf,
+        position: Point<Pixels>,
+        keyboard: bool,
+        window: &mut Window,
+        cx: &mut Context<Self>,
+    ) {
+        use crate::menu::{Command, FileMenu, MenuEvent};
+        if self.options.fixture.is_some() || self.files.close_guard {
+            return;
+        }
+        if self.defer_crumb_menu(path.clone(), position, keyboard, cx) {
+            return;
+        }
+        self.close_path_tree();
+        self.files.menu = None;
+        let menu = cx.new(|cx| FileMenu::breadcrumb(self.colors, position, keyboard, cx));
+        let generation = self.generation;
+        let restore = window.focused(cx);
+        self.navigation.menu_subscription = Some(cx.subscribe_in(
+            &menu,
+            window,
+            move |this, _, event: &MenuEvent, window, cx| {
+                this.navigation.menu = None;
+                if let Some(focus) = &restore {
+                    window.focus(focus, cx);
+                }
+                if generation == this.generation {
+                    match event {
+                        MenuEvent::Command(Command::CopyPath) => {
+                            if let Err(error) =
+                                crate::locations::copy_path(path.clone(), this.tx.clone())
+                            {
+                                this.navigation_error(error, cx);
+                            }
+                        }
+                        MenuEvent::Command(Command::EditPath) => {
+                            this.edit_path_at(path.clone(), window, cx)
+                        }
+                        _ => (),
+                    }
+                }
+                cx.notify();
+            },
+        ));
+        window.focus(&menu.focus_handle(cx), cx);
+        self.files.focus_grid = false;
+        self.navigation.menu = Some(menu);
+        cx.notify();
+    }
+    pub fn navigation_overlay(&self, window: &Window) -> AnyElement {
+        let colors = self.colors;
+        div()
+            .absolute()
+            .inset_0()
+            .children(self.navigation.menu.clone())
+            .when_some(self.navigation.toast.clone(), |d, error| {
+                d.child(
+                    div()
+                        .id("navigation-error-toast")
+                        .absolute()
+                        .left(px(80.))
+                        .top(px(layout::CHROME.bar_height + 4.))
+                        .w(px(
+                            280_f32.min(f32::from(window.viewport_size().width) - 96.)
+                        ))
+                        .px(px(10.))
+                        .py(px(14.))
+                        .rounded(px(10.))
+                        .bg(colors.color(ColorRole::Floating))
+                        .border_1()
+                        .border_color(colors.color(ColorRole::Border))
+                        .shadow(colors.control_shadows(false))
+                        .text_size(px(12.))
+                        .text_color(colors.color(ColorRole::Negative))
+                        .role(Role::Alert)
+                        .child(error),
+                )
+            })
+            .into_any_element()
+    }
     pub fn sidebar_width(&self) -> f32 {
         if self.options.fixture.is_some() && self.options.navigation_fixture == 0 {
             0.
@@ -57,12 +184,20 @@ impl Backleaf {
                             path: std::path::PathBuf::from(format!(
                                 r"V:\Backleaf-fixture\Quick-{i:03}"
                             )),
+                            volume: false,
                         })
                         .collect()
                 } else {
                     locations
                 };
             }
+            Notice::Volumes(Ok(rows)) => {
+                self.navigation.volumes = rows;
+            }
+            Notice::Volumes(Err(error)) | Notice::Clipboard(Err(error)) => {
+                self.navigation_error(error, cx)
+            }
+            Notice::Clipboard(Ok(())) => (),
             Notice::Tree {
                 token,
                 rows,
@@ -99,6 +234,7 @@ impl Backleaf {
             return;
         }
         self.navigation.open = true;
+        self.navigation.menu = None;
         self.navigation.pinned |= pinned;
         if self.navigation.rows.is_empty() {
             self.navigation.token += 1;
@@ -119,6 +255,9 @@ impl Backleaf {
     ) -> bool {
         let k = event.keystroke.key.as_str();
         let m = event.keystroke.modifiers;
+        if self.navigation.menu.is_some() {
+            return true;
+        }
         if !self.navigation.open {
             return false;
         }
@@ -186,13 +325,31 @@ impl Backleaf {
                         self.navigation
                             .common
                             .iter()
+                            .chain(self.navigation.volumes.iter())
                             .enumerate()
                             .map(|(i, location)| {
                                 let path = location.path.clone();
+                                let volume = location.volume;
                                 let selected = path == self.path;
                                 let label = location.title.clone();
                                 div()
-                                    .id(("quick-access", i))
+                                    .id((
+                                        if location.volume {
+                                            "volume-access"
+                                        } else {
+                                            "quick-access"
+                                        },
+                                        if location.volume {
+                                            path.as_os_str()
+                                                .to_string_lossy()
+                                                .bytes()
+                                                .next()
+                                                .unwrap_or_default()
+                                                as usize
+                                        } else {
+                                            i
+                                        },
+                                    ))
                                     .w_full()
                                     .h(px(layout::SCROLL.sidebar_row_height))
                                     .when(i + 1 < self.navigation.common.len(), |d| {
@@ -244,7 +401,11 @@ impl Backleaf {
                                         let path = path.clone();
                                         move |this, _, window, cx| {
                                             this.close_path_tree();
-                                            this.navigate(path.clone(), true, cx);
+                                            if volume {
+                                                this.request_location(path.clone(), cx);
+                                            } else {
+                                                this.navigate(path.clone(), true, cx);
+                                            }
                                             if !this.rename_editing() {
                                                 window.focus(&this.focus, cx);
                                             }
@@ -254,7 +415,11 @@ impl Backleaf {
                                         move |this, event: &KeyDownEvent, window, cx| {
                                             if paint::activation_key(event) {
                                                 this.close_path_tree();
-                                                this.navigate(path.clone(), true, cx);
+                                                if volume {
+                                                    this.request_location(path.clone(), cx);
+                                                } else {
+                                                    this.navigate(path.clone(), true, cx);
+                                                }
                                                 if !this.rename_editing() {
                                                     window.focus(&this.focus, cx);
                                                 }
@@ -262,11 +427,17 @@ impl Backleaf {
                                             }
                                         },
                                     ))
-                                    .child(
+                                    .child(if location.volume {
+                                        icon("drive", colors)
+                                            .size(px(18.))
+                                            .flex_none()
+                                            .into_any_element()
+                                    } else {
                                         img(crate::file_icons::FileIcon::Folder.asset(colors.dark))
                                             .size(px(18.))
-                                            .flex_none(),
-                                    )
+                                            .flex_none()
+                                            .into_any_element()
+                                    })
                                     .child(div().flex_1().min_w_0().truncate().child(label))
                             }),
                     ),
@@ -405,14 +576,46 @@ impl Backleaf {
                                     d.bg(colors.color(ColorRole::Floating))
                                         .shadow(colors.control_shadows(true))
                                 })
-                                .on_key_down(cx.listener(
-                                    |this, event: &KeyDownEvent, window, cx| {
+                                .on_mouse_down(
+                                    MouseButton::Right,
+                                    cx.listener({
+                                        let path = path.clone();
+                                        move |this, event: &MouseDownEvent, window, cx| {
+                                            this.show_crumb_menu(
+                                                path.clone(),
+                                                event.position,
+                                                false,
+                                                window,
+                                                cx,
+                                            );
+                                            cx.stop_propagation();
+                                        }
+                                    }),
+                                )
+                                .on_click(cx.listener(|this, _, window, cx| {
+                                    this.edit_path(window, cx);
+                                    cx.stop_propagation();
+                                }))
+                                .on_key_down(cx.listener({
+                                    let path = path.clone();
+                                    move |this, event: &KeyDownEvent, window, cx| {
+                                        if path_menu_key(event) {
+                                            this.show_crumb_menu(
+                                                path.clone(),
+                                                point(px(88.), px(layout::CHROME.bar_height)),
+                                                true,
+                                                window,
+                                                cx,
+                                            );
+                                            cx.stop_propagation();
+                                            return;
+                                        }
                                         if paint::activation_key(event) {
                                             this.edit_path(window, cx);
                                             cx.stop_propagation();
                                         }
-                                    },
-                                ))
+                                    }
+                                }))
                                 .role(Role::Button)
                                 .aria_label(format!("编辑当前位置 {full}"))
                                 .aria_value(full.clone())
@@ -456,8 +659,35 @@ impl Backleaf {
                                         cx.stop_propagation();
                                     }
                                 }))
+                                .on_mouse_down(
+                                    MouseButton::Right,
+                                    cx.listener({
+                                        let path = path.clone();
+                                        move |this, event: &MouseDownEvent, window, cx| {
+                                            this.show_crumb_menu(
+                                                path.clone(),
+                                                event.position,
+                                                false,
+                                                window,
+                                                cx,
+                                            );
+                                            cx.stop_propagation();
+                                        }
+                                    }),
+                                )
                                 .on_key_down(cx.listener(
                                     move |this, event: &KeyDownEvent, window, cx| {
+                                        if path_menu_key(event) {
+                                            this.show_crumb_menu(
+                                                path.clone(),
+                                                point(px(88.), px(layout::CHROME.bar_height)),
+                                                true,
+                                                window,
+                                                cx,
+                                            );
+                                            cx.stop_propagation();
+                                            return;
+                                        }
                                         if paint::activation_key(event) {
                                             this.close_path_tree();
                                             this.navigate(path.clone(), true, cx);
@@ -566,6 +796,7 @@ impl Backleaf {
             return;
         }
         self.navigation.token += 1;
+        self.navigation.menu = None;
         let mut bytes = 0;
         let mut rows = Vec::new();
         for path in self.path.ancestors().skip(1).take(80) {
@@ -694,4 +925,11 @@ impl Backleaf {
             )
             .into_any_element()
     }
+}
+fn path_menu_key(event: &KeyDownEvent) -> bool {
+    let k = &event.keystroke;
+    !k.modifiers.control
+        && !k.modifiers.alt
+        && !k.modifiers.platform
+        && (k.key == "menu" || (k.key == "f10" && k.modifiers.shift))
 }
