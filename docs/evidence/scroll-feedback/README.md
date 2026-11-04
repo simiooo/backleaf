@@ -11,3 +11,7 @@ v19可编辑主稿137页，保留前129页；8状态图层/冷重开像素容差
 合成导航夹具仅能与--fixture一起使用，上限128条，明确标记样本；不向实际常用导航添加虚构入口，不执行文件命令。用于可控溢出验证。当前生产常用7项，在最小440px窗口通常无溢出，按规则隐藏左条。
 
 真实GPUI 12秒1024自有EXE与1000万合成元数据+8流光压测、合成控制器的边缘滚动/重定位/Esc/追加回归均通过。原始报告分别记录，不把元数据样本当真实复制。CI发布/下载映射待published.json；不执行下载的远端EXE。
+
+工程交付：preview.8于2026-11-04 23:29:43+08由[CI41857259614](https://github.com/simiooo/backleaf/actions/runs/41857259614)实际发布，源码1a2d86c4b6c677f5476e006fcb710fdaa7c5d890。[测试包](https://github.com/simiooo/backleaf/releases/tag/test-v0.1.0-preview.8-1a2d86c4)。CI42测试与解压CLI冒烟通过；下载Release四项资产服务端digest、CI artifact逐字节一致、ZIP内EXE/Logo/v19.fig及源码身份验证通过。ZIP SHA256 `9e960a9ba0ea982b17924be0ffcd1f69509e777ef8064857158924a922462e5a`。本机GUI候选f73d2509、CI EXE0e037de1分别标识；未执行下载的远端EXE。
+
+后续：SIM-973修复旧的整格点击命中范围；SIM-972键入定位；SIM-974文件移动拖放与防环、SIM-975统一快捷访问固定/重排。它们没有混称preview.8完成。

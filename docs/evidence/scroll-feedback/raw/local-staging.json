@@ -9,5 +9,11 @@
     "error": null
   },
   "scope": "generated metadata and navigation only",
-  "sha256": "f73d250959e2879260c12af10b0a178031c54d1b2414d150d5834f3fb74abd72"
+  "sha256": "f73d250959e2879260c12af10b0a178031c54d1b2414d150d5834f3fb74abd72",
+  "source_commit": "1a2d86c4b6c677f5476e006fcb710fdaa7c5d890",
+  "version": "0.1.0-preview.8",
+  "local_build": true,
+  "ci_run_url": "https://github.com/simiooo/backleaf/actions/runs/41857259614",
+  "gpui_revision": "d36a70661471ec64dce230798121d554930d5c60",
+  "design_sha256": "d9383acbfc9c2c11cf4af6612b9be8ed665f2efe1e4df8c2288236ad82c84631"
 }

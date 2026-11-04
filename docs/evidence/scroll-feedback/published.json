@@ -1,0 +1,25 @@
+{
+  "source_commit": "1a2d86c4b6c677f5476e006fcb710fdaa7c5d890",
+  "version": "0.1.0-preview.8",
+  "release_url": "https://github.com/simiooo/backleaf/releases/tag/test-v0.1.0-preview.8-1a2d86c4",
+  "published_at_utc": "2026-11-04T15:29:43Z",
+  "ci_run_url": "https://github.com/simiooo/backleaf/actions/runs/41857259614",
+  "zip_sha256": "9e960a9ba0ea982b17924be0ffcd1f69509e777ef8064857158924a922462e5a",
+  "ci_exe_sha256": "0e037de1467ebd27ab5dc440e28cbd767492580c496970a6c62cdd61949ff4c5",
+  "design_sha256": "d9383acbfc9c2c11cf4af6612b9be8ed665f2efe1e4df8c2288236ad82c84631",
+  "local_graphical_exe_sha256": "f73d250959e2879260c12af10b0a178031c54d1b2414d150d5834f3fb74abd72",
+  "local_deployed_at": "2026-11-04T23:17:59.1875790+08:00",
+  "local_binary_same_as_ci": false,
+  "verification": {
+    "server_digests": true,
+    "release_equals_ci_artifact": true,
+    "zip_embedded_assets": true,
+    "tests_42": true,
+    "ci_packaged_cli_smoke": true,
+    "local_visible_smoke": true,
+    "downloaded_executable_executed": false,
+    "automated_final_hover_recording": false
+  },
+  "boundaries": "CI bytes verified statically; visible native smoke and performance belong to the separately hashed trusted local build. External CRUD sync, saved searches/global index/restore, typeahead and native file drag/drop are pending.",
+  "visible_smoke_source": "User confirmed file-area expansion and sidebar after flicker fix; earlier automatic snapshots are diagnostic; no automatic final mouse-drag recording claimed."
+}

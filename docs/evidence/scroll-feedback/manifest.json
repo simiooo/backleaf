@@ -1,0 +1,20 @@
+{
+  "source_commit": "1a2d86c4b6c677f5476e006fcb710fdaa7c5d890",
+  "files": {
+    "10m-performance.json": "c9f0ddde4e3a045479f8f231b9fafe3aa2fa7f94dd3e48cd4dbcbd98b56e46b4",
+    "build.txt": "be8b859de4f9b8bede9049919ece3da86cc1e7c4f4dd8e26c4aca7894c2248ed",
+    "ci-build.json": "601518e64e907d1d57ba2d9a149d5fb51ff021b6427f662b1cab461d435c091a",
+    "ci-build.txt": "3fc6aebd9fdb8dc5f04cdc0c02a62163a8dd3e6ece1a81c7216cccd10a79fe5b",
+    "ci-clippy.txt": "d50962637357c0944473b942ba338d3eab711f2cd877729b931fb5fb3fd5b185",
+    "ci-SHA256SUMS.txt": "b1013586dd02cbd1ba32e12db80540a8d1143e1f102dd93dd29e1cb678987b13",
+    "ci-tests.txt": "48228afa5f01cfe788044ed7fe6a7e219dfc691d296ebb6199d0687447bd859e",
+    "clippy.txt": "792411b1dd6662216fcaebde9745ae7ae8ac366997b63a13fd4db50a61a2cae8",
+    "exe-performance.json": "09c1695b3ce2f938979cd1c960c5e3953d8ecfe452ee809d24746e16589eb0cb",
+    "local-build-inputs.json": "ac4419f41a22e0735fc79e0828e40b21ecbcdef755272f082570fd4f7b6d0b15",
+    "local-staging.json": "a7836738cde8952d760203b2da3994a088194d336f505d91361282c0a67bdd3a",
+    "performance-summary.json": "70e2adb189cf4fcf9e0a5ccaf778815beab39075a9bc5a0fde1e1c490f2ec1d2",
+    "release-assets.json": "80fcc059e848352612250780b40af4aa6db62c5a64255049d802f364c2f9b718",
+    "selection-controller.json": "8e9483b25b19937a6f20639356f76395957db6659b4eb2f0fc4f82edfee65ab5",
+    "tests.txt": "599cdc3fe3262b53601582cf73576e86f9547a9996c95019b3918fb77c0dd5cc"
+  }
+}
