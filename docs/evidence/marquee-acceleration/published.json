@@ -1,0 +1,25 @@
+{
+  "source_commit": "c2481f3b06f653463c33e0f125ec800665cac15c",
+  "version": "0.1.0-preview.11",
+  "release_url": "https://github.com/simiooo/backleaf/releases/tag/test-v0.1.0-preview.11-c2481f3b",
+  "published_at_utc": "2026-11-04T17:19:37Z",
+  "ci_run_url": "https://github.com/simiooo/backleaf/actions/runs/41875499725",
+  "zip_sha256": "3cf4a5b92d5664a30899b2a54e40f40b0c2375b94fa48f6a162ed4e1b932bfa8",
+  "ci_exe_sha256": "f6135eca1cee899dfae45c3db829c73e00daae2c633ad47d288a421385dcb65a",
+  "design_sha256": "36dc661fc12521e71b981ee6b0c61bff50bb8bebdda3c36cd33efe0e2daea2ef",
+  "local_graphical_exe_sha256": "08c1bcd296305ce3c21e0e1765381d92d67da692a7c3b39549e42fdf06c9b6be",
+  "local_deployed_at": "2026-11-05T01:04:54.1539407+08:00",
+  "local_binary_same_as_ci": false,
+  "verification": {
+    "server_digests": true,
+    "release_equals_ci_artifact": true,
+    "zip_embedded_assets": true,
+    "tests_53": true,
+    "ci_packaged_cli_smoke": true,
+    "local_visible_smoke": true,
+    "native_synthetic_controller": true,
+    "os_continuous_long_hold": false,
+    "downloaded_executable_executed": false
+  },
+  "boundaries": "CI bytes verified statically; visible native smoke and performance belong to the separately hashed trusted local build. Path/drives candidate, external CRUD sync, saved searches/global index/restore, typeahead, archive, Shell extensions and native file drag/drop are pending. Continuous acceleration measurements use an internal controller; the separate actual OS drag smoke selected 12 owned files."
+}

@@ -3,5 +3,11 @@
   "pid": 23760,
   "deployed_at": "2026-11-05T01:04:54.1539407+08:00",
   "fixture": "D:\\work\\backleaf\\.local\\worktrees\\marquee\\.local\\marquee-fixture",
-  "sha256": "08c1bcd296305ce3c21e0e1765381d92d67da692a7c3b39549e42fdf06c9b6be"
+  "sha256": "08c1bcd296305ce3c21e0e1765381d92d67da692a7c3b39549e42fdf06c9b6be",
+  "source_commit": "c2481f3b06f653463c33e0f125ec800665cac15c",
+  "version": "0.1.0-preview.11",
+  "local_build": true,
+  "gpui_revision": "d36a70661471ec64dce230798121d554930d5c60",
+  "ci_run_url": "https://github.com/simiooo/backleaf/actions/runs/41875499725",
+  "design_sha256": "36dc661fc12521e71b981ee6b0c61bff50bb8bebdda3c36cd33efe0e2daea2ef"
 }
