@@ -1,0 +1,19 @@
+{
+  "railWidth": 12,
+  "gutter": 12,
+  "thumbWidth": 4,
+  "activeThumbWidth": 6,
+  "minimumThumbHeight": 24,
+  "insetY": 16,
+  "railInset": 2,
+  "thumbOpacity": 0.42,
+  "activeThumbOpacity": 0.64,
+  "statusHeight": 28,
+  "statusPaddingX": 8,
+  "statusRadius": 8,
+  "statusFontSize": 12,
+  "statusLineHeight": 18,
+  "sidebarRowHeight": 32,
+  "sidebarRowGap": 4,
+  "sidebarPaddingY": 16
+}

@@ -1,0 +1,13 @@
+{
+  "pid": 7244,
+  "exe": "D:\\work\\backleaf\\.local\\staging\\scroll-preview.8-hover-fixed\\Backleaf.exe",
+  "deployed_at": "2026-11-04T23:17:59.1875790+08:00",
+  "navigation_fixture": 64,
+  "fixture_items": 10000000,
+  "session": {
+    "locked": false,
+    "error": null
+  },
+  "scope": "generated metadata and navigation only",
+  "sha256": "f73d250959e2879260c12af10b0a178031c54d1b2414d150d5834f3fb74abd72"
+}

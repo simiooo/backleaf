@@ -17,6 +17,7 @@ pub struct Options {
     pub height: f32,
     pub theme: Option<bool>,
     pub selection_smoke: bool,
+    pub navigation_fixture: usize,
     pub state_dir: PathBuf,
 }
 impl Options {
@@ -33,6 +34,7 @@ impl Options {
             height: 720.,
             theme: None,
             selection_smoke: false,
+            navigation_fixture: 0,
             state_dir: std::env::var_os("LOCALAPPDATA")
                 .map(PathBuf::from)
                 .unwrap_or_else(std::env::temp_dir)
@@ -62,9 +64,21 @@ impl Options {
                     })
                 }
                 "--selection-smoke" => result.selection_smoke = true,
+                "--navigation-fixture" => {
+                    result.navigation_fixture = args
+                        .next()
+                        .expect("navigation fixture count")
+                        .parse::<usize>()
+                        .expect("count")
+                        .min(128)
+                }
                 _ => panic!("unknown argument {arg}"),
             }
         }
+        assert!(
+            result.navigation_fixture == 0 || result.fixture.is_some(),
+            "navigation fixture requires generated metadata mode"
+        );
         if result.selection_smoke {
             assert!(
                 result.fixture.is_some_and(|count| count >= 100_000) && result.output.is_some(),
@@ -251,7 +265,10 @@ impl Metrics {
             gpui_revision: "d36a70661471ec64dce230798121d554930d5c60",
             backend: "GPUI / Win32 / Direct3D 11 / DirectWrite",
             dataset: if options.fixture.is_some() {
-                "generated metadata fixture (same native grid)".into()
+                format!(
+                    "generated metadata fixture (same native grid); navigation fixture entries={}",
+                    options.navigation_fixture
+                )
             } else {
                 "real directory snapshot / SQLite worker".into()
             },

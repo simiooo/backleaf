@@ -1,0 +1,48 @@
+{
+  "version": "v19-responsive-scrollbars",
+  "retainedPages": 129,
+  "pages": [
+    {
+      "key": "130-fit-no-scroll",
+      "name": "130 · v19 fit-no-scroll",
+      "nodes": 126
+    },
+    {
+      "key": "131-main-overflow",
+      "name": "131 · v19 main-overflow",
+      "nodes": 352
+    },
+    {
+      "key": "132-sidebar-overflow-hidden",
+      "name": "132 · v19 sidebar-overflow-hidden",
+      "nodes": 420
+    },
+    {
+      "key": "133-sidebar-overflow-hover",
+      "name": "133 · v19 sidebar-overflow-hover",
+      "nodes": 422
+    },
+    {
+      "key": "134-short-window",
+      "name": "134 · v19 short-window",
+      "nodes": 422
+    },
+    {
+      "key": "135-scroll-dark",
+      "name": "135 · v19 scroll-dark",
+      "nodes": 422
+    },
+    {
+      "key": "136-ten-million-scroll",
+      "name": "136 · v19 ten-million-scroll",
+      "nodes": 352
+    },
+    {
+      "key": "137-empty-no-scroll",
+      "name": "137 · v19 empty-no-scroll",
+      "nodes": 42
+    }
+  ],
+  "tokens": "design/scroll-system.json",
+  "source": "scripts/design/chrome-v19.mjs"
+}

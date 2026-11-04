@@ -105,15 +105,6 @@ impl Palette {
             inset: false,
         }
     }
-    pub fn inline_shadow(&self) -> BoxShadow {
-        BoxShadow {
-            color: self.color(Role::Shadow).opacity(0.5),
-            offset: point(px(0.), px(4.)),
-            blur_radius: px(12.),
-            spread_radius: px(0.),
-            inset: false,
-        }
-    }
     pub fn focus_ring(&self) -> BoxShadow {
         BoxShadow {
             color: self.color(Role::Focus),

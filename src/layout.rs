@@ -97,3 +97,29 @@ pub fn content_top() -> f32 {
 pub fn grid_reserved_height() -> f32 {
     CHROME.bar_height + 32.
 }
+
+#[derive(Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct Scroll {
+    pub rail_width: f32,
+    pub gutter: f32,
+    pub thumb_width: f32,
+    pub active_thumb_width: f32,
+    pub minimum_thumb_height: f32,
+    pub inset_y: f32,
+    pub rail_inset: f32,
+    pub thumb_opacity: f32,
+    pub active_thumb_opacity: f32,
+    pub status_height: f32,
+    pub status_padding_x: f32,
+    pub status_radius: f32,
+    pub status_font_size: f32,
+    pub status_line_height: f32,
+    pub sidebar_row_height: f32,
+    pub sidebar_row_gap: f32,
+    pub sidebar_padding_y: f32,
+}
+pub static SCROLL: LazyLock<Scroll> = LazyLock::new(|| {
+    serde_json::from_str(include_str!("../design/scroll-system.json"))
+        .expect("editable scroll specification")
+});

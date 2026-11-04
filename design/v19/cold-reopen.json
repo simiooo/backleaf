@@ -1,0 +1,49 @@
+{
+  "masterSha256": "d9383acbfc9c2c11cf4af6612b9be8ed665f2efe1e4df8c2288236ad82c84631",
+  "retainedPages": 129,
+  "pages": 137,
+  "result": "passed",
+  "results": [
+    {
+      "key": "130-fit-no-scroll",
+      "changedPixels": 91,
+      "totalPixels": 806400
+    },
+    {
+      "key": "131-main-overflow",
+      "changedPixels": 158,
+      "totalPixels": 806400
+    },
+    {
+      "key": "132-sidebar-overflow-hidden",
+      "changedPixels": 128,
+      "totalPixels": 492800
+    },
+    {
+      "key": "133-sidebar-overflow-hover",
+      "changedPixels": 128,
+      "totalPixels": 492800
+    },
+    {
+      "key": "134-short-window",
+      "changedPixels": 90,
+      "totalPixels": 246400
+    },
+    {
+      "key": "135-scroll-dark",
+      "changedPixels": 153,
+      "totalPixels": 806400
+    },
+    {
+      "key": "136-ten-million-scroll",
+      "changedPixels": 158,
+      "totalPixels": 806400
+    },
+    {
+      "key": "137-empty-no-scroll",
+      "changedPixels": 0,
+      "totalPixels": 246400
+    }
+  ],
+  "verifiedAt": "2026-11-04T15:04:17.036Z"
+}

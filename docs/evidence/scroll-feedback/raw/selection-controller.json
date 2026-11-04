@@ -1,0 +1,78 @@
+{
+  "application_icons": {
+    "cache_entries": 0,
+    "cache_peak": 0,
+    "queue_peak": 0,
+    "result_peak": 0,
+    "extracted": 0,
+    "unavailable": 0
+  },
+  "session_initially_locked": false,
+  "session_locked_at_end": false,
+  "accessibility_active": true,
+  "version": "0.1.0-preview.8",
+  "gpui_revision": "d36a70661471ec64dce230798121d554930d5c60",
+  "backend": "GPUI / Win32 / Direct3D 11 / DirectWrite",
+  "dataset": "generated metadata fixture (same native grid); navigation fixture entries=0",
+  "item_count": 1000000,
+  "selected_count": 7,
+  "selection_bitmap_serialized_bytes": 42,
+  "selection_pending": false,
+  "theme_dark": false,
+  "scripted_scroll": false,
+  "synthetic_selection_script": true,
+  "flow_limit": 0,
+  "reduced_motion": false,
+  "logical_viewport": [
+    1120.0,
+    720.0
+  ],
+  "scale_factor": 1.25,
+  "duration_seconds": 6.0277607,
+  "scene_cpu": {
+    "samples": 45,
+    "p50_ms": 2.7713,
+    "p95_ms": 4.1513,
+    "p99_ms": 4.6736,
+    "max_ms": 4.6736
+  },
+  "frame_callback_interval": {
+    "samples": 45,
+    "p50_ms": 8.8872,
+    "p95_ms": 252.9708,
+    "p99_ms": 2699.2748,
+    "max_ms": 2699.2748
+  },
+  "input_handler_to_scene": {
+    "samples": 2,
+    "p50_ms": 6.1753,
+    "p95_ms": 9.0142,
+    "p99_ms": 9.0142,
+    "max_ms": 9.0142
+  },
+  "frames": 45,
+  "grid_builds": 47,
+  "label_layout_builds": 194,
+  "label_cache_peak": 94,
+  "visible_cells_peak": 60,
+  "cached_items_peak": 100,
+  "flow_layout_builds": 0,
+  "animation_requests": 40,
+  "max_pending_frame_callbacks": 1,
+  "hidden_animation_requests": 0,
+  "peak_working_set_mib": 75.26171875,
+  "private_bytes_mib": 87.6328125,
+  "cpu_seconds": 1.171875,
+  "cpu_one_core_percent": 19.44129932032637,
+  "events": [
+    "0.015s session-unlocked requests=0 frames=0",
+    "1.518s key",
+    "1.518s selection-smoke system-shortcut-pass=true",
+    "1.518s selection-smoke scope=synthetic-controller-events-real-window-not-OS-input",
+    "2.074s selection-smoke edge-pass=true rebase-pass=true offset=262146.06 origin=1921",
+    "2.074s key",
+    "2.226s selection-smoke escape-pass=true",
+    "2.486s selection-smoke additive-pass=true expected=7 selected=7"
+  ],
+  "measurement_notes": "Native release executable, real GPUI layout/paint and D3D11 window. Scene CPU is render start through final canvas paint; callback intervals are not GPU fence/present latency. Input measurement starts in the native event handler. Fixtures are metadata, not real copied files. Warmup: 1 second; first initialization and memory remain in wall-time/peak."
+}

@@ -11,6 +11,8 @@ pub struct NavigationUi {
     pub truncated: bool,
     pub error: Option<String>,
     pub focus: FocusHandle,
+    pub scroll: ScrollHandle,
+    pub hovered: bool,
 }
 impl NavigationUi {
     pub fn new(worker: Worker, cx: &mut Context<Backleaf>) -> Self {
@@ -25,12 +27,14 @@ impl NavigationUi {
             truncated: false,
             error: None,
             focus: cx.focus_handle(),
+            scroll: ScrollHandle::new(),
+            hovered: false,
         }
     }
 }
 impl Backleaf {
     pub fn sidebar_width(&self) -> f32 {
-        if self.options.fixture.is_some() {
+        if self.options.fixture.is_some() && self.options.navigation_fixture == 0 {
             0.
         } else {
             184.
@@ -45,7 +49,20 @@ impl Backleaf {
     }
     pub fn accept_navigation(&mut self, notice: Notice, cx: &mut Context<Self>) {
         match notice {
-            Notice::Common(locations) => self.navigation.common = locations,
+            Notice::Common(locations) => {
+                self.navigation.common = if self.options.navigation_fixture > 0 {
+                    (0..self.options.navigation_fixture)
+                        .map(|i| Location {
+                            title: format!("导航样本 {i:03}"),
+                            path: std::path::PathBuf::from(format!(
+                                r"V:\Backleaf-fixture\Quick-{i:03}"
+                            )),
+                        })
+                        .collect()
+                } else {
+                    locations
+                };
+            }
             Notice::Tree {
                 token,
                 rows,
@@ -142,15 +159,19 @@ impl Backleaf {
         cx.notify();
         true
     }
-    pub fn sidebar(&self, cx: &mut Context<Self>) -> AnyElement {
+    pub fn sidebar(&self, window: &Window, cx: &mut Context<Self>) -> AnyElement {
         let colors = self.colors;
+        let scrollbar = self.scrollbar(app_scroll::Kind::Sidebar, window, cx);
         div()
             .id("quick-access-sidebar")
+            .relative()
+            .min_h_0()
+            .overflow_hidden()
             .w(px(self.sidebar_width()))
             .flex_none()
             .h_full()
             .px(px(8.))
-            .py(px(16.))
+            .py(px(layout::SCROLL.sidebar_padding_y))
             .bg(colors.color(ColorRole::Chrome))
             .role(Role::Navigation)
             .aria_label("快捷访问")
@@ -158,7 +179,9 @@ impl Backleaf {
                 div()
                     .id("quick-access-scroll")
                     .h_full()
+                    .min_h_0()
                     .overflow_y_scroll()
+                    .track_scroll(&self.navigation.scroll)
                     .children(
                         self.navigation
                             .common
@@ -171,8 +194,11 @@ impl Backleaf {
                                 div()
                                     .id(("quick-access", i))
                                     .w_full()
-                                    .h(px(32.))
-                                    .mb(px(4.))
+                                    .h(px(layout::SCROLL.sidebar_row_height))
+                                    .when(i + 1 < self.navigation.common.len(), |d| {
+                                        d.mb(px(layout::SCROLL.sidebar_row_gap))
+                                    })
+                                    .flex_none()
                                     .px(px(8.))
                                     .rounded(px(8.))
                                     .border_1()
@@ -245,6 +271,7 @@ impl Backleaf {
                             }),
                     ),
             )
+            .children(scrollbar)
             .into_any_element()
     }
     pub fn path_available(&self, window: &Window, cx: &App) -> f32 {

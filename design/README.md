@@ -1,3 +1,5 @@
+最新主稿：[Backleaf-v19.fig](Backleaf-v19.fig)，137页；8个紧凑计数/无溢出/主区溢出/侧栏hover条件/短窗/深色/千万/空列表状态，保留全部前129页。几何见[scroll-system.json](scroll-system.json)。
+
 最新主稿：[Backleaf-v18.fig](Backleaf-v18.fig)，129页，保留此前124页并补齐侧栏normal、Tab焦点、当前目录+焦点、深色、窄窗5个状态。
 
 本轮主稿：[Backleaf-v17.fig](Backleaf-v17.fig)，124页。v14/v15图标探索与生图原稿、v16窗口栏8个状态、v17搜索收起4个关键状态均保留。收起过程见[v17](v17/manifest.json)，有限双向动效契约见[search-motion.json](search-motion.json)。

@@ -1,6 +1,7 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 mod app_navigation;
 mod app_operations;
+mod app_scroll;
 mod app_search;
 mod file_icons;
 mod input;
@@ -12,6 +13,7 @@ mod native_icons;
 mod navigation;
 mod operations;
 mod paint;
+mod scrollbar;
 mod search;
 mod search_motion;
 mod selectable;
@@ -71,6 +73,8 @@ struct Backleaf {
     cell_width: f32,
     focus: FocusHandle,
     scroll: UniformListScrollHandle,
+    scrollbar_drag: Option<app_scroll::Drag>,
+    scrollbar_hover: Option<app_scroll::Kind>,
     columns: usize,
     origin_row: usize,
     details: Option<Detail>,
@@ -248,7 +252,8 @@ impl Backleaf {
             })
             .detach();
         }
-        let panel = options.fixture.is_some();
+        let panel =
+            options.fixture.is_some() && (options.navigation_fixture == 0 || options.flow > 0);
         let flow_cache = Rc::new(RefCell::new(FlowCache::default()));
         let metrics = Rc::new(RefCell::new(Metrics::new()));
         let task = cx.new(|_| TaskPanel {
@@ -266,6 +271,8 @@ impl Backleaf {
         });
         let activated = cx.observe_window_activation(window, |this, window, cx| {
             if !window.is_window_active() {
+                this.scrollbar_drag = None;
+                this.navigation.hovered = false;
                 this.commit_rename_blur(cx);
                 this.finish_marquee(cx);
                 this.pressed_id = None;
@@ -330,6 +337,8 @@ impl Backleaf {
             cell_width: layout::LAYOUT.grid.minimum_cell_width,
             focus,
             scroll: UniformListScrollHandle::new(),
+            scrollbar_drag: None,
+            scrollbar_hover: None,
             columns: 1,
             origin_row: 0,
             details: None,
@@ -384,6 +393,9 @@ impl Backleaf {
                     self.finish_marquee(cx);
                 }
                 self.session_locked = locked;
+                if locked {
+                    self.scrollbar_drag = None;
+                }
                 let mut m = self.metrics.borrow_mut();
                 if m.session_initially_locked.is_none() {
                     m.session_initially_locked = Some(locked);
@@ -485,6 +497,7 @@ impl Backleaf {
             return;
         }
         self.cancel_marquee();
+        self.scrollbar_drag = None;
         self.close_search();
         if self.options.fixture.is_some() {
             return;
@@ -792,6 +805,10 @@ impl Backleaf {
             return;
         }
         let key = event.keystroke.key.as_str();
+        if key == "escape" && self.scrollbar_drag.take().is_some() {
+            cx.notify();
+            return;
+        }
         let modifiers = event.keystroke.modifiers;
         if modifiers.platform || (key == "escape" && (modifiers.control || modifiers.alt)) {
             return;
@@ -1344,7 +1361,11 @@ impl Backleaf {
         self.metrics.borrow_mut().grid_builds += 1;
         let width = f32::from(window.viewport_size().width);
         let gap = layout::LAYOUT.grid.column_gap;
-        let grid_width = (width - self.sidebar_width() - self.inline_details_width(window) - 24.)
+        let grid_width = (width
+            - self.sidebar_width()
+            - self.inline_details_width(window)
+            - 24.
+            - layout::SCROLL.gutter)
             .max(layout::LAYOUT.grid.minimum_cell_width);
         let columns = ((grid_width + gap) / (layout::LAYOUT.grid.minimum_cell_width + gap))
             .floor()
@@ -1401,13 +1422,16 @@ impl Backleaf {
         let origin = self.origin_row;
         let visible_height =
             f32::from(window.viewport_size().height) - layout::grid_reserved_height();
+        let scrollbar = self.scrollbar(app_scroll::Kind::Files, window, cx);
         div()
             .id("file-viewport")
+            .relative()
             .role(Role::ListBox)
             .aria_label("文件")
             .size_full()
-            .px(px(12.))
-            .py(px(16.))
+            .pl(px(12.))
+            .pr(px(12. + layout::SCROLL.gutter))
+            .py(px(layout::SCROLL.inset_y))
             .on_mouse_down(MouseButton::Left, cx.listener(Self::begin_marquee))
             .on_mouse_down(
                 MouseButton::Right,
@@ -1458,6 +1482,7 @@ impl Backleaf {
                 .with_width_from_item(Some(local_row.min(rows.saturating_sub(1))))
                 .track_scroll(&self.scroll),
             )
+            .children(scrollbar)
             .into_any_element()
     }
     fn details_panel(&self, cx: &mut Context<Self>) -> AnyElement {
@@ -1672,7 +1697,9 @@ impl Render for Backleaf {
                     .flex_1()
                     .min_h_0()
                     .w_full()
-                    .when(self.sidebar_width() > 0., |d| d.child(self.sidebar(cx)))
+                    .when(self.sidebar_width() > 0., |d| {
+                        d.child(self.sidebar(window, cx))
+                    })
                     .child(if window.is_a11y_active() {
                         div()
                             .w(px(self.grid_width(window)))
@@ -1702,15 +1729,17 @@ impl Render for Backleaf {
                             .id("selection-status-float")
                             .absolute()
                             .left(px(self.sidebar_width() + 12.))
-                            .bottom(px(16.))
+                            .bottom(px(12.))
                             .max_w(px((self.grid_width(window) - 24.).max(1.)))
-                            .px(px(12.))
-                            .py(px(16.))
-                            .rounded(px(12.))
+                            .h(px(layout::SCROLL.status_height))
+                            .px(px(layout::SCROLL.status_padding_x))
+                            .flex()
+                            .items_center()
+                            .rounded(px(layout::SCROLL.status_radius))
                             .bg(colors.color(ColorRole::Floating))
                             .border_1()
                             .border_color(colors.color(ColorRole::Border))
-                            .shadow(vec![colors.inline_shadow()])
+                            .shadow(colors.control_shadows(false))
                             .occlude()
                             .on_mouse_down(MouseButton::Left, |_, _, cx| cx.stop_propagation())
                             .child(
@@ -1720,7 +1749,8 @@ impl Render for Backleaf {
                                     .role(Role::Label)
                                     .aria_value(status.clone())
                                     .tooltip(tooltip(status.clone(), colors))
-                                    .text_size(px(12.))
+                                    .text_size(px(layout::SCROLL.status_font_size))
+                                    .line_height(px(layout::SCROLL.status_line_height))
                                     .child(status),
                             ),
                     )
@@ -1786,13 +1816,55 @@ impl Render for Backleaf {
                                 });
                             }
                         });
+                        // Stable pane bounds, independent of the scrollbar's occluding hitbox.
+                        let hoverer = owner.clone();
+                        window.on_mouse_event(move |event: &MouseMoveEvent, phase, window, cx| {
+                            if phase == DispatchPhase::Capture
+                                && let Some(view) = hoverer.upgrade()
+                            {
+                                let state = view.read(cx);
+                                let hovered = scrollbar::inside_sidebar(
+                                    f32::from(event.position.x),
+                                    f32::from(event.position.y),
+                                    state.sidebar_width(),
+                                    layout::CHROME.bar_height,
+                                    f32::from(window.viewport_size().height),
+                                );
+                                if hovered != state.navigation.hovered {
+                                    view.update(cx, |this, cx| {
+                                        this.navigation.hovered = hovered;
+                                        cx.notify();
+                                    });
+                                }
+                            }
+                        });
+                        let leaver = owner.clone();
+                        window.on_mouse_event(move |_: &MouseExitEvent, phase, _, cx| {
+                            if phase == DispatchPhase::Capture
+                                && let Some(view) = leaver.upgrade()
+                                && view.read(cx).navigation.hovered
+                            {
+                                view.update(cx, |this, cx| {
+                                    this.navigation.hovered = false;
+                                    cx.notify();
+                                });
+                            }
+                        });
                         let mover = owner.clone();
                         window.on_mouse_event(move |event: &MouseMoveEvent, phase, window, cx| {
                             if phase == DispatchPhase::Capture
                                 && let Some(view) = mover.upgrade()
-                                && view.read(cx).marquee.is_some()
+                                && (view.read(cx).marquee.is_some()
+                                    || view.read(cx).scrollbar_drag.is_some())
                             {
-                                view.update(cx, |this, cx| this.move_marquee(event, window, cx));
+                                view.update(cx, |this, cx| {
+                                    if this.scrollbar_drag.is_some() {
+                                        this.drag_scrollbar(event, window, cx);
+                                        cx.stop_propagation();
+                                    } else {
+                                        this.move_marquee(event, window, cx);
+                                    }
+                                });
                             }
                         });
                         let upper = owner.clone();
@@ -1801,9 +1873,11 @@ impl Render for Backleaf {
                                 && event.button == MouseButton::Left
                                 && let Some(view) = upper.upgrade()
                                 && (view.read(cx).marquee.is_some()
-                                    || view.read(cx).pressed_id.is_some())
+                                    || view.read(cx).pressed_id.is_some()
+                                    || view.read(cx).scrollbar_drag.is_some())
                             {
                                 view.update(cx, |this, cx| {
+                                    this.scrollbar_drag = None;
                                     this.pressed_id = None;
                                     this.finish_marquee(cx);
                                     cx.notify();

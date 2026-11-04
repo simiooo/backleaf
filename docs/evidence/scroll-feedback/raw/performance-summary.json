@@ -1,0 +1,40 @@
+[
+  {
+    "application_icons": {
+      "cache_entries": 128,
+      "cache_peak": 128,
+      "queue_peak": 32,
+      "result_peak": 11,
+      "extracted": 1223,
+      "unavailable": 872
+    },
+    "case": "1024-real-exe-scroll",
+    "cached_items_peak": 72,
+    "visible_cells_peak": 40,
+    "source_exe_sha256": "f73d250959e2879260c12af10b0a178031c54d1b2414d150d5834f3fb74abd72",
+    "started_at": "2026-11-04T23:21:01.1849917+08:00",
+    "frame_callback_p95_ms": 16.7736,
+    "working_set_peak_mib": 77.08984375,
+    "scene_p95_ms": 4.6241,
+    "report_sha256": "09c1695b3ce2f938979cd1c960c5e3953d8ecfe452ee809d24746e16589eb0cb"
+  },
+  {
+    "application_icons": {
+      "cache_entries": 0,
+      "cache_peak": 0,
+      "queue_peak": 0,
+      "result_peak": 0,
+      "extracted": 0,
+      "unavailable": 0
+    },
+    "case": "10m-scroll-flow8",
+    "cached_items_peak": 90,
+    "visible_cells_peak": 50,
+    "source_exe_sha256": "f73d250959e2879260c12af10b0a178031c54d1b2414d150d5834f3fb74abd72",
+    "started_at": "2026-11-04T23:21:14.1031207+08:00",
+    "frame_callback_p95_ms": 13.3187,
+    "working_set_peak_mib": 70.6484375,
+    "scene_p95_ms": 5.0732,
+    "report_sha256": "c9f0ddde4e3a045479f8f231b9fafe3aa2fa7f94dd3e48cd4dbcbd98b56e46b4"
+  }
+]
