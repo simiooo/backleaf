@@ -17,7 +17,7 @@ impl Selectable {
         Self {
             colors,
             text: text.into(),
-            focus: cx.focus_handle(),
+            focus: cx.focus_handle().tab_stop(true),
             selected: 0..0,
             anchor: 0,
             dragging: false,

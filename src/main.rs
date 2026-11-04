@@ -157,7 +157,7 @@ impl Backleaf {
         } else {
             Source::directory(path.clone(), 1, tx.clone())
         };
-        let focus = cx.focus_handle();
+        let focus = cx.focus_handle().tab_stop(true);
         window.focus(&focus, cx);
         cx.spawn(async move |this, cx| {
             while let Ok(event) = rx.recv().await {
