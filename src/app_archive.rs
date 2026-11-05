@@ -235,7 +235,7 @@ impl Backleaf {
         match result {
             Ok(id) => {
                 self.archive.draft = None;
-                self.show_operation(id);
+                self.show_operation(id, cx);
                 self.files.focus_grid = true;
             }
             Err(error) => {

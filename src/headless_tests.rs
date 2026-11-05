@@ -585,6 +585,55 @@ fn short_successful_operations_do_not_open_or_leave_a_task_panel() {
 }
 
 #[test]
+fn new_folder_in_equivalent_display_path_uses_snapshot_destination_identity() {
+    let mut h = Harness::new(&["original.txt"], None);
+    h.view.update(&mut h.cx, |this, cx| {
+        let alias = this.path.join("..").join("files");
+        this.navigate(alias, false, cx);
+    });
+    h.wait("equivalent path snapshot", |this, _| {
+        this.source.finished() && !this.watch_stale() && !this.cache.is_empty()
+    });
+    h.key("ctrl-shift-n");
+    h.wait("new folder at an equivalent display path", |this, _| {
+        this.files.editor.is_some()
+    });
+    let input = h.editor();
+    assert!(h.focused(&input));
+    h.text("alias-folder");
+    h.key("enter");
+    h.wait("alias rename committed", |this, _| {
+        this.files.editor.is_none()
+    });
+    assert!(h.file("alias-folder").is_dir());
+}
+
+#[test]
+fn slow_operations_reveal_once_without_reopening_after_escape() {
+    let mut h = Harness::new(&["original.txt"], None);
+    h.view.update(&mut h.cx, |this, cx| {
+        let id = this
+            .files
+            .hub
+            .queued_for_test(operations::service::Operation::Copy);
+        this.show_operation(id, cx);
+    });
+    h.frame();
+    assert!(!h.read(|this, _| this.files.open));
+    h.cx.advance_clock(Duration::from_millis(599));
+    h.frame();
+    assert!(!h.read(|this, _| this.files.open));
+    h.cx.advance_clock(Duration::from_millis(1));
+    h.frame();
+    assert!(h.read(|this, _| this.files.open));
+    h.key("escape");
+    assert!(!h.read(|this, _| this.files.open));
+    h.cx.advance_clock(Duration::from_secs(2));
+    h.frame();
+    assert!(!h.read(|this, _| this.files.open));
+}
+
+#[test]
 fn repeated_letters_cycle_and_wrap_without_intercepting_text_inputs() {
     let mut h = Harness::new(
         &["alpha.txt", "apple.txt", "apricot.txt", "banana.txt"],

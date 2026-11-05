@@ -518,6 +518,15 @@ impl Hub {
         let id = self.shared.clipboard_intent.load(Ordering::Acquire);
         self.view(id).is_some_and(|v| !v.phase.terminal())
     }
+    #[cfg(test)]
+    pub(crate) fn queued_for_test(&self, operation: Operation) -> u64 {
+        self.register(operation, PathBuf::from("D:\\"), None)
+            .unwrap()
+            .view
+            .lock()
+            .unwrap()
+            .id
+    }
     fn register(
         &self,
         operation: Operation,

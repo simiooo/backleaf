@@ -40,6 +40,7 @@ pub struct FileOperations {
     pub focus_grid: bool,
     new_folder: Option<u64>,
     rename_location: Option<(PathBuf, OsString)>,
+    auto_panel_task: Option<Task<()>>,
     pub close_guard: bool,
     pub exit_after_cancel: bool,
 }
@@ -119,6 +120,7 @@ impl FileOperations {
             focus_grid: false,
             new_folder: None,
             rename_location: None,
+            auto_panel_task: None,
             close_guard: false,
             exit_after_cancel: false,
         }
@@ -217,11 +219,7 @@ impl Backleaf {
             }
             if self.files.new_folder == Some(v.id) {
                 self.files.new_folder = None;
-                if v.phase == Phase::Complete
-                    // Compare the original destination, not Shell's returned
-                    // display spelling (which may expand a DOS 8.3 parent).
-                    && same_location(&v.target, &self.path)
-                {
+                if v.phase == Phase::Complete && self.operation_target_is_current(&v.target) {
                     locate = v
                         .created
                         .as_ref()
@@ -241,15 +239,13 @@ impl Backleaf {
                 )
             {
                 // Refresh once per completed task; never rebuild a huge directory for every copied item.
-                refresh |= same_location(&v.target, &self.path)
+                refresh |= self.operation_target_is_current(&v.target)
                     || v.source_mask.is_some()
                         && self.source.snapshot_path().is_some_and(|p| {
                             v.source_snapshot.as_ref().is_some_and(|s| s.as_path() == p)
                         });
             }
-            if self.files.selected == Some(v.id)
-                && matches!(v.phase, Phase::Complete | Phase::Canceled)
-            {
+            if self.files.selected == Some(v.id) && v.phase == Phase::Complete {
                 self.files.open = false;
                 self.files.selected = None;
             }
@@ -568,13 +564,14 @@ impl Backleaf {
             }
         })();
         match result {
-            Ok(Some(id)) => self.show_operation(id),
+            Ok(Some(id)) => self.show_operation(id, cx),
             Ok(None) => (),
             Err(error) => self.error = Some(error),
         }
         cx.notify();
     }
-    pub fn show_operation(&mut self, id: u64) {
+    pub fn show_operation(&mut self, id: u64, cx: &mut Context<Self>) {
+        self.files.auto_panel_task = None;
         self.files.selected = Some(id);
         self.files.expanded = false;
         self.files.failed_only = true;
@@ -582,21 +579,74 @@ impl Backleaf {
         self.files.page_history.clear();
         self.files.page_requested = None;
         self.request_operation_page();
+        if self.files.hub.view(id).is_some_and(|v| {
+            matches!(
+                v.operation,
+                Operation::Copy
+                    | Operation::Move
+                    | Operation::Recycle
+                    | Operation::Compress
+                    | Operation::Extract
+            )
+        }) {
+            self.files.auto_panel_task = Some(cx.spawn(async move |this, cx| {
+                cx.background_executor()
+                    .timer(Duration::from_millis(600))
+                    .await;
+                let _ = this.update(cx, |this, cx| {
+                    if this.files.selected == Some(id)
+                        && this.files.editor.is_none()
+                        && this.files.menu.is_none()
+                        && this.files.hub.view(id).is_some_and(|v| !v.phase.terminal())
+                    {
+                        this.files.open = true;
+                        cx.notify();
+                    }
+                });
+            }));
+        }
     }
     pub fn visible_operations(&self) -> Vec<View> {
         self.files
             .hub
             .views()
             .into_iter()
-            .filter(|v| !matches!(v.phase, Phase::Complete | Phase::Canceled))
+            .filter(|v| {
+                v.phase != Phase::Complete
+                    && !(v.phase == Phase::Canceled
+                        && v.successful == 0
+                        && v.failed == 0
+                        && v.unknown == 0)
+            })
             .collect()
+    }
+    fn operation_target_is_current(&self, target: &std::path::Path) -> bool {
+        // The worker resolves junction/DOS aliases; the UI may retain their
+        // original spelling. Compare against its already-resolved snapshot,
+        // without synchronous filesystem canonicalization on the UI thread.
+        same_location(target, &self.path)
+            || self
+                .source
+                .parent()
+                .is_some_and(|p| same_location(target, &p))
     }
     pub fn begin_rename(
         &mut self,
-        detail: Detail,
+        mut detail: Detail,
         window: Option<&mut Window>,
         cx: &mut Context<Self>,
     ) {
+        if let Some(parent) = self.source.parent()
+            && detail
+                .path
+                .parent()
+                .is_some_and(|p| self.operation_target_is_current(p))
+            && let Some(name) = detail.path.file_name()
+        {
+            // Shell operations use the resolved snapshot parent. Display paths
+            // may contain aliases or dot components that Shell parsing rejects.
+            detail.path = parent.join(name);
+        }
         if detail.path.file_name().and_then(|n| n.to_str()).is_none() {
             self.error = Some("此名称包含无法编辑的字符，可复制完整路径处理".into());
             return;
@@ -852,7 +902,7 @@ impl Backleaf {
                         detail.identity.as_ref().and_then(|i| Identity::decode(i)),
                         self.native_owner_handle,
                     ) {
-                        Ok(id) => self.show_operation(id),
+                        Ok(id) => self.show_operation(id, cx),
                         Err(error) => self.error = Some(error.to_string()),
                     }
                 }
@@ -987,6 +1037,7 @@ impl Backleaf {
             return false;
         }
         if key == "escape" && self.files.open {
+            self.files.auto_panel_task = None;
             self.files.open = false;
             cx.notify();
             return true;
@@ -1472,6 +1523,7 @@ impl Backleaf {
                     .shadow(colors.control_shadows(true))
             })
             .on_click(cx.listener(|this, _, _, cx| {
+                this.files.auto_panel_task = None;
                 this.files.open = !this.files.open;
                 let views = this.visible_operations();
                 this.files.selected = (views.len() == 1).then(|| views[0].id);
@@ -1482,6 +1534,7 @@ impl Backleaf {
             }))
             .on_key_down(cx.listener(|this, e: &KeyDownEvent, _, cx| {
                 if paint::activation_key(e) {
+                    this.files.auto_panel_task = None;
                     this.files.open = !this.files.open;
                     let views = this.visible_operations();
                     this.files.selected = (views.len() == 1).then(|| views[0].id);
@@ -1644,6 +1697,7 @@ impl Backleaf {
             .on_mouse_down(MouseButton::Left, |_, _, cx| cx.stop_propagation())
             .on_mouse_down_out(cx.listener(|this, e: &MouseDownEvent, _, cx| {
                 if e.button == MouseButton::Left {
+                    this.files.auto_panel_task = None;
                     this.files.open = false;
                     cx.notify();
                 }
@@ -1663,10 +1717,7 @@ impl Backleaf {
                         let label = format!(
                             "{} → {}",
                             v.operation.label(),
-                            v.target
-                                .file_name()
-                                .unwrap_or(v.target.as_os_str())
-                                .to_string_lossy()
+                            navigation::display_name(&v.target)
                         );
                         div()
                             .id(("queued-task", id))
@@ -1688,7 +1739,8 @@ impl Backleaf {
                                 colors,
                             ))
                             .on_click(cx.listener(move |this, _, _, cx| {
-                                this.show_operation(id);
+                                this.show_operation(id, cx);
+                                this.files.auto_panel_task = None;
                                 this.files.open = true;
                                 this.files.expanded = true;
                                 this.request_operation_page();
@@ -1696,7 +1748,8 @@ impl Backleaf {
                             }))
                             .on_key_down(cx.listener(move |this, e: &KeyDownEvent, _, cx| {
                                 if paint::activation_key(e) {
-                                    this.show_operation(id);
+                                    this.show_operation(id, cx);
+                                    this.files.auto_panel_task = None;
                                     this.files.open = true;
                                     this.files.expanded = true;
                                     this.request_operation_page();
@@ -1734,15 +1787,17 @@ impl Backleaf {
         let colors = self.colors;
         let id = v.id;
         let terminal = v.phase.terminal();
-        let target = v.target.to_string_lossy().into_owned();
-        let destination = v
-            .target
-            .file_name()
-            .unwrap_or(v.target.as_os_str())
-            .to_string_lossy();
+        let target = navigation::display_path(&v.target);
+        let destination = navigation::display_name(&v.target);
         let failures = v.failed.saturating_add(v.unknown);
-        let title = if terminal {
-            format!("{} 项未完成", number(failures.max(1) as usize))
+        let title = if v.phase == Phase::Canceled {
+            "已取消".into()
+        } else if terminal && failures > 0 {
+            format!("{} 项未完成", number(failures as usize))
+        } else if terminal {
+            format!("{}未完成", v.operation.label())
+        } else if v.operation == Operation::Recycle {
+            v.operation.label().into()
         } else {
             format!("{} → {destination}", v.operation.label())
         };

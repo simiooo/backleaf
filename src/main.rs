@@ -643,7 +643,7 @@ impl Backleaf {
                 cx.notify();
             }
             Event::OleTask(id) => {
-                self.show_operation(id);
+                self.show_operation(id, cx);
                 cx.notify();
             }
             Event::OlePin {

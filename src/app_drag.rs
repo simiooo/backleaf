@@ -176,7 +176,7 @@ impl Backleaf {
                 self.native_owner_handle,
                 Some(target),
             ) {
-                Ok(id) => self.show_operation(id),
+                Ok(id) => self.show_operation(id, cx),
                 Err(error) => self.navigation_error(error.to_string(), cx),
             }
         }
