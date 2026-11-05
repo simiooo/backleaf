@@ -12,6 +12,8 @@ Copy-Item assets/archive-engine/7z.dll "$bundle/lib/7z.dll"
 Copy-Item docs/native-preview-readme.txt "$bundle/README.txt"
 Copy-Item LICENSE "$bundle/LICENSE"
 Copy-Item assets/brand/backleaf-logo.png "$bundle/Logo.png"
+Copy-Item design/Backleaf-brand-v2.fig "$bundle/Backleaf-brand-v2.fig"
+Copy-Item assets/brand/generation.md "$bundle/Logo-provenance.md"
 Copy-Item design/Backleaf-v41.fig "$bundle/Backleaf-v41.fig"
 Copy-Item design/Backleaf-v41.fig .local/ci/Backleaf-v41.fig
 Copy-Item .local/ci/headless.json "$bundle/headless.json"

@@ -1,0 +1,22 @@
+{
+  "masterSha256": "1d863356dc71e3339328ecb0649ec7a02d44ab8e789428a64522605eaa3820e8",
+  "pages": 3,
+  "results": [
+    {
+      "page": "light",
+      "nodes": 3,
+      "changedPixels": 0
+    },
+    {
+      "page": "dark",
+      "nodes": 3,
+      "changedPixels": 0
+    },
+    {
+      "page": "sizes",
+      "nodes": 11,
+      "changedPixels": 0
+    }
+  ],
+  "result": "passed"
+}

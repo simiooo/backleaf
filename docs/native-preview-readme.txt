@@ -1,9 +1,10 @@
-拾径 / Backleaf 0.1.0-preview.19
+拾径 / Backleaf 0.1.0-preview.20
 
 Windows x64 便携测试版：解压整个ZIP，运行Backleaf.exe。或在PowerShell执行：
 irm https://raw.githubusercontent.com/simiooo/backleaf/staging/install.ps1 | iex
 
 本批次：
+- 圆叶小表情应用logo和九档透明Windows图标；附独立三页OpenPencil品牌稿。
 - 文件变化后台准备后原位提交，保留滚动与身份可验证的选择；失败保留旧列表。
 - 分区总量/剩余/使用率、卷接口PnP通知和独立后台容量探测。
 - 选择浮层增加文件大小；文件夹不递归，未知数据不填0。

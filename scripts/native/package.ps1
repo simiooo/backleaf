@@ -25,6 +25,8 @@ Copy-Item -LiteralPath (Join-Path $projectRoot 'docs/native-preview-readme.txt')
 Copy-Item -LiteralPath (Join-Path $projectRoot 'LICENSE') -Destination (Join-Path $bundle 'LICENSE')
 Copy-Item -LiteralPath (Join-Path $projectRoot 'design/Backleaf-v41.fig') -Destination (Join-Path $bundle 'Backleaf-v41.fig')
 Copy-Item -LiteralPath (Join-Path $projectRoot 'assets/brand/backleaf-logo.png') -Destination (Join-Path $bundle 'Logo.png')
+Copy-Item -LiteralPath (Join-Path $projectRoot 'design/Backleaf-brand-v2.fig') -Destination (Join-Path $bundle 'Backleaf-brand-v2.fig')
+Copy-Item -LiteralPath (Join-Path $projectRoot 'assets/brand/generation.md') -Destination (Join-Path $bundle 'Logo-provenance.md')
 Copy-Item -LiteralPath (Join-Path $projectRoot '.local/native-build-manifest.json') -Destination (Join-Path $bundle 'build.json')
 Copy-Item -LiteralPath (Join-Path $projectRoot '.local/batch-headless.json') -Destination (Join-Path $bundle 'headless.json')
 Copy-Item -LiteralPath (Join-Path $projectRoot '.local/native-licenses') -Destination (Join-Path $bundle 'licenses') -Recurse

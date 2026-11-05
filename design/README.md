@@ -58,3 +58,7 @@
 ## v41 · 存储与选择
 
 当前主稿Backleaf-v41.fig，247页，保留241页，新增容量就绪、未知、介质移除、混合选区、文件夹选区与深色六态。分区行60px、普通行32px、行间4px、选区浮层28px；冷重开和图像对照见v41/cold-reopen.json，源scripts/design/storage-v41.mjs。
+
+## 独立品牌稿 v2
+
+Backleaf-brand-v2.fig为圆叶logo的三页明暗/尺寸展示稿，不替代v41 UI主稿。源scripts/design/brand-v2.mjs，独立冷重开见brand-v2/cold-reopen.json。
