@@ -55,14 +55,14 @@ function New-Fixture([string]$Version = '0.1.0-preview.15', [string]$Content = '
 # ZIP inspection/extraction, locks, install promotion, rollback and cleanup are real.
 function Invoke-RestMethod {
     param($Uri, $Headers, $TimeoutSec, $ErrorAction)
-    if ($Uri -like '*/tags/runtime-v1') { return $script:runtimeFixture.release }
+    if ($Uri -like '*/tags/runtime-v2') { return $script:runtimeFixture.release }
     return $script:releases
 }
 function Invoke-BackleafDownload {
     param($Uri, $Destination)
     if ($script:downloadFailure) { throw 'Simulated download failure.' }
     $base = $script:fixture.dir
-    if ($Uri -like '*/runtime-v1/*') { $base = $script:runtimeFixture.dir }
+    if ($Uri -like '*/runtime-v2/*') { $base = $script:runtimeFixture.dir }
     Copy-Item -LiteralPath (Join-Path $base ([Uri]$Uri).Segments[-1]) -Destination $Destination
 }
 function Get-Process {
@@ -86,14 +86,14 @@ try {
         [IO.File]::WriteAllText($path, 'offline fixture runtime: ' + $name)
         @{name=$name;sha256=(Get-FileHash -LiteralPath $path).Hash.ToLowerInvariant()}
     }
-    @{id='runtime-v1';architecture='x64';files=@($runtimeFiles)}|ConvertTo-Json -Depth 5|Set-Content (Join-Path $runtimePackage 'runtime.json') -Encoding UTF8
+    @{id='runtime-v2';architecture='x64';files=@($runtimeFiles)}|ConvertTo-Json -Depth 5|Set-Content (Join-Path $runtimePackage 'runtime.json') -Encoding UTF8
     'Offline runtime notice fixture' | Set-Content (Join-Path $runtimePackage 'NOTICE.txt')
     $runtimeZip = Join-Path $runtimeDir 'Backleaf-runtime-x64.zip'
     [IO.Compression.ZipFile]::CreateFromDirectory($runtimePackage, $runtimeZip)
-    $script:runtimeFixture = [PSCustomObject]@{dir=$runtimeDir;release=[PSCustomObject]@{tag_name='runtime-v1';draft=$false;assets=@([PSCustomObject]@{
+    $script:runtimeFixture = [PSCustomObject]@{dir=$runtimeDir;release=[PSCustomObject]@{tag_name='runtime-v2';draft=$false;assets=@([PSCustomObject]@{
         name='Backleaf-runtime-x64.zip';state='uploaded';size=(Get-Item -LiteralPath $runtimeZip).Length
         digest='sha256:'+(Get-FileHash -LiteralPath $runtimeZip).Hash.ToLowerInvariant()
-        browser_download_url='https://github.com/simiooo/backleaf/releases/download/runtime-v1/Backleaf-runtime-x64.zip'
+        browser_download_url='https://github.com/simiooo/backleaf/releases/download/runtime-v2/Backleaf-runtime-x64.zip'
     })}}
     $script:target = Join-Path $env:LOCALAPPDATA 'Programs/Backleaf'
     $script:fixture = New-Fixture
@@ -214,7 +214,7 @@ try {
             Assert-True (Test-Path -LiteralPath (Join-Path $script:target ('current/'+$name))) 'App-local runtime or license missing.'
         }
         $receipt = Get-Content -LiteralPath (Join-Path $script:target 'current/.backleaf-install.json') -Raw|ConvertFrom-Json
-        Assert-True ($receipt.runtime.tag -eq 'runtime-v1') 'Runtime provenance missing.'
+        Assert-True ($receipt.runtime.tag -eq 'runtime-v2') 'Runtime provenance missing.'
         Assert-True ($receipt.runtime.files[0].sha256 -match '^[a-f0-9]{64}$') 'Runtime receipt was truncated.'
     }
     Test-Case 'runtime download corruption prevents application replacement' {

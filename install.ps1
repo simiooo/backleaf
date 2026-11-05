@@ -54,7 +54,7 @@ function Invoke-BackleafDownload {
 
 function Add-BackleafRuntime {
     param([string]$Work, [string]$Stage)
-    $runtimeTag = 'runtime-v1'
+    $runtimeTag = 'runtime-v2'
     $release = Invoke-RestMethod -Uri "https://api.github.com/repos/simiooo/backleaf/releases/tags/$runtimeTag" -Headers @{ Accept = 'application/vnd.github+json'; 'User-Agent' = 'Backleaf-Installer' } -TimeoutSec 30 -ErrorAction Stop
     if ($release.draft -or $release.tag_name -ne $runtimeTag) { throw 'Published Backleaf runtime support package is unavailable.' }
     $asset = @($release.assets | Where-Object { $_.name -ceq 'Backleaf-runtime-x64.zip' -and $_.state -eq 'uploaded' })
