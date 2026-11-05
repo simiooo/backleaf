@@ -1,0 +1,19 @@
+[
+  {
+    "check": "Sidebar keyboard focus accepts filename prefix and transfers focus to matching file",
+    "result": "passed",
+    "before": "Data (D:) navigation button",
+    "key": "m",
+    "after": "move-me"
+  },
+  {
+    "check": "Enter after prefix location opens matched folder",
+    "result": "passed"
+  },
+  {
+    "check": "Rename editor retains actual alphabet key and focus",
+    "result": "passed",
+    "value": "guarded-nameq.txt",
+    "key": "q"
+  }
+]

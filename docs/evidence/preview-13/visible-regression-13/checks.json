@@ -73,5 +73,18 @@
     "check": "1/2/5/10 windows and close nine retains usable window",
     "result": "passed",
     "resources": "visible-performance-13/window-*.json"
+  },
+  {
+    "check": "Restored missing path retains original path and exposes retry/Home",
+    "result": "passed"
+  },
+  {
+    "check": "Restored unavailable path automatically recovers when original directory returns",
+    "result": "passed",
+    "file": "probe.txt"
+  },
+  {
+    "check": "Long name ellipsis, tooltip only on filename, complete wrapping name/path in details",
+    "result": "passed"
   }
 ]

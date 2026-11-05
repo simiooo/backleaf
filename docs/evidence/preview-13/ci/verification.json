@@ -1,0 +1,19 @@
+{
+  "source_commit": "fce2fd5ff505b2a39ac515dc5fbde182f8e61de0",
+  "ci_run": "https://github.com/simiooo/backleaf/actions/runs/41960384487",
+  "release": "https://github.com/simiooo/backleaf/releases/tag/test-v0.1.0-preview.13-fce2fd5f",
+  "published_at": "2026-11-05T03:23:28Z",
+  "verified_at_utc": "2026-11-05T03:27:32.756206+00:00",
+  "remote_asset_digests": true,
+  "zip_exe_design_dll_hashes": true,
+  "license_and_corresponding_source": true,
+  "ci_tests": 76,
+  "ci_exe_sha256": "e500f40ba54b5efbf6cc96aba3cb3805f3a62d131faac49169efab8f9f0f5b68",
+  "local_exe_sha256": "a4268ed77f88a806e3f58591d067644bc4f86b43cb657039b52a55ef44e81066",
+  "zip_sha256": "524013db2a2aeeb3d3d19a74fcb85ef5647fd285edd4c5e69e0952a0e5ae3eee",
+  "design_sha256": "26cf726e45e67743f31699790c0f9529c6d44b2c3b37a9ef1c4fe6afb2a4d6c6",
+  "downloaded_cli_smoke": true,
+  "downloaded_visible_startup": true,
+  "downloaded_native_menu_shown": true,
+  "native_command_click": "not verified: Computer Use rejected cross-process popup hit; helper has no returned target window"
+}
