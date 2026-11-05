@@ -990,14 +990,105 @@ mod tests {
         drop(f.rx);
     }
     #[test]
+    fn indexed_cache_root_case_alias_keeps_incremental_and_nonrecursive_coverage() {
+        let mut f = IndexedFixture::new();
+        assert_eq!(
+            f.root.parent().unwrap(),
+            f._fixture.0.canonicalize().unwrap()
+        );
+        let mut view = f.view("报");
+        view.recursive = false;
+        assert_eq!(f.query(view.clone()).0, 3);
+        let renamed = f._fixture.0.join("FILES");
+        assert_eq!(
+            renamed.parent().unwrap().canonicalize().unwrap(),
+            f._fixture.0.canonicalize().unwrap()
+        );
+        std::fs::rename(&f.root, &renamed).unwrap();
+        crate::index::register(&f.index, &renamed).unwrap();
+        assert_eq!(
+            f.index
+                .query_row("SELECT count(*) FROM roots", [], |r| r.get::<_, i64>(0))
+                .unwrap(),
+            1
+        );
+        let new = f.root.join("报告_added.txt");
+        std::fs::write(&new, b"new").unwrap();
+        f.changed(&new);
+        drop(crate::index::build_test_index(&renamed, &f.state));
+        assert_eq!(
+            f.query(view.clone()).0,
+            4,
+            "Root case alias lost a matching file"
+        );
+        let later = f.root.join("报告_later.txt");
+        std::fs::write(&later, b"later").unwrap();
+        f.changed(&later);
+        assert_eq!(
+            f.query(view).0,
+            5,
+            "Incremental update after root rename was lost"
+        );
+        drop(f.worker);
+        drop(f.rx);
+    }
+    #[test]
+    fn legacy_duplicate_root_case_aliases_merge_on_startup_and_keep_watching() {
+        let mut f = IndexedFixture::new();
+        let renamed = f._fixture.0.join("FILES");
+        assert_eq!(
+            renamed.parent().unwrap().canonicalize().unwrap(),
+            f._fixture.0.canonicalize().unwrap()
+        );
+        std::fs::rename(&f.root, &renamed).unwrap();
+        let actual = renamed.canonicalize().unwrap();
+        f.index
+            .execute(
+                "INSERT INTO roots(path)VALUES(?1)",
+                [super::encode(&actual)],
+            )
+            .unwrap();
+        let (tx, rx) = async_channel::unbounded();
+        let service = crate::index::Service::new(f.state.clone(), Some(vec![]), tx);
+        let wait = |expected| {
+            let deadline = std::time::Instant::now() + std::time::Duration::from_secs(10);
+            loop {
+                match rx.try_recv() {
+                    Ok(Event::IndexStatus(s)) => {
+                        assert!(s.error.is_none(), "{:?}", s.error);
+                        if s.roots == [actual.clone()] && !s.building && s.count == expected {
+                            break;
+                        }
+                    }
+                    _ => std::thread::sleep(std::time::Duration::from_millis(2)),
+                }
+                assert!(
+                    std::time::Instant::now() < deadline,
+                    "Legacy root recovery timed out"
+                );
+            }
+        };
+        wait(4);
+        let mut view = f.view("报");
+        view.recursive = false;
+        assert_eq!(f.query(view.clone()).0, 3);
+        std::fs::write(actual.join("报告-after-recovery.txt"), b"new").unwrap();
+        wait(5);
+        assert_eq!(f.query(view).0, 4);
+        drop(service);
+        drop(rx);
+        drop(f.worker);
+        drop(f.rx);
+    }
+    #[test]
     #[ignore = "Explicit real-file cache performance measurement"]
     fn indexed_search_cache_real_files_benchmark() {
         let mut f = IndexedFixture::new();
         for i in 0..10000 {
             let p = f.root.join(format!("报告_{i:05}.txt"));
             std::fs::write(&p, b"owned cache benchmark").unwrap();
-            f.changed(&p);
         }
+        drop(crate::index::build_test_index(&f.root, &f.state));
         let mut cold = Vec::new();
         let mut warm = Vec::new();
         let mut delta = Vec::new();

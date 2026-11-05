@@ -436,6 +436,56 @@ fn indexed_search_cache_reuse_incremental_refresh_and_replaced_visible_identity(
 }
 
 #[test]
+fn indexed_root_case_rename_rebuilds_without_duplicates_and_keeps_nonrecursive_updates() {
+    let mut h = Harness::new(&["报告-original.txt", "other.txt"], None);
+    h.read(|this, _| {
+        this.index
+            .as_ref()
+            .unwrap()
+            .send(index::Action::Add(this.path.clone()))
+            .unwrap()
+    });
+    h.wait("root indexed", |this, _| {
+        !this.index_status.building && this.index_status.count == 2
+    });
+    h.key("ctrl-f");
+    h.view.update(&mut h.cx, |this, cx| {
+        this.search.definition.indexed = true;
+        this.search.definition.recursive = false;
+        this.start_search("报".into(), cx);
+    });
+    h.wait("nonrecursive root search", |this, _| {
+        this.search.done && this.search.rows.len() == 1
+    });
+    let old = h.read(|this, _| this.path.clone());
+    let new = h.fixture.0.join("FILES");
+    assert_eq!(old.parent().unwrap(), h.fixture.0.as_path());
+    assert_eq!(new.parent().unwrap(), h.fixture.0.as_path());
+    std::fs::rename(&old, &new).unwrap();
+    std::fs::write(old.join("报告-added.txt"), b"new").unwrap();
+    let actual = new.canonicalize().unwrap();
+    h.wait("case alias root migrated and rebuilt", |this, _| {
+        this.index_status.roots == [actual.clone()]
+            && !this.index_status.building
+            && this.search.done
+            && !this.search.refreshing
+            && this.search.count == 2
+            && this.search.rows.len() == 2
+    });
+    std::fs::write(new.join("报告-later.txt"), b"later").unwrap();
+    h.wait(
+        "replacement watcher and nonrecursive membership",
+        |this, _| {
+            !this.index_status.building
+                && this.search.done
+                && !this.search.refreshing
+                && this.search.count == 3
+                && this.search.rows.len() == 3
+        },
+    );
+}
+
+#[test]
 fn new_folder_completion_refreshes_in_place_and_enters_rename() {
     let mut h = Harness::new(&["original.txt"], None);
     let handle = h.read(|this, _| this.scroll.0.clone());

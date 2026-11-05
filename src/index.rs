@@ -74,10 +74,10 @@ pub fn register(db: &Connection, path: &Path) -> anyhow::Result<()> {
         .query_map([], |r| r.get::<_, Vec<u8>>(0))?
         .collect::<Result<Vec<_>, _>>()?;
     drop(q);
-    if existing
-        .iter()
-        .any(|raw| path.starts_with(decode_path(raw)))
-    {
+    if existing.iter().any(|raw| {
+        let registered = decode_path(raw);
+        path.starts_with(registered.canonicalize().unwrap_or(registered))
+    }) {
         return Ok(());
     }
     anyhow::ensure!(existing.len() < 64, "索引位置最多64个");
@@ -90,8 +90,65 @@ pub fn register(db: &Connection, path: &Path) -> anyhow::Result<()> {
     Ok(())
 }
 fn enqueue(db: &Connection, root: i64, path: &Path, crawl: bool) -> anyhow::Result<()> {
-    db.execute("INSERT INTO frontier VALUES(?1,?2,?3) ON CONFLICT(root,path)DO UPDATE SET crawl=max(crawl,excluded.crawl)",params![root,encode_path(path),crawl])?;
+    let Some(registered) = db
+        .query_row("SELECT path FROM roots WHERE id=?1", [root], |r| {
+            r.get::<_, Vec<u8>>(0)
+        })
+        .optional()?
+    else {
+        return Ok(());
+    };
+    let registered = decode_path(&registered);
+    let path = if path.starts_with(&registered) {
+        path.to_owned()
+    } else {
+        path.canonicalize().unwrap_or_else(|_| path.to_owned())
+    };
+    if !path.starts_with(&registered) {
+        return Ok(());
+    }
+    db.execute("INSERT INTO frontier VALUES(?1,?2,?3) ON CONFLICT(root,path)DO UPDATE SET crawl=max(crawl,excluded.crawl)",params![root,encode_path(&path),crawl])?;
     db.execute("UPDATE roots SET building=1 WHERE id=?1", [root])?;
+    Ok(())
+}
+// Called only by the index writer, inside its transaction. Root spelling changes
+// invalidate every old parent key, so rebuild that root rather than mixing aliases.
+fn migrate_root_path(
+    db: &Connection,
+    root: i64,
+    previous: &Path,
+    next: &Path,
+) -> anyhow::Result<()> {
+    let stored = db
+        .query_row("SELECT path FROM roots WHERE id=?1", [root], |r| {
+            r.get::<_, Vec<u8>>(0)
+        })
+        .optional()?;
+    if stored.as_deref() != Some(encode_path(previous).as_slice()) {
+        return Ok(());
+    }
+    let raw = encode_path(next);
+    if let Some(other) = db
+        .query_row(
+            "SELECT id FROM roots WHERE path=?1 AND id<>?2",
+            params![&raw, root],
+            |r| r.get::<_, i64>(0),
+        )
+        .optional()?
+    {
+        db.execute("DELETE FROM roots WHERE id=?1", [root])?;
+        enqueue(db, other, next, true)?;
+    } else {
+        db.execute("DELETE FROM frontier WHERE root=?1", [root])?;
+        db.execute("DELETE FROM problems WHERE root=?1", [root])?;
+        db.execute("DELETE FROM entries WHERE root=?1", [root])?;
+        db.execute(
+            "UPDATE roots SET path=?2,count=0,building=1 WHERE id=?1",
+            params![root, &raw],
+        )?;
+        enqueue(db, root, next, true)?;
+    }
+    db.execute("UPDATE meta SET value=value+1 WHERE key='revision'", [])?;
     Ok(())
 }
 fn cjk(c: char) -> bool {
@@ -241,7 +298,7 @@ pub(crate) fn incremental(
     {
         return Ok(());
     }
-    let txn = db.transaction()?;
+    let txn = db.transaction_with_behavior(rusqlite::TransactionBehavior::Immediate)?;
     let Some(registered) = txn
         .query_row("SELECT path FROM roots WHERE id=?1", [root], |r| {
             r.get::<_, Vec<u8>>(0)
@@ -250,6 +307,15 @@ pub(crate) fn incremental(
     else {
         return Ok(());
     };
+    let registered_path = decode_path(&registered);
+    let actual_root = registered_path
+        .canonicalize()
+        .unwrap_or_else(|_| registered_path.clone());
+    if actual_root != registered_path {
+        migrate_root_path(&txn, root, &registered_path, &actual_root)?;
+        txn.commit()?;
+        return Ok(());
+    }
     match identity::capture(path) {
         Ok(metadata) => {
             let epoch = txn.query_row("SELECT value FROM meta WHERE key='epoch'", [], |r| {
@@ -449,7 +515,7 @@ impl Service {
                         if owner.is_some(){
                             let initialized=db.query_row("SELECT count(*) FROM meta WHERE key='initialized'",[],|r|r.get::<_,i64>(0))?;
                             if initialized==0{let roots=initial_roots.clone().unwrap_or_else(||crate::navigation::common_locations().into_iter().skip(1).map(|l|l.path).collect());for path in roots{let _=register(&db,&path);}db.execute("INSERT OR IGNORE INTO meta VALUES('initialized',1)",[])?;}
-                            let existing=status(&db)?.roots;for root in existing{let id=db.query_row("SELECT id FROM roots WHERE path=?1",[encode_path(&root)],|r|r.get(0))?;enqueue(&db,id,&root,true)?;}
+                            let existing=status(&db)?.roots;for root in existing{let Some(id)=db.query_row("SELECT id FROM roots WHERE path=?1",[encode_path(&root)],|r|r.get::<_,i64>(0)).optional()? else{continue;};let actual=root.canonicalize().unwrap_or_else(|_|root.clone());let txn=db.transaction_with_behavior(rusqlite::TransactionBehavior::Immediate)?;if actual!=root{migrate_root_path(&txn,id,&root,&actual)?;}let stored=txn.query_row("SELECT path FROM roots WHERE id=?1",[id],|r|r.get::<_,Vec<u8>>(0)).optional()?;if stored.as_deref()==Some(encode_path(&actual).as_slice()){enqueue(&txn,id,&actual,true)?;}txn.commit()?;}
                         }
                     }
                     for _ in 0..16 {
@@ -463,10 +529,10 @@ impl Service {
                     }
                     if owner.is_some(){
                         let mut q=db.prepare("SELECT id,path FROM roots ORDER BY id")?;let roots=q.query_map([],|r|Ok((r.get::<_,i64>(0)?,decode_path(&r.get::<_,Vec<u8>>(1)?))))?.collect::<Result<Vec<_>,_>>()?;drop(q);
-                        watches.retain(|id,_|roots.iter().any(|(root,_)|root==id));
+                        watches.retain(|id,(path,_)|roots.iter().any(|(root,current)|root==id&&current==path));
                         for (id,path) in roots{watches.entry(id).or_insert_with(||(path.clone(),crate::index_watch::Watch::new(id,path,directory.clone(),changes.clone())));}
                         for _ in 0..128{match rx.try_recv(){Ok(change)=>{incremental(&mut db,change.root,&change.path,&directory)?;},Err(_)=>break}}
-                        for (id,(path,watch)) in &watches{if watch.overflow.swap(false,Ordering::AcqRel){enqueue(&db,*id,path,true)?;}}
+                        for (id,(_,watch)) in &watches{if watch.overflow.swap(false,Ordering::AcqRel)&&let Some(current)=db.query_row("SELECT path FROM roots WHERE id=?1",[id],|r|r.get::<_,Vec<u8>>(0)).optional()?{enqueue(&db,*id,&decode_path(&current),true)?;}}
                         let next=db.query_row("SELECT root,path,crawl FROM frontier ORDER BY crawl,root,path LIMIT 1",[],|r|Ok((r.get::<_,i64>(0)?,decode_path(&r.get::<_,Vec<u8>>(1)?),r.get::<_,bool>(2)?))).optional()?;
                         if let Some((root,path,crawl))=next{reconcile(&mut db,root,&path,crawl,&directory,&halted,&tx)?;last_reconcile=Instant::now();}
                         db.execute("UPDATE roots SET building=EXISTS(SELECT 1 FROM frontier f WHERE f.root=roots.id) WHERE building<>EXISTS(SELECT 1 FROM frontier f WHERE f.root=roots.id)",[])?;
@@ -488,6 +554,17 @@ struct WriterLock(windows::Win32::Foundation::HANDLE);
 pub(crate) fn build_test_index(root: &Path, state: &Path) -> Connection {
     let mut db = open(state).unwrap();
     register(&db, root).unwrap();
+    let excluded = state.canonicalize().unwrap();
+    for path in status(&db).unwrap().roots {
+        let id = db
+            .query_row(
+                "SELECT id FROM roots WHERE path=?1",
+                [encode_path(&path)],
+                |r| r.get(0),
+            )
+            .unwrap();
+        enqueue(&db, id, &path, true).unwrap();
+    }
     let (tx, _rx) = async_channel::unbounded();
     while let Some((id, path, crawl)) = db
         .query_row("SELECT root,path,crawl FROM frontier LIMIT 1", [], |r| {
@@ -505,7 +582,7 @@ pub(crate) fn build_test_index(root: &Path, state: &Path) -> Connection {
             id,
             &path,
             crawl,
-            state,
+            &excluded,
             &AtomicBool::new(false),
             &tx,
         )

@@ -11,9 +11,9 @@ try {
     $cases=@([regex]::Matches($log,'(?m)^test (headless_tests::\S+) \.\.\. (ok|FAILED)\s*$') | ForEach-Object {
         [ordered]@{name=$_.Groups[1].Value;passed=$_.Groups[2].Value -eq 'ok'}
     })
-    $required=@('indexed_search_cache_reuse_incremental_refresh_and_replaced_visible_identity','pending_letter_activation_finishes_before_directory_refresh_commits','repeated_letters_cycle_and_wrap_without_intercepting_text_inputs','selected_bytes_include_empty_files_and_never_recurse_into_folders','volume_capacity_updates_keep_sidebar_geometry_and_ignore_stale_or_removed_rows','new_folder_completion_refreshes_in_place_and_enters_rename','directory_refresh_never_clears_the_grid_and_remaps_selection_by_identity','directory_refresh_preserves_scroll_handle_and_visible_anchor','refresh_failure_keeps_old_rows_and_late_results_cannot_replace_navigation','automatic_search_refresh_keeps_rows_until_the_new_page_is_ready','async_shell_discovery_and_large_submenu_never_resize_or_move_the_root','dynamic_child_waits_for_rows_and_keeps_both_ancestors_stable','late_dynamic_rows_do_not_revive_closed_columns_or_the_menu_family','menu_family_focus_and_bottom_flip_keep_ancestors_stable')
+    $required=@('indexed_root_case_rename_rebuilds_without_duplicates_and_keeps_nonrecursive_updates','indexed_search_cache_reuse_incremental_refresh_and_replaced_visible_identity','pending_letter_activation_finishes_before_directory_refresh_commits','repeated_letters_cycle_and_wrap_without_intercepting_text_inputs','selected_bytes_include_empty_files_and_never_recurse_into_folders','volume_capacity_updates_keep_sidebar_geometry_and_ignore_stale_or_removed_rows','new_folder_completion_refreshes_in_place_and_enters_rename','directory_refresh_never_clears_the_grid_and_remaps_selection_by_identity','directory_refresh_preserves_scroll_handle_and_visible_anchor','refresh_failure_keeps_old_rows_and_late_results_cannot_replace_navigation','automatic_search_refresh_keeps_rows_until_the_new_page_is_ready','async_shell_discovery_and_large_submenu_never_resize_or_move_the_root','dynamic_child_waits_for_rows_and_keeps_both_ancestors_stable','late_dynamic_rows_do_not_revive_closed_columns_or_the_menu_family','menu_family_focus_and_bottom_flip_keep_ancestors_stable')
     $missing=@($required | Where-Object { $name='headless_tests::'+$_; !($cases | Where-Object {$_.name -eq $name -and $_.passed}) })
-    $passed=$resultCode -eq 0 -and $cases.Count -ge 30 -and $missing.Count -eq 0 -and @($cases | Where-Object {!$_.passed}).Count -eq 0
+    $passed=$resultCode -eq 0 -and $cases.Count -ge 31 -and $missing.Count -eq 0 -and @($cases | Where-Object {!$_.passed}).Count -eq 0
     $report=[ordered]@{
         passed=$passed;exit_code=$resultCode;test_count=$cases.Count;cases=$cases;missing_required=$missing
         workspace_commit=(git rev-parse HEAD).Trim();workspace_dirty=[bool](git status --porcelain)
@@ -25,6 +25,6 @@ try {
     $reportPath=[IO.Path]::ChangeExtension($logPath,'json')
     $report | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath $reportPath -Encoding utf8
     Get-Content -LiteralPath $logPath
-    if (!$passed) {throw "GPUI headless regressions failed or required menu/refresh cases missing (minimum 30): $reportPath"}
+    if (!$passed) {throw "GPUI headless regressions failed or required menu/refresh cases missing (minimum 31): $reportPath"}
     Write-Output "GPUI headless gate passed: $($cases.Count) cases; $reportPath"
 } finally {Pop-Location}
