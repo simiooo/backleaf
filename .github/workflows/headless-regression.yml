@@ -1,0 +1,45 @@
+name: GPUI headless regressions
+on:
+  pull_request:
+  push:
+    branches: [staging, main]
+    paths:
+      - 'src/**'
+      - 'Cargo.*'
+      - 'build.rs'
+      - 'rust-toolchain.toml'
+      - 'vendor/zed'
+      - 'assets/**'
+      - 'design/*-system.json'
+      - 'scripts/native/**'
+      - '.github/workflows/**'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: gpui-headless-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  headless:
+    runs-on: windows-2025
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+      - uses: ilammy/msvc-dev-cmd@v1
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: '1.99.1'
+      - uses: Swatinem/rust-cache@v2
+        with:
+          cache-on-failure: true
+      - name: Event-driven headless UI regressions
+        shell: pwsh
+        run: ./scripts/native/test-headless.ps1 -Output .local/headless-ci/headless.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: gpui-headless-evidence
+          path: .local/headless-ci
+          retention-days: 30

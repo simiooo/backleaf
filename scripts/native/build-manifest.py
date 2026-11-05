@@ -21,9 +21,12 @@ manifest={
     'compiler':subprocess.check_output(['rustc','--version'],cwd=root,text=True).strip(),
     'profile':'release; --locked','exe_sha256':sha(binary),'exe_bytes':binary.stat().st_size,
     'inputs':[{'path':p,'sha256':sha(root/p)} for p in paths],
-    'check_logs':[{'path':f'{name}.log','sha256':sha(root/f'.local/batch-{name}.log')} for name in ['fmt','clippy','tests','build']],
-    'check_scope':'fmt, all-target Clippy, unit/model and isolated Windows filesystem/COM protocol tests; visible native/staging acceptance is recorded separately.'
+    'check_logs':[{'path':f'{name}.log','sha256':sha(root/f'.local/batch-{name}.log')} for name in ['fmt','clippy','tests','headless','build']],
+    'headless':json.loads((root/'.local/batch-headless.json').read_text('utf-8-sig')),
+    'check_scope':'fmt, all-target Clippy, GPUI headless UI interactions, unit/model and isolated Windows filesystem/COM protocol tests; native HWND/GPU acceptance is recorded separately.'
 }
+if not manifest['headless']['passed'] or manifest['headless']['workspace_commit']!=manifest['source_commit'] or manifest['headless']['workspace_dirty']:
+    raise SystemExit('Headless interaction gate has not passed')
 output=root/'.local/native-build-manifest.json'
 output.write_text(json.dumps(manifest,indent=2),encoding='utf-8')
 print(json.dumps({'output':str(output),'version':version,'source_commit':manifest['source_commit'],'exe_sha256':manifest['exe_sha256']}))

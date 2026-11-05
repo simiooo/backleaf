@@ -1030,6 +1030,25 @@ impl Hub {
             let ledger = create_ledger(&task)?;
             let metadata =
                 shell::identity::capture(if new_folder { &destination } else { &source })?;
+            if !new_folder {
+                // Inline rename commits on blur. An existing destination must return
+                // to that editor rather than block a worker on Shell's conflict UI.
+                let target = destination.join(&new_name);
+                match shell::identity::capture(&target) {
+                    Ok(existing) => {
+                        let case_only = source.file_name().is_some_and(|name| {
+                            name.to_string_lossy().to_lowercase()
+                                == new_name.to_string_lossy().to_lowercase()
+                        });
+                        anyhow::ensure!(
+                            case_only && existing.identity == metadata.identity,
+                            "此位置已存在同名项目"
+                        );
+                    }
+                    Err(error) if matches!(error.code().0 as u32, 0x80070002 | 0x80070003) => (),
+                    Err(error) => return Err(error.into()),
+                }
+            }
             task.update(false, |v| {
                 v.total = Some(1);
                 v.bytes_total = metadata.bytes;

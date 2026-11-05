@@ -1,0 +1,622 @@
+//! Event-driven regressions on GPUI's TestPlatform; no desktop input or HWNDs.
+use super::*;
+use crate::input::TextInput;
+use core::prelude::v1::test;
+
+struct Harness {
+    cx: HeadlessAppContext,
+    window: WindowHandle<Backleaf>,
+    view: Entity<Backleaf>,
+    fixture: test_support::Fixture,
+}
+impl Harness {
+    fn new(names: &[&str], generated: Option<usize>) -> Self {
+        let fixture = test_support::Fixture::new("gpui-headless");
+        let directory = fixture.0.join("files");
+        std::fs::create_dir(&directory).unwrap();
+        for name in names {
+            std::fs::write(directory.join(name), format!("contents of {name}")).unwrap();
+        }
+        let options = Options {
+            fixture: generated,
+            path: Some(directory),
+            output: None,
+            seconds: 12,
+            scroll: false,
+            flow: 0,
+            reduced_motion: true,
+            width: 1120.,
+            height: 720.,
+            theme: Some(false),
+            selection_smoke: false,
+            marquee_smoke: false,
+            navigation_fixture: 0,
+            state_dir: fixture.0.join("state"),
+            index_roots: Some(vec![]),
+            restored: None,
+            restore_error: None,
+        };
+        let mut cx = HeadlessAppContext::with_asset_source(
+            Arc::new(NoopTextSystem),
+            Arc::new(paint::Assets),
+        );
+        cx.allow_parking();
+        cx.update(input::bind_keys);
+        let window = cx
+            .open_window(size(px(1120.), px(720.)), |window, cx| {
+                cx.new(|cx| Backleaf::new(options, window, cx))
+            })
+            .unwrap();
+        let view = window.root(&mut cx).unwrap();
+        let mut h = Self {
+            cx,
+            window,
+            view,
+            fixture,
+        };
+        h.cx.update_window(window.into(), |_, window, cx| {
+            window.activate_window();
+            let focus = h.view.read(cx).focus.clone();
+            window.focus(&focus, cx);
+        })
+        .unwrap();
+        h.wait("initial directory/cache", |this, _| {
+            this.source.count() == generated.unwrap_or(names.len())
+                && !this.cache.is_empty()
+                && (generated.is_some() || !this.watch_stale())
+        });
+        h
+    }
+    fn read<R>(&self, f: impl FnOnce(&Backleaf, &App) -> R) -> R {
+        self.view.read_with(&self.cx, f)
+    }
+    fn frame(&mut self) {
+        self.cx.run_until_parked();
+        let windows = self.cx.update(|cx| cx.windows());
+        for handle in windows {
+            let _ = self.cx.update_window(handle, |_, window, cx| {
+                window.simulate_next_frame(cx);
+                window.refresh();
+                window.draw(cx).clear(cx);
+            });
+        }
+        self.cx.run_until_parked();
+    }
+    fn wait(&mut self, what: &str, condition: impl Fn(&Backleaf, &App) -> bool) {
+        let deadline = Instant::now() + Duration::from_secs(10);
+        loop {
+            self.frame();
+            if self.read(&condition) {
+                return;
+            }
+            self.cx.advance_clock(Duration::from_millis(10));
+            assert!(
+                Instant::now() < deadline,
+                "timed out waiting for {what}; {}",
+                self.diagnostics()
+            );
+            std::thread::sleep(Duration::from_millis(3));
+        }
+    }
+    fn diagnostics(&self) -> String {
+        self.read(|this, cx| format!("path={:?} count={} cache={} selection={} editor={:?} search=({:?},{},{}) stale={} active={} detail_pending={} error={:?} windows={}", this.path, this.source.count(),this.cache.len(),this.selection.count(),this.files.editor.as_ref().map(|e|(e.input.read(cx).value(), e.error.clone())),this.search.query,this.search.count,this.search.done,this.watch_stale(),this.navigation.window_active,this.detail_pending,this.error,cx.windows().len()))
+    }
+    fn event(&mut self, handle: AnyWindowHandle, event: PlatformInput) {
+        self.cx
+            .update_window(handle, |_, window, cx| {
+                window.dispatch_event(event, cx);
+            })
+            .unwrap();
+        self.frame();
+    }
+    fn click(&mut self, x: f32, y: f32, button: MouseButton) {
+        self.cx
+            .update_window(self.window.into(), |_, window, _| window.activate_window())
+            .unwrap();
+        let position = point(px(x), px(y));
+        self.event(
+            self.window.into(),
+            MouseMoveEvent {
+                position,
+                ..Default::default()
+            }
+            .to_platform_input(),
+        );
+        self.event(
+            self.window.into(),
+            MouseDownEvent {
+                position,
+                button,
+                click_count: 1,
+                ..Default::default()
+            }
+            .to_platform_input(),
+        );
+        self.event(
+            self.window.into(),
+            MouseUpEvent {
+                position,
+                button,
+                click_count: 1,
+                ..Default::default()
+            }
+            .to_platform_input(),
+        );
+    }
+    fn key_in(&mut self, handle: AnyWindowHandle, key: &str) {
+        self.cx
+            .update_window(handle, |_, window, cx| {
+                window.dispatch_keystroke(
+                    Keystroke::parse_with_os(key, OperatingSystem::Windows).unwrap(),
+                    cx,
+                );
+            })
+            .unwrap();
+        self.frame();
+    }
+    fn key(&mut self, key: &str) {
+        self.key_in(self.window.into(), key);
+    }
+    fn text(&mut self, text: &str) {
+        for c in text.chars() {
+            self.key(&c.to_string());
+        }
+    }
+    fn focused(&mut self, input: &Entity<TextInput>) -> bool {
+        self.cx
+            .update_window(self.window.into(), |_, window, cx| {
+                input.focus_handle(cx).is_focused(window)
+            })
+            .unwrap()
+    }
+    fn grid_focused(&mut self) -> bool {
+        self.cx
+            .update_window(self.window.into(), |_, window, cx| {
+                self.view.read(cx).focus.is_focused(window)
+            })
+            .unwrap()
+    }
+    fn alert(&mut self) {
+        let error = self.read(|this, _| {
+            this.files
+                .editor
+                .as_ref()
+                .and_then(|e| e.error.clone())
+                .expect("error retained")
+        });
+        let painted = self
+            .cx
+            .update_window(self.window.into(), |_, window, _| {
+                let scale = window.scale_factor();
+                window.painted_quads().iter().any(|quad| {
+                    (quad.bounds.size.width.0 / scale - 280.).abs() < 1.
+                        && quad.bounds.size.height.0 / scale > 24.
+                        && (quad.corner_radii.top_left.0 / scale - 8.).abs() < 1.
+                })
+            })
+            .unwrap();
+        assert!(painted, "error toast surface was not painted: {error}");
+    }
+    fn popup(&mut self) -> AnyWindowHandle {
+        let windows = self.cx.update(|cx| cx.windows());
+        assert_eq!(
+            windows.len(),
+            2,
+            "one independent popup: {}",
+            self.diagnostics()
+        );
+        *windows.iter().find(|w| **w != self.window.into()).unwrap()
+    }
+    fn first_icon(&self) -> (f32, f32) {
+        self.read(|this, _| {
+            (
+                layout::content_left(this.sidebar_width()) + this.cell_width / 2.,
+                layout::content_top()
+                    + layout::LAYOUT.file.visual_padding_top
+                    + layout::LAYOUT.grid.icon_size / 2.,
+            )
+        })
+    }
+    fn file(&self, name: &str) -> PathBuf {
+        self.fixture.0.join("files").join(name)
+    }
+    fn editor(&self) -> Entity<TextInput> {
+        self.read(|this, _| {
+            this.files
+                .editor
+                .as_ref()
+                .expect("editor opened")
+                .input
+                .clone()
+        })
+    }
+    fn rename(&mut self) {
+        let (x, y) = self.first_icon();
+        self.click(x, y, MouseButton::Left);
+        self.key("f2");
+        self.wait("rename input", |this, _| this.files.editor.is_some());
+        let input = self.editor();
+        assert!(self.focused(&input));
+    }
+}
+
+#[gpui::test]
+fn headless_platform_is_windowless(cx: &mut TestAppContext) {
+    let (_, cx) = cx.add_window_view(|_, _| Empty);
+    cx.update(|window, _| {
+        assert!(raw_window_handle::HasWindowHandle::window_handle(window).is_err());
+    });
+}
+
+#[test]
+fn rename_blur_commits_real_file_and_preserves_bytes() {
+    let mut h = Harness::new(&["before.txt"], None);
+    let original = std::fs::read(h.file("before.txt")).unwrap();
+    h.rename();
+    h.text("after");
+    // Tab exercises TextInput's actual Blur subscription, without the grid's
+    // independent blank-click commit path masking a missing blur handler.
+    h.key("tab");
+    h.wait("rename blur completion", |this, _| {
+        this.files.editor.is_none()
+    });
+    assert!(!h.file("before.txt").exists());
+    assert_eq!(std::fs::read(h.file("after.txt")).unwrap(), original);
+}
+
+#[test]
+fn rename_invalid_blur_preserves_draft_and_refocuses() {
+    let mut h = Harness::new(&["before.txt"], None);
+    h.rename();
+    h.text("bad?");
+    h.click(800., 400., MouseButton::Left);
+    h.wait("rename error", |this, _| {
+        this.files
+            .editor
+            .as_ref()
+            .is_some_and(|e| e.error.is_some())
+    });
+    let input = h.editor();
+    assert!(h.focused(&input));
+    assert_eq!(h.read(|_, cx| input.read(cx).value()), "bad?.txt");
+    assert!(h.file("before.txt").exists());
+    h.alert();
+    h.key("ctrl-a");
+    h.text("recovered.txt");
+    h.click(800., 400., MouseButton::Left);
+    h.wait("rename recovery", |this, _| this.files.editor.is_none());
+    assert!(h.file("recovered.txt").exists());
+}
+
+#[test]
+fn rename_escape_cancels_without_filesystem_change() {
+    let mut h = Harness::new(&["before.txt"], None);
+    let original = std::fs::read(h.file("before.txt")).unwrap();
+    h.rename();
+    h.text("discarded");
+    h.key("escape");
+    assert!(h.read(|this, _| this.files.editor.is_none()));
+    assert!(h.grid_focused());
+    assert_eq!(std::fs::read(h.file("before.txt")).unwrap(), original);
+    assert!(!h.file("discarded.txt").exists());
+}
+
+#[test]
+fn rename_case_only_remains_supported_and_preserves_content() {
+    let mut h = Harness::new(&["before.txt"], None);
+    let bytes = std::fs::read(h.file("before.txt")).unwrap();
+    h.rename();
+    h.key("ctrl-a");
+    h.text("BEFORE.txt");
+    h.click(800., 400., MouseButton::Left);
+    h.wait("case-only rename", |this, _| this.files.editor.is_none());
+    assert_eq!(std::fs::read(h.file("BEFORE.txt")).unwrap(), bytes);
+    assert_eq!(
+        std::fs::read_dir(h.fixture.0.join("files"))
+            .unwrap()
+            .map(|e| e.unwrap().file_name())
+            .collect::<Vec<_>>(),
+        vec![std::ffi::OsString::from("BEFORE.txt")]
+    );
+}
+
+#[test]
+fn rename_existing_destination_reports_error_without_overwrite() {
+    let mut h = Harness::new(&["before.txt", "occupied.txt"], None);
+    let original = std::fs::read(h.file("before.txt")).unwrap();
+    let occupied = std::fs::read(h.file("occupied.txt")).unwrap();
+    h.rename();
+    h.key("ctrl-a");
+    h.text("occupied.txt");
+    h.click(800., 400., MouseButton::Left);
+    h.wait("filesystem rename error", |this, cx| {
+        this.files
+            .editor
+            .as_ref()
+            .is_some_and(|e| e.error.is_some() && e.input.read(cx).enabled)
+    });
+    let input = h.editor();
+    assert!(h.focused(&input));
+    h.alert();
+    assert_eq!(h.read(|_, cx| input.read(cx).value()), "occupied.txt");
+    assert_eq!(std::fs::read(h.file("before.txt")).unwrap(), original);
+    assert_eq!(std::fs::read(h.file("occupied.txt")).unwrap(), occupied);
+}
+
+#[test]
+fn path_blur_error_restores_draft_then_navigates_on_correction() {
+    let mut h = Harness::new(&["note.txt"], None);
+    std::fs::create_dir(h.file("child")).unwrap();
+    h.key("ctrl-l");
+    let input = h.editor();
+    assert!(h.focused(&input));
+    h.text("missing-child");
+    h.click(800., 400., MouseButton::Left);
+    h.wait("path resolution error", |this, _| {
+        this.files
+            .editor
+            .as_ref()
+            .is_some_and(|e| e.error.is_some())
+    });
+    assert!(h.focused(&input));
+    h.alert();
+    assert_eq!(h.read(|_, cx| input.read(cx).value()), "missing-child");
+    assert_eq!(
+        h.read(|this, _| this.path.clone()),
+        h.fixture.0.join("files")
+    );
+    h.key("ctrl-a");
+    h.text("child");
+    h.click(800., 400., MouseButton::Left);
+    h.wait("corrected path navigation", |this, _| {
+        this.files.editor.is_none() && this.path.file_name().is_some_and(|n| n == "child")
+    });
+    assert_eq!(h.read(|this, _| this.path.clone()), h.file("child"));
+}
+
+#[test]
+fn search_unicode_input_submit_and_escape_use_real_input_routing() {
+    let mut h = Harness::new(&["中文报告.txt", "alpha.txt", "beta.txt"], None);
+    h.key("ctrl-f");
+    let input = h.read(|this, _| this.search.input.clone().expect("search input"));
+    assert!(h.focused(&input));
+    h.text("中文");
+    assert_eq!(h.read(|_, cx| input.read(cx).value()), "中文");
+    assert_eq!(h.read(|this, _| this.selection.count()), 0);
+    h.key("enter");
+    h.wait("Unicode search results", |this, _| {
+        this.search.done && this.search.count == 1 && !this.search.rows.is_empty()
+    });
+    assert!(h.read(|this, _| {
+        this.search
+            .rows
+            .values()
+            .all(|r| r.path.file_name().is_some_and(|n| n == "中文报告.txt"))
+    }));
+    h.key("escape");
+    assert!(!h.read(|this, _| this.search.open));
+    assert!(h.grid_focused());
+}
+
+#[test]
+fn search_debounce_executes_latest_query_after_250ms() {
+    let mut h = Harness::new(&["alpha.txt", "beta.txt"], None);
+    h.key("ctrl-f");
+    h.text("alpha");
+    h.key("ctrl-a");
+    h.text("beta");
+    h.cx.advance_clock(Duration::from_millis(249));
+    h.frame();
+    assert!(!h.read(|this, _| this.search.started));
+    h.cx.advance_clock(Duration::from_millis(1));
+    h.wait("latest debounced query", |this, _| {
+        this.search.done
+            && this.search.query == "beta"
+            && this.search.count == 1
+            && !this.search.rows.is_empty()
+    });
+    assert!(h.read(|this, _| {
+        this.search
+            .rows
+            .values()
+            .all(|r| r.path.file_name().is_some_and(|n| n == "beta.txt"))
+    }));
+}
+
+#[test]
+fn independent_menu_escape_restores_grid_focus_and_selection() {
+    let mut h = Harness::new(&["note.txt"], None);
+    let (x, y) = h.first_icon();
+    h.click(x, y, MouseButton::Right);
+    let popup = h.popup();
+    h.cx.update_window(popup, |_, window, _| {
+        assert!(raw_window_handle::HasWindowHandle::window_handle(window).is_err())
+    })
+    .unwrap();
+    h.key_in(popup, "escape");
+    h.wait("popup dismissal", |this, cx| {
+        this.files.menu.is_none() && cx.windows().len() == 1
+    });
+    assert!(h.grid_focused());
+    assert!(h.read(|this, _| this.selection.count() == 1 && this.selection.contains(0)));
+}
+
+#[test]
+fn independent_menu_owner_activation_dismisses_popup_and_restores_focus() {
+    let mut h = Harness::new(&["note.txt"], None);
+    let (x, y) = h.first_icon();
+    h.click(x, y, MouseButton::Right);
+    h.popup();
+    h.click(800., 400., MouseButton::Left);
+    h.wait("menu owner activation", |this, cx| {
+        this.files.menu.is_none() && cx.windows().len() == 1
+    });
+    assert!(h.grid_focused());
+}
+
+#[test]
+fn independent_menu_rename_returns_action_to_owner_and_focuses_editor() {
+    let mut h = Harness::new(&["before.txt"], None);
+    let (x, y) = h.first_icon();
+    h.click(x, y, MouseButton::Right);
+    let popup = h.popup();
+    h.key_in(popup, "f2");
+    h.wait("menu rename editor", |this, cx| {
+        this.files.editor.is_some() && this.files.menu.is_none() && cx.windows().len() == 1
+    });
+    let input = h.editor();
+    assert!(h.focused(&input));
+    h.text("after-menu");
+    h.click(800., 400., MouseButton::Left);
+    h.wait("menu rename completion", |this, _| {
+        this.files.editor.is_none()
+    });
+    assert!(h.file("after-menu.txt").exists());
+    assert!(!h.file("before.txt").exists());
+}
+
+#[test]
+fn rename_blur_then_other_file_context_menu_completes_both_actions() {
+    let mut h = Harness::new(&["before.txt", "next.txt"], None);
+    h.rename();
+    h.text("after");
+    let (x, y) = h.first_icon();
+    let step = h.read(|this, _| this.cell_width + layout::LAYOUT.grid.column_gap);
+    h.click(x + step, y, MouseButton::Right);
+    h.wait("deferred other-file menu", |this, _| {
+        this.files.editor.is_none() && this.files.menu.is_some()
+    });
+    assert!(h.file("after.txt").exists());
+    assert!(!h.file("before.txt").exists());
+    assert_eq!(
+        h.read(|this, _| this
+            .selection
+            .focus
+            .and_then(|id| this.cache.get(&id))
+            .map(|i| i.name.clone())),
+        Some("next.txt".into())
+    );
+    let popup = h.popup();
+    h.key_in(popup, "escape");
+    assert!(h.grid_focused());
+}
+
+#[test]
+fn closing_owner_removes_independent_popup_without_reading_owner_entity() {
+    let mut h = Harness::new(&["note.txt"], None);
+    let (x, y) = h.first_icon();
+    h.click(x, y, MouseButton::Right);
+    h.popup();
+    h.cx.update_window(h.window.into(), |_, window, _| window.remove_window())
+        .unwrap();
+    h.frame();
+    assert!(
+        h.cx.update(|cx| cx.windows().is_empty()),
+        "popup survived its owner"
+    );
+}
+
+#[test]
+fn marquee_edge_scroll_release_commits_contiguous_selection_and_stops() {
+    let mut h = Harness::new(&[], Some(100_000));
+    let left = h.read(|this, _| layout::content_left(this.sidebar_width()) - 4.);
+    let start = point(px(left), px(layout::content_top() + 8.));
+    h.event(
+        h.window.into(),
+        MouseDownEvent {
+            position: start,
+            button: MouseButton::Left,
+            click_count: 1,
+            ..Default::default()
+        }
+        .to_platform_input(),
+    );
+    let end = point(px(1092.), px(layout::content_bottom(720.)));
+    h.event(
+        h.window.into(),
+        MouseMoveEvent {
+            position: end,
+            pressed_button: Some(MouseButton::Left),
+            ..Default::default()
+        }
+        .to_platform_input(),
+    );
+    h.wait("marquee auto-scroll", |this, _| {
+        -f32::from(this.scroll.0.borrow().base_handle.offset().y) > 700.
+    });
+    h.event(
+        h.window.into(),
+        MouseUpEvent {
+            position: end,
+            button: MouseButton::Left,
+            click_count: 1,
+            ..Default::default()
+        }
+        .to_platform_input(),
+    );
+    h.wait("selection worker commit", |this, _| this.marquee.is_none());
+    let (count, columns, offset) = h.read(|this, _| {
+        (
+            this.selection.count(),
+            this.columns,
+            this.scroll.0.borrow().base_handle.offset().y,
+        )
+    });
+    assert!(count > columns * 5);
+    assert_eq!(count % columns, 0);
+    assert!(
+        h.read(|this, _| (0..count).all(|id| this.selection.contains(id))
+            && !this.selection.contains(count))
+    );
+    for _ in 0..8 {
+        h.frame();
+    }
+    assert_eq!(
+        h.read(|this, _| this.scroll.0.borrow().base_handle.offset().y),
+        offset
+    );
+    assert!(h.read(|this, _| this.cache.len() <= 256 && this.metrics.borrow().max_clocks <= 1));
+}
+
+#[test]
+fn additive_marquee_escape_restores_original_selection() {
+    let mut h = Harness::new(&[], Some(100_000));
+    let (x, y) = h.first_icon();
+    h.click(x, y, MouseButton::Left);
+    let left = h.read(|this, _| layout::content_left(this.sidebar_width()) - 4.);
+    let modifiers = Modifiers {
+        control: true,
+        ..Default::default()
+    };
+    h.event(
+        h.window.into(),
+        MouseDownEvent {
+            position: point(px(left), px(layout::content_top() + 8.)),
+            button: MouseButton::Left,
+            click_count: 1,
+            modifiers,
+            ..Default::default()
+        }
+        .to_platform_input(),
+    );
+    h.event(
+        h.window.into(),
+        MouseMoveEvent {
+            position: point(px(1092.), px(420.)),
+            pressed_button: Some(MouseButton::Left),
+            modifiers,
+        }
+        .to_platform_input(),
+    );
+    h.wait("additive preview", |this, _| {
+        this.marquee
+            .as_ref()
+            .is_some_and(|m| m.active && m.accepted == m.token)
+    });
+    assert!(h.read(|this, _| this.selection.count() > 1));
+    h.key("escape");
+    assert!(h.read(|this, _| this.marquee.is_none()
+        && this.selection.count() == 1
+        && this.selection.contains(0)));
+    assert!(h.grid_focused());
+}

@@ -33,10 +33,13 @@ jobs:
           if ($LASTEXITCODE) { Get-Content .local/ci/fmt.log; throw 'Format failed' }
           cargo clippy --release --locked -p backleaf --all-targets --no-deps -- -D warnings *> .local/ci/clippy.log
           if ($LASTEXITCODE) { Get-Content .local/ci/clippy.log; throw 'Clippy failed' }
-          cargo test --release --locked *> .local/ci/tests.log
+          cargo test --release --locked -p backleaf -- --skip headless_tests:: *> .local/ci/tests.log
           if ($LASTEXITCODE) { Get-Content .local/ci/tests.log; throw 'Tests failed' }
           cargo build --release --locked *> .local/ci/build.log
           if ($LASTEXITCODE) { Get-Content .local/ci/build.log; throw 'Build failed' }
+      - name: GPUI headless interaction gate
+        shell: pwsh
+        run: ./scripts/native/test-headless.ps1 -Output .local/ci/headless.log
       - name: Package and smoke
         shell: pwsh
         run: ./scripts/native/ci-package.ps1

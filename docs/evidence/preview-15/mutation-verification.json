@@ -1,0 +1,25 @@
+{
+  "scope": "Deliberate missing Blur subscription and original popup owner-entity access regression; no mutation remains in source.",
+  "cases": [
+    {
+      "mutation": "blur",
+      "test": "headless_tests::rename_blur_commits_real_file_and_preserves_bytes",
+      "exit_code": 101,
+      "expected_assertion_failure": true,
+      "source_restored": true,
+      "restored_source": "src/input.rs",
+      "restored_sha256": "93ce947dbd3f7e4423c845df5d72f93e74ff4b464ead5efb7cec53cc8057336a",
+      "log_sha256": "7457b9c7a45c2d7c6635da5d3d829e56551aca666bff2dcc73bb617fb1d61bdd"
+    },
+    {
+      "mutation": "popup-routing",
+      "test": "headless_tests::independent_menu_rename_returns_action_to_owner_and_focuses_editor",
+      "exit_code": 101,
+      "expected_assertion_failure": true,
+      "source_restored": true,
+      "restored_source": "src/popup_menu.rs",
+      "restored_sha256": "97bed11f3f87858c111d0b62f3a653865b2b568d7421cbff9087f813cbaeeac3",
+      "log_sha256": "96112b5b4fcb0cfd60bf7cb51f6eb27660cba6dbe5a75c17d7ec52677a03b29f"
+    }
+  ]
+}

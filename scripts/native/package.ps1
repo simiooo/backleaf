@@ -8,6 +8,7 @@ if (!$match.Success) {throw 'Missing package version'}
 $version=$match.Groups[1].Value
 $build=Get-Content -LiteralPath (Join-Path $projectRoot '.local/native-build-manifest.json') -Raw | ConvertFrom-Json
 if ($build.source_commit -ne $Commit -or $build.version -ne $version) {throw 'Build manifest does not match requested source/version'}
+if (!$build.headless.passed) {throw 'GPUI headless interaction gate missing'}
 $builtHash=(Get-FileHash -LiteralPath (Join-Path $projectRoot 'target/release/backleaf.exe') -Algorithm SHA256).Hash.ToLowerInvariant()
 if ($builtHash -ne $build.exe_sha256) {throw 'Executable no longer matches recorded build'}
 $short=$Commit.Substring(0,8)
@@ -25,6 +26,7 @@ Copy-Item -LiteralPath (Join-Path $projectRoot 'LICENSE') -Destination (Join-Pat
 Copy-Item -LiteralPath (Join-Path $projectRoot 'design/Backleaf-v38.fig') -Destination (Join-Path $bundle 'Backleaf-v38.fig')
 Copy-Item -LiteralPath (Join-Path $projectRoot 'assets/brand/backleaf-logo.png') -Destination (Join-Path $bundle 'Logo.png')
 Copy-Item -LiteralPath (Join-Path $projectRoot '.local/native-build-manifest.json') -Destination (Join-Path $bundle 'build.json')
+Copy-Item -LiteralPath (Join-Path $projectRoot '.local/batch-headless.json') -Destination (Join-Path $bundle 'headless.json')
 Copy-Item -LiteralPath (Join-Path $projectRoot '.local/native-licenses') -Destination (Join-Path $bundle 'licenses') -Recurse
 $exeHash=(Get-FileHash -LiteralPath (Join-Path $bundle 'Backleaf.exe') -Algorithm SHA256).Hash.ToLowerInvariant()
 $metadata=[ordered]@{version=$version;source_commit=$Commit;gpui_revision='d36a70661471ec64dce230798121d554930d5c60';exe_sha256=$exeHash;packaged_at_utc=[DateTime]::UtcNow.ToString('o');status='candidate; final visible performance and interactive staging smoke pending'}

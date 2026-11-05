@@ -2,6 +2,8 @@ $ErrorActionPreference = 'Stop'
 $version = ([regex]::Match((Get-Content Cargo.toml -Raw),'(?m)^version = "([^"]+)"')).Groups[1].Value
 $commit = (git rev-parse HEAD).Trim()
 $short = $commit.Substring(0,8)
+$headless = Get-Content .local/ci/headless.json -Raw | ConvertFrom-Json
+if (!$headless.passed -or $headless.workspace_commit -ne $commit -or $headless.workspace_dirty) {throw 'Clean-source headless interaction gate missing'}
 $bundle = '.local/ci/Backleaf'
 New-Item -ItemType Directory -Force $bundle | Out-Null
 Copy-Item target/release/backleaf.exe "$bundle/Backleaf.exe"
@@ -12,10 +14,14 @@ Copy-Item LICENSE "$bundle/LICENSE"
 Copy-Item assets/brand/backleaf-logo.png "$bundle/Logo.png"
 Copy-Item design/Backleaf-v38.fig "$bundle/Backleaf-v38.fig"
 Copy-Item design/Backleaf-v38.fig .local/ci/Backleaf-v38.fig
+Copy-Item .local/ci/headless.json "$bundle/headless.json"
 python scripts/native/collect-licenses.py "$bundle/licenses"
 if ($LASTEXITCODE) { throw 'License collection failed' }
 $exeHash = (Get-FileHash "$bundle/Backleaf.exe" -Algorithm SHA256).Hash.ToLowerInvariant()
 $metadata = [ordered]@{version=$version;source_commit=$commit;gpui_revision=(git -C vendor/zed rev-parse HEAD).Trim();built_at_utc=[DateTime]::UtcNow.ToString('o');exe_sha256=$exeHash;archive_library_sha256=(Get-FileHash "$bundle/lib/7z.dll").Hash.ToLowerInvariant();design_sha256=(Get-FileHash design/Backleaf-v38.fig).Hash.ToLowerInvariant();ci_run_url="https://github.com/$env:GITHUB_REPOSITORY/actions/runs/$env:GITHUB_RUN_ID";scope='Native Windows preview: path/drives, typeahead, external changes, internal moves/pinning/reorder, saved FileViews, metadata index, ZIP creation and ZIP/7z/RAR extraction, owned self-drawn extension menus and native OLE file drag/drop, path/search restore and independent windows; see README for limits';interactive_smoke='not run on hosted CI; local scope is recorded separately'}
+$metadata.headless_test_count=$headless.test_count
+$metadata.headless_log_sha256=$headless.log_sha256
+$metadata.headless_report_sha256=(Get-FileHash "$bundle/headless.json").Hash.ToLowerInvariant()
 $metadata | ConvertTo-Json | Set-Content "$bundle/build.json" -Encoding utf8
 Copy-Item "$bundle/build.json" .local/ci/build.json
 $zip = ".local/ci/Backleaf-$version-$short-win-x64.zip"

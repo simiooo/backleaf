@@ -2,6 +2,8 @@
 
 Current engineering baseline: preview.14 source `ad488a41e6698c6760decb075a69247de44d4cf7`, editable OpenPencil v38 (233 pages). Scope SIM-919, constraints SIM-934. The entries below reflect the current queue; the dated records afterwards preserve earlier delivery boundaries.
 
+SIM-992 is the sole current engineering unit: preview.15 GPUI headless interaction regressions and CI gates, with v38 UI unchanged. Final source checks, native-only checks and delivery are being consolidated; preview.14 remains the last delivered baseline until the new release is verified.
+
 | Queue | Issue | Current scope |
 | --- | --- | --- |
 | accepted baseline | SIM-921 / SIM-948 | User accepted v6 for implementation; subsequent feedback is retained in v38 |

@@ -345,6 +345,7 @@ impl Backleaf {
             },
         ));
         if self.options.fixture.is_none()
+            && Self::native_owner(window) != 0
             && let Some(selection) = self.source.freeze_selection(self.selection.mask.clone())
         {
             let session = crate::shell_menu::Session::new(

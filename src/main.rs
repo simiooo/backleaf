@@ -15,6 +15,8 @@ mod drag;
 mod file_geometry;
 mod file_icons;
 mod file_view;
+#[cfg(test)]
+mod headless_tests;
 mod index;
 mod index_watch;
 mod input;
@@ -84,7 +86,7 @@ struct Backleaf {
     native_owner_handle: usize,
     colors: &'static Palette,
     session_locked: bool,
-    _session: session::SessionMonitor,
+    _session: Option<session::SessionMonitor>,
     grid: Entity<FileGrid>,
     options: Options,
     source: Source,
@@ -161,6 +163,7 @@ impl Render for FileGrid {
 }
 impl Backleaf {
     fn new(mut options: Options, window: &mut Window, cx: &mut Context<Self>) -> Self {
+        let native_owner = Self::native_owner(window);
         let colors = options
             .theme
             .map(theme::palette)
@@ -175,7 +178,7 @@ impl Backleaf {
         let mut navigation = app_navigation::NavigationUi::new(
             navigation::Worker::new(tx.clone()),
             tx.clone(),
-            options.fixture.is_none(),
+            options.fixture.is_none() && native_owner != 0,
             options.state_dir.clone(),
             cx,
         );
@@ -241,7 +244,9 @@ impl Backleaf {
             }
         })
         .detach();
-        let session = session::monitor(tx.clone());
+        // A TestPlatform window has no HWND or desktop session. Its production
+        // view and workers still run; only the native OS boundary is absent.
+        let session = (native_owner != 0).then(|| session::monitor(tx.clone()));
         let path = options.path.clone().unwrap_or_else(|| {
             std::env::var_os("USERPROFILE")
                 .map(PathBuf::from)
@@ -485,7 +490,7 @@ impl Backleaf {
             marquee_smoke::schedule(window, cx);
         }
         let mut ole_error = None;
-        let ole = if options.fixture.is_none() {
+        let ole = if options.fixture.is_none() && native_owner != 0 {
             ole::Site::new(
                 Self::native_owner(window),
                 options.state_dir.join("ole"),
@@ -516,7 +521,7 @@ impl Backleaf {
             files: app_operations::FileOperations::new(hub),
             native_owner_handle: Self::native_owner(window),
             colors,
-            session_locked: true,
+            session_locked: native_owner != 0,
             _session: session,
             grid,
             options,

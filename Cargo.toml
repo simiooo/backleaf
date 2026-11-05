@@ -1,6 +1,6 @@
 [package]
 name = "backleaf"
-version = "0.1.0-preview.14"
+version = "0.1.0-preview.15"
 edition = "2024"
 license = "Apache-2.0"
 publish = false
@@ -38,3 +38,6 @@ async-task = { git = "https://github.com/zed-industries/async-task", rev = "0158
 
 [build-dependencies]
 cc = "1"
+
+[dev-dependencies]
+gpui = { path = "vendor/zed/crates/gpui", default-features = false, features = ["test-support"] }

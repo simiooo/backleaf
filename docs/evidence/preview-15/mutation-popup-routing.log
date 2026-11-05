@@ -1,0 +1,19 @@
+   Compiling backleaf v0.1.0-preview.15 (D:\work\backleaf)
+    Finished `release` profile [optimized] target(s) in 33.88s
+     Running unittests src\main.rs (target\release\deps\backleaf-bfa2ffce61a29bee.exe)
+
+running 1 test
+
+thread 'headless_tests::independent_menu_rename_returns_action_to_owner_and_focuses_editor' (8600) panicked at src\headless_tests.rs:93:13:
+timed out waiting for menu rename editor; path="C:\\Users\\qq651\\AppData\\Local\\Temp\\Backleaf-test-gpui-headless-45076-1793860350410997400-0\\files" count=1 cache=1 selection=1 editor=None search=("",0,false) stale=false active=false detail_pending=false error=None windows=1
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test headless_tests::independent_menu_rename_returns_action_to_owner_and_focuses_editor ... FAILED
+
+failures:
+
+failures:
+    headless_tests::independent_menu_rename_returns_action_to_owner_and_focuses_editor
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 96 filtered out; finished in 10.43s
+
+error: test failed, to rerun pass `-p backleaf --bin backleaf`
