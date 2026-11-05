@@ -1,0 +1,9 @@
+{
+  "passed": true,
+  "verified_at_utc": "2026-11-05T15:19:14.1712094Z",
+  "source": "e4134419ec83ffe4aae43cd59bf8a90dba877113",
+  "exe_sha256": "5401c404e1d2c7cee597e0f85a94e74dad970ac7b1587bac4768011ab819ac45",
+  "scope": "Real mouse context-menu create, focused Unicode rename, Tab blur persistence, no automatic operation panel",
+  "created_name": "命名验证",
+  "original_file_unchanged": true
+}

@@ -1,0 +1,34 @@
+{
+  "masterSha256": "e41be3229bce509f139a694b2cec45b816b02e4b3e9149885f6f05ca3f58f50f",
+  "retainedPages": 256,
+  "pages": 261,
+  "result": "passed",
+  "results": [
+    {
+      "key": "257-new-folder-name",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "258-compact-progress",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "259-failed-items",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "260-quiet-success",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "261-dark-progress",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    }
+  ],
+  "verifiedAt": "2026-11-05T15:06:59.920Z"
+}
