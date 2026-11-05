@@ -1,0 +1,9 @@
+# preview.18 · SIM-1000
+
+源码7f78d5688f7b67720c6b1180d149263513002469；OpenPencil v41/247页，保留241页，六态独立冷重开0像素差，主稿SHA256 908e86ba7b6ac00d0f7aac2b5953182aea88a3fbf48615c5789a7a4d9fbd1ccd。
+
+最终fmt、严格all-target Clippy、90项非无头及28项生产GPUI无头交互通过。新增字母重复/回绕/快速合并及输入框保护、零字节文件与文件夹不递归、容量异步到达前后的侧栏几何、迟到与移除结果、未知尺寸/u128总量、10万字节流式汇总和千万fixture闭式汇总边界。非无头包含本机真实容量API和无窗口PnP注册/回调检查。
+
+2026-11-05 18:10:48+08从便携ZIP部署到.local/staging/0.1.0-preview.18-7f78d568；实际EXE诊断和三个相邻运行库加载路径检查通过。EXE SHA256 b6c43f4e6e37f9d512a6ae25e71d1522da5093c463823b6fd5eee216f73e8b4f；本机ZIP SHA256 0ca596406d76f30edbbe2eb317e765f1e47bee5477ea6eadaf36b57dc96582db。原始日志、输入清单与确切报告见local。
+
+Windows包CI42008148622仍在执行，结果待附。本机WTS预检locked=true，Computer Use仅读取现有窗口得到黑色画面，没有发送鼠标键盘；已请求用户手动解锁。可见窗口、GPU/混合DPI、IME/Explorer完整手势及物理USB插拔未计通过，留到最终统一原生检查。原生回调模拟不能代替真实介质插拔。

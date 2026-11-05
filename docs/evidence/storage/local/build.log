@@ -1,0 +1,5 @@
+   Compiling gpui v0.2.2 (D:\work\backleaf\vendor\zed\crates\gpui)
+   Compiling accesskit_windows v0.34.0
+   Compiling gpui_windows v0.1.0 (D:\work\backleaf\vendor\zed\crates\gpui_windows)
+   Compiling backleaf v0.1.0-preview.18 (D:\work\backleaf)
+    Finished `release` profile [optimized] target(s) in 59.43s
