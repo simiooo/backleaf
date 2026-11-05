@@ -1,0 +1,43 @@
+    Finished `release` profile [optimized] target(s) in 1.52s
+     Running unittests src\main.rs (target\release\deps\backleaf-ed3c5470f116b8b7.exe)
+
+running 36 tests
+test headless_tests::additive_marquee_escape_restores_original_selection ... ok
+test headless_tests::async_shell_discovery_and_large_submenu_never_resize_or_move_the_root ... ok
+test headless_tests::automatic_search_refresh_keeps_rows_until_the_new_page_is_ready ... ok
+test headless_tests::closing_owner_removes_independent_popup_without_reading_owner_entity ... ok
+test headless_tests::directory_refresh_never_clears_the_grid_and_remaps_selection_by_identity ... ok
+test headless_tests::directory_refresh_preserves_scroll_handle_and_visible_anchor ... ok
+test headless_tests::dynamic_child_waits_for_rows_and_keeps_both_ancestors_stable ... ok
+test headless_tests::headless_platform_is_windowless ... ok
+test headless_tests::independent_menu_escape_restores_grid_focus_and_selection ... ok
+test headless_tests::independent_menu_owner_activation_dismisses_popup_and_restores_focus ... ok
+test headless_tests::independent_menu_rename_returns_action_to_owner_and_focuses_editor ... ok
+test headless_tests::indexed_root_case_rename_rebuilds_without_duplicates_and_keeps_nonrecursive_updates ... ok
+test headless_tests::indexed_search_cache_reuse_incremental_refresh_and_replaced_visible_identity ... ok
+test headless_tests::late_directory_notification_during_new_folder_locate_preserves_rename_intent ... ok
+test headless_tests::late_dynamic_rows_do_not_revive_closed_columns_or_the_menu_family ... ok
+test headless_tests::marquee_edge_scroll_release_commits_contiguous_selection_and_stops ... ok
+test headless_tests::menu_family_focus_and_bottom_flip_keep_ancestors_stable ... ok
+test headless_tests::new_folder_completion_refreshes_in_place_and_enters_rename ... ok
+test headless_tests::new_folder_in_equivalent_display_path_uses_snapshot_destination_identity ... ok
+test headless_tests::path_blur_error_restores_draft_then_navigates_on_correction ... ok
+test headless_tests::pending_letter_activation_finishes_before_directory_refresh_commits ... ok
+test headless_tests::refresh_failure_keeps_old_rows_and_late_results_cannot_replace_navigation ... ok
+test headless_tests::rename_blur_commits_real_file_and_preserves_bytes ... ok
+test headless_tests::rename_blur_then_other_file_context_menu_completes_both_actions ... ok
+test headless_tests::rename_case_only_remains_supported_and_preserves_content ... ok
+test headless_tests::rename_escape_cancels_without_filesystem_change ... ok
+test headless_tests::rename_existing_destination_reports_error_without_overwrite ... ok
+test headless_tests::rename_invalid_blur_preserves_draft_and_refocuses ... ok
+test headless_tests::repeated_letters_cycle_and_wrap_without_intercepting_text_inputs ... ok
+test headless_tests::right_click_new_folder_keeps_filename_focused_and_blur_saves_it ... ok
+test headless_tests::search_debounce_executes_latest_query_after_250ms ... ok
+test headless_tests::search_unicode_input_submit_and_escape_use_real_input_routing ... ok
+test headless_tests::selected_bytes_include_empty_files_and_never_recurse_into_folders ... ok
+test headless_tests::short_successful_operations_do_not_open_or_leave_a_task_panel ... ok
+test headless_tests::slow_operations_reveal_once_without_reopening_after_escape ... ok
+test headless_tests::volume_capacity_updates_keep_sidebar_geometry_and_ignore_stale_or_removed_rows ... ok
+
+test result: ok. 36 passed; 0 failed; 0 ignored; 0 measured; 102 filtered out; finished in 25.19s
+

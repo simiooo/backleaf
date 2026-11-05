@@ -1,0 +1,45 @@
+{
+  "source_commit": "c96cf09b9bc1609cfbaf0e75dc6fc950040e18e2",
+  "files": [
+    {
+      "path": ".gitattributes",
+      "sha256": "94ef722dacc6540628217180ef7799ce1a317028c9dca612c124c4efb7aae8a4"
+    },
+    {
+      "path": "build.json",
+      "sha256": "8d6f2c81e75d2a7c85bfbc82285fff5f43ad61830d895c4385ecded4e603288e"
+    },
+    {
+      "path": "clippy.log",
+      "sha256": "6c82c3edc4c1ebfa3182fbfb9a5de7ae7e3659634ebca2c524e82a65f1106be0"
+    },
+    {
+      "path": "design-cold-reopen.json",
+      "sha256": "e83bb3a2cd0e5da3cbfdbd8d22947823453846b1ea1522eb08a0810fc5a17e05"
+    },
+    {
+      "path": "fmt.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "headless.json",
+      "sha256": "5b814802418ba54c245542ec9b5a066e63e645fa508a360de68f58a2099827f2"
+    },
+    {
+      "path": "headless.log",
+      "sha256": "c9941e988bdf205c958e8cd93b89b1b16b0796aaca41a32891793e850b8c9330"
+    },
+    {
+      "path": "logic-tests.log",
+      "sha256": "0f315ae4a2c453e2b3bf1dbc0b29e75a1f7da33b6c20c08bdf426216100d0dca"
+    },
+    {
+      "path": "README.md",
+      "sha256": "44e85286b24067231744e2df36944c1aa3bbe058b76a99edc8b5999c4d7e3a38"
+    },
+    {
+      "path": "staging.json",
+      "sha256": "ead92b37849dc86ff11c9f5237ca77c45abf570e348c0803c6215caaeb82b09b"
+    }
+  ]
+}
