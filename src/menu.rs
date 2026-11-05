@@ -77,6 +77,30 @@ impl Command {
         }
     }
 }
+/// The owner holds the lease; the popup holds only its view and release receiver.
+#[derive(Clone)]
+pub struct OwnedMenu {
+    entity: Entity<FileMenu>,
+    _lease: std::sync::Arc<async_channel::Sender<()>>,
+}
+impl OwnedMenu {
+    pub fn new(entity: Entity<FileMenu>) -> (Self, async_channel::Receiver<()>) {
+        let (tx, rx) = async_channel::bounded(1);
+        (
+            Self {
+                entity,
+                _lease: std::sync::Arc::new(tx),
+            },
+            rx,
+        )
+    }
+}
+impl std::ops::Deref for OwnedMenu {
+    type Target = Entity<FileMenu>;
+    fn deref(&self) -> &Self::Target {
+        &self.entity
+    }
+}
 pub enum MenuEvent {
     Command(Command),
     Dismiss,

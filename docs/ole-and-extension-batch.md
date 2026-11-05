@@ -17,3 +17,5 @@
 统一检查进展：81项Release已通过，含真实Shell IDataObject/CF_HDROP往返、原生IDropTarget同步/异步到IFileOperation的实际移动、PerformedDropEffect=NONE避免二次删除。GUI已实测独立菜单/动态子菜单/Esc焦点及选区保留，7-Zip测试1压缩包/1文件30字节和2压缩包/2文件60字节均无错误；同窗真实快速OLE移动与1/1项、20/20B进度。工具拒绝源窗口边界外的拖动终点，未绕过，也不把跨窗/外部手势当GUI已通过。
 
 修复：owned popup保留WS_VISIBLE，原生尺寸改变后显式同步GPUI bounds_changed避免旧viewport裁切；菜单高度至多640逻辑px/屏幕工作区，窄屏只展示可容纳的最近层级。OLE启动检查App/Window借用状态，目标回调只做受保护的viewport几何更新，磁盘/身份仍后台处理；短等待不消费鼠标/键盘消息，源同时读取实际鼠标释放，避免拖动停留。侧栏原生固定保留before/revision、原插入提示线和边缘滚动。
+
+归档 staging 冒烟发现 fd5368c 的菜单后续动作焦点错误，已取消 CI 41973622289，不作为交付。根因是 popup render 读取/观察 Backleaf 主实体，GPUI 将 current_window_by_entity 改指弹窗；后续订阅和 defer 随弹窗关闭而丢失。改为 OwnedMenu sender 租约和 receiver 断开通知生命周期，弹窗仅访问菜单实体；命令延后回主窗口执行。实机验证压缩输入自动聚焦、失焦提交成功（1/1 项、42/42 B，ZIP 内容逐字节一致），路径菜单进入编辑后失效路径 toast 并恢复草稿/焦点，重命名菜单自动聚焦与失焦保存成功。截图见 preview-14/owned-*，与此前阶段分开记录。

@@ -53,6 +53,12 @@ impl Backleaf {
         false
     }
     pub fn begin_archive(&mut self, kind: Kind, window: &mut Window, cx: &mut Context<Self>) {
+        crate::popup_menu::trace(&format!(
+            "begin archive stale={} count={} active={}",
+            self.watch_stale(),
+            self.selection.count(),
+            window.is_window_active()
+        ));
         self.reset_typeahead();
         if self.defer_archive(kind, cx) {
             return;
@@ -141,7 +147,7 @@ impl Backleaf {
             parent,
             token: self.archive.serial,
             pending: false,
-            focus: false,
+            focus: true,
             error: None,
         });
         window.focus(&input.focus_handle(cx), cx);

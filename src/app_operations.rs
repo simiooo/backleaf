@@ -19,7 +19,7 @@ pub struct FileOperations {
     ready_menu: Option<(Point<Pixels>, usize)>,
     refresh_pending: bool,
     pub hub: Hub,
-    pub menu: Option<Entity<FileMenu>>,
+    pub menu: Option<crate::menu::OwnedMenu>,
     menu_subscription: Option<Subscription>,
     menu_generation: u64,
     pub editor: Option<Editor>,
@@ -328,7 +328,7 @@ impl Backleaf {
             &menu,
             window,
             |this, source, event: &MenuEvent, window, cx| {
-                if this.files.menu.as_ref().map(Entity::entity_id) != Some(source.entity_id()) {
+                if this.files.menu.as_ref().map(|m| m.entity_id()) != Some(source.entity_id()) {
                     return;
                 }
                 crate::popup_menu::trace("file menu event");
@@ -336,7 +336,10 @@ impl Backleaf {
                 this.files.menu = None;
                 window.focus(&this.focus, cx);
                 if valid && let MenuEvent::Command(command) = event {
-                    this.file_command(*command, window, cx);
+                    let command = *command;
+                    this.defer_menu_action(window, cx, move |this, window, cx| {
+                        this.file_command(command, window, cx)
+                    });
                 }
                 cx.notify();
             },
@@ -353,12 +356,40 @@ impl Backleaf {
             menu.update(cx, |m, cx| m.attach_shell(session, cx));
         }
         self.files.focus_grid = false;
-        self.files.menu = Some(menu.clone());
-        if let Err(error) = crate::popup_menu::open(menu, window, cx.entity().downgrade(), cx) {
+        let (owned, released) = crate::menu::OwnedMenu::new(menu.clone());
+        self.files.menu = Some(owned);
+        if let Err(error) =
+            crate::popup_menu::open(menu, released, window, cx.entity().downgrade(), cx)
+        {
             self.files.menu = None;
             self.navigation_error(error.to_string(), cx);
         }
         cx.notify();
+    }
+    /// Let the owned popup close before activating an editor in the owner.
+    pub fn defer_menu_action(
+        &mut self,
+        window: &mut Window,
+        cx: &mut Context<Self>,
+        action: impl FnOnce(&mut Self, &mut Window, &mut Context<Self>) + 'static,
+    ) {
+        let owner = cx.entity().downgrade();
+        let generation = self.generation;
+        crate::popup_menu::trace(&format!("defer menu action g={generation}"));
+        window.defer(cx, move |window, cx| {
+            let _ = owner.update(cx, |this, cx| {
+                crate::popup_menu::trace(&format!("run menu action g={} captured={generation} files={} nav={} stale={} count={} active={}",this.generation,this.files.menu.is_some(),this.navigation.menu.is_some(),this.watch_stale(),this.selection.count(),window.is_window_active()));
+                if generation != this.generation
+                    || this.files.menu.is_some()
+                    || this.navigation.menu.is_some()
+                {
+                    return;
+                }
+                window.activate_window();
+                action(this, window, cx);
+                cx.notify();
+            });
+        });
     }
     pub fn file_command(&mut self, command: Command, window: &mut Window, cx: &mut Context<Self>) {
         if self.selection_busy() || self.files.editor.is_some() {

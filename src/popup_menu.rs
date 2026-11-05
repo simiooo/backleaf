@@ -29,18 +29,21 @@ struct Placement {
     work: RECT,
 }
 pub struct MenuPopup {
+    // Do not read/observe the Backleaf entity from this window: GPUI associates
+    // accessed entities with the rendering window, rerouting owner subscriptions.
+    // Lifetime is signalled by OwnedMenu's lease instead.
     menu: Entity<FileMenu>,
     placement: Placement,
     base: Option<POINT>,
     last: (i32, i32),
-    owner: WeakEntity<crate::Backleaf>,
-    _owner_changed: Subscription,
+    released: async_channel::Receiver<()>,
     _events: Subscription,
     _changed: Subscription,
     _activation: Subscription,
 }
 pub fn open(
     menu: Entity<FileMenu>,
+    released: async_channel::Receiver<()>,
     parent: &mut Window,
     owner_view: WeakEntity<crate::Backleaf>,
     cx: &mut App,
@@ -135,10 +138,13 @@ pub fn open(
                         );
                     }
                     window.focus(&menu.focus_handle(cx), cx);
-                    let owner_changed = cx.observe(
-                        &owner_view.upgrade().expect("live menu owner"),
-                        |_, _, cx| cx.notify(),
-                    );
+                    let release_wait = released.clone();
+                    let popup_handle = window.window_handle();
+                    cx.spawn(async move |_, cx| {
+                        let _ = release_wait.recv().await;
+                        let _ = popup_handle.update(cx, |_, window, _| window.remove_window());
+                    })
+                    .detach();
                     let events =
                         cx.subscribe_in(&menu, window, |_, _, _: &MenuEvent, window, _| {
                             window.remove_window()
@@ -168,8 +174,7 @@ pub fn open(
                         placement,
                         base: None,
                         last: (0, 0),
-                        owner: owner_view,
-                        _owner_changed: owner_changed,
+                        released,
                         _events: events,
                         _changed: changed,
                         _activation: activation,
@@ -195,14 +200,7 @@ fn native(window: &Window) -> HWND {
 }
 impl Render for MenuPopup {
     fn render(&mut self, window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
-        let attached = self.owner.upgrade().is_some_and(|owner| {
-            let root = owner.read(cx);
-            root.files
-                .menu
-                .as_ref()
-                .or(root.navigation.menu.as_ref())
-                .is_some_and(|m| m.entity_id() == self.menu.entity_id())
-        });
+        let attached = !self.released.is_closed();
         if !attached
             || !unsafe { IsWindow(Some(self.placement.owner)) }.as_bool()
             || self.menu.read(cx).dismissed

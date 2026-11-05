@@ -168,14 +168,16 @@ impl Backleaf {
             &menu,
             window,
             move |this, source, event: &MenuEvent, window, cx| {
-                if this.navigation.menu.as_ref().map(Entity::entity_id) != Some(source.entity_id())
+                if this.navigation.menu.as_ref().map(|m| m.entity_id()) != Some(source.entity_id())
                 {
                     return;
                 }
                 this.navigation.menu = None;
                 window.focus(&this.focus, cx);
                 if let MenuEvent::Command(command) = event {
-                    match command {
+                    let command = *command;
+                    let entry = entry.clone();
+                    this.defer_menu_action(window, cx, move |this, window, cx| match command {
                         Command::Open => match &entry.destination {
                             Destination::Folder(p) => this.request_location(p.path(), cx),
                             Destination::View(v) => {
@@ -207,13 +209,16 @@ impl Backleaf {
                             }
                         }
                         _ => {}
-                    }
+                    });
                 }
                 cx.notify();
             },
         ));
-        self.navigation.menu = Some(menu.clone());
-        if let Err(error) = crate::popup_menu::open(menu, window, cx.entity().downgrade(), cx) {
+        let (owned, released) = crate::menu::OwnedMenu::new(menu.clone());
+        self.navigation.menu = Some(owned);
+        if let Err(error) =
+            crate::popup_menu::open(menu, released, window, cx.entity().downgrade(), cx)
+        {
             self.navigation.menu = None;
             self.navigation_error(error.to_string(), cx);
         }

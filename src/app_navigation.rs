@@ -9,7 +9,7 @@ pub struct NavigationUi {
     pub window_active: bool,
     pub menu_focus_transfer: bool,
     pub volumes: Vec<Location>,
-    pub menu: Option<Entity<crate::menu::FileMenu>>,
+    pub menu: Option<crate::menu::OwnedMenu>,
     pub pending: Option<u64>,
     pub(super) menu_subscription: Option<Subscription>,
     pub drag: Option<crate::app_quick_drag::QuickDrag>,
@@ -118,7 +118,7 @@ impl Backleaf {
             &menu,
             window,
             move |this, source, event: &MenuEvent, window, cx| {
-                if this.navigation.menu.as_ref().map(Entity::entity_id) != Some(source.entity_id())
+                if this.navigation.menu.as_ref().map(|m| m.entity_id()) != Some(source.entity_id())
                 {
                     return;
                 }
@@ -126,9 +126,13 @@ impl Backleaf {
                 if let Some(focus) = &restore {
                     window.focus(focus, cx);
                 }
-                if generation == this.generation {
-                    match event {
-                        MenuEvent::Command(Command::CopyPath) => {
+                if generation == this.generation
+                    && let MenuEvent::Command(command) = event
+                {
+                    let command = *command;
+                    let path = path.clone();
+                    this.defer_menu_action(window, cx, move |this, window, cx| match command {
+                        Command::CopyPath => {
                             if this.files.hub.clipboard_preparing() {
                                 this.navigation_error("正在准备剪贴板，请稍后重试".into(), cx);
                                 return;
@@ -139,18 +143,19 @@ impl Backleaf {
                                 this.navigation_error(error, cx);
                             }
                         }
-                        MenuEvent::Command(Command::EditPath) => {
-                            this.edit_path_at(path.clone(), window, cx)
-                        }
+                        Command::EditPath => this.edit_path_at(path.clone(), window, cx),
                         _ => (),
-                    }
+                    });
                 }
                 cx.notify();
             },
         ));
         self.files.focus_grid = false;
-        self.navigation.menu = Some(menu.clone());
-        if let Err(error) = crate::popup_menu::open(menu, window, cx.entity().downgrade(), cx) {
+        let (owned, released) = crate::menu::OwnedMenu::new(menu.clone());
+        self.navigation.menu = Some(owned);
+        if let Err(error) =
+            crate::popup_menu::open(menu, released, window, cx.entity().downgrade(), cx)
+        {
             self.navigation.menu = None;
             self.navigation_error(error.to_string(), cx);
         }
