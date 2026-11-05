@@ -1,36 +1,22 @@
 # Delivery index
 
-Scope: SIM-919. Constraints: SIM-934. One engineering unit is active at a time.
+Current engineering baseline: preview.14 source `ad488a41e6698c6760decb075a69247de44d4cf7`, editable OpenPencil v38 (233 pages). Scope SIM-919, constraints SIM-934. The entries below reflect the current queue; the dated records afterwards preserve earlier delivery boundaries.
 
-| Queue | Issue | Deliverable / gate |
+| Queue | Issue | Current scope |
 | --- | --- | --- |
-| accepted | SIM-921 | User accepted v6 as the implementation baseline on 2026-11-04 |
-| accepted | SIM-948 | v6 feedback incorporated and accepted as baseline |
-| focus_issue | SIM-976 | Breadcrumb context, address editing/blur recovery and real Windows drives; v21 design, native implementation in progress |
-| review_queue | SIM-979 | Progressive marquee acceleration across complete logical range; preview.11 published and downloaded verification passed |
-| ready_queue | SIM-980 | Rounded primary file surface with extremely subtle static elevation; shared bounds/scroll/selection regression |
-| review_queue | SIM-973 | Visible-identity hit regions; preview.9 published and downloaded verification passed |
-| review_queue | SIM-971 | Compact counter, adaptive scrollbars and stable sidebar hover; preview.8 published |
-| ready_queue | SIM-972 | Letter-key typeahead after current navigation feedback, research checkpoint released |
-| ready_queue | SIM-974 | Internal file drag/move and directory cycle protection |
-| ready_queue | SIM-975 | Unified quick-access pin/reorder, real saved-view targets depend on SIM-920 |
-| ready_queue | SIM-977 | Real archive creation/extraction tasks, beginning with verified ZIP round trips |
-| ready_queue | SIM-978 | Third-party Shell context commands with compatible native fallback and host isolation |
-| review_queue | SIM-965 | v18 toolbar/sidebar focus and reversible search motion; preview.7 published |
-| review_queue | SIM-963 | Generated file artwork and bounded embedded EXE icons, bundled in preview.7; product acceptance pending |
-| review_queue | SIM-953 | v9 selection/state redesign, rubber-band and keyboard selection; installed-window smoke and 13 native runs passed; preview.2 published |
-| ready_resume | SIM-954 | v13 keyboard / focus / rename-blur and navigation feedback, preview.6; broader Explorer and retry gates remain |
-| review_queue | SIM-951 | Native GPUI preview deployed and published; unlocked performance and installed-window smoke passed |
-| review_queue | SIM-935 | Technical plan only; native rendering now progresses through SIM-951, broader Windows validation remains open |
-| ready_resume | SIM-920 | v12 local recursive filename search committed at 2055d260; keyboard fix proceeds through 954; saved views remain |
-| ready_queue | SIM-967 | External directory notifications, batched changes and activation reconciliation; current preview requires F5 |
-| candidate after dependencies | SIM-922 | SQLite index, refresh, short Chinese queries, benchmark and coverage |
-| candidate after dependencies | SIM-937 | Directory/search restore and failure recovery |
-| cross-cutting | SIM-938 | Independent windows, stale-result rejection, coordinated shared state |
+| accepted baseline | SIM-921 / SIM-948 | User accepted v6 for implementation; subsequent feedback is retained in v38 |
+| review_queue | SIM-978 | Owned self-drawn context-menu windows and isolated third-party commands; preview.14 staging, CI, download and downloaded-window smoke passed |
+| review_queue | SIM-974 | Native OLE real-file external/cross-window transfer delivered in preview.14; synchronous/asynchronous COM and actual move tested, full Explorer/cross-window mouse gesture remains unverified due tool boundary |
+| review_queue | SIM-920 / SIM-922 / SIM-937 / SIM-938 | Saved FileViews in the unique quick-access system, metadata index, search/path recovery and independent windows delivered in preview.13 |
+| review_queue | SIM-967 / SIM-972 / SIM-975 / SIM-976 / SIM-977 / SIM-980 | External changes, typeahead, pin/reorder, path/drives, archive operations and rounded primary surface delivered in preview.13 |
+| review_queue | SIM-951 / SIM-953 / SIM-954 / SIM-963 / SIM-965 / SIM-971 / SIM-973 / SIM-979 | Earlier native, selection, input, artwork, chrome, scrolling, hit-region and marquee increments retain their versioned evidence |
+| broader validation | SIM-935 | Mixed DPI, NVDA, monitor removal and long-duration pressure are not verified; no general Windows compatibility claim |
 
-`in_review` means engineering evidence is ready for product acceptance. It does not imply that real users have validated usability or that untested hardware, IMEs or filesystems have passed.
+`in_review` means engineering delivery is available for product acceptance, not that product acceptance has completed. Product feedback remains authoritative. Preview.14 implementation and checks are described in [the batch record](ole-and-extension-batch.md); binary-specific evidence and limitations are in [preview.14 evidence](evidence/preview-14/README.md). The cancelled fd5368c candidate is superseded and is not a delivered release.
 
-SIM-953 engineering delivery is in product review and its claim is released. SIM-965 and the SIM-963 artwork dependency are delivered in preview.7, engineering in_review with claims released. SIM-967 (external directory changes and activation reconciliation) remains ready in the current feedback queue. SIM-954 has a released safe checkpoint for the delivered v13 increment. SIM-920 has a safe source checkpoint and released claim. Saved views, persistent indexing and restore remain incomplete under SIM-920 / SIM-922 / SIM-937. SIM-951 is in the product review queue. The [file operation contract](file-operations.md) records current scope; v9 selection rules remain in visual-system-v9.md.
+Historical delivery records follow. Statements about missing features refer to their dated version, not to the current queue.
+
+2026-11-05 13:55:34+08: preview.14 source `ad488a41e6698c6760decb075a69247de44d4cf7` published after [CI 41976196744](https://github.com/simiooo/backleaf/actions/runs/41976196744) passed 81 Release tests, strict all-target Clippy, fmt/build and extracted-package CLI smoke. [Windows test package](https://github.com/simiooo/backleaf/releases/tag/test-v0.1.0-preview.14-ad488a41). Local staging deployed 13:47:32+08, archive/menu/actual registered 7-Zip command smoke and same-binary 100k/10M visible GPUI probes passed. At 13:57+08 downloaded assets matched CI artifact bytes and server digests; downloaded executable passed visible startup, owned path menu, returned editor focus, Escape and normal exit. Local and CI executable hashes remain separate in [evidence](evidence/preview-14/README.md). Cross-window/Explorer full mouse gestures, mixed DPI/NVDA and long pressure remain unverified; no universal extension compatibility claim. Product acceptance is pending.
 
 2026-11-03: SIM-921 v5.1 adds eight scale states to the compact baseline, for a 38-page editable master. The design covers million-item selections, a bounded 24-task queue and ten thousand failures. The isolated metadata/queue probe verifies 100,000 and 1,000,000 records, UTF-16 long paths, retained results, bounded payloads and paged reads. See [performance contract and evidence](bulk-performance.md).
 

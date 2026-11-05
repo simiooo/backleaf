@@ -1,0 +1,25 @@
+{
+  "version": "0.1.0-preview.14",
+  "source_commit": "ad488a41e6698c6760decb075a69247de44d4cf7",
+  "deployed_at_utc": "2026-11-05T05:47:32.0045446Z",
+  "installation": "portable ZIP extracted to isolated staging directory",
+  "staging_path": "D:\\work\\backleaf\\.local\\staging\\0.1.0-preview.14-ad488a41",
+  "artifact_path": "D:\\work\\backleaf\\.local\\artifacts\\Backleaf-0.1.0-preview.14-candidate-ad488a41-win-x64.zip",
+  "artifact_sha256": "70286dc7896a6a1223d7777533eefd9f5de244e099f4327992779a0ca591be41",
+  "exe_sha256": "014913814243666033b5e92df79dfc04cf462fb9ddc9464906e1324a15b3951d",
+  "installed_hash_matches": true,
+  "cli_smoke_passed": true,
+  "interactive_smoke_passed": true,
+  "session": {
+    "locked": false,
+    "error": null
+  },
+  "interactive_smoke_at_utc": "2026-11-05T05:49:46.916771+00:00",
+  "interactive_scope": [
+    "visible isolated installed startup",
+    "owned menu and automatically focused archive name",
+    "blur commit and successful bundled archive engine",
+    "archive member bytes verified",
+    "actual registered 7-Zip Test archive through owned self-drawn dynamic submenu: 1 archive,199 compressed bytes,1 file,33 bytes,no errors"
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "verified_at_utc": "2026-11-05T05:56:15.621810+00:00",
+  "source_commit": "ad488a41e6698c6760decb075a69247de44d4cf7",
+  "ci_run_url": "https://github.com/simiooo/backleaf/actions/runs/41976196744",
+  "release_url": "https://github.com/simiooo/backleaf/releases/tag/test-v0.1.0-preview.14-ad488a41",
+  "published_at_utc": "2026-11-05T05:55:34Z",
+  "ci_conclusion": "success",
+  "server_digests_match": true,
+  "release_equals_ci_artifact": true,
+  "checksums_match": true,
+  "packaged_exe_design_logo_library_verified": true,
+  "archive_source_and_license_present": true,
+  "ci_exe_sha256": "6b8e5a24a7b739ee55e459f77784769aa5ceb9c234018a16c1bbd4c0c3f88f11",
+  "local_exe_sha256": "014913814243666033b5e92df79dfc04cf462fb9ddc9464906e1324a15b3951d",
+  "assets": [
+    {
+      "name": "Backleaf-0.1.0-preview.14-ad488a41-win-x64.zip",
+      "sha256": "afec281b4663dcd3f2d7571abe2b22dafca9327963cb3a5f155ca4ca6ea037d9",
+      "bytes": 14765956
+    },
+    {
+      "name": "Backleaf-v38.fig",
+      "sha256": "b8333145eea88f5b7647684a549d3fab812bc883d5f04e13acb1052121db1b16",
+      "bytes": 1629174
+    },
+    {
+      "name": "build.json",
+      "sha256": "765d7ead836003e555cf75839f773101d7bf592231e00092b037576f28cefc6b",
+      "bytes": 999
+    },
+    {
+      "name": "SHA256SUMS.txt",
+      "sha256": "0df00ae68d96dc41d0a2a0b0bf7e13d19251665e7c43d510073907fff82a4fd1",
+      "bytes": 198
+    }
+  ],
+  "downloaded_gui_smoke_passed": true,
+  "downloaded_gui_scope": [
+    "visible isolated startup with real files",
+    "owned breadcrumb context menu",
+    "Edit path action returns automatic input focus to owner",
+    "Escape returns to main view",
+    "normal window close"
+  ],
+  "downloaded_gui_at_utc": "2026-11-05T05:57:14.225007+00:00"
+}

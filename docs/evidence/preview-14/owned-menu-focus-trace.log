@@ -1,0 +1,23 @@
+file open_menu
+open requested
+open deferred
+created hwnd=117968540 foreground=117968540 visible=true style=14c00000
+activation true
+file menu event
+defer menu action g=2
+run menu action g=2 captured=2 files=false nav=false stale=false count=1 active=false
+begin archive stale=false count=1 active=false
+open requested
+open deferred
+created hwnd=67243984 foreground=67243984 visible=true style=14c00000
+activation true
+defer menu action g=3
+run menu action g=3 captured=3 files=false nav=false stale=false count=0 active=false
+file open_menu
+open requested
+open deferred
+created hwnd=118361756 foreground=118361756 visible=true style=14c00000
+activation true
+file menu event
+defer menu action g=3
+run menu action g=3 captured=3 files=false nav=false stale=false count=1 active=false

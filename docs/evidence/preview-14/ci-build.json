@@ -1,0 +1,13 @@
+{
+  "version": "0.1.0-preview.14",
+  "source_commit": "ad488a41e6698c6760decb075a69247de44d4cf7",
+  "gpui_revision": "d36a70661471ec64dce230798121d554930d5c60",
+  "built_at_utc": "2026-11-05T05:55:09.4732938Z",
+  "exe_sha256": "6b8e5a24a7b739ee55e459f77784769aa5ceb9c234018a16c1bbd4c0c3f88f11",
+  "archive_library_sha256": "78bf6b668d75801e3aa180b4ccb16e6d8395fba80dec8a065055bb6f8dfabb82",
+  "design_sha256": "b8333145eea88f5b7647684a549d3fab812bc883d5f04e13acb1052121db1b16",
+  "ci_run_url": "https://github.com/simiooo/backleaf/actions/runs/41976196744",
+  "scope": "Native Windows preview: path/drives, typeahead, external changes, internal moves/pinning/reorder, saved FileViews, metadata index, ZIP creation and ZIP/7z/RAR extraction, owned self-drawn extension menus and native OLE file drag/drop, path/search restore and independent windows; see README for limits",
+  "interactive_smoke": "not run on hosted CI; local scope is recorded separately",
+  "cli_smoke_passed": true
+}
