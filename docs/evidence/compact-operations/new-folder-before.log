@@ -1,0 +1,19 @@
+   Compiling backleaf v0.1.0-preview.23 (D:\work\backleaf)
+    Finished `release` profile [optimized] target(s) in 41.51s
+     Running unittests src\main.rs (target\release\deps\backleaf-b156fbb90ab9b5a4.exe)
+
+running 1 test
+
+thread 'headless_tests::late_directory_notification_during_new_folder_locate_preserves_rename_intent' (25956) panicked at src\headless_tests.rs:106:13:
+timed out waiting for rename survives a later directory generation; path="C:\\Users\\qq651\\AppData\\Local\\Temp\\Backleaf-test-gpui-headless-45936-1793890956862438000-0\\files" count=2 cache=2 selection=1 editor=None search=("",0,false) stale=false active=true detail_pending=false error=None windows=1
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test headless_tests::late_directory_notification_during_new_folder_locate_preserves_rename_intent ... FAILED
+
+failures:
+
+failures:
+    headless_tests::late_directory_notification_during_new_folder_locate_preserves_rename_intent
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 134 filtered out; finished in 10.46s
+
+error: test failed, to rerun pass `-p backleaf --bin backleaf`
