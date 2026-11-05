@@ -17,7 +17,7 @@ $archive=[IO.Compression.ZipFile]::OpenRead(($files|Where-Object Extension -eq '
 try {
     $required=@(@('Backleaf.exe',$metadata.exe_sha256),@(($files|Where-Object Extension -eq '.fig').Name,$metadata.design_sha256))
     if($metadata.archive_library_sha256){$required+=,@('lib/7z.dll',$metadata.archive_library_sha256)}
-    if(!$metadata.headless_report_sha256 -or $metadata.headless_test_count -lt 25){throw 'Headless gate metadata missing'}
+    if(!$metadata.headless_report_sha256 -or $metadata.headless_test_count -lt 28){throw 'Headless gate metadata missing'}
     if(!$metadata.runtime -or @($metadata.runtime.files).Count -lt 3){throw 'App-local runtime metadata missing'}
     foreach($runtimeFile in $metadata.runtime.files){$required+=,@($runtimeFile.name,$runtimeFile.sha256)}
     $required+=,@('headless.json',$metadata.headless_report_sha256)

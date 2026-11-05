@@ -1,0 +1,39 @@
+{
+  "masterSha256": "908e86ba7b6ac00d0f7aac2b5953182aea88a3fbf48615c5789a7a4d9fbd1ccd",
+  "retainedPages": 241,
+  "pages": 247,
+  "result": "passed",
+  "results": [
+    {
+      "key": "242-capacity-ready",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "243-capacity-pending",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "244-medium-removed",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "245-selection-mixed",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "246-selection-folders",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "247-capacity-dark",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    }
+  ],
+  "verifiedAt": "2026-11-05T10:04:56.634Z"
+}

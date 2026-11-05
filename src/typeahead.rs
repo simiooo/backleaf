@@ -7,6 +7,7 @@ pub struct State {
     prefix: String,
     last: Option<Instant>,
     pub pending: bool,
+    pub cycle: usize,
 }
 impl State {
     pub fn reset(&mut self) {
@@ -14,6 +15,7 @@ impl State {
         self.prefix.clear();
         self.last = None;
         self.pending = false;
+        self.cycle = 0;
     }
     pub fn continuing(&self, now: Instant) -> bool {
         self.last
@@ -28,11 +30,17 @@ impl State {
             .is_none_or(|t| now.saturating_duration_since(t) > Duration::from_secs(1))
         {
             self.prefix.clear();
+            self.cycle = 0;
         }
         if self.prefix.len() + text.len() > 1024 {
             self.prefix.clear();
         }
-        self.prefix.push_str(text);
+        if self.prefix.chars().count() == 1 && self.prefix.to_lowercase() == text.to_lowercase() {
+            self.cycle = self.cycle.saturating_add(1);
+        } else {
+            self.prefix.push_str(text);
+            self.cycle = 0;
+        }
         self.last = Some(now);
         self.token = self.token.wrapping_add(1);
         self.pending = true;
@@ -73,6 +81,21 @@ pub fn native_composing(owner: usize) -> bool {
 #[cfg(test)]
 mod state_tests {
     use super::*;
+    #[test]
+    fn repeats_cycle_but_distinct_letters_extend_the_prefix() {
+        let mut state = State::default();
+        let now = Instant::now();
+        assert_eq!(state.push("A", now).unwrap().1, "a");
+        assert_eq!(state.push("a", now).unwrap().1, "a");
+        assert_eq!(state.cycle, 1);
+        assert_eq!(state.push("A", now).unwrap().1, "a");
+        assert_eq!(state.cycle, 2);
+        assert_eq!(state.push("l", now).unwrap().1, "al");
+        assert_eq!(state.cycle, 0);
+        assert_eq!(state.push("l", now).unwrap().1, "all");
+        state.push("a", now + Duration::from_secs(2));
+        assert_eq!(state.cycle, 0);
+    }
     #[test]
     fn prefix_timeout_reset_and_unicode_range_do_not_leak_between_sessions() {
         let mut state = State::default();

@@ -12,6 +12,7 @@ pub struct Location {
     pub title: String,
     pub path: PathBuf,
     pub volume: bool,
+    pub capacity: Option<crate::volume_capacity::Capacity>,
     pub entry: Option<crate::quick_access::Entry>,
 }
 #[derive(Clone, Debug)]
@@ -22,8 +23,17 @@ pub struct TreeRow {
     pub current: bool,
 }
 pub enum Notice {
+    VolumeSnapshot {
+        epoch: u64,
+        result: Result<Vec<Location>, String>,
+    },
+    Capacity {
+        epoch: u64,
+        path: PathBuf,
+        title: Option<String>,
+        value: Option<crate::volume_capacity::Capacity>,
+    },
     Common(Vec<Location>),
-    Volumes(Result<Vec<Location>, String>),
     Clipboard(Result<(), String>),
     Tree {
         token: u64,
@@ -240,6 +250,7 @@ pub fn common_locations() -> Vec<Location> {
                 title: title.into(),
                 path: p.into(),
                 volume: false,
+                capacity: None,
                 entry: None,
             })
         })

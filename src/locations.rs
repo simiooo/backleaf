@@ -10,7 +10,6 @@ use std::{
         atomic::{AtomicBool, Ordering},
     },
     thread,
-    time::Duration,
 };
 
 static COPY_ACTIVE: AtomicBool = AtomicBool::new(false);
@@ -191,106 +190,16 @@ fn location_error(error: std::io::Error) -> String {
     .into()
 }
 
-struct VolumeState {
-    gate: Mutex<()>,
-    changed: Condvar,
-    stop: AtomicBool,
-    active: AtomicBool,
-    refresh: AtomicBool,
-}
-pub struct Volumes(Arc<VolumeState>);
-impl Volumes {
-    pub fn new(tx: async_channel::Sender<Event>) -> Self {
-        let state = Arc::new(VolumeState {
-            gate: Mutex::new(()),
-            changed: Condvar::new(),
-            stop: AtomicBool::new(false),
-            active: AtomicBool::new(true),
-            refresh: AtomicBool::new(true),
-        });
-        let shared = state.clone();
-        thread::Builder::new()
-            .name("backleaf-volumes".into())
-            .spawn(move || {
-                use windows::Win32::System::Diagnostics::Debug::{
-                    SEM_FAILCRITICALERRORS, SEM_NOOPENFILEERRORBOX, SetThreadErrorMode,
-                };
-                // Never let an empty drive summon a system error dialog from this worker.
-                let labels = unsafe {
-                    SetThreadErrorMode(SEM_FAILCRITICALERRORS | SEM_NOOPENFILEERRORBOX, None)
-                        .is_ok()
-                };
-                let mut previous = None;
-                let mut cached = Vec::new();
-                loop {
-                    let mut gate = shared.gate.lock().unwrap();
-                    while !shared.active.load(Ordering::Acquire)
-                        && !shared.stop.load(Ordering::Acquire)
-                    {
-                        gate = shared.changed.wait(gate).unwrap();
-                    }
-                    if shared.stop.load(Ordering::Acquire) {
-                        return;
-                    }
-                    let force = shared.refresh.swap(false, Ordering::AcqRel);
-                    drop(gate);
-                    let next = read_volumes(if force { &[] } else { &cached }, labels);
-                    if let Ok(rows) = &next {
-                        cached = rows.clone();
-                    }
-                    if previous.as_ref() != Some(&next) {
-                        previous = Some(next.clone());
-                        if tx
-                            .send_blocking(Event::Navigation(Notice::Volumes(next)))
-                            .is_err()
-                        {
-                            return;
-                        }
-                    }
-                    let gate = shared.gate.lock().unwrap();
-                    if !shared.refresh.load(Ordering::Acquire)
-                        && !shared.stop.load(Ordering::Acquire)
-                    {
-                        let _ = shared
-                            .changed
-                            .wait_timeout(gate, Duration::from_secs(2))
-                            .unwrap();
-                    }
-                }
-            })
-            .expect("volume worker");
-        Self(state)
-    }
-    pub fn set_active(&self, active: bool) {
-        let _gate = self.0.gate.lock().unwrap();
-        self.0.active.store(active, Ordering::Release);
-        if active {
-            self.0.refresh.store(true, Ordering::Release);
-        }
-        self.0.changed.notify_one();
-    }
-    pub fn refresh(&self) {
-        let _gate = self.0.gate.lock().unwrap();
-        self.0.refresh.store(true, Ordering::Release);
-        self.0.changed.notify_one();
-    }
-}
-impl Drop for Volumes {
-    fn drop(&mut self) {
-        let _gate = self.0.gate.lock().unwrap();
-        self.0.stop.store(true, Ordering::Release);
-        self.0.changed.notify_one();
-    }
-}
+pub use crate::volume_capacity::Volumes;
 fn roots(mask: u32) -> impl Iterator<Item = PathBuf> {
     (0..26)
         .filter(move |bit| mask & (1 << bit) != 0)
         .map(|bit| PathBuf::from(format!("{}:\\", (b'A' + bit as u8) as char)))
 }
-fn read_volumes(cached: &[Location], labels: bool) -> Result<Vec<Location>, String> {
+pub(crate) fn read_volumes() -> Result<Vec<Location>, String> {
     use std::os::windows::ffi::OsStrExt;
     use windows::{
-        Win32::Storage::FileSystem::{GetDriveTypeW, GetLogicalDrives, GetVolumeInformationW},
+        Win32::Storage::FileSystem::{GetDriveTypeW, GetLogicalDrives},
         core::PCWSTR,
     };
     let mask = unsafe { GetLogicalDrives() };
@@ -299,34 +208,9 @@ fn read_volumes(cached: &[Location], labels: bool) -> Result<Vec<Location>, Stri
     }
     Ok(roots(mask)
         .map(|path| {
-            if let Some(old) = cached.iter().find(|v| v.path == path) {
-                return old.clone();
-            }
             let raw: Vec<u16> = path.as_os_str().encode_wide().chain(Some(0)).collect();
             let kind = unsafe { GetDriveTypeW(PCWSTR(raw.as_ptr())) };
-            // Network/removable/optical labels may wait on unavailable media. Keep a useful
-            // drive-letter row immediately; validating a selected destination is separate.
-            let mut label = [0u16; 261];
-            let name = if labels
-                && kind == 3
-                && unsafe {
-                    GetVolumeInformationW(
-                        PCWSTR(raw.as_ptr()),
-                        Some(&mut label),
-                        None,
-                        None,
-                        None,
-                        None,
-                    )
-                    .is_ok()
-                } {
-                String::from_utf16_lossy(
-                    &label[..label.iter().position(|c| *c == 0).unwrap_or(label.len())],
-                )
-            } else {
-                String::new()
-            };
-            let fallback = match kind {
+            let name = match kind {
                 2 => "可移动磁盘",
                 3 => "本地磁盘",
                 4 => "网络磁盘",
@@ -334,15 +218,12 @@ fn read_volumes(cached: &[Location], labels: bool) -> Result<Vec<Location>, Stri
                 6 => "内存磁盘",
                 _ => "磁盘",
             };
-            let letter = raw[0] as u8 as char;
             Location {
-                title: format!(
-                    "{} ({letter}:)",
-                    if name.is_empty() { fallback } else { &name }
-                ),
+                title: format!("{name} ({}:)", raw[0] as u8 as char),
                 path,
                 volume: true,
                 entry: None,
+                capacity: None,
             }
         })
         .collect())

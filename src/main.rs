@@ -39,6 +39,7 @@ mod search;
 mod search_motion;
 mod selectable;
 mod selection;
+mod selection_bytes;
 mod selection_smoke;
 mod session;
 mod shell_menu;
@@ -47,6 +48,7 @@ mod task_panel;
 mod test_support;
 mod theme;
 mod typeahead;
+mod volume_capacity;
 mod watcher;
 mod window_state;
 
@@ -101,6 +103,7 @@ struct Backleaf {
     requested: Range<usize>,
     serial: u64,
     selection: Selection,
+    stats: selection_bytes::Stats,
     selection_worker: SelectionWorker,
     marquee: Option<Marquee>,
     keyboard_focus: bool,
@@ -533,6 +536,7 @@ impl Backleaf {
             history: vec![],
             generation: 1,
             next_generation: 1,
+            stats: selection_bytes::Stats::new(tx.clone()),
             tx,
             cache: PageCache::new(),
             labels: Rc::new(RefCell::new(GridTextCache::default())),
@@ -597,6 +601,14 @@ impl Backleaf {
             return;
         }
         match event {
+            Event::SelectionBytes {
+                generation,
+                token,
+                result,
+            } => {
+                self.stats.accept(generation, token, result);
+                cx.notify();
+            }
             Event::Count {
                 generation,
                 count,
@@ -1004,7 +1016,7 @@ impl Backleaf {
     }
     fn reset_typeahead(&mut self) {
         self.typeahead.reset();
-        self.source.prefix(self.typeahead.token, None);
+        self.source.prefix(self.typeahead.token, None, 0);
     }
     fn typeahead_key(
         &mut self,
@@ -1043,7 +1055,8 @@ impl Backleaf {
             return false;
         }
         if let Some((token, prefix)) = self.typeahead.push(text, Instant::now()) {
-            self.source.prefix(token, Some(prefix));
+            self.source
+                .prefix(token, Some(prefix), self.typeahead.cycle);
             cx.notify();
             return true;
         }
@@ -2196,6 +2209,10 @@ impl Render for Backleaf {
             .begin([width, height], window.scale_factor());
         let count = self.source.count();
         self.arm_clock(window, cx);
+        if !self.selection_busy() {
+            self.stats
+                .sync(&self.source, self.generation, &self.selection.mask);
+        }
         let status = if let Some(m) = &self.marquee
             && m.active
             && (m.accepted != m.token || m.held)
@@ -2215,7 +2232,13 @@ impl Render for Backleaf {
         } else if let Some(error) = &self.error {
             error.clone()
         } else if self.selection.count() > 0 {
-            format!("已选 {} 项", number(self.selection.count()))
+            format!(
+                "已选 {} 项{}",
+                number(self.selection.count()),
+                self.stats
+                    .suffix()
+                    .map_or(String::new(), |s| format!(" · {s}"))
+            )
         } else {
             format!("{} 项", number(count))
         };

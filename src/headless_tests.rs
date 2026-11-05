@@ -391,6 +391,180 @@ fn new_folder_completion_refreshes_in_place_and_enters_rename() {
 }
 
 #[test]
+fn repeated_letters_cycle_and_wrap_without_intercepting_text_inputs() {
+    let mut h = Harness::new(
+        &["alpha.txt", "apple.txt", "apricot.txt", "banana.txt"],
+        None,
+    );
+    let matches = h.read(|this, _| {
+        this.cache
+            .values()
+            .filter(|i| i.name.starts_with('a'))
+            .map(|i| i.id)
+            .collect::<Vec<_>>()
+    });
+    h.key("a");
+    h.wait("first letter match", |this, _| {
+        this.selection.focus == Some(matches[0])
+    });
+    h.key("a");
+    h.wait("second letter match", |this, _| {
+        this.selection.focus == Some(matches[1])
+    });
+    h.cx.update_window(h.window.into(), |_, window, cx| {
+        for _ in 0..2 {
+            window.dispatch_keystroke(
+                Keystroke::parse_with_os("a", OperatingSystem::Windows).unwrap(),
+                cx,
+            );
+        }
+    })
+    .unwrap();
+    h.wait("coalesced repetitions wrap", |this, _| {
+        this.selection.focus == Some(matches[0]) && !this.typeahead.pending
+    });
+    h.key("escape");
+    h.key("b");
+    h.key("a");
+    h.wait("multi-letter prefix", |this, _| {
+        this.selection
+            .focus
+            .and_then(|id| this.cache.get(&id))
+            .is_some_and(|i| i.name == "banana.txt")
+    });
+    h.key("ctrl-f");
+    h.text("aa");
+    h.read(|this, cx| assert_eq!(this.search.input.as_ref().unwrap().read(cx).value(), "aa"));
+}
+
+#[test]
+fn selected_bytes_include_empty_files_and_never_recurse_into_folders() {
+    let mut h = Harness::new(&["a.txt", "zero.dat"], None);
+    let path = h.read(|this, _| this.path.clone());
+    std::fs::write(path.join("zero.dat"), []).unwrap();
+    std::fs::create_dir(path.join("folder")).unwrap();
+    std::fs::write(path.join("folder/ignored.bin"), vec![1u8; 8192]).unwrap();
+    h.invalidate_directory();
+    h.wait("updated file sizes", |this, _| {
+        !this.watch_stale() && this.source.count() == 3
+    });
+    h.view.update(&mut h.cx, |this, cx| {
+        this.selection.all(3);
+        cx.notify();
+    });
+    h.wait("file-only byte total", |this, _| {
+        this.stats.result.as_ref().is_some_and(|r| {
+            r.as_ref().is_ok_and(|t| {
+                t.files == 2 && t.bytes == "contents of a.txt".len() as u128 && t.unknown == 0
+            })
+        })
+    });
+    let folder = h.read(|this, _| this.cache.values().find(|i| i.directory).unwrap().id);
+    h.view.update(&mut h.cx, |this, cx| {
+        this.selection.select(folder, false, false);
+        cx.notify();
+    });
+    h.wait("folder-only selection has no fake zero bytes", |this, _| {
+        this.stats
+            .result
+            .as_ref()
+            .is_some_and(|r| r.as_ref().is_ok_and(|t| t.files == 0))
+    });
+    h.read(|this, _| assert!(this.stats.suffix().is_none()));
+}
+
+#[test]
+fn volume_capacity_updates_keep_sidebar_geometry_and_ignore_stale_or_removed_rows() {
+    let mut h = Harness::new(&[], Some(1000));
+    let rows = (0..20)
+        .map(|i| navigation::Location {
+            title: format!("Disk {i}"),
+            path: PathBuf::from(format!("{}:\\", (b'C' + i as u8) as char)),
+            volume: true,
+            entry: None,
+            capacity: None,
+        })
+        .collect::<Vec<_>>();
+    let path = rows[0].path.clone();
+    h.view.update(&mut h.cx, |this, cx| {
+        this.navigation.common.clear();
+        this.accept_navigation(
+            navigation::Notice::VolumeSnapshot {
+                epoch: 0,
+                result: Ok(rows),
+            },
+            cx,
+        );
+    });
+    h.frame();
+    let before =
+        h.cx.update_window(h.window.into(), |_, window, cx| {
+            h.view
+                .read(cx)
+                .scroll_geometry(app_scroll::Kind::Sidebar, window)
+                .unwrap()
+        })
+        .unwrap();
+    let capacity = crate::volume_capacity::Capacity {
+        total: 1000,
+        free: 250,
+        available: 200,
+    };
+    h.view.update(&mut h.cx, |this, cx| {
+        this.accept_navigation(
+            navigation::Notice::Capacity {
+                epoch: 1,
+                path: path.clone(),
+                title: None,
+                value: Some(capacity),
+            },
+            cx,
+        );
+        assert!(this.navigation.volumes[0].capacity.is_none());
+        this.accept_navigation(
+            navigation::Notice::Capacity {
+                epoch: 0,
+                path: path.clone(),
+                title: None,
+                value: Some(capacity),
+            },
+            cx,
+        );
+    });
+    h.frame();
+    let after =
+        h.cx.update_window(h.window.into(), |_, window, cx| {
+            h.view
+                .read(cx)
+                .scroll_geometry(app_scroll::Kind::Sidebar, window)
+                .unwrap()
+        })
+        .unwrap();
+    assert_eq!(before.viewport, after.viewport);
+    assert_eq!(before.maximum, after.maximum);
+    h.view.update(&mut h.cx, |this, cx| {
+        assert_eq!(this.navigation.volumes[0].capacity, Some(capacity));
+        this.accept_navigation(
+            navigation::Notice::VolumeSnapshot {
+                epoch: 0,
+                result: Ok(vec![]),
+            },
+            cx,
+        );
+        this.accept_navigation(
+            navigation::Notice::Capacity {
+                epoch: 0,
+                path,
+                title: None,
+                value: Some(capacity),
+            },
+            cx,
+        );
+        assert!(this.navigation.volumes.is_empty());
+    });
+}
+
+#[test]
 fn directory_refresh_preserves_scroll_handle_and_visible_anchor() {
     let names: Vec<_> = (0..600).map(|i| format!("file-{i:04}.txt")).collect();
     let refs: Vec<_> = names.iter().map(String::as_str).collect();

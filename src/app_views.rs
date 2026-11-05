@@ -130,6 +130,7 @@ impl Backleaf {
                                 title: e.title.clone(),
                                 path,
                                 volume: false,
+                                capacity: None,
                                 entry: Some(e),
                             }
                         })

@@ -1,0 +1,43 @@
+{
+  "version": "v41-storage-selection",
+  "retainedPages": 241,
+  "pages": [
+    {
+      "key": "242-capacity-ready",
+      "name": "242 · v41 capacity-ready",
+      "nodes": 121,
+      "state": "ready"
+    },
+    {
+      "key": "243-capacity-pending",
+      "name": "243 · v41 capacity-pending",
+      "nodes": 118,
+      "state": "pending"
+    },
+    {
+      "key": "244-medium-removed",
+      "name": "244 · v41 medium-removed",
+      "nodes": 112,
+      "state": "removed"
+    },
+    {
+      "key": "245-selection-mixed",
+      "name": "245 · v41 selection-mixed",
+      "nodes": 123,
+      "state": "mixed"
+    },
+    {
+      "key": "246-selection-folders",
+      "name": "246 · v41 selection-folders",
+      "nodes": 122,
+      "state": "folders"
+    },
+    {
+      "key": "247-capacity-dark",
+      "name": "247 · v41 capacity-dark",
+      "nodes": 121,
+      "state": "dark"
+    }
+  ],
+  "source": "scripts/design/storage-v41.mjs"
+}

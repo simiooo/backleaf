@@ -1,21 +1,15 @@
-拾径 / Backleaf 0.1.0-preview.17
+拾径 / Backleaf 0.1.0-preview.18
 
-Windows x64 便携测试版：解压整个ZIP，运行Backleaf.exe。也可在PowerShell执行：
+Windows x64 便携测试版：解压整个ZIP，运行Backleaf.exe。或在PowerShell执行：
 irm https://raw.githubusercontent.com/simiooo/backleaf/staging/install.ps1 | iex
 
 本批次：
-- 文件变化后台准备，完整后原位提交；保留画面、滚动与可验证的选择，错误保留旧列表。
-- 搜索自动刷新等新结果页就绪后再替换。
-- 父菜单尺寸固定，应用操作由固定入口展开；每级子菜单独立owned窗口，就绪后出现。
-- 子菜单打开/关闭及第三方异步返回不再调整父窗口尺寸。
-- 25项GPUI无头交互与84项逻辑/文件/原生协议/隐藏Win32测试，分别门禁。
-- ZIP携带经过微软签名与摘要核验的相邻VC++运行库，不用额外安装或修改全局PATH。
-- OpenPencil v40/241页，保留全部历史基线。
+- 文件变化后台准备后原位提交，保留滚动与身份可验证的选择；失败保留旧列表。
+- 分区总量/剩余/使用率、卷接口PnP通知和独立后台容量探测。
+- 选择浮层增加文件大小；文件夹不递归，未知数据不填0。
+- 重复单字母循环定位，输入框及多字母前缀保持正常。
+- 28项GPUI无头与90项逻辑/文件/原生检查，OpenPencil v41/247页。
 
-保留路径编辑和分区导航、统一快捷访问、搜索及持久化增量元数据索引、文件操作与进度、ZIP创建及ZIP/7z/RAR提取、目录变更检测、恢复和独立窗口、OLE拖放及自绘扩展菜单、虚拟网格/长文本/流光与框选加速。
+保留路径/分区导航、统一快捷访问和FileView、持久化增量索引、文件操作进度、ZIP创建和ZIP/7z/RAR提取、恢复、多窗口、独立自绘Shell菜单、OLE拖放、虚拟网格/长文本/流光与框选加速。跨查询结果缓存未实现。
 
-容量/选区大小、移动介质事件更新与重复字母循环仍在后续事项；跨查询结果缓存尚未实现。
-
-用户数据：%LOCALAPPDATA%\Backleaf\operations。升级保留数据，升级前关闭应用。原生IME、UIA/NVDA、混合DPI/拔屏、Explorer完整跨应用鼠标手势及长期压力仍有未验证边界；无头字体为合成度量，不把旧EXE截图/性能冒充本版。最终可见窗口回归按具体版本记录。
-
-保留整个目录、lib与licenses。包内有EXE、Logo、241页可编辑设计、build.json、headless.json、VC++运行库声明、7-Zip DLL及对应完整源包。详情见仓库docs/native-test-release.md和docs/grid-refresh-v40.md。
+保留整个目录、lib与licenses。微软签名相邻运行库和7-Zip引擎均附来源/许可证。用户数据%LOCALAPPDATA%\Backleaf\operations，升级保留，升级前关闭应用。真实USB插拔、故障驱动、IME、NVDA、混合DPI/拔屏、Explorer完整手势及长期压力仍需各自实机证据；无头字体使用合成度量。详见docs/native-test-release.md和docs/storage-v41.md。

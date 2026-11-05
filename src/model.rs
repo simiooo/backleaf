@@ -33,6 +33,11 @@ pub struct Detail {
     pub identity: Option<[u8; 33]>,
 }
 pub enum Event {
+    SelectionBytes {
+        generation: u64,
+        token: u64,
+        result: Result<crate::selection_bytes::Totals, String>,
+    },
     Refreshed {
         generation: u64,
         result: Result<refresh::Ready, String>,
@@ -113,7 +118,7 @@ pub(crate) struct Pending {
     detail: Option<(u64, usize)>,
     locate: Option<(u64, std::ffi::OsString)>,
     cut: Option<PathBuf>,
-    prefix: Option<(u64, String)>,
+    prefix: Option<(u64, String, usize)>,
     prefix_latest: u64,
 }
 pub enum Source {
@@ -195,6 +200,8 @@ impl Source {
                 let mut count = 0;
                 let mut done = false;
                 let mut last_notice = std::time::Instant::now();
+                let mut prefix_cursor: Option<(String,usize,Option<i64>)>=None;
+                let mut prefix_hits:Option<String>=None;
                 loop {
                     if s.load(Ordering::Relaxed) || tx.is_closed() { break; }
                     if !done {
@@ -224,19 +231,21 @@ impl Source {
                     }
                     let (page, detail, locate, cut) = { let mut lock = p.lock().unwrap(); (lock.page.take(), lock.detail.take(),lock.locate.take(),lock.cut.clone()) };
                     let prefix = p.lock().unwrap().prefix.take();
-                    if let Some((token, text)) = prefix {
+                    if let Some((token, text, cycle)) = prefix {
+                        if cycle>0 && !done {p.lock().unwrap().prefix=Some((token,text,cycle));} else {
                         // Indexed full names, not the visible/truncated labels. The worker owns this
                         // connection and enumeration; a first match cannot be displaced by later IDs.
                         let shared=p.clone();let stopped=s.clone();
                         db.progress_handler(2048,Some(move || stopped.load(Ordering::Relaxed) || shared.lock().unwrap().prefix_latest != token))?;
-                        let result = prefix_match(&db, &text);
+                        let result = prefix_cycle(&db, &text, cycle, &prefix_cursor, &mut prefix_hits);
                         db.progress_handler(0,None::<fn()->bool>)?;
                         if let Ok(id)=result {
                             let mut lock=p.lock().unwrap();
                             if lock.prefix_latest==token {
-                                if id.is_some() || done { drop(lock);let _=tx.send_blocking(Event::PrefixLocated{generation,token,id:id.map(|v|v as usize)}); }
-                                else { lock.prefix=Some((token,text)); }
+                                if id.is_some() || done { prefix_cursor=Some((text,cycle,id));drop(lock);let _=tx.send_blocking(Event::PrefixLocated{generation,token,id:id.map(|v|v as usize)}); }
+                                else { lock.prefix=Some((token,text,cycle)); }
                             }
+                        }
                         }
                     }
                     if let Some((token,name))=locate{
@@ -350,14 +359,14 @@ impl Source {
             Self::Directory { done, .. } => *done,
         }
     }
-    pub fn prefix(&self, token: u64, text: Option<String>) {
+    pub fn prefix(&self, token: u64, text: Option<String>, cycle: usize) {
         if let Self::Directory {
             pending, worker, ..
         } = self
         {
             let mut p = pending.lock().unwrap();
             p.prefix_latest = token;
-            p.prefix = text.map(|text| (token, text));
+            p.prefix = text.map(|text| (token, text, cycle));
             drop(p);
             worker.unpark();
         }
@@ -494,6 +503,51 @@ fn prefix_match(db: &Connection, text: &str) -> rusqlite::Result<Option<i64>> {
             |r| r.get(0),
         ),
     }
+}
+fn prefix_cycle(
+    db: &Connection,
+    text: &str,
+    cycle: usize,
+    cursor: &Option<(String, usize, Option<i64>)>,
+    hits: &mut Option<String>,
+) -> rusqlite::Result<Option<i64>> {
+    if cycle == 0 {
+        return prefix_match(db, text);
+    }
+    if hits.as_deref() != Some(text) {
+        *hits = None;
+        db.execute_batch("CREATE TEMP TABLE IF NOT EXISTS prefix_hits(id INTEGER PRIMARY KEY); DELETE FROM prefix_hits;")?;
+        if let Some(upper) = crate::typeahead::successor(text) {
+            db.execute("INSERT INTO prefix_hits SELECT id FROM files INDEXED BY files_prefix WHERE folded>=?1 AND folded<?2",params![text,upper])?;
+        } else {
+            db.execute("INSERT INTO prefix_hits SELECT id FROM files INDEXED BY files_prefix WHERE folded>=?1",[text])?;
+        }
+        *hits = Some(text.to_owned());
+    }
+    let (mut completed, mut id) = match cursor
+        .as_ref()
+        .filter(|(prefix, n, _)| prefix == text && *n <= cycle)
+    {
+        Some((_, n, id)) => (*n, *id),
+        None => (0, prefix_match(db, text)?),
+    };
+    while completed < cycle {
+        id = match id {
+            Some(id) => db
+                .query_row(
+                    "SELECT id FROM prefix_hits WHERE id>?1 ORDER BY id LIMIT 1",
+                    [id],
+                    |r| r.get(0),
+                )
+                .optional()?,
+            None => None,
+        };
+        if id.is_none() {
+            id = db.query_row("SELECT min(id) FROM prefix_hits", [], |r| r.get(0))?;
+        }
+        completed += 1;
+    }
+    Ok(id)
 }
 
 #[cfg(test)]

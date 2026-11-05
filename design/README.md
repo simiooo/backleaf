@@ -54,3 +54,7 @@
 ## v40 · 原位刷新
 
 当前主稿Backleaf-v40.fig，241页，保留此前237页。新增238–241页表达刷新前、后台准备、原位提交与失败保留；前三页布局相同，错误仅增加短浮层。源脚本scripts/design/grid-refresh-v40.mjs，冷重开与像素对照见v40/cold-reopen.json。
+
+## v41 · 存储与选择
+
+当前主稿Backleaf-v41.fig，247页，保留241页，新增容量就绪、未知、介质移除、混合选区、文件夹选区与深色六态。分区行60px、普通行32px、行间4px、选区浮层28px；冷重开和图像对照见v41/cold-reopen.json，源scripts/design/storage-v41.mjs。

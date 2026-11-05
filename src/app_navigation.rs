@@ -230,6 +230,7 @@ impl Backleaf {
                                 r"V:\Backleaf-fixture\Quick-{i:03}"
                             )),
                             volume: false,
+                            capacity: None,
                             entry: None,
                         })
                         .collect()
@@ -237,12 +238,44 @@ impl Backleaf {
                     locations
                 };
             }
-            Notice::Volumes(Ok(rows)) => {
-                self.navigation.volumes = rows;
+            Notice::VolumeSnapshot { epoch, result }
+                if epoch
+                    == self
+                        .navigation
+                        .volume_worker
+                        .as_ref()
+                        .map_or(0, |w| w.epoch()) =>
+            {
+                match result {
+                    Ok(rows) => self.navigation.volumes = rows,
+                    Err(error) => self.navigation_error(error, cx),
+                }
             }
-            Notice::Volumes(Err(error)) | Notice::Clipboard(Err(error)) => {
-                self.navigation_error(error, cx)
+            Notice::Capacity {
+                epoch,
+                path,
+                title,
+                value,
+            } if epoch
+                == self
+                    .navigation
+                    .volume_worker
+                    .as_ref()
+                    .map_or(0, |w| w.epoch()) =>
+            {
+                if let Some(row) = self
+                    .navigation
+                    .volumes
+                    .iter_mut()
+                    .find(|row| row.path == path)
+                {
+                    row.capacity = value;
+                    if let Some(title) = title {
+                        row.title = title;
+                    }
+                }
             }
+            Notice::Clipboard(Err(error)) => self.navigation_error(error, cx),
             Notice::Clipboard(Ok(())) => (),
             Notice::Tree {
                 token,
@@ -394,6 +427,9 @@ impl Backleaf {
                                         && self.search.open
                                 }) || (view.is_none() && path == self.path);
                                 let label = location.title.clone();
+                                let capacity_label = location
+                                    .capacity
+                                    .map_or("容量暂不可用".into(), |v| v.description());
                                 div()
                                     .id(SharedString::from(
                                         location
@@ -408,10 +444,17 @@ impl Backleaf {
                                             }),
                                     ))
                                     .w_full()
-                                    .h(px(layout::SCROLL.sidebar_row_height))
-                                    .when(i + 1 < self.navigation.common.len(), |d| {
-                                        d.mb(px(layout::SCROLL.sidebar_row_gap))
-                                    })
+                                    .h(px(if volume {
+                                        layout::SCROLL.volume_row_height
+                                    } else {
+                                        layout::SCROLL.sidebar_row_height
+                                    }))
+                                    .when(
+                                        i + 1
+                                            < self.navigation.common.len()
+                                                + self.navigation.volumes.len(),
+                                        |d| d.mb(px(layout::SCROLL.sidebar_row_gap)),
+                                    )
                                     .flex_none()
                                     .px(px(8.))
                                     .rounded(px(8.))
@@ -422,9 +465,17 @@ impl Backleaf {
                                     .gap(px(8.))
                                     .role(Role::Button)
                                     .aria_label(format!(
-                                        "{label}，{}",
-                                        navigation::display_path(&path)
+                                        "{label}，{}{}",
+                                        navigation::display_path(&path),
+                                        if volume {
+                                            format!("，{capacity_label}")
+                                        } else {
+                                            String::new()
+                                        }
                                     ))
+                                    .when(volume, |d| {
+                                        d.tooltip(tooltip(capacity_label.clone(), colors))
+                                    })
                                     .aria_selected(selected)
                                     .focusable()
                                     .tab_stop(true)
@@ -557,7 +608,62 @@ impl Backleaf {
                                             .into_any_element()
                                         },
                                     )
-                                    .child(div().flex_1().min_w_0().truncate().child(label))
+                                    .child(if volume {
+                                        div()
+                                            .flex_1()
+                                            .min_w_0()
+                                            .flex()
+                                            .flex_col()
+                                            .gap(px(2.))
+                                            .child(
+                                                div()
+                                                    .h(px(20.))
+                                                    .line_height(px(20.))
+                                                    .truncate()
+                                                    .child(label),
+                                            )
+                                            .child(
+                                                div()
+                                                    .h(px(16.))
+                                                    .line_height(px(16.))
+                                                    .text_size(px(11.))
+                                                    .text_color(colors.color(ColorRole::Secondary))
+                                                    .truncate()
+                                                    .child(
+                                                        location
+                                                            .capacity
+                                                            .map_or("— / —".into(), |v| {
+                                                                v.label()
+                                                            }),
+                                                    ),
+                                            )
+                                            .child(
+                                                div()
+                                                    .w_full()
+                                                    .h(px(2.))
+                                                    .rounded(px(1.))
+                                                    .overflow_hidden()
+                                                    .bg(colors.color(ColorRole::Border))
+                                                    .when_some(location.capacity, |d, v| {
+                                                        d.child(
+                                                            div()
+                                                                .h_full()
+                                                                .w(relative(v.fraction()))
+                                                                .bg(colors
+                                                                    .color(ColorRole::Secondary))
+                                                                .opacity(0.5),
+                                                        )
+                                                    }),
+                                            )
+                                            .into_any_element()
+                                    } else {
+                                        div()
+                                            .flex_1()
+                                            .min_w_0()
+                                            .truncate()
+                                            .child(label)
+                                            .into_any_element()
+                                    })
                             }),
                     ),
             )
