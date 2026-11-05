@@ -23,7 +23,7 @@ New-Item -ItemType Directory -Path (Join-Path $bundle 'lib') | Out-Null
 Copy-Item -LiteralPath (Join-Path $projectRoot 'assets/archive-engine/7z.dll') -Destination (Join-Path $bundle 'lib/7z.dll')
 Copy-Item -LiteralPath (Join-Path $projectRoot 'docs/native-preview-readme.txt') -Destination (Join-Path $bundle 'README.txt')
 Copy-Item -LiteralPath (Join-Path $projectRoot 'LICENSE') -Destination (Join-Path $bundle 'LICENSE')
-Copy-Item -LiteralPath (Join-Path $projectRoot 'design/Backleaf-v39.fig') -Destination (Join-Path $bundle 'Backleaf-v39.fig')
+Copy-Item -LiteralPath (Join-Path $projectRoot 'design/Backleaf-v40.fig') -Destination (Join-Path $bundle 'Backleaf-v40.fig')
 Copy-Item -LiteralPath (Join-Path $projectRoot 'assets/brand/backleaf-logo.png') -Destination (Join-Path $bundle 'Logo.png')
 Copy-Item -LiteralPath (Join-Path $projectRoot '.local/native-build-manifest.json') -Destination (Join-Path $bundle 'build.json')
 Copy-Item -LiteralPath (Join-Path $projectRoot '.local/batch-headless.json') -Destination (Join-Path $bundle 'headless.json')

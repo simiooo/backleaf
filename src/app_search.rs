@@ -6,6 +6,9 @@ use crate::{
 use std::collections::BTreeMap;
 
 pub struct SearchUi {
+    pub(super) refresh: Option<Notice>,
+    pub(super) refreshing: bool,
+    pub(super) refresh_again: bool,
     pub(super) worker: Worker,
     pub definition: crate::file_view::FileView,
     pub saved: Option<crate::quick_access::Entry>,
@@ -34,6 +37,9 @@ pub struct SearchUi {
 impl SearchUi {
     pub fn new(worker: Worker) -> Self {
         Self {
+            refresh: None,
+            refreshing: false,
+            refresh_again: false,
             worker,
             definition: crate::file_view::FileView::new(std::path::Path::new(".")),
             saved: None,
@@ -74,17 +80,25 @@ impl Backleaf {
         if !self.search.open || self.search.query.trim().is_empty() {
             return;
         }
+        if !self.search.started {
+            return;
+        }
+        if self.search.refreshing || !self.search.done {
+            self.search.refresh_again = true;
+            return;
+        }
         self.search.token += 1;
-        self.search.rows.clear();
-        self.search.requested = 0..0;
-        self.search.count = 0;
-        self.search.done = false;
+        self.search.refreshing = true;
+        self.search.refresh = None;
         self.search.error = None;
         self.search
             .worker
             .search_view(self.search.token, self.search.definition.clone());
     }
     pub fn close_search(&mut self) {
+        self.search.refreshing = false;
+        self.search.refresh = None;
+        self.search.refresh_again = false;
         self.search.open = false;
         self.search.motion.retarget(
             false,
@@ -150,6 +164,9 @@ impl Backleaf {
                     }
                     InputEvent::Error(error) => this.search.error = Some(error.clone()),
                     InputEvent::Changed => {
+                        this.search.refreshing = false;
+                        this.search.refresh = None;
+                        this.search.refresh_again = false;
                         this.search.token += 1;
                         this.search.worker.cancel(this.search.token);
                         this.search.rows.clear();
@@ -190,6 +207,9 @@ impl Backleaf {
         cx.notify();
     }
     pub fn start_search(&mut self, value: String, cx: &mut Context<Self>) {
+        self.search.refreshing = false;
+        self.search.refresh = None;
+        self.search.refresh_again = false;
         let query = value.trim().to_owned();
         self.search.token += 1;
         self.search.worker.cancel(self.search.token);
@@ -213,6 +233,84 @@ impl Backleaf {
     }
     pub fn accept_search(&mut self, notice: Notice, cx: &mut Context<Self>) {
         if !self.search.open {
+            return;
+        }
+        if self.search.refreshing {
+            match notice {
+                Notice::Progress {
+                    token,
+                    count,
+                    scanned,
+                    unavailable,
+                    skipped,
+                    done,
+                    error,
+                } if token == self.search.token => {
+                    if let Some(error) = error {
+                        self.search.refreshing = false;
+                        self.search.refresh = None;
+                        self.navigation_error(error, cx);
+                    } else if done {
+                        self.search.refresh = Some(Notice::Progress {
+                            token,
+                            count,
+                            scanned,
+                            unavailable,
+                            skipped,
+                            done,
+                            error: None,
+                        });
+                        let start = self.search.requested.start.min(count.saturating_sub(1));
+                        self.search.serial += 1;
+                        self.search.worker.page(
+                            token,
+                            self.search.serial,
+                            start..(start + 32).min(count),
+                        );
+                    }
+                }
+                Notice::Page {
+                    token,
+                    serial,
+                    rows,
+                } if token == self.search.token
+                    && serial == self.search.serial
+                    && self.search.refresh.is_some() =>
+                {
+                    let selected = self
+                        .search
+                        .selected
+                        .and_then(|id| self.search.rows.get(&id))
+                        .map(|r| r.path.clone());
+                    let Some(Notice::Progress {
+                        count,
+                        scanned,
+                        unavailable,
+                        skipped,
+                        ..
+                    }) = self.search.refresh.take()
+                    else {
+                        unreachable!()
+                    };
+                    self.search.selected = selected
+                        .and_then(|path| rows.iter().find(|r| r.path == path).map(|r| r.id));
+                    self.search.rows = rows.into_iter().map(|r| (r.id, r)).collect();
+                    self.search.count = count;
+                    self.search.scanned = scanned;
+                    self.search.unavailable = unavailable;
+                    self.search.skipped = skipped;
+                    self.search.done = true;
+                    self.search.refreshing = false;
+                    self.search.error = None;
+                    self.search.requested = 0..0;
+                    if self.search.refresh_again {
+                        self.search.refresh_again = false;
+                        self.refresh_search();
+                    }
+                }
+                _ => return,
+            }
+            cx.notify();
             return;
         }
         match notice {
@@ -249,6 +347,13 @@ impl Backleaf {
                 self.search.rows = rows.into_iter().map(|row| (row.id, row)).collect();
             }
             _ => return,
+        }
+        if self.search.done
+            && (!self.search.rows.is_empty() || self.search.count == 0)
+            && self.search.refresh_again
+        {
+            self.search.refresh_again = false;
+            self.refresh_search();
         }
         cx.notify();
     }

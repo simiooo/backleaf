@@ -1,0 +1,29 @@
+{
+  "masterSha256": "252d68f6d8b7badc7efbddce14d33d01597c570fdcd967992e5a5317e1cf5b75",
+  "retainedPages": 237,
+  "pages": 241,
+  "result": "passed",
+  "results": [
+    {
+      "key": "238-refresh-before",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "239-refresh-background",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "240-refresh-committed",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "241-refresh-error",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    }
+  ],
+  "verifiedAt": "2026-11-05T09:28:27.287Z"
+}

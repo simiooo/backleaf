@@ -50,3 +50,7 @@
 尺寸与交互见 [设计契约](../docs/design-contract.md)。[布局审计](spacing-audit.json)、[保存结构检查](recovery-verification.json)、[独立重开视觉检查](cold-reopen-verification.json) 与 [精确文字检查](text-reopen-verification.json) 记录持久性和布局证据。文字逐项精确一致；视觉检查保留实际像素差及既定容差，不将细微栅格差异描述为内容丢失。
 
 源文件为 [layout.mjs](../scripts/design/layout.mjs)，大规模状态源为 [bulk.mjs](../scripts/design/bulk.mjs)，逐页 JSX 与变量位于 [source](source/)。重建说明见 [scripts/design](../scripts/design/README.md)。v9 对应的 preview.2 已完成原生实现、实机验证与 staging 安装冒烟，发布状态与记录见原生选择验证文档；视觉审美仍待产品验收。
+
+## v40 · 原位刷新
+
+当前主稿Backleaf-v40.fig，241页，保留此前237页。新增238–241页表达刷新前、后台准备、原位提交与失败保留；前三页布局相同，错误仅增加短浮层。源脚本scripts/design/grid-refresh-v40.mjs，冷重开与像素对照见v40/cold-reopen.json。

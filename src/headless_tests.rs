@@ -11,6 +11,18 @@ struct Harness {
     fixture: test_support::Fixture,
 }
 impl Harness {
+    fn invalidate_directory(&mut self) {
+        let view = self.view.clone();
+        self.cx
+            .update_window(self.window.into(), |_, window, cx| {
+                view.update(cx, |this, cx| {
+                    this.watch.retry = None;
+                    this.watch.dirty = true;
+                    this.sync_watcher(window, cx);
+                })
+            })
+            .unwrap();
+    }
     fn new(names: &[&str], generated: Option<usize>) -> Self {
         let fixture = test_support::Fixture::new("gpui-headless");
         let directory = fixture.0.join("files");
@@ -277,6 +289,207 @@ impl Harness {
         let input = self.editor();
         assert!(self.focused(&input));
     }
+}
+
+#[test]
+fn directory_refresh_never_clears_the_grid_and_remaps_selection_by_identity() {
+    let mut h = Harness::new(&["keep.txt", "rename.txt", "replace.txt"], None);
+    let (directory, generation, handle) =
+        h.read(|this, _| (this.path.clone(), this.generation, this.scroll.0.clone()));
+    h.view.update(&mut h.cx, |this, cx| {
+        this.selection.all(3);
+        cx.notify();
+    });
+    std::fs::rename(directory.join("rename.txt"), directory.join("renamed.txt")).unwrap();
+    std::fs::rename(
+        directory.join("replace.txt"),
+        h.fixture.0.join("old-replace.txt"),
+    )
+    .unwrap();
+    std::fs::write(directory.join("replace.txt"), "different file identity").unwrap();
+    std::fs::write(directory.join("new.txt"), "new").unwrap();
+    h.invalidate_directory();
+    h.read(|this, _| {
+        assert_eq!(this.source.count(), 3);
+        assert_eq!(this.cache.len(), 3);
+        assert_eq!(this.selection.count(), 3);
+    });
+    let deadline = Instant::now() + Duration::from_secs(10);
+    while h.read(|this, _| this.generation == generation) {
+        h.frame();
+        h.read(|this, _| {
+            assert!(!this.cache.is_empty());
+            assert!(Rc::ptr_eq(&this.scroll.0, &handle));
+        });
+        assert!(Instant::now() < deadline);
+        h.cx.advance_clock(Duration::from_millis(20));
+        std::thread::sleep(Duration::from_millis(3));
+    }
+    h.read(|this, _| {
+        assert_eq!(this.source.count(), 4);
+        assert_eq!(this.selection.count(), 2);
+        let mut names: Vec<_> = this
+            .cache
+            .values()
+            .filter(|i| this.selection.contains(i.id))
+            .map(|i| i.name.as_str())
+            .collect();
+        names.sort();
+        assert_eq!(names, vec!["keep.txt", "renamed.txt"]);
+    });
+    // A subsequent native notification must still be received after display generation changes.
+    std::fs::write(directory.join("second.txt"), "second").unwrap();
+    h.wait("second native watcher refresh", |this, _| {
+        this.source.count() == 5 && this.watch.pending.is_none()
+    });
+}
+
+#[test]
+fn automatic_search_refresh_keeps_rows_until_the_new_page_is_ready() {
+    let mut h = Harness::new(&["needle-old.txt"], None);
+    h.key("ctrl-f");
+    h.text("needle");
+    h.key("enter");
+    h.wait("first search page", |this, _| {
+        this.search.done && this.search.rows.len() == 1
+    });
+    let (path, handle) = h.read(|this, _| (this.path.clone(), this.search.scroll.0.clone()));
+    std::fs::write(path.join("needle-new.txt"), "new").unwrap();
+    h.view.update(&mut h.cx, |this, _| {
+        this.refresh_search();
+        assert_eq!(this.search.count, 1);
+        assert_eq!(this.search.rows.len(), 1);
+    });
+    let deadline = Instant::now() + Duration::from_secs(10);
+    while h.read(|this, _| this.search.count != 2 || this.search.refreshing) {
+        h.frame();
+        h.read(|this, _| {
+            assert!(!this.search.rows.is_empty());
+            assert!(Rc::ptr_eq(&handle, &this.search.scroll.0));
+        });
+        assert!(Instant::now() < deadline, "search refresh timed out");
+        h.cx.advance_clock(Duration::from_millis(20));
+        std::thread::sleep(Duration::from_millis(3));
+    }
+}
+
+#[test]
+fn new_folder_completion_refreshes_in_place_and_enters_rename() {
+    let mut h = Harness::new(&["original.txt"], None);
+    let handle = h.read(|this, _| this.scroll.0.clone());
+    h.key("ctrl-shift-n");
+    h.wait("new folder rename after atomic refresh", |this, _| {
+        this.source.count() == 2 && this.files.editor.is_some()
+    });
+    h.read(|this, _| {
+        assert!(Rc::ptr_eq(&handle, &this.scroll.0));
+        assert!(matches!(
+            this.files.editor.as_ref().unwrap().kind,
+            crate::app_operations::EditKind::Rename(_)
+        ));
+    });
+}
+
+#[test]
+fn directory_refresh_preserves_scroll_handle_and_visible_anchor() {
+    let names: Vec<_> = (0..600).map(|i| format!("file-{i:04}.txt")).collect();
+    let refs: Vec<_> = names.iter().map(String::as_str).collect();
+    let mut h = Harness::new(&refs, None);
+    let view = h.view.clone();
+    h.cx.update_window(h.window.into(), |_, window, cx| {
+        view.update(cx, |this, cx| {
+            this.set_scroll_offset(app_scroll::Kind::Files, 1800., window, cx)
+        })
+    })
+    .unwrap();
+    h.wait("scrolled viewport", |this, _| {
+        this.requested.start > 0
+            && this
+                .cache
+                .contains_key(&((1800. / layout::row_step()).floor() as usize * this.columns))
+    });
+    let (handle, top_name, generation, path, offset) = h.read(|this, _| {
+        let offset = this.origin_row as f64 * f64::from(layout::row_step())
+            - f64::from(f32::from(this.scroll.0.borrow().base_handle.offset().y));
+        let id = (offset / f64::from(layout::row_step())).floor() as usize * this.columns;
+        (
+            this.scroll.0.clone(),
+            this.cache[&id].name.clone(),
+            this.generation,
+            this.path.clone(),
+            offset,
+        )
+    });
+    std::fs::write(path.join("new.txt"), "new").unwrap();
+    h.invalidate_directory();
+    h.wait("atomic viewport commit", |this, _| {
+        this.generation != generation
+    });
+    h.read(|this, _| {
+        assert!(Rc::ptr_eq(&handle, &this.scroll.0));
+        let item = this
+            .cache
+            .values()
+            .find(|i| i.name == top_name)
+            .expect("visible anchor remains cached");
+        let now = this.origin_row as f64 * f64::from(layout::row_step())
+            - f64::from(f32::from(this.scroll.0.borrow().base_handle.offset().y));
+        assert_eq!(
+            (now / f64::from(layout::row_step())).floor() as usize,
+            item.id / this.columns
+        );
+        assert!(
+            (now % f64::from(layout::row_step()) - offset % f64::from(layout::row_step())).abs()
+                < 0.5
+        );
+    });
+}
+
+#[test]
+fn refresh_failure_keeps_old_rows_and_late_results_cannot_replace_navigation() {
+    let mut h = Harness::new(&["original.txt"], None);
+    let (path, generation) = h.read(|this, _| (this.path.clone(), this.generation));
+    let away = h.fixture.0.join("away");
+    std::fs::rename(&path, &away).unwrap();
+    h.invalidate_directory();
+    h.wait("failed refresh retains old snapshot", |this, _| {
+        this.watch.pending.is_none()
+    });
+    h.read(|this, _| {
+        assert_eq!(this.generation, generation);
+        assert_eq!(this.source.count(), 1);
+        assert_eq!(this.cache.values().next().unwrap().name, "original.txt");
+    });
+    std::fs::rename(&away, &path).unwrap();
+    h.invalidate_directory();
+    let pending = h.read(|this, _| this.watch.pending.as_ref().unwrap().generation);
+    let target = h.fixture.0.join("target");
+    std::fs::create_dir(&target).unwrap();
+    std::fs::write(target.join("target.txt"), "target").unwrap();
+    h.view.update(&mut h.cx, |this, cx| {
+        this.navigate(target.clone(), true, cx)
+    });
+    h.view.update(&mut h.cx, |this, cx| {
+        this.receive(
+            Event::Count {
+                generation: pending,
+                count: 999,
+                done: true,
+                error: None,
+            },
+            cx,
+        )
+    });
+    h.wait("new directory wins", |this, _| {
+        this.path == target
+            && this.source.finished()
+            && this.cache.values().any(|i| i.name == "target.txt")
+    });
+    h.read(|this, _| {
+        assert!(this.generation > pending);
+        assert_eq!(this.source.count(), 1);
+        assert!(this.watch.pending.is_none());
+    });
 }
 
 fn extension_item(id: u32, submenu: bool) -> crate::shell_menu::Item {

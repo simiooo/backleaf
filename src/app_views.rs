@@ -473,10 +473,22 @@ impl Backleaf {
                         .min(range.start * columns + 32);
                 if this.search.requested != requested {
                     this.search.requested = requested.clone();
-                    this.search.serial += 1;
-                    this.search
-                        .worker
-                        .page(this.search.token, this.search.serial, requested);
+                    let range = if !this.search.refreshing {
+                        Some(requested)
+                    } else if let Some(crate::search::Notice::Progress { count, .. }) =
+                        &this.search.refresh
+                    {
+                        let start = requested.start.min(count.saturating_sub(1));
+                        Some(start..(start + 32).min(*count))
+                    } else {
+                        None
+                    };
+                    if let Some(range) = range {
+                        this.search.serial += 1;
+                        this.search
+                            .worker
+                            .page(this.search.token, this.search.serial, range);
+                    }
                 }
                 range
                     .map(|row_index| {

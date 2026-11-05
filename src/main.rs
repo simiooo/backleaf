@@ -94,6 +94,7 @@ struct Backleaf {
     path: PathBuf,
     history: Vec<PathBuf>,
     generation: u64,
+    next_generation: u64,
     tx: async_channel::Sender<Event>,
     cache: PageCache,
     labels: SharedGridTextCache,
@@ -324,6 +325,7 @@ impl Backleaf {
         });
         let drag = app_drag::DragUi::new(drag::Worker::new(tx.clone()));
         let watch = app_watch::WatchUi {
+            generation: 1,
             monitor: options
                 .fixture
                 .is_none()
@@ -530,6 +532,7 @@ impl Backleaf {
             path,
             history: vec![],
             generation: 1,
+            next_generation: 1,
             tx,
             cache: PageCache::new(),
             labels: Rc::new(RefCell::new(GridTextCache::default())),
@@ -594,6 +597,32 @@ impl Backleaf {
             return;
         }
         match event {
+            Event::Count {
+                generation,
+                count,
+                done,
+                error,
+            } if self
+                .watch
+                .pending
+                .as_ref()
+                .is_some_and(|p| p.generation == generation) =>
+            {
+                self.refresh_count(count, done, error, cx);
+            }
+            Event::Refreshed { generation, result }
+                if self
+                    .watch
+                    .pending
+                    .as_ref()
+                    .is_some_and(|p| p.generation == generation) =>
+            {
+                match result {
+                    Ok(ready) => self.watch.pending.as_mut().unwrap().ready = Some(ready),
+                    Err(error) => self.refresh_failed(error, cx),
+                }
+                cx.notify();
+            }
             Event::OleChanged => {
                 if let Some(site) = &self.ole {
                     site.changed();
@@ -669,18 +698,10 @@ impl Backleaf {
                 }
                 cx.notify();
             }
-            Event::DirectoryDirty { generation, epoch } if generation == self.generation => {
+            Event::DirectoryDirty { generation, epoch } if generation == self.watch.generation => {
                 if epoch != self.watch.applied {
                     self.mark_directory_dirty(cx);
                 }
-            }
-            Event::IdentityRestored { generation, id }
-                if generation == self.generation && !self.watch_stale() =>
-            {
-                if let Some(id) = id {
-                    self.selection.select(id, false, false);
-                }
-                cx.notify();
             }
             Event::PrefixLocated {
                 generation,
@@ -835,7 +856,8 @@ impl Backleaf {
         if push {
             self.history.push(self.path.clone());
         }
-        self.generation += 1;
+        self.next_generation += 1;
+        self.generation = self.next_generation;
         self.files.editor = None;
         self.close_path_tree();
         self.navigation.rows.clear();
@@ -860,6 +882,7 @@ impl Backleaf {
         self.scroll = UniformListScrollHandle::new();
         self.origin_row = 0;
         self.watch = app_watch::WatchUi {
+            generation: self.generation,
             monitor: Some(watcher::Monitor::new(
                 self.path.clone(),
                 self.generation,

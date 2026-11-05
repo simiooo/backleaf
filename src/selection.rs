@@ -15,6 +15,16 @@ pub struct SelectionMask {
     values: Arc<RoaringTreemap>,
 }
 impl SelectionMask {
+    pub fn same_snapshot(&self, other: &Self) -> bool {
+        self.inverse == other.inverse && Arc::ptr_eq(&self.values, &other.values)
+    }
+    pub fn from_bitmap(mut values: RoaringTreemap) -> Self {
+        values.optimize();
+        Self {
+            inverse: None,
+            values: Arc::new(values),
+        }
+    }
     pub fn contains(&self, id: usize) -> bool {
         match self.inverse {
             Some(end) => id < end && !self.values.contains(id as u64),

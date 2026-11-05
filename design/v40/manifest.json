@@ -1,0 +1,31 @@
+{
+  "version": "v40-stable-grid-refresh",
+  "retainedPages": 237,
+  "pages": [
+    {
+      "key": "238-refresh-before",
+      "name": "238 · v40 refresh-before",
+      "nodes": 116,
+      "state": "before"
+    },
+    {
+      "key": "239-refresh-background",
+      "name": "239 · v40 refresh-background",
+      "nodes": 116,
+      "state": "background"
+    },
+    {
+      "key": "240-refresh-committed",
+      "name": "240 · v40 refresh-committed",
+      "nodes": 116,
+      "state": "committed"
+    },
+    {
+      "key": "241-refresh-error",
+      "name": "241 · v40 refresh-error",
+      "nodes": 118,
+      "state": "error"
+    }
+  ],
+  "source": "scripts/design/grid-refresh-v40.mjs"
+}

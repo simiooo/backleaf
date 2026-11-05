@@ -11,6 +11,7 @@ use std::{
     thread,
 };
 use unicode_segmentation::UnicodeSegmentation;
+pub mod refresh;
 
 #[derive(Clone, Debug)]
 pub struct Item {
@@ -32,6 +33,10 @@ pub struct Detail {
     pub identity: Option<[u8; 33]>,
 }
 pub enum Event {
+    Refreshed {
+        generation: u64,
+        result: Result<refresh::Ready, String>,
+    },
     OleChanged,
     OleTask(u64),
     OlePin {
@@ -63,10 +68,6 @@ pub enum Event {
     DirectoryDirty {
         generation: u64,
         epoch: u64,
-    },
-    IdentityRestored {
-        generation: u64,
-        id: Option<usize>,
     },
     PrefixLocated {
         generation: u64,
@@ -107,13 +108,13 @@ pub enum Event {
 }
 #[derive(Default)]
 pub(crate) struct Pending {
+    refresh: Option<refresh::Request>,
     page: Option<(u64, Range<usize>)>,
     detail: Option<(u64, usize)>,
     locate: Option<(u64, std::ffi::OsString)>,
     cut: Option<PathBuf>,
     prefix: Option<(u64, String)>,
     prefix_latest: u64,
-    restore: Option<(std::ffi::OsString, [u8; 33])>,
 }
 pub enum Source {
     Fixture {
@@ -189,7 +190,7 @@ impl Source {
                 if let Ok(metadata)=crate::operations::windows::identity::capture(&canonical_parent){let _=lease.parent_identity.set(metadata.identity.encode());}
                 let _=lease.parent.set(canonical_parent);
                 let mut db = Connection::open(db_path)?;
-                db.execute_batch("PRAGMA journal_mode=MEMORY; PRAGMA synchronous=OFF; PRAGMA cache_size=-8192; CREATE TABLE files(id INTEGER PRIMARY KEY, short TEXT NOT NULL, raw BLOB NOT NULL, dir INTEGER NOT NULL, bytes INTEGER, folded TEXT NOT NULL, identity BLOB NOT NULL); CREATE INDEX files_prefix ON files(folded,id);")?;
+                db.execute_batch("PRAGMA journal_mode=MEMORY; PRAGMA synchronous=OFF; PRAGMA cache_size=-8192; CREATE TABLE files(id INTEGER PRIMARY KEY, short TEXT NOT NULL, raw BLOB NOT NULL, dir INTEGER NOT NULL, bytes INTEGER, folded TEXT NOT NULL, identity BLOB NOT NULL); CREATE INDEX files_prefix ON files(folded,id); CREATE INDEX files_identity ON files(identity,raw);")?;
                 let mut entries = crate::directory_snapshot::Reader::new(lease.parent.get().expect("snapshot parent"))?;
                 let mut count = 0;
                 let mut done = false;
@@ -222,14 +223,6 @@ impl Source {
                         }
                     }
                     let (page, detail, locate, cut) = { let mut lock = p.lock().unwrap(); (lock.page.take(), lock.detail.take(),lock.locate.take(),lock.cut.clone()) };
-                    let restore=p.lock().unwrap().restore.take();
-                    if let Some((name,expected))=restore {
-                        let id=db.query_row("SELECT id FROM files WHERE raw=?1",[encode_name(&name)],|r|r.get::<_,i64>(0)).optional()?;
-                        if id.is_some() || done {
-                            let same=crate::operations::windows::identity::capture(&path.join(&name)).ok().is_some_and(|m|m.identity.encode()==expected);
-                            let _=tx.send_blocking(Event::IdentityRestored{generation,id:id.filter(|_|same).map(|id|id as usize)});
-                        } else {p.lock().unwrap().restore=Some((name,expected));}
-                    }
                     let prefix = p.lock().unwrap().prefix.take();
                     if let Some((token, text)) = prefix {
                         // Indexed full names, not the visible/truncated labels. The worker owns this
@@ -273,7 +266,14 @@ impl Source {
                         })?.collect::<Result<Vec<_>, _>>()?;
                         if tx.send_blocking(Event::Page { generation, serial, items }).is_err() { break; }
                     }
-                    if done { thread::park(); }
+                    if done {
+                        let request=p.lock().unwrap().refresh.take();
+                        if let Some(request)=request {
+                            let result=refresh::prepare(&db,&lease,request,&s).map_err(|e|e.to_string());
+                            if !s.load(Ordering::Relaxed) && tx.send_blocking(Event::Refreshed{generation,result}).is_err(){break;}
+                        }
+                        thread::park();
+                    }
                 }
                 Ok(())
             })();
@@ -302,6 +302,15 @@ impl Source {
                 mask,
             }),
             _ => None,
+        }
+    }
+    pub fn refresh(&self, request: refresh::Request) {
+        if let Self::Directory {
+            pending, worker, ..
+        } = self
+        {
+            pending.lock().unwrap().refresh = Some(request);
+            worker.unpark();
         }
     }
     #[cfg(test)]
@@ -339,15 +348,6 @@ impl Source {
         match self {
             Self::Fixture { .. } => true,
             Self::Directory { done, .. } => *done,
-        }
-    }
-    pub fn restore_identity(&self, name: std::ffi::OsString, identity: [u8; 33]) {
-        if let Self::Directory {
-            pending, worker, ..
-        } = self
-        {
-            pending.lock().unwrap().restore = Some((name, identity));
-            worker.unpark();
         }
     }
     pub fn prefix(&self, token: u64, text: Option<String>) {

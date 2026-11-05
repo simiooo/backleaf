@@ -147,12 +147,9 @@ impl Backleaf {
         rename: bool,
         cx: &mut Context<Self>,
     ) {
-        let path = self.path.clone();
-        self.navigate(path, false, cx);
+        self.mark_directory_dirty(cx);
         if let Some(name) = name {
-            self.files.locate_token += 1;
-            self.files.locate_rename = rename;
-            self.source.locate(self.files.locate_token, name);
+            self.watch.locate = Some((name, rename));
         }
     }
     pub fn refresh_cut(&mut self, cx: &mut Context<Self>) {
