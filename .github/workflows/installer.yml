@@ -12,21 +12,23 @@ jobs:
   install:
     runs-on: windows-2025
     timeout-minutes: 15
-    strategy:
-      fail-fast: false
-      matrix:
-        shell: [powershell, pwsh]
     steps:
       - uses: actions/checkout@v4
-      - name: Offline install, integrity and rollback regressions
-        shell: ${{ matrix.shell }}
-        run: ./scripts/native/test-installer.ps1 -Output .local/installer-tests.json
-      - name: Anonymous published package install and executable smoke
-        shell: ${{ matrix.shell }}
-        run: ./scripts/native/test-installer-online.ps1 -Output .local/installer-online.json
+      - name: Offline regressions (Windows PowerShell 5.1)
+        shell: powershell
+        run: ./scripts/native/test-installer.ps1 -Output .local/installer-tests-5.json
+      - name: Anonymous installation (Windows PowerShell 5.1)
+        shell: powershell
+        run: ./scripts/native/test-installer-online.ps1 -Output .local/installer-online-5.json
+      - name: Offline regressions (PowerShell 7)
+        shell: pwsh
+        run: ./scripts/native/test-installer.ps1 -Output .local/installer-tests-7.json
+      - name: Anonymous installation (PowerShell 7)
+        shell: pwsh
+        run: ./scripts/native/test-installer-online.ps1 -Output .local/installer-online-7.json
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: installer-${{ matrix.shell }}
+          name: installer-evidence
           path: .local/installer-*.json
           retention-days: 30
