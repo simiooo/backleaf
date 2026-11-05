@@ -14,8 +14,8 @@ Copy-Item LICENSE "$bundle/LICENSE"
 Copy-Item assets/brand/backleaf-logo.png "$bundle/Logo.png"
 Copy-Item design/Backleaf-brand-v2.fig "$bundle/Backleaf-brand-v2.fig"
 Copy-Item assets/brand/generation.md "$bundle/Logo-provenance.md"
-Copy-Item design/Backleaf-v43.fig "$bundle/Backleaf-v43.fig"
-Copy-Item design/Backleaf-v43.fig .local/ci/Backleaf-v43.fig
+Copy-Item design/Backleaf-v44.fig "$bundle/Backleaf-v44.fig"
+Copy-Item design/Backleaf-v44.fig .local/ci/Backleaf-v44.fig
 Copy-Item .local/ci/headless.json "$bundle/headless.json"
 python scripts/native/collect-licenses.py "$bundle/licenses"
 if ($LASTEXITCODE) { throw 'License collection failed' }
@@ -25,7 +25,7 @@ $runtime = Add-BackleafRuntime -Work ([IO.Path]::GetFullPath('.local/ci/runtime-
 $runtimeVersion=[Version](($runtime.files | Where-Object name -eq 'vcruntime140.dll').version)
 if(!$env:VCToolsVersion -or $runtimeVersion -lt [Version]($env:VCToolsVersion.TrimEnd('\','/'))) {throw 'App-local runtime is older than the MSVC build toolset'}
 $exeHash = (Get-FileHash "$bundle/Backleaf.exe" -Algorithm SHA256).Hash.ToLowerInvariant()
-$metadata = [ordered]@{version=$version;source_commit=$commit;gpui_revision=(git -C vendor/zed rev-parse HEAD).Trim();built_at_utc=[DateTime]::UtcNow.ToString('o');exe_sha256=$exeHash;archive_library_sha256=(Get-FileHash "$bundle/lib/7z.dll").Hash.ToLowerInvariant();design_sha256=(Get-FileHash design/Backleaf-v43.fig).Hash.ToLowerInvariant();ci_run_url="https://github.com/$env:GITHUB_REPOSITORY/actions/runs/$env:GITHUB_RUN_ID";runtime=$runtime;scope='Native Windows preview with atomic directory/search refresh, stable menu windows and app-local runtime; see README for complete scope and limits';interactive_smoke='not run on hosted CI; local scope is recorded separately'}
+$metadata = [ordered]@{version=$version;source_commit=$commit;gpui_revision=(git -C vendor/zed rev-parse HEAD).Trim();built_at_utc=[DateTime]::UtcNow.ToString('o');exe_sha256=$exeHash;archive_library_sha256=(Get-FileHash "$bundle/lib/7z.dll").Hash.ToLowerInvariant();design_sha256=(Get-FileHash design/Backleaf-v44.fig).Hash.ToLowerInvariant();ci_run_url="https://github.com/$env:GITHUB_REPOSITORY/actions/runs/$env:GITHUB_RUN_ID";runtime=$runtime;scope='Native Windows preview with atomic directory/search refresh, stable menu windows and app-local runtime; see README for complete scope and limits';interactive_smoke='not run on hosted CI; local scope is recorded separately'}
 $metadata.headless_test_count=$headless.test_count
 $metadata.msvc_tools_version=$env:VCToolsVersion
 $metadata.headless_log_sha256=$headless.log_sha256
@@ -46,5 +46,5 @@ $metadata.cli_smoke_passed = $true
 $metadata | ConvertTo-Json -Depth 8 | Set-Content .local/ci/build.json -Encoding utf8
 $sum = (Get-FileHash $zip).Hash.ToLowerInvariant() + '  ' + (Split-Path $zip -Leaf)
 $sum | Set-Content .local/ci/SHA256SUMS.txt -Encoding ascii
-((Get-FileHash .local/ci/Backleaf-v43.fig).Hash.ToLowerInvariant()+'  Backleaf-v43.fig') | Add-Content .local/ci/SHA256SUMS.txt -Encoding ascii
+((Get-FileHash .local/ci/Backleaf-v44.fig).Hash.ToLowerInvariant()+'  Backleaf-v44.fig') | Add-Content .local/ci/SHA256SUMS.txt -Encoding ascii
 @{tag="test-v$version-$short";title="Backleaf $version · 原生测试包"} | ConvertTo-Json | Set-Content .local/ci/release.json -Encoding utf8

@@ -1,3 +1,7 @@
+# 当前：OpenPencil v44 / 261页
+
+[可编辑主稿](Backleaf-v44.fig)保留v43全部256页，新建命名、紧凑进度、未完成项目、安静成功及暗色5态见[v44](v44/manifest.json)。独立冷重开5态0像素差。
+
 当前主稿：[OpenPencil v43 · 256页](Backleaf-v43.fig)，搜索缓存复用、增量刷新与不可用状态。独立品牌稿：[圆叶 v2](Backleaf-brand-v2.fig)。
 
 当前版本：[Backleaf-v39.fig](Backleaf-v39.fig)，237页。v39补齐稳定父菜单、固定应用操作入口、就绪后独立子菜单和底部独立翻转；保留v38及此前233页。固定OpenPencil原生CLI生成源：[menu-stability-v39.mjs](../scripts/design/menu-stability-v39.mjs)，独立进程冷重开：[v39/cold-reopen.json](v39/cold-reopen.json)。所有此前页面和历史文件均保留。

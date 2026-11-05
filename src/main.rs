@@ -1787,7 +1787,7 @@ impl Backleaf {
                     .h_full()
                     .window_control_area(WindowControlArea::Drag),
             )
-            .when(!self.files.hub.views().is_empty(), |d| {
+            .when(!self.visible_operations().is_empty(), |d| {
                 d.child(self.operation_entry(cx))
             })
             .when(self.options.fixture.is_none(), |d| {

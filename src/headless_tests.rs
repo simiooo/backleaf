@@ -503,6 +503,88 @@ fn new_folder_completion_refreshes_in_place_and_enters_rename() {
 }
 
 #[test]
+fn right_click_new_folder_keeps_filename_focused_and_blur_saves_it() {
+    let mut h = Harness::new(&["original.txt"], None);
+    h.click(650., 350., MouseButton::Right);
+    let popup = h.popup();
+    h.key_in(popup, "home");
+    h.key_in(popup, "enter");
+    h.wait("menu-created folder editor", |this, cx| {
+        this.source.count() == 2 && this.files.editor.is_some() && cx.windows().len() == 1
+    });
+    let input = h.editor();
+    assert!(h.focused(&input));
+    h.text("命名后的目录");
+    h.key("tab");
+    h.wait("folder name committed on blur", |this, _| {
+        this.files.editor.is_none()
+    });
+    assert!(h.file("命名后的目录").is_dir());
+    assert!(!h.file("新建文件夹").exists());
+    h.read(|this, _| assert!(!this.files.open));
+}
+
+#[test]
+fn late_directory_notification_during_new_folder_locate_preserves_rename_intent() {
+    let mut h = Harness::new(&["original.txt"], None);
+    std::fs::create_dir(h.file("新建文件夹")).unwrap();
+    h.invalidate_directory();
+    h.wait("created folder snapshot", |this, _| {
+        this.cache.values().any(|i| i.name == "新建文件夹")
+    });
+    h.view.update(&mut h.cx, |this, cx| {
+        let id = this
+            .cache
+            .values()
+            .find(|i| i.name == "新建文件夹")
+            .unwrap()
+            .id;
+        this.refresh_directory(Some("新建文件夹".into()), true, cx);
+        // The previous snapshot already dispatched its locate request. A late
+        // filesystem notification now makes request_detail refuse that snapshot.
+        this.watch.locate = None;
+        this.watch.dirty = true;
+        this.files.locate_rename = true;
+        this.files.locate_token += 1;
+        this.receive_operation(
+            &Event::Located {
+                generation: this.generation,
+                token: this.files.locate_token,
+                id: Some(id),
+            },
+            cx,
+        );
+    });
+    h.wait("rename survives a later directory generation", |this, _| {
+        this.files.editor.is_some()
+    });
+    let input = h.editor();
+    assert!(h.focused(&input));
+    h.text("实际名称");
+    h.key("enter");
+    h.wait("rename persisted", |this, _| this.files.editor.is_none());
+    assert!(h.file("实际名称").is_dir());
+}
+
+#[test]
+fn short_successful_operations_do_not_open_or_leave_a_task_panel() {
+    let mut h = Harness::new(&["original.txt"], None);
+    h.key("ctrl-shift-n");
+    h.wait("name editor", |this, _| this.files.editor.is_some());
+    h.read(|this, _| {
+        assert!(!this.files.open);
+        assert!(this.visible_operations().is_empty());
+    });
+    h.text("quiet-folder");
+    h.key("enter");
+    h.wait("quiet creation and rename complete", |this, _| {
+        this.files.editor.is_none() && this.visible_operations().is_empty()
+    });
+    assert!(h.file("quiet-folder").is_dir());
+    h.read(|this, _| assert!(!this.files.open));
+}
+
+#[test]
 fn repeated_letters_cycle_and_wrap_without_intercepting_text_inputs() {
     let mut h = Harness::new(
         &["alpha.txt", "apple.txt", "apricot.txt", "banana.txt"],

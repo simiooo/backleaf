@@ -1,0 +1,36 @@
+{
+  "version": "v44-compact-operations",
+  "retainedPages": 256,
+  "pages": [
+    {
+      "key": "257-new-folder-name",
+      "name": "257 · v44 new-folder-name",
+      "state": "rename",
+      "nodes": 126
+    },
+    {
+      "key": "258-compact-progress",
+      "name": "258 · v44 compact-progress",
+      "state": "progress",
+      "nodes": 132
+    },
+    {
+      "key": "259-failed-items",
+      "name": "259 · v44 failed-items",
+      "state": "failed",
+      "nodes": 138
+    },
+    {
+      "key": "260-quiet-success",
+      "name": "260 · v44 quiet-success",
+      "state": "quiet",
+      "nodes": 124
+    },
+    {
+      "key": "261-dark-progress",
+      "name": "261 · v44 dark-progress",
+      "state": "dark",
+      "nodes": 132
+    }
+  ]
+}

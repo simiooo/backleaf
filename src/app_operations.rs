@@ -39,6 +39,7 @@ pub struct FileOperations {
     pub locate_rename: bool,
     pub focus_grid: bool,
     new_folder: Option<u64>,
+    rename_location: Option<(PathBuf, OsString)>,
     pub close_guard: bool,
     pub exit_after_cancel: bool,
 }
@@ -117,13 +118,13 @@ impl FileOperations {
             locate_rename: false,
             focus_grid: false,
             new_folder: None,
+            rename_location: None,
             close_guard: false,
             exit_after_cancel: false,
         }
     }
     pub fn animating(&self) -> bool {
         self.open
-            && self.expanded
             && self
                 .selected
                 .and_then(|id| self.hub.view(id))
@@ -149,6 +150,9 @@ impl Backleaf {
     ) {
         self.mark_directory_dirty(cx);
         if let Some(name) = name {
+            if rename {
+                self.files.rename_location = Some((self.path.clone(), name.clone()));
+            }
             self.watch.locate = Some((name, rename));
         }
     }
@@ -213,7 +217,12 @@ impl Backleaf {
             }
             if self.files.new_folder == Some(v.id) {
                 self.files.new_folder = None;
-                if v.phase == Phase::Complete {
+                if v.phase == Phase::Complete
+                    && v.created
+                        .as_ref()
+                        .and_then(|p| p.parent())
+                        .is_some_and(|p| same_location(p, &self.path))
+                {
                     locate = v
                         .created
                         .as_ref()
@@ -239,8 +248,24 @@ impl Backleaf {
                             v.source_snapshot.as_ref().is_some_and(|s| s.as_path() == p)
                         });
             }
+            if self.files.selected == Some(v.id)
+                && matches!(v.phase, Phase::Complete | Phase::Canceled)
+            {
+                self.files.open = false;
+                self.files.selected = None;
+            }
+            if v.operation == Operation::NewFolder
+                && v.phase != Phase::Complete
+                && let Some(error) = &v.error
+            {
+                self.error = Some(error.to_string());
+            }
         }
         self.selection.mask.exclude(&self.files.removed);
+        if self.visible_operations().is_empty() {
+            self.files.open = false;
+            self.files.selected = None;
+        }
         if self.files.seen.len() > 128 {
             self.files
                 .seen
@@ -552,13 +577,20 @@ impl Backleaf {
     }
     pub fn show_operation(&mut self, id: u64) {
         self.files.selected = Some(id);
-        self.files.open = true;
-        self.files.expanded = true;
-        self.files.failed_only = false;
+        self.files.expanded = false;
+        self.files.failed_only = true;
         self.files.page_after = 0;
         self.files.page_history.clear();
         self.files.page_requested = None;
         self.request_operation_page();
+    }
+    pub fn visible_operations(&self) -> Vec<View> {
+        self.files
+            .hub
+            .views()
+            .into_iter()
+            .filter(|v| !matches!(v.phase, Phase::Complete | Phase::Canceled))
+            .collect()
     }
     pub fn begin_rename(
         &mut self,
@@ -808,6 +840,7 @@ impl Backleaf {
     ) -> Option<Detail> {
         match self.files.detail_intent {
             DetailIntent::Rename => {
+                self.files.rename_location = None;
                 self.files.detail_intent = DetailIntent::Show;
                 self.begin_rename(detail, None, cx);
                 None
@@ -841,6 +874,14 @@ impl Backleaf {
                 token,
                 id,
             } if *generation == self.generation && *token == self.files.locate_token => {
+                if self.files.locate_rename && self.watch_stale() {
+                    if let Some((parent, name)) = &self.files.rename_location
+                        && same_location(parent, &self.path)
+                    {
+                        self.refresh_directory(Some(name.clone()), true, cx);
+                    }
+                    return true;
+                }
                 if self
                     .files
                     .menu_after_locate
@@ -1355,6 +1396,9 @@ impl Backleaf {
         if let Some(id) = self.files.selected
             && let Some(v) = self.files.hub.view(id)
         {
+            if self.files.failed_only && v.failed == 0 && v.unknown == 0 {
+                return;
+            }
             let signature = (
                 id,
                 self.files.page_after,
@@ -1405,7 +1449,7 @@ impl Backleaf {
             .child(label)
     }
     pub fn operation_entry(&self, cx: &mut Context<Self>) -> AnyElement {
-        let count = self.files.hub.views().len();
+        let count = self.visible_operations().len();
         let colors = self.colors;
         div()
             .id("operations-entry")
@@ -1430,14 +1474,21 @@ impl Backleaf {
             })
             .on_click(cx.listener(|this, _, _, cx| {
                 this.files.open = !this.files.open;
-                this.files.selected = None;
+                let views = this.visible_operations();
+                this.files.selected = (views.len() == 1).then(|| views[0].id);
+                this.files.expanded = true;
+                this.files.failed_only = true;
                 this.request_operation_page();
                 cx.notify();
             }))
             .on_key_down(cx.listener(|this, e: &KeyDownEvent, _, cx| {
                 if paint::activation_key(e) {
                     this.files.open = !this.files.open;
-                    this.files.selected = None;
+                    let views = this.visible_operations();
+                    this.files.selected = (views.len() == 1).then(|| views[0].id);
+                    this.files.expanded = true;
+                    this.files.failed_only = true;
+                    this.request_operation_page();
                     cx.stop_propagation();
                     cx.notify();
                 }
@@ -1462,7 +1513,7 @@ impl Backleaf {
                     .absolute()
                     .right(px(12.))
                     .bottom(px(36.))
-                    .w(px(400.))
+                    .w(px(320.))
                     .max_w(px((f32::from(window.viewport_size().width) - 24.).max(1.)))
                     .child(content),
             );
@@ -1601,7 +1652,7 @@ impl Backleaf {
     }
     fn operation_queue(&self, cx: &mut Context<Self>) -> AnyElement {
         let colors = self.colors;
-        let views = self.files.hub.views();
+        let views = self.visible_operations();
         self.panel_shell("operation-queue", cx)
             .child(
                 div()
@@ -1639,11 +1690,17 @@ impl Backleaf {
                             ))
                             .on_click(cx.listener(move |this, _, _, cx| {
                                 this.show_operation(id);
+                                this.files.open = true;
+                                this.files.expanded = true;
+                                this.request_operation_page();
                                 cx.notify();
                             }))
                             .on_key_down(cx.listener(move |this, e: &KeyDownEvent, _, cx| {
                                 if paint::activation_key(e) {
                                     this.show_operation(id);
+                                    this.files.open = true;
+                                    this.files.expanded = true;
+                                    this.request_operation_page();
                                     cx.stop_propagation();
                                     cx.notify();
                                 }
@@ -1668,8 +1725,7 @@ impl Backleaf {
                                     .mt(px(8.))
                                     .text_size(px(12.))
                                     .text_color(colors.color(ColorRole::Secondary))
-                                    .child(div().w(relative(0.5)).child(count_label(&v)))
-                                    .child(div().w(relative(0.5)).child(bytes_label(&v))),
+                                    .child(operation_summary(&v)),
                             )
                     })),
             )
@@ -1680,102 +1736,59 @@ impl Backleaf {
         let id = v.id;
         let terminal = v.phase.terminal();
         let target = v.target.to_string_lossy().into_owned();
-        let title = v
+        let destination = v
             .target
             .file_name()
             .unwrap_or(v.target.as_os_str())
-            .to_string_lossy()
-            .into_owned();
-        let action = if terminal {
-            self.button(
-                "close",
-                "关闭已结束任务",
-                cx.listener(move |this, _, window, cx| {
+            .to_string_lossy();
+        let failures = v.failed.saturating_add(v.unknown);
+        let title = if terminal {
+            format!("{} 项未完成", number(failures.max(1) as usize))
+        } else {
+            format!("{} → {destination}", v.operation.label())
+        };
+        let action = self.button(
+            "close",
+            if terminal {
+                "关闭任务结果"
+            } else if v.phase == Phase::Canceling {
+                "正在取消"
+            } else {
+                "取消任务"
+            },
+            cx.listener(move |this, _, window, cx| {
+                if terminal {
                     this.files.hub.dismiss(id);
                     this.files.selected = None;
-                    if this.files.hub.views().is_empty() {
-                        this.files.open = false;
-                    }
+                    this.files.open = false;
                     window.focus(&this.focus, cx);
-                    cx.notify();
-                }),
-            )
-            .into_any_element()
-        } else {
-            self.text_action(
-                "cancel-operation",
-                if v.phase == Phase::Canceling {
-                    "取消中"
                 } else {
-                    "取消"
-                },
-                cx.listener(move |this, _, _, cx| {
                     this.files.hub.cancel(id);
-                    cx.notify();
-                }),
-            )
-            .into_any_element()
-        };
+                }
+                cx.notify();
+            }),
+        );
         let mut panel = self
             .panel_shell("real-operation", cx)
             .role(Role::Group)
             .aria_label(format!("{}，{}", v.operation.label(), phase_label(v.phase)))
             .child(
                 div()
-                    .h(px(32.))
                     .flex()
                     .items_center()
+                    .gap(px(8.))
+                    .h(px(28.))
                     .child(
                         div()
-                            .id("operation-target")
+                            .id("operation-caption")
                             .flex_1()
                             .min_w_0()
-                            .h_full()
-                            .flex()
-                            .items_center()
-                            .rounded(px(8.))
-                            .role(Role::Button)
-                            .aria_label(format!(
-                                "{} → {target}，{}",
-                                v.operation.label(),
-                                phase_label(v.phase)
-                            ))
+                            .truncate()
                             .tooltip(tooltip(
-                                format!(
-                                    "{} → {target}\n{}",
-                                    v.operation.label(),
-                                    phase_label(v.phase)
-                                ),
+                                format!("{} → {target}", v.operation.label()),
                                 colors,
                             ))
-                            .focusable()
-                            .tab_stop(true)
-                            .focus_visible(move |d| {
-                                d.bg(colors.color(ColorRole::InputActive))
-                                    .shadow(colors.control_shadows(true))
-                            })
-                            .on_click(cx.listener(|this, _, _, cx| {
-                                this.files.expanded = !this.files.expanded;
-                                this.request_operation_page();
-                                cx.notify();
-                            }))
-                            .on_key_down(cx.listener(|this, e: &KeyDownEvent, _, cx| {
-                                if paint::activation_key(e) {
-                                    this.files.expanded = !this.files.expanded;
-                                    this.request_operation_page();
-                                    cx.stop_propagation();
-                                    cx.notify();
-                                }
-                            }))
-                            .child(div().flex_1().min_w_0().truncate().child(title))
-                            .child(icon(
-                                if self.files.expanded {
-                                    "collapse"
-                                } else {
-                                    "more"
-                                },
-                                colors,
-                            )),
+                            .child(title),
                     )
                     .child(action),
             )
@@ -1799,172 +1812,145 @@ impl Backleaf {
             )
             .child(
                 div()
-                    .flex()
-                    .items_baseline()
                     .mt(px(8.))
                     .text_size(px(12.))
                     .text_color(colors.color(ColorRole::Secondary))
-                    .child(div().w(relative(0.5)).child(count_label(&v)))
-                    .child(div().w(relative(0.5)).child(bytes_label(&v))),
+                    .child(operation_summary(&v)),
             );
-        if self.files.expanded {
+        if !terminal && let Some(active) = v.active.first() {
             let animate = window.is_visible()
                 && !self.session_locked
                 && !self.options.reduced_motion
                 && !cx.reduce_motion();
-            let phase = (v.started.elapsed().as_secs_f32() / 1.8).fract();
-            let mut rows = Vec::new();
-            let mut page_next = None;
-            if !self.files.failed_only && self.files.page_after == 0 && !terminal {
-                for active in v.active.iter().take(8) {
-                    let name = active.name.to_string();
-                    rows.push(
-                        div()
-                            .id(("active-operation-file", active.token))
-                            .w_full()
-                            .h(px(28.))
-                            .role(Role::Label)
-                            .aria_label(format!("{name}，{}中", v.operation.label()))
-                            .aria_value(format!("{name}，{}中", v.operation.label()))
-                            .tooltip(tooltip(
-                                format!("{name}\n{}中", v.operation.label()),
-                                colors,
-                            ))
-                            .child(paint::flowing_name(
-                                name,
-                                phase,
-                                animate,
-                                self.flow_cache.clone(),
-                                colors,
-                            ))
-                            .into_any_element(),
-                    );
-                }
-            }
-            let max_rows: usize = if v.error.is_some() { 4 } else { 8 };
+            panel = panel.child(
+                div()
+                    .id(SharedString::from(format!(
+                        "operation-active-{}-{}",
+                        active.key, active.token
+                    )))
+                    .mt(px(8.))
+                    .h(px(24.))
+                    .tooltip(tooltip(active.name.to_string(), colors))
+                    .child(paint::flowing_name(
+                        active.name.to_string(),
+                        (v.started.elapsed().as_secs_f32() / 1.8).fract(),
+                        animate,
+                        self.flow_cache.clone(),
+                        colors,
+                    )),
+            );
+        }
+        if let Some(error) = v
+            .error
+            .as_ref()
+            .or_else(|| v.page.as_ref().and_then(|p| p.error.as_ref()))
+        {
+            panel = panel.child(
+                div()
+                    .id("operation-error")
+                    .mt(px(8.))
+                    .text_size(px(12.))
+                    .text_color(colors.color(ColorRole::Negative))
+                    .truncate()
+                    .tooltip(tooltip(error.to_string(), colors))
+                    .child(error.to_string()),
+            );
+        }
+        if self.files.expanded && failures > 0 {
+            let mut next = None;
+            let limit = if f32::from(window.viewport_size().height) < 560. {
+                4
+            } else {
+                8
+            };
             if let Some(page) = &v.page
                 && page.after == self.files.page_after
-                && page.failed_only == self.files.failed_only
+                && page.failed_only
             {
-                for row in page.rows.iter().take(max_rows.saturating_sub(rows.len())) {
-                    page_next = Some(row.sequence);
+                let mut rows = Vec::new();
+                for row in page.rows.iter().take(limit) {
+                    next = Some(row.sequence);
                     let name = row
                         .path
                         .file_name()
                         .unwrap_or(row.path.as_os_str())
                         .to_string_lossy()
                         .into_owned();
-                    if !terminal
-                        && v.active
-                            .iter()
-                            .any(|a| a.key == row.root && a.name.as_ref() == name)
-                    {
-                        continue;
-                    }
-                    let state = state_label(row.state);
-                    let full = format!(
-                        "{}\n{state}{}",
-                        row.path.to_string_lossy(),
-                        row.hresult
-                            .filter(|n| *n < 0)
-                            .map(|c| format!("\n{}", operations::service::error_label(c)))
-                            .unwrap_or_default()
-                    );
+                    let reason = row
+                        .hresult
+                        .filter(|n| *n < 0)
+                        .map(operations::service::error_label)
+                        .unwrap_or_else(|| state_label(row.state).into());
+                    let full = format!("{}\n{reason}", row.path.to_string_lossy());
                     rows.push(
                         div()
                             .id(("operation-file", row.sequence))
                             .w_full()
-                            .h(px(28.))
-                            .flex()
-                            .items_center()
-                            .text_size(px(13.))
-                            .text_color(colors.color(match row.state {
-                                State::Failed => ColorRole::Negative,
-                                State::Success => ColorRole::Primary,
-                                State::Partial | State::Unknown => ColorRole::Negative,
-                                _ => ColorRole::Secondary,
-                            }))
+                            .py(px(6.))
                             .role(Role::ListBoxOption)
                             .aria_label(full.clone())
                             .tooltip(tooltip(full, colors))
-                            .child(div().truncate().child(name))
-                            .into_any_element(),
+                            .child(
+                                div()
+                                    .text_size(px(13.))
+                                    .text_color(colors.color(ColorRole::Negative))
+                                    .truncate()
+                                    .child(name),
+                            )
+                            .child(
+                                div()
+                                    .text_size(px(12.))
+                                    .text_color(colors.color(ColorRole::Secondary))
+                                    .truncate()
+                                    .child(reason),
+                            ),
                     );
                 }
+                if page.rows.len() <= limit {
+                    next = None;
+                }
+                panel = panel.child(div().mt(px(8.)).children(rows));
             }
-            panel = panel.child(div().mt(px(16.)).max_h(px(380.)).children(rows));
-            if let Some(error) = v
-                .error
-                .as_ref()
-                .or_else(|| v.page.as_ref().and_then(|p| p.error.as_ref()))
-            {
+            if !self.files.page_history.is_empty() || next.is_some() {
                 panel = panel.child(
                     div()
-                        .mt(px(16.))
-                        .text_size(px(12.))
-                        .text_color(colors.color(ColorRole::Negative))
-                        .child(error.to_string()),
+                        .mt(px(8.))
+                        .flex()
+                        .items_center()
+                        .justify_end()
+                        .gap(px(8.))
+                        .when(!self.files.page_history.is_empty(), |d| {
+                            d.child(self.button(
+                                "back",
+                                "上一页未完成项目",
+                                cx.listener(|this, _, _, cx| {
+                                    if let Some(after) = this.files.page_history.pop() {
+                                        this.files.page_after = after;
+                                        this.files.page_requested = None;
+                                        this.request_operation_page();
+                                        cx.notify();
+                                    }
+                                }),
+                            ))
+                        })
+                        .when_some(next, |d, next| {
+                            d.child(self.button(
+                                "more",
+                                "下一页未完成项目",
+                                cx.listener(move |this, _, _, cx| {
+                                    if this.files.page_history.len() >= 128 {
+                                        this.files.page_history.remove(0);
+                                    }
+                                    this.files.page_history.push(this.files.page_after);
+                                    this.files.page_after = next;
+                                    this.files.page_requested = None;
+                                    this.request_operation_page();
+                                    cx.notify();
+                                }),
+                            ))
+                        }),
                 );
             }
-            panel = panel.child(
-                div()
-                    .mt(px(8.))
-                    .flex()
-                    .items_center()
-                    .child(self.text_action(
-                        "all-operation-files",
-                        "全部",
-                        cx.listener(|this, _, _, cx| {
-                            this.files.failed_only = false;
-                            this.files.page_after = 0;
-                            this.files.page_history.clear();
-                            this.files.page_requested = None;
-                            this.request_operation_page();
-                            cx.notify();
-                        }),
-                    ))
-                    .child(self.text_action(
-                        "failed-operation-files",
-                        "失败",
-                        cx.listener(|this, _, _, cx| {
-                            this.files.failed_only = true;
-                            this.files.page_after = 0;
-                            this.files.page_history.clear();
-                            this.files.page_requested = None;
-                            this.request_operation_page();
-                            cx.notify();
-                        }),
-                    ))
-                    .child(div().flex_1())
-                    .child(self.button(
-                        "back",
-                        "上一页结果",
-                        cx.listener(|this, _, _, cx| {
-                            if let Some(after) = this.files.page_history.pop() {
-                                this.files.page_after = after;
-                                this.files.page_requested = None;
-                                this.request_operation_page();
-                                cx.notify();
-                            }
-                        }),
-                    ))
-                    .child(self.button(
-                        "more",
-                        "下一页结果",
-                        cx.listener(move |this, _, _, cx| {
-                            if let Some(next) = page_next {
-                                if this.files.page_history.len() >= 128 {
-                                    this.files.page_history.remove(0);
-                                }
-                                this.files.page_history.push(this.files.page_after);
-                                this.files.page_after = next;
-                                this.files.page_requested = None;
-                                this.request_operation_page();
-                                cx.notify();
-                            }
-                        }),
-                    )),
-            );
         }
         panel.into_any_element()
     }
@@ -2024,20 +2010,31 @@ fn count_label(v: &View) -> String {
             .unwrap_or_else(|| "—".into())
     )
 }
+fn operation_summary(v: &View) -> String {
+    let count = count_label(v);
+    let bytes = bytes_label(v);
+    if bytes.is_empty() {
+        count
+    } else {
+        format!("{count} · {bytes}")
+    }
+}
+
 fn size(n: u64) -> String {
     crate::volume_capacity::bytes(u128::from(n))
 }
 
 fn bytes_label(v: &View) -> String {
     if !v.size_available {
-        return "— / —".into();
+        return String::new();
     }
-    format!(
-        "{} / {}",
-        size(v.bytes.saturating_add(v.in_flight)),
-        v.bytes_total.map(size).unwrap_or_else(|| "—".into())
-    )
+    let done = size(v.bytes.saturating_add(v.in_flight));
+    match v.bytes_total {
+        Some(total) => format!("{done} / {}", size(total)),
+        None => done,
+    }
 }
+
 fn fraction(v: &View) -> f32 {
     if v.phase == Phase::Complete {
         return 1.;
