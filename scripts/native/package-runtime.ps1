@@ -1,15 +1,19 @@
 [CmdletBinding()]
-param([string]$Output = '.local/runtime-ci', [string]$RuntimeTag = 'runtime-v1')
+param([string]$Output = '.local/runtime-ci', [string]$RuntimeTag = 'runtime-v2')
 $ErrorActionPreference = 'Stop'
 if ($RuntimeTag -notmatch '^runtime-v[0-9]+$') { throw 'Invalid runtime tag' }
 $vswhere = Join-Path ${env:ProgramFiles(x86)} 'Microsoft Visual Studio/Installer/vswhere.exe'
-$vs = & $vswhere -latest -products '*' -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath
+$vs = & $vswhere -latest -prerelease -products '*' -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath
 if (!$vs) { throw 'Licensed Visual Studio C++ redistributable installation not found' }
 $redist = Join-Path $vs 'VC/Redist/MSVC'
-$source = Get-ChildItem -LiteralPath $redist -Directory | Where-Object { $_.Name -match '^\d+\.\d+\.\d+$' } |
-    Sort-Object { [Version]$_.Name } -Descending | ForEach-Object { Join-Path $_.FullName 'x64/Microsoft.VC143.CRT' } |
-    Where-Object { Test-Path -LiteralPath $_ } | Select-Object -First 1
-if (!$source) { throw 'x64 Microsoft.VC143.CRT redist directory not found' }
+$candidates = foreach($version in Get-ChildItem -LiteralPath $redist -Directory) {
+    $x64 = Join-Path $version.FullName 'x64'
+    if(Test-Path -LiteralPath $x64) {
+        Get-ChildItem -LiteralPath $x64 -Directory | Where-Object {$_.Name -match '^Microsoft\.VC[0-9]+\.CRT$' -and (Test-Path -LiteralPath (Join-Path $_.FullName 'vcruntime140.dll'))}
+    }
+}
+$source = $candidates | Sort-Object { [Version](Get-Item -LiteralPath (Join-Path $_.FullName 'vcruntime140.dll')).VersionInfo.FileVersion } -Descending | Select-Object -First 1 -ExpandProperty FullName
+if (!$source) { throw 'x64 Microsoft VC CRT redist directory not found' }
 $out = [IO.Path]::GetFullPath($Output)
 $bundle = Join-Path $out 'runtime'
 if (Test-Path -LiteralPath $bundle) { throw 'Runtime output already exists; use a new output directory' }
@@ -26,7 +30,7 @@ $files = foreach ($dll in Get-ChildItem -LiteralPath $source -Filter '*.dll' -Fi
 foreach ($required in @('msvcp140.dll','vcruntime140.dll','vcruntime140_1.dll')) {
     if (!($files | Where-Object name -eq $required)) { throw "Missing runtime DLL: $required" }
 }
-$metadata = [ordered]@{ id = $RuntimeTag; architecture = 'x64'; source_commit = (git rev-parse HEAD).Trim(); packaged_at_utc = [DateTime]::UtcNow.ToString('o'); source = 'Visual Studio VC/Redist/MSVC/x64/Microsoft.VC143.CRT'; files = @($files) }
+$metadata = [ordered]@{ id = $RuntimeTag; architecture = 'x64'; source_commit = (git rev-parse HEAD).Trim(); packaged_at_utc = [DateTime]::UtcNow.ToString('o'); source = $source; files = @($files) }
 $metadata | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath (Join-Path $bundle 'runtime.json') -Encoding UTF8
 @'
 Microsoft Visual C++ Runtime (x64)
