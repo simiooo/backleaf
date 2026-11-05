@@ -1,0 +1,11 @@
+   Compiling backleaf v0.1.0-preview.17 (D:\work\backleaf)
+    Finished `release` profile [optimized] target(s) in 43.77s
+     Running unittests src\main.rs (target\release\deps\backleaf-5297b2576ec1fd2e.exe)
+
+running 2 tests
+test model::refresh::tests::ambiguous_hard_link_renames_do_not_inherit_selection_and_cancel_is_observed ... ok
+100000 identity remaps: 166.2985ms; viewport=96, bitmap=37 bytes
+test model::refresh::tests::hundred_thousand_selected_rows_remap_on_worker_with_bounded_viewport ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 106 filtered out; finished in 1.91s
+
