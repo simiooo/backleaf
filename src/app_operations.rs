@@ -218,10 +218,9 @@ impl Backleaf {
             if self.files.new_folder == Some(v.id) {
                 self.files.new_folder = None;
                 if v.phase == Phase::Complete
-                    && v.created
-                        .as_ref()
-                        .and_then(|p| p.parent())
-                        .is_some_and(|p| same_location(p, &self.path))
+                    // Compare the original destination, not Shell's returned
+                    // display spelling (which may expand a DOS 8.3 parent).
+                    && same_location(&v.target, &self.path)
                 {
                     locate = v
                         .created
