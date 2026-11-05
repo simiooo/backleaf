@@ -33,3 +33,4 @@ docs/evidence/menu-stability/** -text whitespace=cr-at-eol,-blank-at-eof
 docs/evidence/grid-refresh/** -text whitespace=cr-at-eol,-blank-at-eof
 docs/evidence/storage/** -text whitespace=cr-at-eol,-blank-at-eof
 docs/evidence/brand-v2/** -text whitespace=cr-at-eol,-blank-at-eof
+docs/evidence/capacity-v42/** -text whitespace=cr-at-eol,-blank-at-eof

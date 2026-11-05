@@ -1,0 +1,39 @@
+{
+  "masterSha256": "4e8da14e94aa9d36e9e74212dfb99267cc59c0452dc60b9c5e9c5dfe99082975",
+  "retainedPages": 247,
+  "pages": 253,
+  "result": "passed",
+  "results": [
+    {
+      "key": "248-meter-ready",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "249-meter-unknown",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "250-meter-small-units",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "251-meter-low-space",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "252-meter-selected",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "253-meter-dark",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    }
+  ],
+  "verifiedAt": "2026-11-05T10:59:51.490Z"
+}

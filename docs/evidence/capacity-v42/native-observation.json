@@ -1,0 +1,20 @@
+{
+  "observed_at_utc": "2026-11-05T11:10:49.012Z",
+  "source_commit": "b006987b240658bbe3c3ab70a4e733a5405e3504",
+  "window": {
+    "id": 18680946,
+    "app": "process:D:\\work\\backleaf\\target\\release\\backleaf.exe",
+    "title": "拾径 · Backleaf"
+  },
+  "capacity_accessibility": [
+    "\t\t\t\t28 按钮 Windows-SSD (C:)，C:\\，总容量 400 GB；已使用 325 GB；剩余 74.8 GB；当前用户可用 74.8 GB",
+    "\t\t\t\t29 按钮 Data (D:)，D:\\，总容量 461 GB；已使用 426 GB；剩余 34.5 GB；当前用户可用 34.5 GB"
+  ],
+  "visual_checks": [
+    "Real GPUI window: 10px secondary capacity text is smaller than drive title",
+    "Caption and thin static usage rail share one left edge and width",
+    "Caption shows familiar GB labels and drops trailing .0",
+    "Both drive rows keep their existing fixed height; no new card or percentage label"
+  ],
+  "scope": "Actual local release executable; native pixels and accessibility inspected. Small-unit, unknown, low-space and dark states validated in OpenPencil plus formatter/headless tests, not forced onto real disks."
+}

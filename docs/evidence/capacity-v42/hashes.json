@@ -1,0 +1,62 @@
+[
+  {
+    "file": "build.json",
+    "sha256": "84ad2f664264bfd43eed6e508897c7fbea59877ab6a789378caacd7b4fd78bbb"
+  },
+  {
+    "file": "ci-headless-run.json",
+    "sha256": "229ef53598bb6d52531b3bd5ad85c90b1e0418a4f8231b778b12e646e8a6efc3"
+  },
+  {
+    "file": "ci-install.json",
+    "sha256": "42b5a869b92a4a0019feef479da94d0ea1c779e99e2d50e4043294ddfb4973cd"
+  },
+  {
+    "file": "ci-run.json",
+    "sha256": "df64ef02e8f3f9ea365370b4fc291655ebafc74b00a444b3d96c7b1596963b1b"
+  },
+  {
+    "file": "design-cold-reopen.json",
+    "sha256": "5ffc5f6309e6f36bde6804eae9845140715f39bd2090fbf3f992ea3456d93ffd"
+  },
+  {
+    "file": "local-clippy.txt",
+    "sha256": "1e051a21a2bc2620ea9823fff50ef53dbaaa336b39fd7b8b8b019b915553d183"
+  },
+  {
+    "file": "local-fmt.txt",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "file": "local-headless.json",
+    "sha256": "1ab212b105a481705d98a7fbc9d6c1aecf81d1b1aea2d6f80e4a59e08f131e16"
+  },
+  {
+    "file": "local-staging.json",
+    "sha256": "58601ba742578ceabea03d5bc0eea4a2b5575cdcec1a7cfddce5cc4f3c2f448b"
+  },
+  {
+    "file": "local-tests.txt",
+    "sha256": "834b5e010106144810618d1307e3428f28978f4424e8ce3f6a14a186e52f8f9f"
+  },
+  {
+    "file": "native-observation.json",
+    "sha256": "64e4afef8a51a1196c954a87c1dfd01dbb44f950ab9c13fd9722aeadb1e9ec6c"
+  },
+  {
+    "file": "native-process.json",
+    "sha256": "af99f4d1349df06ce8b47c5000af17ec99c07e9ca5ea39d7ffc9c389cb18119e"
+  },
+  {
+    "file": "README.md",
+    "sha256": "bcc019bcbad165d83b7e378b775aa9313dfaf122416551c403915dd4637bcd2c"
+  },
+  {
+    "file": "release.json",
+    "sha256": "c0834ef9057a2f8eaab15c051d77a0fb9a04ffd9f71e19b7944a8e43dbc1c4f9"
+  },
+  {
+    "file": "SHA256SUMS.txt",
+    "sha256": "07d22457ea11302c318077187a061b26144fb5c4e1dcd3f1bf78cf870a003c5e"
+  }
+]
