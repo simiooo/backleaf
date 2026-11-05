@@ -1,0 +1,29 @@
+{
+  "masterSha256": "ce9a84870ac4571dc0470fd8ddae41618ddb6939893f0c4025dcac30d700aa6d",
+  "retainedPages": 233,
+  "pages": 237,
+  "result": "passed",
+  "results": [
+    {
+      "key": "234-root-pending-stable",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "235-applications-ready",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "236-child-ready-stable",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "237-bottom-flip-dark",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    }
+  ],
+  "verifiedAt": "2026-11-05T08:02:48.490Z"
+}

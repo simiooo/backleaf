@@ -344,16 +344,19 @@ impl Backleaf {
                 cx.notify();
             },
         ));
-        if self.options.fixture.is_none()
-            && Self::native_owner(window) != 0
-            && let Some(selection) = self.source.freeze_selection(self.selection.mask.clone())
-        {
-            let session = crate::shell_menu::Session::new(
-                selection,
-                self.options.state_dir.clone(),
-                Self::native_owner(window),
-                self.tx.clone(),
-            );
+        if self.options.fixture.is_none() && Self::native_owner(window) != 0 {
+            let session = self
+                .source
+                .freeze_selection(self.selection.mask.clone())
+                .ok_or_else(|| "当前列表尚未就绪".to_string())
+                .and_then(|selection| {
+                    crate::shell_menu::Session::new(
+                        selection,
+                        self.options.state_dir.clone(),
+                        Self::native_owner(window),
+                        self.tx.clone(),
+                    )
+                });
             menu.update(cx, |m, cx| m.attach_shell(session, cx));
         }
         self.files.focus_grid = false;

@@ -12,17 +12,20 @@ Copy-Item assets/archive-engine/7z.dll "$bundle/lib/7z.dll"
 Copy-Item docs/native-preview-readme.txt "$bundle/README.txt"
 Copy-Item LICENSE "$bundle/LICENSE"
 Copy-Item assets/brand/backleaf-logo.png "$bundle/Logo.png"
-Copy-Item design/Backleaf-v38.fig "$bundle/Backleaf-v38.fig"
-Copy-Item design/Backleaf-v38.fig .local/ci/Backleaf-v38.fig
+Copy-Item design/Backleaf-v39.fig "$bundle/Backleaf-v39.fig"
+Copy-Item design/Backleaf-v39.fig .local/ci/Backleaf-v39.fig
 Copy-Item .local/ci/headless.json "$bundle/headless.json"
 python scripts/native/collect-licenses.py "$bundle/licenses"
 if ($LASTEXITCODE) { throw 'License collection failed' }
+. ./install.ps1
+New-Item -ItemType Directory -Force .local/ci/runtime-download | Out-Null
+$runtime = Add-BackleafRuntime -Work ([IO.Path]::GetFullPath('.local/ci/runtime-download')) -Stage ([IO.Path]::GetFullPath($bundle))
 $exeHash = (Get-FileHash "$bundle/Backleaf.exe" -Algorithm SHA256).Hash.ToLowerInvariant()
-$metadata = [ordered]@{version=$version;source_commit=$commit;gpui_revision=(git -C vendor/zed rev-parse HEAD).Trim();built_at_utc=[DateTime]::UtcNow.ToString('o');exe_sha256=$exeHash;archive_library_sha256=(Get-FileHash "$bundle/lib/7z.dll").Hash.ToLowerInvariant();design_sha256=(Get-FileHash design/Backleaf-v38.fig).Hash.ToLowerInvariant();ci_run_url="https://github.com/$env:GITHUB_REPOSITORY/actions/runs/$env:GITHUB_RUN_ID";scope='Native Windows preview: path/drives, typeahead, external changes, internal moves/pinning/reorder, saved FileViews, metadata index, ZIP creation and ZIP/7z/RAR extraction, owned self-drawn extension menus and native OLE file drag/drop, path/search restore and independent windows; see README for limits';interactive_smoke='not run on hosted CI; local scope is recorded separately'}
+$metadata = [ordered]@{version=$version;source_commit=$commit;gpui_revision=(git -C vendor/zed rev-parse HEAD).Trim();built_at_utc=[DateTime]::UtcNow.ToString('o');exe_sha256=$exeHash;archive_library_sha256=(Get-FileHash "$bundle/lib/7z.dll").Hash.ToLowerInvariant();design_sha256=(Get-FileHash design/Backleaf-v39.fig).Hash.ToLowerInvariant();ci_run_url="https://github.com/$env:GITHUB_REPOSITORY/actions/runs/$env:GITHUB_RUN_ID";runtime=$runtime;scope='Native Windows preview with independent stable menu column windows and app-local runtime; see README for complete scope and limits';interactive_smoke='not run on hosted CI; local scope is recorded separately'}
 $metadata.headless_test_count=$headless.test_count
 $metadata.headless_log_sha256=$headless.log_sha256
 $metadata.headless_report_sha256=(Get-FileHash "$bundle/headless.json").Hash.ToLowerInvariant()
-$metadata | ConvertTo-Json | Set-Content "$bundle/build.json" -Encoding utf8
+$metadata | ConvertTo-Json -Depth 8 | Set-Content "$bundle/build.json" -Encoding utf8
 Copy-Item "$bundle/build.json" .local/ci/build.json
 $zip = ".local/ci/Backleaf-$version-$short-win-x64.zip"
 Compress-Archive -Path "$bundle/*" -DestinationPath $zip
@@ -30,12 +33,13 @@ $installed = '.local/ci/installed'
 Expand-Archive -LiteralPath $zip -DestinationPath $installed
 if ((Get-FileHash "$installed/Backleaf.exe").Hash.ToLowerInvariant() -ne $exeHash) { throw 'ZIP executable hash mismatch' }
 if ((Get-FileHash "$installed/lib/7z.dll").Hash.ToLowerInvariant() -ne $metadata.archive_library_sha256) { throw 'ZIP archive library hash mismatch' }
+& ./scripts/native/test-runtime.ps1 -InstallDirectory ([IO.Path]::GetFullPath($installed)) | Out-Null
 $sessionFile = Join-Path (Get-Location) '.local/ci/session.json'
 $p = Start-Process "$installed/Backleaf.exe" -ArgumentList @('--session-status-file',('"'+$sessionFile+'"')) -PassThru -Wait -WindowStyle Hidden
 if ($p.ExitCode -ne 0 -or !(Test-Path $sessionFile)) { throw 'Packaged executable CLI smoke failed' }
 $metadata.cli_smoke_passed = $true
-$metadata | ConvertTo-Json | Set-Content .local/ci/build.json -Encoding utf8
+$metadata | ConvertTo-Json -Depth 8 | Set-Content .local/ci/build.json -Encoding utf8
 $sum = (Get-FileHash $zip).Hash.ToLowerInvariant() + '  ' + (Split-Path $zip -Leaf)
 $sum | Set-Content .local/ci/SHA256SUMS.txt -Encoding ascii
-((Get-FileHash .local/ci/Backleaf-v38.fig).Hash.ToLowerInvariant()+'  Backleaf-v38.fig') | Add-Content .local/ci/SHA256SUMS.txt -Encoding ascii
+((Get-FileHash .local/ci/Backleaf-v39.fig).Hash.ToLowerInvariant()+'  Backleaf-v39.fig') | Add-Content .local/ci/SHA256SUMS.txt -Encoding ascii
 @{tag="test-v$version-$short";title="Backleaf $version · 原生测试包"} | ConvertTo-Json | Set-Content .local/ci/release.json -Encoding utf8

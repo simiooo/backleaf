@@ -1,0 +1,55 @@
+{
+  "version": "v39-stable-menu-family",
+  "retainedPages": 233,
+  "pages": [
+    {
+      "key": "234-root-pending-stable",
+      "name": "234 · v39 root-pending-stable",
+      "nodes": 147,
+      "state": "pending",
+      "rootBounds": {
+        "x": 320,
+        "y": 180,
+        "width": 260,
+        "height": 256
+      }
+    },
+    {
+      "key": "235-applications-ready",
+      "name": "235 · v39 applications-ready",
+      "nodes": 160,
+      "state": "ready",
+      "rootBounds": {
+        "x": 320,
+        "y": 180,
+        "width": 260,
+        "height": 256
+      }
+    },
+    {
+      "key": "236-child-ready-stable",
+      "name": "236 · v39 child-ready-stable",
+      "nodes": 173,
+      "state": "nested",
+      "rootBounds": {
+        "x": 320,
+        "y": 180,
+        "width": 260,
+        "height": 256
+      }
+    },
+    {
+      "key": "237-bottom-flip-dark",
+      "name": "237 · v39 bottom-flip-dark",
+      "nodes": 173,
+      "state": "bottom",
+      "rootBounds": {
+        "x": 728,
+        "y": 440,
+        "width": 260,
+        "height": 256
+      }
+    }
+  ],
+  "source": "scripts/design/menu-stability-v39.mjs"
+}

@@ -60,6 +60,8 @@ pub struct Session {
     pub id: u64,
     sender: mpsc::SyncSender<Request>,
     flags: Arc<Flags>,
+    #[cfg(test)]
+    _test_requests: Option<std::sync::Mutex<mpsc::Receiver<Request>>>,
 }
 impl Drop for Session {
     fn drop(&mut self) {
@@ -280,7 +282,26 @@ impl Session {
             ACTIVE.fetch_sub(1, Ordering::AcqRel);
             return Err(e.to_string());
         }
-        Ok(Arc::new(Self { id, sender, flags }))
+        Ok(Arc::new(Self {
+            id,
+            sender,
+            flags,
+            #[cfg(test)]
+            _test_requests: None,
+        }))
+    }
+    #[cfg(test)]
+    pub fn headless_fixture(id: u64) -> Arc<Self> {
+        let (sender, receiver) = mpsc::sync_channel(16);
+        Arc::new(Self {
+            id,
+            sender,
+            flags: Arc::new(Flags {
+                closed: AtomicBool::new(false),
+                requested: AtomicBool::new(false),
+            }),
+            _test_requests: Some(std::sync::Mutex::new(receiver)),
+        })
     }
     pub fn submenu(&self, parent: u32) -> Result<(), String> {
         self.sender

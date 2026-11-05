@@ -1,4 +1,4 @@
-当前版本：[Backleaf-v38.fig](Backleaf-v38.fig)，233页。v37补齐OLE拖入/拖出、跨窗、侧栏固定及自绘扩展菜单；v38补齐独立owned菜单窗口、动态子菜单与焦点返回。冷重开验证：[v38/cold-reopen.json](v38/cold-reopen.json)。所有此前页面和历史文件均保留。
+当前版本：[Backleaf-v39.fig](Backleaf-v39.fig)，237页。v39补齐稳定父菜单、固定应用操作入口、就绪后独立子菜单和底部独立翻转；保留v38及此前233页。固定OpenPencil原生CLI生成源：[menu-stability-v39.mjs](../scripts/design/menu-stability-v39.mjs)，独立进程冷重开：[v39/cold-reopen.json](v39/cold-reopen.json)。所有此前页面和历史文件均保留。
 
 最新主稿：[Backleaf-v22.fig](Backleaf-v22.fig)，149页，保留已发布v20的143页，新增6个渐进框选状态。持续加速的参数和行为见[交互契约](marquee-scroll-contract.md)。v21路径/磁盘设计仍属于另一个未交付候选单元。
 

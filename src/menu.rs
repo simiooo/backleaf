@@ -119,7 +119,15 @@ struct Column {
     parent: u32,
     rows: Vec<Option<Entry>>,
     current: usize,
-    y: f32,
+    token: u64,
+    ready: bool,
+}
+#[derive(Clone, Copy)]
+pub struct ColumnGeometry {
+    pub token: u64,
+    pub width: f32,
+    pub height: f32,
+    pub row_offset: f32,
 }
 pub struct FileMenu {
     colors: &'static Palette,
@@ -133,7 +141,8 @@ pub struct FileMenu {
     session: Option<std::sync::Arc<crate::shell_menu::Session>>,
     pub dismissed: bool,
     hover_serial: u64,
-    leftward: bool,
+    applications: Option<Vec<Option<Entry>>>,
+    next_column: u64,
 }
 impl EventEmitter<MenuEvent> for FileMenu {}
 impl Focusable for FileMenu {
@@ -222,7 +231,11 @@ impl FileMenu {
                 })
             })
             .collect::<Vec<_>>();
-        Self::with_rows(colors, anchor, folder, rows, keyboard, false, cx)
+        let mut menu = Self::with_rows(colors, anchor, folder, rows, keyboard, false, cx);
+        if real {
+            menu.status(0, "读取扩展…".into());
+        }
+        menu
     }
     fn with_rows(
         colors: &'static Palette,
@@ -245,10 +258,11 @@ impl FileMenu {
             anchor,
             columns: vec![Column {
                 scroll: ScrollHandle::new(),
-                parent: 0,
+                parent: u32::MAX,
                 rows,
                 current,
-                y: 0.,
+                token: 0,
+                ready: true,
             }],
             keyboard,
             breadcrumb,
@@ -257,7 +271,8 @@ impl FileMenu {
             session: None,
             dismissed: false,
             hover_serial: 0,
-            leftward: false,
+            applications: None,
+            next_column: 0,
         }
     }
     pub fn breadcrumb(
@@ -302,26 +317,40 @@ impl FileMenu {
     pub fn origin(&self) -> Point<Pixels> {
         self.anchor
     }
-    pub fn set_leftward(&mut self, left: bool) {
-        self.leftward = left
-    }
-    pub fn leftward(&self) -> bool {
-        self.leftward
-    }
-    pub fn dimensions(&self) -> (f32, f32) {
+    pub fn column_geometry(&self, level: usize) -> Option<ColumnGeometry> {
+        let column = self.columns.get(level).filter(|c| c.ready)?;
         let width = if self.breadcrumb { 188. } else { 260. };
-        let visible = self.columns.len().min(3);
-        let height = self
-            .columns
-            .iter()
-            .rev()
-            .take(visible)
-            .map(|c| c.y + Self::height(&c.rows))
-            .fold(0., f32::max);
-        (
-            width * visible as f32 + 8. * visible.saturating_sub(1) as f32 + 16.,
-            height + 16.,
-        )
+        let row_offset = if level == 0 {
+            0.
+        } else {
+            let parent = &self.columns[level - 1];
+            let at = parent.rows.iter().position(|r| {
+                r.as_ref()
+                    .is_some_and(|e| e.command == Command::Extension(column.parent, true))
+            })?;
+            parent
+                .rows
+                .iter()
+                .take(at)
+                .map(|r| {
+                    if r.is_some() {
+                        LAYOUT.floating.row_height
+                    } else {
+                        LAYOUT.floating.group_break_height
+                    }
+                })
+                .sum::<f32>()
+                + f32::from(parent.scroll.offset().y)
+        };
+        Some(ColumnGeometry {
+            token: column.token,
+            width: width + 16.,
+            height: (Self::height(&column.rows) + 16.).min(640.),
+            row_offset,
+        })
+    }
+    pub fn column_count(&self) -> usize {
+        self.columns.len()
     }
     fn height(rows: &[Option<Entry>]) -> f32 {
         rows.iter()
@@ -350,6 +379,10 @@ impl FileMenu {
         cx.notify();
     }
     fn status(&mut self, level: usize, label: String) {
+        if level == 0 {
+            self.application_entry(Some(label));
+            return;
+        }
         let entry = Entry {
             command: Command::Extension(0, false),
             hint: String::new(),
@@ -358,12 +391,28 @@ impl FileMenu {
             checked: false,
             radio: false,
         };
-        if level == 0 {
-            self.columns[0].rows.truncate(self.base);
-            self.columns[0].rows.extend([None, Some(entry)]);
-        } else if let Some(c) = self.columns.get_mut(level) {
+        if let Some(c) = self.columns.get_mut(level) {
             c.rows = vec![Some(entry)];
+            c.ready = true;
         }
+    }
+    fn application_entry(&mut self, disabled: Option<String>) {
+        self.columns[0].rows.truncate(self.base);
+        self.columns[0].rows.extend([
+            None,
+            Some(Entry {
+                command: Command::Extension(0, true),
+                label: "应用操作".into(),
+                hint: if disabled.as_deref() == Some("读取扩展…") {
+                    "…".into()
+                } else {
+                    String::new()
+                },
+                disabled,
+                checked: false,
+                radio: false,
+            }),
+        ]);
     }
     pub fn shell_notice(&mut self, notice: crate::shell_menu::Notice, cx: &mut Context<Self>) {
         if !self
@@ -374,7 +423,12 @@ impl FileMenu {
         {
             return;
         }
-        let Some(level) = self.columns.iter().position(|c| c.parent == notice.parent) else {
+        let level = if notice.parent == 0 {
+            Some(0)
+        } else {
+            self.columns.iter().position(|c| c.parent == notice.parent)
+        };
+        let Some(level) = level else {
             return;
         };
         match notice.result {
@@ -407,13 +461,15 @@ impl FileMenu {
                     rows.pop();
                 }
                 if level == 0 {
-                    self.columns[0].rows.truncate(self.base);
-                    if !rows.is_empty() {
-                        self.columns[0].rows.push(None);
-                        self.columns[0].rows.extend(rows)
+                    self.application_entry(rows.is_empty().then(|| "没有可用的应用操作".into()));
+                    self.applications = Some(rows.clone());
+                    if let Some(column) = self.columns.iter_mut().skip(1).find(|c| c.parent == 0) {
+                        column.rows = rows;
+                        column.ready = true;
                     }
                 } else {
                     self.columns[level].rows = rows;
+                    self.columns[level].ready = true;
                 }
             }
         }
@@ -433,30 +489,26 @@ impl FileMenu {
         if level >= 7 {
             return;
         }
-        let y = self.columns[level].y
-            + LAYOUT.floating.padding_y
-            + self.columns[level]
-                .rows
-                .iter()
-                .take(self.columns[level].current)
-                .map(|r| {
-                    if r.is_some() {
-                        LAYOUT.floating.row_height
-                    } else {
-                        LAYOUT.floating.group_break_height
-                    }
-                })
-                .sum::<f32>();
         self.columns.truncate(level + 1);
+        self.next_column = self.next_column.wrapping_add(1);
         self.columns.push(Column {
             scroll: ScrollHandle::new(),
             parent: id,
-            rows: vec![],
+            rows: if id == 0 {
+                self.applications.clone().unwrap_or_default()
+            } else {
+                vec![]
+            },
             current: 0,
-            y,
+            token: self.next_column,
+            ready: id == 0,
         });
-        self.status(level + 1, "读取扩展…".into());
-        if let Some(session) = &self.session
+        if id != 0 {
+            self.status(level + 1, "读取扩展…".into());
+            self.columns[level + 1].ready = false;
+        }
+        if id != 0
+            && let Some(session) = &self.session
             && let Err(e) = session.submenu(id)
         {
             self.status(level + 1, e)
@@ -478,7 +530,7 @@ impl FileMenu {
         match entry.command {
             Command::Extension(id, true) => {
                 self.open_submenu(level, id, cx);
-                self.active = level + 1;
+                self.active = (level + 1).min(self.columns.len() - 1);
                 self.keyboard = true;
             }
             Command::Extension(id, false) => {
@@ -588,48 +640,46 @@ impl FileMenu {
         }
     }
 }
-impl Render for FileMenu {
-    fn render(&mut self, window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
+impl FileMenu {
+    pub fn render_column(
+        &mut self,
+        level: usize,
+        window: &mut Window,
+        cx: &mut Context<Self>,
+    ) -> AnyElement {
+        if self.columns.get(level).is_none_or(|c| !c.ready) {
+            return div().size_full().into_any_element();
+        }
         let colors = self.colors;
         let f = &LAYOUT.floating;
         let width = if self.breadcrumb { 188. } else { 260. };
-        let fit = (((f32::from(window.viewport_size().width) - 8.) / (width + 8.)).floor()
-            as usize)
-            .clamp(1, 3);
-        let start = self.columns.len().saturating_sub(fit);
-        let count = self.columns.len() - start;
         let active = self.active;
         let keyboard = self.keyboard;
-        let left = self.leftward;
         div()
             .id("menu-window-content")
             .font_family("Microsoft YaHei UI")
             .relative()
             .size_full()
-            .track_focus(&self.focus)
-            .tab_stop(true)
+            .when(level == 0, |d| {
+                d.track_focus(&self.focus)
+                    .tab_stop(true)
+                    .on_key_down(cx.listener(Self::key))
+            })
             .role(Role::Menu)
             .aria_label(if self.breadcrumb {
                 "路径菜单"
             } else {
                 "文件菜单"
             })
-            .on_key_down(cx.listener(Self::key))
             .on_mouse_down(
                 MouseButton::Left,
-                cx.listener(|this, event: &MouseDownEvent, _, cx| {
+                cx.listener(move |this, event: &MouseDownEvent, window, cx| {
                     let width = if this.breadcrumb { 188. } else { 260. };
-                    let count = this.columns.len().min(3);
-                    let inside = (0..count).any(|i| {
-                        let col = &this.columns[this.columns.len() - count + i];
-                        let at = if this.leftward { count - 1 - i } else { i };
-                        let x = 8. + at as f32 * (width + 8.);
-                        let y = 8. + col.y;
-                        f32::from(event.position.x) >= x
-                            && f32::from(event.position.x) <= x + width
-                            && f32::from(event.position.y) >= y
-                            && f32::from(event.position.y) <= y + Self::height(&col.rows)
-                    });
+                    let inside = f32::from(event.position.x) >= 8.
+                        && f32::from(event.position.x) <= 8. + width
+                        && f32::from(event.position.y) >= 8.
+                        && f32::from(event.position.y)
+                            <= f32::from(window.viewport_size().height) - 8.;
                     if !inside {
                         this.dismiss(cx);
                     }
@@ -637,158 +687,165 @@ impl Render for FileMenu {
                 }),
             )
             .children(
-                self.columns
-                    .iter()
-                    .enumerate()
-                    .skip(start)
-                    .map(|(level, column)| {
-                        let x = 8.
-                            + if left {
-                                (count - 1 - (level - start)) as f32
-                            } else {
-                                (level - start) as f32
-                            } * (width + 8.);
-                        let y = (8. + column.y).min(
-                            (f32::from(window.viewport_size().height)
-                                - Self::height(&column.rows)
-                                - 8.)
-                                .max(8.),
-                        );
-                        div()
-                            .id(("menu-column", level))
-                            .absolute()
-                            .left(px(x))
-                            .top(px(y))
-                            .w(px(width))
-                            .flex()
-                            .flex_col()
-                            .track_scroll(&column.scroll)
-                            .max_h(px(
-                                (f32::from(window.viewport_size().height) - y - 8.).max(48.)
-                            ))
-                            .px(px(f.padding_x))
-                            .py(px(f.padding_y))
-                            .rounded(px(f.radius))
-                            .bg(colors.color(ColorRole::Floating))
-                            .border_1()
-                            .border_color(colors.color(ColorRole::Border))
-                            .shadow(colors.control_shadows(false))
-                            .occlude()
-                            .overflow_y_scroll()
-                            .children(column.rows.iter().enumerate().map(|(index, row)| {
-                                let Some(entry) = row else {
-                                    return div()
-                                        .h(px(f.group_break_height))
-                                        .flex_none()
-                                        .w_full()
-                                        .flex()
-                                        .items_center()
-                                        .child(
-                                            div()
-                                                .w_full()
-                                                .h(px(1.))
-                                                .bg(colors.color(ColorRole::Border)),
-                                        )
-                                        .into_any_element();
-                                };
-                                let disabled = entry.disabled.is_some();
-                                let selected = column.current == index && level <= active;
-                                let label = entry.label.clone();
-                                let hint = entry.hint.clone();
-                                let command = entry.command;
-                                let is_sub = matches!(command, Command::Extension(_, true));
-                                let checked = entry.checked;
-                                let radio = entry.radio;
-                                div()
-                                    .id(("menu-item", (level * 1024 + index)))
-                                    .role(Role::MenuItem)
-                                    .aria_label(format!(
-                                        "{}{}{}",
-                                        label,
-                                        if checked { "，已勾选" } else { "" },
-                                        if disabled { "，不可用" } else { "" }
-                                    ))
-                                    .w_full()
-                                    .h(px(f.row_height))
+                std::iter::once((level, &self.columns[level])).map(|(level, column)| {
+                    let x = 8.;
+                    let y = 8.;
+                    div()
+                        .id(("menu-column", level))
+                        .absolute()
+                        .left(px(x))
+                        .top(px(y))
+                        .w(px(width))
+                        .flex()
+                        .flex_col()
+                        .track_scroll(&column.scroll)
+                        .on_scroll(cx.listener(move |this, _: &ScrollEvent, _, cx| {
+                            if this.columns.len() > level + 1 {
+                                this.columns.truncate(level + 1);
+                                this.active = level;
+                                cx.notify();
+                            }
+                        }))
+                        .h(px((f32::from(window.viewport_size().height) - 16.).max(32.)))
+                        .px(px(f.padding_x))
+                        .py(px(f.padding_y))
+                        .rounded(px(f.radius))
+                        .bg(colors.color(ColorRole::Floating))
+                        .border_1()
+                        .border_color(colors.color(ColorRole::Border))
+                        .shadow(colors.control_shadows(false))
+                        .occlude()
+                        .overflow_y_scroll()
+                        .children(column.rows.iter().enumerate().map(|(index, row)| {
+                            let Some(entry) = row else {
+                                return div()
+                                    .h(px(f.group_break_height))
                                     .flex_none()
-                                    .px(px(f.row_padding_x))
-                                    .rounded(px(f.row_radius))
+                                    .w_full()
                                     .flex()
                                     .items_center()
-                                    .gap(px(8.))
-                                    .text_size(px(13.))
-                                    .text_color(colors.color(if disabled {
-                                        ColorRole::Disabled
-                                    } else {
-                                        ColorRole::Primary
-                                    }))
-                                    .when(selected && !disabled, |d| {
-                                        d.bg(colors.color(if keyboard {
-                                            ColorRole::InputActive
-                                        } else {
-                                            ColorRole::Hover
-                                        }))
-                                        .when(keyboard, |d| d.shadow(colors.control_shadows(true)))
-                                    })
-                                    .when_some(
-                                        entry.disabled.clone().or_else(|| {
-                                            (label.chars().count() > 24).then(|| label.clone())
-                                        }),
-                                        |d, message| d.tooltip(tooltip(message, colors)),
-                                    )
-                                    .on_hover(cx.listener(move |this, hovered: &bool, _, cx| {
-                                        if !*hovered {
-                                            return;
-                                        }
-                                        this.hover_serial += 1;
-                                        this.columns[level].current = index;
-                                        this.active = level;
-                                        this.keyboard = false;
-                                        if let Command::Extension(id, true) = command {
-                                            if !disabled {
-                                                this.open_submenu(level, id, cx)
-                                            }
-                                        } else {
-                                            let serial = this.hover_serial;
-                                            cx.spawn(async move |menu, cx| {
-                                                cx.background_executor()
-                                                    .timer(std::time::Duration::from_millis(150))
-                                                    .await;
-                                                let _ = menu.update(cx, |this, cx| {
-                                                    if this.hover_serial == serial {
-                                                        this.columns.truncate(level + 1);
-                                                        cx.notify();
-                                                    }
-                                                });
-                                            })
-                                            .detach();
-                                        }
-                                        cx.notify();
-                                    }))
-                                    .on_mouse_down(MouseButton::Left, |_, _, cx| {
-                                        cx.stop_propagation()
-                                    })
-                                    .on_click(cx.listener(move |this, _, _, cx| {
-                                        this.activate(level, index, cx);
-                                        cx.stop_propagation();
-                                    }))
-                                    .child(div().w(px(12.)).flex_none().child(if checked {
-                                        if radio { "●" } else { "✓" }
-                                    } else {
-                                        ""
-                                    }))
-                                    .child(div().flex_1().min_w_0().truncate().child(label))
                                     .child(
                                         div()
-                                            .flex_none()
-                                            .text_size(px(11.))
-                                            .text_color(colors.color(ColorRole::Secondary))
-                                            .child(if is_sub { "›".to_string() } else { hint }),
+                                            .w_full()
+                                            .h(px(1.))
+                                            .bg(colors.color(ColorRole::Border)),
                                     )
-                                    .into_any_element()
-                            }))
-                            .into_any_element()
-                    }),
+                                    .into_any_element();
+                            };
+                            let disabled = entry.disabled.is_some();
+                            let selected = column.current == index && level <= active;
+                            let label = entry.label.clone();
+                            let hint = entry.hint.clone();
+                            let command = entry.command;
+                            let is_sub = matches!(command, Command::Extension(_, true));
+                            let checked = entry.checked;
+                            let radio = entry.radio;
+                            div()
+                                .id(("menu-item", (level * 1024 + index)))
+                                .role(Role::MenuItem)
+                                .aria_label(format!(
+                                    "{}{}{}",
+                                    label,
+                                    if checked { "，已勾选" } else { "" },
+                                    if disabled { "，不可用" } else { "" }
+                                ))
+                                .w_full()
+                                .h(px(f.row_height))
+                                .flex_none()
+                                .px(px(f.row_padding_x))
+                                .rounded(px(f.row_radius))
+                                .flex()
+                                .items_center()
+                                .gap(px(8.))
+                                .text_size(px(13.))
+                                .text_color(colors.color(if disabled {
+                                    ColorRole::Disabled
+                                } else {
+                                    ColorRole::Primary
+                                }))
+                                .when(selected && !disabled, |d| {
+                                    d.bg(colors.color(if keyboard {
+                                        ColorRole::InputActive
+                                    } else {
+                                        ColorRole::Hover
+                                    }))
+                                    .when(keyboard, |d| d.shadow(colors.control_shadows(true)))
+                                })
+                                .when_some(
+                                    entry.disabled.clone().or_else(|| {
+                                        (label.chars().count() > 24).then(|| label.clone())
+                                    }),
+                                    |d, message| d.tooltip(tooltip(message, colors)),
+                                )
+                                .on_hover(cx.listener(move |this, hovered: &bool, _, cx| {
+                                    if !*hovered || this.columns.get(level).is_none() {
+                                        return;
+                                    }
+                                    this.hover_serial += 1;
+                                    this.columns[level].current = index;
+                                    this.active = level;
+                                    this.keyboard = false;
+                                    if let Command::Extension(id, true) = command {
+                                        if !disabled {
+                                            this.open_submenu(level, id, cx)
+                                        }
+                                    } else {
+                                        let serial = this.hover_serial;
+                                        cx.spawn(async move |menu, cx| {
+                                            cx.background_executor()
+                                                .timer(std::time::Duration::from_millis(150))
+                                                .await;
+                                            let _ = menu.update(cx, |this, cx| {
+                                                if this.hover_serial == serial {
+                                                    this.columns.truncate(level + 1);
+                                                    cx.notify();
+                                                }
+                                            });
+                                        })
+                                        .detach();
+                                    }
+                                    cx.notify();
+                                }))
+                                .on_mouse_down(MouseButton::Left, |_, _, cx| cx.stop_propagation())
+                                .on_click(cx.listener(move |this, _, _, cx| {
+                                    if this
+                                        .columns
+                                        .get(level)
+                                        .and_then(|c| c.rows.get(index))
+                                        .and_then(Option::as_ref)
+                                        .is_some_and(|e| e.command == command)
+                                    {
+                                        this.activate(level, index, cx);
+                                    }
+                                    cx.stop_propagation();
+                                }))
+                                .child(div().w(px(12.)).flex_none().child(if checked {
+                                    if radio { "●" } else { "✓" }
+                                } else {
+                                    ""
+                                }))
+                                .child(div().flex_1().min_w_0().truncate().child(label))
+                                .child(
+                                    div()
+                                        .flex_none()
+                                        .text_size(px(11.))
+                                        .text_color(colors.color(ColorRole::Secondary))
+                                        .child(if is_sub && hint.is_empty() {
+                                            "›".to_string()
+                                        } else {
+                                            hint
+                                        }),
+                                )
+                                .into_any_element()
+                        }))
+                        .into_any_element()
+                }),
             )
+            .into_any_element()
+    }
+}
+impl Render for FileMenu {
+    fn render(&mut self, window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
+        self.render_column(0, window, cx)
     }
 }

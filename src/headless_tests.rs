@@ -1,6 +1,7 @@
 //! Event-driven regressions on GPUI's TestPlatform; no desktop input or HWNDs.
 use super::*;
 use crate::input::TextInput;
+use crate::menu::FileMenu;
 use core::prelude::v1::test;
 
 struct Harness {
@@ -207,6 +208,44 @@ impl Harness {
         );
         *windows.iter().find(|w| **w != self.window.into()).unwrap()
     }
+    fn shell_menu(&mut self) -> Entity<FileMenu> {
+        let menu = self.read(|this, _| {
+            let menu: &Entity<FileMenu> = this.files.menu.as_ref().expect("open menu");
+            menu.clone()
+        });
+        self.cx.update(|cx| {
+            menu.update(cx, |model, cx| {
+                model.attach_shell(Ok(crate::shell_menu::Session::headless_fixture(4242)), cx)
+            })
+        });
+        self.frame();
+        menu
+    }
+    fn shell_rows(
+        &mut self,
+        menu: &Entity<FileMenu>,
+        parent: u32,
+        rows: Vec<crate::shell_menu::Item>,
+    ) {
+        self.cx.update(|cx| {
+            menu.update(cx, |model, cx| {
+                model.shell_notice(
+                    crate::shell_menu::Notice {
+                        session: 4242,
+                        parent,
+                        result: Ok(rows),
+                    },
+                    cx,
+                )
+            })
+        });
+        self.frame();
+    }
+    fn window_bounds(&mut self, handle: AnyWindowHandle) -> Bounds<Pixels> {
+        self.cx
+            .update_window(handle, |_, window, _| window.bounds())
+            .unwrap()
+    }
     fn first_icon(&self) -> (f32, f32) {
         self.read(|this, _| {
             (
@@ -240,12 +279,209 @@ impl Harness {
     }
 }
 
+fn extension_item(id: u32, submenu: bool) -> crate::shell_menu::Item {
+    crate::shell_menu::Item {
+        id,
+        label: format!("应用命令 {id}"),
+        hint: String::new(),
+        enabled: true,
+        checked: false,
+        radio: false,
+        submenu,
+        separator: false,
+        unavailable: false,
+    }
+}
+
+#[test]
+fn async_shell_discovery_and_large_submenu_never_resize_or_move_the_root() {
+    let mut h = Harness::new(&["note.txt"], None);
+    let (x, y) = h.first_icon();
+    h.click(x, y, MouseButton::Right);
+    let root = h.popup();
+    let before = h.window_bounds(root);
+    let menu = h.shell_menu();
+    assert_eq!(h.window_bounds(root), before);
+    h.shell_rows(
+        &menu,
+        0,
+        (1..=50).map(|id| extension_item(id, false)).collect(),
+    );
+    assert_eq!(h.window_bounds(root), before);
+    h.key_in(root, "end");
+    h.key_in(root, "right");
+    h.wait("independent applications column", |_, cx| {
+        cx.windows().len() == 3
+    });
+    assert_eq!(h.window_bounds(root), before);
+    for _ in 0..8 {
+        h.frame();
+        assert_eq!(h.window_bounds(root), before);
+    }
+    h.key_in(root, "left");
+    h.wait("applications column closed", |_, cx| {
+        cx.windows().len() == 2
+    });
+    assert_eq!(h.window_bounds(root), before);
+    h.key_in(root, "escape");
+    h.wait("entire menu closed", |this, cx| {
+        this.files.menu.is_none() && cx.windows().len() == 1
+    });
+    assert!(h.grid_focused());
+}
+
+#[test]
+fn dynamic_child_waits_for_rows_and_keeps_both_ancestors_stable() {
+    let mut h = Harness::new(&["before.txt"], None);
+    let (x, y) = h.first_icon();
+    h.click(x, y, MouseButton::Right);
+    let root = h.popup();
+    let root_bounds = h.window_bounds(root);
+    let menu = h.shell_menu();
+    h.shell_rows(&menu, 0, vec![extension_item(11, true)]);
+    h.key_in(root, "end");
+    h.key_in(root, "right");
+    h.wait("applications column", |_, cx| cx.windows().len() == 3);
+    let owner = h.window.into();
+    let app = h.cx.update(|cx| {
+        cx.windows()
+            .into_iter()
+            .find(|w| *w != root && *w != owner)
+            .unwrap()
+    });
+    let app_bounds = h.window_bounds(app);
+    h.key_in(root, "home");
+    h.key_in(root, "right");
+    h.cx.advance_clock(Duration::from_millis(300));
+    h.frame();
+    assert_eq!(
+        h.cx.update(|cx| cx.windows().len()),
+        3,
+        "a loading placeholder must not create a resizing child surface"
+    );
+    assert_eq!(h.window_bounds(root), root_bounds);
+    assert_eq!(h.window_bounds(app), app_bounds);
+    h.shell_rows(
+        &menu,
+        11,
+        (100..130).map(|id| extension_item(id, false)).collect(),
+    );
+    h.wait("ready dynamic child", |_, cx| cx.windows().len() == 4);
+    assert_eq!(h.window_bounds(root), root_bounds);
+    assert_eq!(h.window_bounds(app), app_bounds);
+    h.key_in(root, "f2");
+    h.wait("owner rename after nested menus", |this, cx| {
+        this.files.editor.is_some() && this.files.menu.is_none() && cx.windows().len() == 1
+    });
+    let editor = h.editor();
+    assert!(h.focused(&editor));
+    h.key("escape");
+}
+
+#[test]
+fn late_dynamic_rows_do_not_revive_closed_columns_or_the_menu_family() {
+    let mut h = Harness::new(&["note.txt"], None);
+    let (x, y) = h.first_icon();
+    h.click(x, y, MouseButton::Right);
+    let root = h.popup();
+    let menu = h.shell_menu();
+    h.shell_rows(&menu, 0, vec![extension_item(11, true)]);
+    h.key_in(root, "end");
+    h.key_in(root, "right");
+    h.wait("applications column", |_, cx| cx.windows().len() == 3);
+    h.key_in(root, "home");
+    h.key_in(root, "right");
+    let owner = h.window.into();
+    let app = h.cx.update(|cx| {
+        cx.windows()
+            .into_iter()
+            .find(|w| *w != root && *w != owner)
+            .unwrap()
+    });
+    h.event(
+        app,
+        MouseMoveEvent {
+            position: point(px(100.), px(30.)),
+            ..Default::default()
+        }
+        .to_platform_input(),
+    );
+    h.event(
+        app,
+        ScrollEvent {
+            position: point(px(100.), px(30.)),
+            delta: ScrollDelta::Pixels(point(px(0.), px(-32.))),
+            ..Default::default()
+        }
+        .to_platform_input(),
+    );
+    h.shell_rows(&menu, 11, vec![extension_item(99, false)]);
+    assert_eq!(h.cx.update(|cx| cx.windows().len()), 3);
+    h.key_in(root, "escape");
+    h.wait("dismiss family", |this, cx| {
+        this.files.menu.is_none() && cx.windows().len() == 1
+    });
+    h.shell_rows(&menu, 11, vec![extension_item(100, false)]);
+    h.shell_rows(&menu, 0, vec![extension_item(200, true)]);
+    assert_eq!(h.cx.update(|cx| cx.windows().len()), 1);
+    assert!(h.grid_focused());
+}
+
 #[gpui::test]
 fn headless_platform_is_windowless(cx: &mut TestAppContext) {
     let (_, cx) = cx.add_window_view(|_, _| Empty);
     cx.update(|window, _| {
         assert!(raw_window_handle::HasWindowHandle::window_handle(window).is_err());
     });
+}
+
+#[test]
+fn menu_family_focus_and_bottom_flip_keep_ancestors_stable() {
+    let mut h = Harness::new(&["note.txt"], None);
+    h.click(1080., 690., MouseButton::Right);
+    let root = h.popup();
+    let before = h.window_bounds(root);
+    let menu = h.shell_menu();
+    h.shell_rows(
+        &menu,
+        0,
+        (1..=40).map(|id| extension_item(id, false)).collect(),
+    );
+    h.key_in(root, "end");
+    h.key_in(root, "right");
+    h.wait("bottom edge child", |_, cx| cx.windows().len() == 3);
+    let owner = h.window.into();
+    let child = h.cx.update(|cx| {
+        cx.windows()
+            .into_iter()
+            .find(|w| *w != owner && *w != root)
+            .unwrap()
+    });
+    let bounds = h.window_bounds(child);
+    assert!(
+        bounds.origin.x < before.origin.x,
+        "submenu must flip independently"
+    );
+    assert!(
+        f32::from(bounds.origin.y) >= 0. && f32::from(bounds.origin.y + bounds.size.height) <= 720.
+    );
+    assert_eq!(h.window_bounds(root), before);
+    h.cx.update_window(child, |_, window, _| window.activate_window())
+        .unwrap();
+    h.frame();
+    h.cx.advance_clock(Duration::from_millis(100));
+    h.frame();
+    assert_eq!(
+        h.cx.update(|cx| cx.windows().len()),
+        3,
+        "family activation dismissed its parent"
+    );
+    assert_eq!(h.window_bounds(root), before);
+    h.click(350., 300., MouseButton::Left);
+    h.wait("outside activation dismisses entire family", |this, cx| {
+        this.files.menu.is_none() && cx.windows().len() == 1
+    });
+    assert!(h.grid_focused());
 }
 
 #[test]
