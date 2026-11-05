@@ -1656,3 +1656,64 @@ fn properties_refresh_rechecks_identity_and_close_cancels_the_reader() {
     assert!(canceled());
     assert_eq!(h.cx.update(|cx| cx.windows().len()), 1);
 }
+
+#[test]
+fn properties_scrollbar_tracks_short_window_overflow_and_hides_when_it_fits() {
+    let mut h = Harness::new(&["item.txt"], None);
+    h.key("home");
+    h.key("alt-enter");
+    let properties = h.properties();
+    h.properties_ready(properties);
+    h.cx.update_window(properties.into(), |_, window, cx| {
+        window.resize(size(px(340.), px(360.)));
+        window.bounds_changed(cx);
+        window.refresh();
+    })
+    .unwrap();
+    h.frame();
+    h.frame();
+    let geometry = properties
+        .read_with(&h.cx, |view, _| view.scroll_geometry())
+        .unwrap()
+        .expect("overflow scrollbar");
+    assert!(geometry.maximum > 0. && geometry.thumb < geometry.viewport as f32);
+    h.event(
+        properties.into(),
+        MouseDownEvent {
+            position: point(px(333.), px(340.)),
+            button: MouseButton::Left,
+            click_count: 1,
+            ..Default::default()
+        }
+        .to_platform_input(),
+    );
+    h.event(
+        properties.into(),
+        MouseUpEvent {
+            position: point(px(333.), px(340.)),
+            button: MouseButton::Left,
+            click_count: 1,
+            ..Default::default()
+        }
+        .to_platform_input(),
+    );
+    assert!(
+        properties
+            .read_with(&h.cx, |view, _| view.scroll_geometry().unwrap().offset > 0.)
+            .unwrap()
+    );
+    h.cx.update_window(properties.into(), |_, window, cx| {
+        window.resize(size(px(600.), px(900.)));
+        window.bounds_changed(cx);
+        window.refresh();
+    })
+    .unwrap();
+    h.frame();
+    h.frame();
+    assert!(
+        properties
+            .read_with(&h.cx, |view, _| view.scroll_geometry().is_none())
+            .unwrap()
+    );
+    h.key_in(properties.into(), "escape");
+}

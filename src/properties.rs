@@ -66,7 +66,11 @@ pub struct Properties {
     pub(crate) snapshot: Snapshot,
     counter: Counter,
     poll: Option<Task<()>>,
+    scroll: ScrollHandle,
+    scroll_drag: Option<(f32, crate::scrollbar::Geometry)>,
+    scroll_hover: bool,
     _appearance: Subscription,
+    _bounds: Subscription,
 }
 impl Properties {
     fn new(
@@ -96,6 +100,12 @@ impl Properties {
             }
             cx.notify();
         });
+        let bounds = cx.observe_window_bounds(window, |this, window, cx| {
+            this.scroll_drag = None;
+            Self::measure_after_frame(window, cx);
+            cx.notify();
+        });
+        Self::measure_after_frame(window, cx);
         let mut this = Self {
             detail,
             colors,
@@ -107,7 +117,11 @@ impl Properties {
             snapshot: Snapshot::default(),
             counter: Counter::new(initial_bytes),
             poll: None,
+            scroll: ScrollHandle::new(),
+            scroll_drag: None,
+            scroll_hover: false,
             _appearance: appearance,
+            _bounds: bounds,
         };
         this.start_poll(cx);
         this
@@ -119,6 +133,138 @@ impl Properties {
                 .identity
                 .as_ref()
                 .and_then(|value| crate::operations::windows::identity::Identity::decode(value)),
+        )
+    }
+    fn measure_after_frame(window: &mut Window, cx: &mut Context<Self>) {
+        let view = cx.entity().downgrade();
+        window.on_next_frame(move |_, cx| {
+            let _ = view.update(cx, |_, cx| cx.notify());
+        });
+    }
+    pub(crate) fn scroll_geometry(&self) -> Option<crate::scrollbar::Geometry> {
+        let viewport = f64::from(f32::from(self.scroll.bounds().size.height))
+            - 2. * f64::from(crate::layout::SCROLL.inset_y);
+        let maximum = f64::from(f32::from(self.scroll.max_offset().y));
+        crate::scrollbar::Geometry::new(
+            viewport,
+            viewport + maximum,
+            -f64::from(f32::from(self.scroll.offset().y)),
+            crate::layout::SCROLL.minimum_thumb_height,
+        )
+    }
+    fn set_scroll(&self, value: f64, cx: &mut Context<Self>) {
+        if let Some(g) = self.scroll_geometry() {
+            self.scroll
+                .set_offset(point(px(0.), px(-value.clamp(0., g.maximum) as f32)));
+            cx.notify();
+        }
+    }
+    fn scrollbar(&self, cx: &mut Context<Self>) -> Option<AnyElement> {
+        let g = self.scroll_geometry()?;
+        let s = &crate::layout::SCROLL;
+        let colors = self.colors;
+        let active = self.scroll_hover || self.scroll_drag.is_some();
+        let owner = cx.entity().downgrade();
+        let width = if active {
+            s.active_thumb_width
+        } else {
+            s.thumb_width
+        };
+        Some(
+            div()
+                .id("properties-scrollbar")
+                .absolute()
+                .right(px(s.rail_inset))
+                .top(px(44. + s.inset_y))
+                .bottom(px(s.inset_y))
+                .w(px(s.rail_width))
+                .occlude()
+                .role(Role::ScrollBar)
+                .aria_label("详情滚动条")
+                .aria_orientation(accesskit::Orientation::Vertical)
+                .aria_min_numeric_value(0.)
+                .aria_max_numeric_value(100.)
+                .aria_numeric_value(g.offset / g.maximum * 100.)
+                .focusable()
+                .tab_stop(true)
+                .rounded(px(6.))
+                .focus_visible(move |d| d.bg(colors.color(ColorRole::Hover)))
+                .on_hover(cx.listener(|this, hovered, _, cx| {
+                    this.scroll_hover = *hovered;
+                    cx.notify();
+                }))
+                .on_mouse_down(
+                    MouseButton::Left,
+                    cx.listener(move |this, event: &MouseDownEvent, _, cx| {
+                        let pointer = f32::from(event.position.y);
+                        let local = pointer - 44. - s.inset_y;
+                        if local >= g.top && local <= g.top + g.thumb {
+                            this.scroll_drag = Some((pointer, g));
+                        } else {
+                            this.set_scroll(
+                                g.offset
+                                    + if local < g.top {
+                                        -g.viewport
+                                    } else {
+                                        g.viewport
+                                    },
+                                cx,
+                            );
+                        }
+                        cx.stop_propagation();
+                        cx.notify();
+                    }),
+                )
+                .on_scroll(cx.listener(|this, event: &ScrollEvent, window, cx| {
+                    if let Some(g) = this.scroll_geometry() {
+                        let delta =
+                            f64::from(f32::from(event.delta.pixel_delta(window.line_height()).y));
+                        this.set_scroll(g.offset - delta, cx);
+                        cx.stop_propagation();
+                    }
+                }))
+                .on_key_down(cx.listener(|this, event: &KeyDownEvent, _, cx| {
+                    let Some(g) = this.scroll_geometry() else {
+                        return;
+                    };
+                    let target = match event.keystroke.key.as_str() {
+                        "up" => g.offset - 32.,
+                        "down" => g.offset + 32.,
+                        "pageup" => g.offset - g.viewport,
+                        "pagedown" => g.offset + g.viewport,
+                        "home" => 0.,
+                        "end" => g.maximum,
+                        _ => return,
+                    };
+                    this.set_scroll(target, cx);
+                    cx.stop_propagation();
+                }))
+                .on_a11y_action(AccessibleAction::SetValue, move |data, _, cx| {
+                    if let Some(accesskit::ActionData::NumericValue(value)) = data
+                        && value.is_finite()
+                    {
+                        let _ = owner.update(cx, |this, cx| {
+                            if let Some(g) = this.scroll_geometry() {
+                                this.set_scroll(g.maximum * value.clamp(0., 100.) / 100., cx);
+                            }
+                        });
+                    }
+                })
+                .child(
+                    div()
+                        .absolute()
+                        .top(px(g.top))
+                        .left(px((s.rail_width - width) / 2.))
+                        .w(px(width))
+                        .h(px(g.thumb))
+                        .rounded(px(width / 2.))
+                        .bg(colors.color(ColorRole::Secondary).opacity(if active {
+                            s.active_thumb_opacity
+                        } else {
+                            s.thumb_opacity
+                        })),
+                )
+                .into_any_element(),
         )
     }
     fn start_poll(&mut self, cx: &mut Context<Self>) {
@@ -301,6 +447,7 @@ impl Render for Properties {
         let path = navigation::display_path(&self.detail.path);
         div()
             .id("properties-window")
+            .relative()
             .size_full()
             .flex()
             .flex_col()
@@ -310,10 +457,40 @@ impl Render for Properties {
             .text_size(px(13.))
             .line_height(px(21.))
             .track_focus(&self.focus)
+            .on_mouse_move(cx.listener(|this, event: &MouseMoveEvent, _, cx| {
+                if let Some((pointer, g)) = this.scroll_drag {
+                    if !event.dragging() {
+                        this.scroll_drag = None;
+                    } else {
+                        this.set_scroll(
+                            g.dragged_offset(f32::from(event.position.y) - pointer),
+                            cx,
+                        );
+                    }
+                    cx.notify();
+                }
+            }))
+            .on_mouse_up(
+                MouseButton::Left,
+                cx.listener(|this, _, _, cx| {
+                    this.scroll_drag = None;
+                    cx.notify();
+                }),
+            )
+            .on_mouse_up_out(
+                MouseButton::Left,
+                cx.listener(|this, _, _, cx| {
+                    this.scroll_drag = None;
+                    cx.notify();
+                }),
+            )
             .on_key_down(cx.listener(|this, event: &KeyDownEvent, window, cx| {
                 let key = event.keystroke.key.as_str();
                 let modifiers = event.keystroke.modifiers;
-                if key == "escape" || (modifiers.control && key == "w") {
+                if key == "escape" && this.scroll_drag.take().is_some() {
+                    cx.stop_propagation();
+                    cx.notify();
+                } else if key == "escape" || (modifiers.control && key == "w") {
                     window.remove_window();
                     cx.stop_propagation();
                 } else if key == "f5" {
@@ -354,9 +531,12 @@ impl Render for Properties {
                 div()
                     .id("properties-scroll")
                     .overflow_y_scroll()
+                    .track_scroll(&self.scroll)
+                    .on_scroll(cx.listener(|_, _, _, cx| cx.notify()))
                     .flex_1()
                     .min_h_0()
                     .px(px(12.))
+                    .pr(px(12. + crate::layout::SCROLL.gutter))
                     .py(px(16.))
                     .flex()
                     .flex_col()
@@ -480,6 +660,7 @@ impl Render for Properties {
                     .child(self.date("创建时间", self.snapshot.created))
                     .child(self.date("修改时间", self.snapshot.modified)),
             )
+            .children(self.scrollbar(cx))
     }
 }
 struct Counter {
