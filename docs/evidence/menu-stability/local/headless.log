@@ -1,0 +1,27 @@
+    Finished `release` profile [optimized] target(s) in 1.69s
+     Running unittests src\main.rs (target\release\deps\backleaf-19cb1f3ebae9c498.exe)
+
+running 20 tests
+test headless_tests::additive_marquee_escape_restores_original_selection ... ok
+test headless_tests::async_shell_discovery_and_large_submenu_never_resize_or_move_the_root ... ok
+test headless_tests::closing_owner_removes_independent_popup_without_reading_owner_entity ... ok
+test headless_tests::dynamic_child_waits_for_rows_and_keeps_both_ancestors_stable ... ok
+test headless_tests::headless_platform_is_windowless ... ok
+test headless_tests::independent_menu_escape_restores_grid_focus_and_selection ... ok
+test headless_tests::independent_menu_owner_activation_dismisses_popup_and_restores_focus ... ok
+test headless_tests::independent_menu_rename_returns_action_to_owner_and_focuses_editor ... ok
+test headless_tests::late_dynamic_rows_do_not_revive_closed_columns_or_the_menu_family ... ok
+test headless_tests::marquee_edge_scroll_release_commits_contiguous_selection_and_stops ... ok
+test headless_tests::menu_family_focus_and_bottom_flip_keep_ancestors_stable ... ok
+test headless_tests::path_blur_error_restores_draft_then_navigates_on_correction ... ok
+test headless_tests::rename_blur_commits_real_file_and_preserves_bytes ... ok
+test headless_tests::rename_blur_then_other_file_context_menu_completes_both_actions ... ok
+test headless_tests::rename_case_only_remains_supported_and_preserves_content ... ok
+test headless_tests::rename_escape_cancels_without_filesystem_change ... ok
+test headless_tests::rename_existing_destination_reports_error_without_overwrite ... ok
+test headless_tests::rename_invalid_blur_preserves_draft_and_refocuses ... ok
+test headless_tests::search_debounce_executes_latest_query_after_250ms ... ok
+test headless_tests::search_unicode_input_submit_and_escape_use_real_input_routing ... ok
+
+test result: ok. 20 passed; 0 failed; 0 ignored; 0 measured; 82 filtered out; finished in 9.45s
+
