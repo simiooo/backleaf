@@ -15,6 +15,10 @@
   "statusLineHeight": 18,
   "sidebarRowHeight": 32,
   "volumeRowHeight": 60,
+  "volumeCaptionFontSize": 10,
+  "volumeCaptionLineHeight": 14,
+  "volumeMeterHeight": 18,
+  "volumeMeterThickness": 2,
   "sidebarRowGap": 4,
   "sidebarPaddingY": 16
 }

@@ -29,7 +29,7 @@ impl Capacity {
     }
     pub fn label(self) -> String {
         format!(
-            "{} 剩余 / {}",
+            "{} 剩余 · {}",
             bytes(self.free as u128),
             bytes(self.total as u128)
         )
@@ -44,22 +44,40 @@ impl Capacity {
         )
     }
 }
+/// Windows-style binary progression with familiar unit labels, matching file tasks.
+/// Integer rounding avoids loss of large u128 totals and carries across unit boundaries.
 pub fn bytes(n: u128) -> String {
-    const UNITS: [&str; 6] = ["B", "KiB", "MiB", "GiB", "TiB", "PiB"];
-    let mut value = n as f64;
+    const UNITS: [&str; 9] = ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
     let mut unit = 0;
-    while value >= 1024. && unit < UNITS.len() - 1 {
-        value /= 1024.;
+    let mut divisor = 1u128;
+    while unit + 1 < UNITS.len() && n >= divisor * 1024 {
         unit += 1;
+        divisor *= 1024;
     }
     if unit == 0 {
-        format!("{n} B")
-    } else if value >= 100. {
-        format!("{value:.0} {}", UNITS[unit])
-    } else {
-        format!("{value:.1} {}", UNITS[unit])
+        return format!("{n} B");
+    }
+    loop {
+        let whole = n / divisor;
+        let remainder = n % divisor;
+        let rounded = whole + u128::from(remainder >= divisor / 2);
+        if rounded >= 1024 && unit + 1 < UNITS.len() {
+            unit += 1;
+            divisor *= 1024;
+            continue;
+        }
+        let tenths = whole * 10 + (remainder * 10 + divisor / 2) / divisor;
+        let value = if whole >= 100 || tenths >= 1000 {
+            rounded.to_string()
+        } else if tenths.is_multiple_of(10) {
+            (tenths / 10).to_string()
+        } else {
+            format!("{}.{}", tenths / 10, tenths % 10)
+        };
+        return format!("{value} {}", UNITS[unit]);
     }
 }
+
 #[derive(Default)]
 struct Queue {
     pending: BTreeMap<PathBuf, u64>,
@@ -339,6 +357,34 @@ unsafe extern "system" fn device_changed(
 mod tests {
     use super::*;
     #[test]
+    fn readable_units_trim_zeros_and_carry_rounding_without_losing_large_totals() {
+        for (n, expected) in [
+            (0, "0 B"),
+            (1, "1 B"),
+            (1023, "1023 B"),
+            (1024, "1 KB"),
+            (1536, "1.5 KB"),
+            (1024 * 1024 - 1, "1 MB"),
+            (1024 * 1024, "1 MB"),
+            (1024u128.pow(3), "1 GB"),
+            (1024u128.pow(4), "1 TB"),
+            (1024u128.pow(4) - 1, "1 TB"),
+            (100 * 1024, "100 KB"),
+            (u64::MAX as u128, "16 EB"),
+        ] {
+            assert_eq!(bytes(n), expected);
+        }
+        assert_eq!(bytes(99 * 1024 + 1023), "100 KB");
+        assert!(bytes(u128::MAX).ends_with(" YB"));
+        let value = Capacity {
+            total: 400 * 1024u64.pow(3),
+            free: 75 * 1024u64.pow(3),
+            available: 70 * 1024u64.pow(3),
+        };
+        assert_eq!(value.label(), "75 GB 剩余 · 400 GB");
+        assert!(value.description().contains("当前用户可用 70 GB"));
+    }
+    #[test]
     fn native_capacity_uses_physical_totals_and_quota_aware_available_bytes() {
         error_mode();
         let root = PathBuf::from(format!("{}\\", std::env::var("SystemDrive").unwrap()));
@@ -349,7 +395,7 @@ mod tests {
         assert!(capacity.available <= capacity.total);
         assert!((0.0..=1.0).contains(&capacity.fraction()));
         assert_eq!(bytes(0), "0 B");
-        assert_eq!(bytes(1024), "1.0 KiB");
+        assert_eq!(bytes(1024), "1 KB");
         println!("system volume: {}", capacity.description());
     }
     #[test]

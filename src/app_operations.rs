@@ -2025,19 +2025,9 @@ fn count_label(v: &View) -> String {
     )
 }
 fn size(n: u64) -> String {
-    let units = ["B", "KB", "MB", "GB", "TB"];
-    let mut value = n as f64;
-    let mut unit = 0;
-    while value >= 1024. && unit < 4 {
-        value /= 1024.;
-        unit += 1;
-    }
-    if unit == 0 {
-        format!("{n} B")
-    } else {
-        format!("{value:.1} {}", units[unit])
-    }
+    crate::volume_capacity::bytes(u128::from(n))
 }
+
 fn bytes_label(v: &View) -> String {
     if !v.size_available {
         return "— / —".into();

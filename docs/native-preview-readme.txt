@@ -1,15 +1,16 @@
-拾径 / Backleaf 0.1.0-preview.20
+拾径 / Backleaf 0.1.0-preview.21
 
 Windows x64 便携测试版：解压整个ZIP，运行Backleaf.exe。或在PowerShell执行：
 irm https://raw.githubusercontent.com/simiooo/backleaf/staging/install.ps1 | iex
 
 本批次：
+- 容量副文案10px，一体静态用量条；B/KB/MB/GB自动单位、去除多余.0并处理临界舍入。
 - 圆叶小表情应用logo和九档透明Windows图标；附独立三页OpenPencil品牌稿。
 - 文件变化后台准备后原位提交，保留滚动与身份可验证的选择；失败保留旧列表。
 - 分区总量/剩余/使用率、卷接口PnP通知和独立后台容量探测。
 - 选择浮层增加文件大小；文件夹不递归，未知数据不填0。
 - 重复单字母循环定位，输入框及多字母前缀保持正常。
-- 29项GPUI无头与90项逻辑/文件/原生检查，OpenPencil v41/247页。
+- 29项GPUI无头与91项逻辑/文件/原生检查，OpenPencil v42/253页。
 
 保留路径/分区导航、统一快捷访问和FileView、持久化增量索引、文件操作进度、ZIP创建和ZIP/7z/RAR提取、恢复、多窗口、独立自绘Shell菜单、OLE拖放、虚拟网格/长文本/流光与框选加速。跨查询结果缓存未实现。
 

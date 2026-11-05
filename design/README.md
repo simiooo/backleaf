@@ -62,3 +62,7 @@
 ## 独立品牌稿 v2
 
 Backleaf-brand-v2.fig为圆叶logo的三页明暗/尺寸展示稿，不替代v41 UI主稿。源scripts/design/brand-v2.mjs，独立冷重开见brand-v2/cold-reopen.json。
+
+## v42 · 统一容量用量组件
+
+当前UI主稿Backleaf-v42.fig，253页，保留247页；新增六态使用10px/14px容量文字和18px一体meter，分区行保持60px。源scripts/design/capacity-v42.mjs，冷重开见v42/cold-reopen.json；独立圆叶品牌稿v2保留。

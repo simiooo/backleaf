@@ -1,4 +1,50 @@
 use super::*;
+fn capacity_meter(
+    value: Option<crate::volume_capacity::Capacity>,
+    colors: &'static Palette,
+) -> AnyElement {
+    let spec = &layout::SCROLL;
+    let label = value.map_or("—".into(), |v| v.label());
+    div()
+        .w_full()
+        .h(px(spec.volume_meter_height))
+        .relative()
+        .flex_none()
+        .child(
+            div()
+                .absolute()
+                .left_0()
+                .top_0()
+                .w_full()
+                .h(px(spec.volume_caption_line_height))
+                .line_height(px(spec.volume_caption_line_height))
+                .text_size(px(spec.volume_caption_font_size))
+                .text_color(colors.color(ColorRole::Secondary))
+                .truncate()
+                .child(label),
+        )
+        .child(
+            div()
+                .absolute()
+                .left_0()
+                .bottom_0()
+                .w_full()
+                .h(px(spec.volume_meter_thickness))
+                .rounded(px(spec.volume_meter_thickness / 2.))
+                .overflow_hidden()
+                .bg(colors.color(ColorRole::Border))
+                .when_some(value, |d, v| {
+                    d.child(
+                        div()
+                            .h_full()
+                            .w(relative(v.fraction()))
+                            .bg(colors.color(ColorRole::Secondary))
+                            .opacity(0.5),
+                    )
+                }),
+        )
+        .into_any_element()
+}
 use crate::navigation::{Location, Notice, TreeRow, Worker};
 pub struct NavigationUi {
     pub worker: Worker,
@@ -622,39 +668,7 @@ impl Backleaf {
                                                     .truncate()
                                                     .child(label),
                                             )
-                                            .child(
-                                                div()
-                                                    .h(px(16.))
-                                                    .line_height(px(16.))
-                                                    .text_size(px(11.))
-                                                    .text_color(colors.color(ColorRole::Secondary))
-                                                    .truncate()
-                                                    .child(
-                                                        location
-                                                            .capacity
-                                                            .map_or("— / —".into(), |v| {
-                                                                v.label()
-                                                            }),
-                                                    ),
-                                            )
-                                            .child(
-                                                div()
-                                                    .w_full()
-                                                    .h(px(2.))
-                                                    .rounded(px(1.))
-                                                    .overflow_hidden()
-                                                    .bg(colors.color(ColorRole::Border))
-                                                    .when_some(location.capacity, |d, v| {
-                                                        d.child(
-                                                            div()
-                                                                .h_full()
-                                                                .w(relative(v.fraction()))
-                                                                .bg(colors
-                                                                    .color(ColorRole::Secondary))
-                                                                .opacity(0.5),
-                                                        )
-                                                    }),
-                                            )
+                                            .child(capacity_meter(location.capacity, colors))
                                             .into_any_element()
                                     } else {
                                         div()

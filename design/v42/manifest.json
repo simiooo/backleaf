@@ -1,0 +1,43 @@
+{
+  "version": "v42-unified-capacity-meter",
+  "retainedPages": 247,
+  "pages": [
+    {
+      "key": "248-meter-ready",
+      "name": "248 · v42 meter-ready",
+      "nodes": 124,
+      "state": "ready"
+    },
+    {
+      "key": "249-meter-unknown",
+      "name": "249 · v42 meter-unknown",
+      "nodes": 121,
+      "state": "pending"
+    },
+    {
+      "key": "250-meter-small-units",
+      "name": "250 · v42 meter-small-units",
+      "nodes": 124,
+      "state": "small"
+    },
+    {
+      "key": "251-meter-low-space",
+      "name": "251 · v42 meter-low-space",
+      "nodes": 124,
+      "state": "low"
+    },
+    {
+      "key": "252-meter-selected",
+      "name": "252 · v42 meter-selected",
+      "nodes": 126,
+      "state": "mixed"
+    },
+    {
+      "key": "253-meter-dark",
+      "name": "253 · v42 meter-dark",
+      "nodes": 124,
+      "state": "dark"
+    }
+  ],
+  "source": "scripts/design/capacity-v42.mjs"
+}

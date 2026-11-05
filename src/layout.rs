@@ -136,6 +136,10 @@ pub struct Scroll {
     pub status_line_height: f32,
     pub sidebar_row_height: f32,
     pub volume_row_height: f32,
+    pub volume_caption_font_size: f32,
+    pub volume_caption_line_height: f32,
+    pub volume_meter_height: f32,
+    pub volume_meter_thickness: f32,
     pub sidebar_row_gap: f32,
     pub sidebar_padding_y: f32,
 }
