@@ -12,7 +12,7 @@ $candidates = foreach($version in Get-ChildItem -LiteralPath $redist -Directory)
         Get-ChildItem -LiteralPath $x64 -Directory | Where-Object {$_.Name -match '^Microsoft\.VC[0-9]+\.CRT$' -and (Test-Path -LiteralPath (Join-Path $_.FullName 'vcruntime140.dll'))}
     }
 }
-$source = $candidates | Sort-Object { [Version](Get-Item -LiteralPath (Join-Path $_.FullName 'vcruntime140.dll')).VersionInfo.FileVersion } -Descending | Select-Object -First 1 -ExpandProperty FullName
+$source = $candidates | Sort-Object { $v=(Get-Item -LiteralPath (Join-Path $_.FullName 'vcruntime140.dll')).VersionInfo; [Version](('{0}.{1}.{2}.{3}' -f $v.FileMajorPart,$v.FileMinorPart,$v.FileBuildPart,$v.FilePrivatePart)) } -Descending | Select-Object -First 1 -ExpandProperty FullName
 if (!$source) { throw 'x64 Microsoft VC CRT redist directory not found' }
 $out = [IO.Path]::GetFullPath($Output)
 $bundle = Join-Path $out 'runtime'
@@ -25,7 +25,8 @@ $files = foreach ($dll in Get-ChildItem -LiteralPath $source -Filter '*.dll' -Fi
     $pe = [BitConverter]::ToInt32($bytes, 60)
     if ([BitConverter]::ToUInt16($bytes, $pe + 4) -ne 0x8664) { throw 'Runtime DLL is not x64' }
     Copy-Item -LiteralPath $dll.FullName -Destination $bundle
-    [ordered]@{ name = $dll.Name; sha256 = (Get-FileHash -LiteralPath $dll.FullName).Hash.ToLowerInvariant(); version = $dll.VersionInfo.FileVersion; signer = $signature.SignerCertificate.Subject }
+    $v=$dll.VersionInfo
+    [ordered]@{ name = $dll.Name; sha256 = (Get-FileHash -LiteralPath $dll.FullName).Hash.ToLowerInvariant(); version = ('{0}.{1}.{2}.{3}' -f $v.FileMajorPart,$v.FileMinorPart,$v.FileBuildPart,$v.FilePrivatePart); signer = $signature.SignerCertificate.Subject }
 }
 foreach ($required in @('msvcp140.dll','vcruntime140.dll','vcruntime140_1.dll')) {
     if (!($files | Where-Object name -eq $required)) { throw "Missing runtime DLL: $required" }
@@ -35,12 +36,11 @@ $metadata | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath (Join-Path $bundl
 @'
 Microsoft Visual C++ Runtime (x64)
 Copyright Microsoft Corporation. All rights reserved.
-These unmodified redistributable files come from the licensed Visual Studio Microsoft.VC143.CRT redist directory.
+These unmodified redistributable files come from the licensed Visual Studio x64 CRT redist directory recorded in runtime.json.
 They remain subject to the applicable Microsoft Visual Studio software license terms and distributable-code terms.
 Redistribution and app-local deployment:
 https://learn.microsoft.com/cpp/windows/redistributing-visual-cpp-files
-Distributable code list:
-https://learn.microsoft.com/visualstudio/releases/2022/redistribution
+Refer to the applicable Visual Studio edition's Distributable Code list and terms:
 License terms:
 https://visualstudio.microsoft.com/license-terms/
 App-local runtime files must be updated with the application; no machine-wide runtime is installed or removed.
