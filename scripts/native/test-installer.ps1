@@ -51,11 +51,11 @@ function New-Fixture([string]$Version = '0.1.0-preview.15', [string]$Content = '
 
 # Only network, process enumeration and one rename fault are substituted. All hashes,
 # ZIP inspection/extraction, locks, install promotion, rollback and cleanup are real.
-function Invoke-RestMethod { param($Uri, $Headers, $ErrorAction) return $script:releases }
-function Invoke-WebRequest {
-    param($Uri, [switch]$UseBasicParsing, $OutFile, $ErrorAction)
+function Invoke-RestMethod { param($Uri, $Headers, $TimeoutSec, $ErrorAction) return $script:releases }
+function Invoke-BackleafDownload {
+    param($Uri, $Destination)
     if ($script:downloadFailure) { throw 'Simulated download failure.' }
-    Copy-Item -LiteralPath (Join-Path $script:fixture.dir ([Uri]$Uri).Segments[-1]) -Destination $OutFile
+    Copy-Item -LiteralPath (Join-Path $script:fixture.dir ([Uri]$Uri).Segments[-1]) -Destination $Destination
 }
 function Get-Process {
     param($Name, $ErrorAction)
@@ -184,7 +184,7 @@ try {
     Test-Case 'temporary installation trees are removed after success and failure' {
         Assert-True (@(Get-ChildItem -LiteralPath $script:target -Force | Where-Object { $_.Name -match '^\.(install|previous)-' }).Count -eq 0) 'Temporary tree leaked.'
     }
-    $report = [ordered]@{ passed = $true; powershell = $PSVersionTable.PSVersion.ToString(); test_count = $results.Count; tests = @($results.ToArray()); completed_at_utc = [DateTime]::UtcNow.ToString('o') }
+    $report = [ordered]@{ passed = $true; powershell = $PSVersionTable.PSVersion.ToString(); installer_sha256 = (Get-FileHash (Join-Path $project 'install.ps1')).Hash.ToLowerInvariant(); test_count = $results.Count; tests = @($results.ToArray()); completed_at_utc = [DateTime]::UtcNow.ToString('o') }
     $outputFull = [IO.Path]::GetFullPath($Output)
     New-Item -ItemType Directory -Path (Split-Path $outputFull -Parent) -Force | Out-Null
     $report | ConvertTo-Json -Depth 5 | Set-Content -LiteralPath $outputFull -Encoding UTF8

@@ -16,7 +16,7 @@ if (!$process.WaitForExit(30000)) {
 if ($process.ExitCode -ne 0 -or !(Test-Path -LiteralPath $sessionFile)) { throw 'Installed executable diagnostic failed.' }
 $hash = (Get-FileHash -LiteralPath $exe).Hash.ToLowerInvariant()
 if ($hash -ne $receipt.exe_sha256) { throw 'Installed executable changed after installation.' }
-$report = [ordered]@{ passed = $true; powershell = $PSVersionTable.PSVersion.ToString(); anonymous_download = $true
+$report = [ordered]@{ passed = $true; powershell = $PSVersionTable.PSVersion.ToString(); installer_sha256 = (Get-FileHash (Join-Path $project 'install.ps1')).Hash.ToLowerInvariant(); anonymous_download = $true
     tag = $receipt.tag; version = $receipt.version; source_commit = $receipt.source_commit; installed_path = $root
     installed_at_utc = $receipt.installed_at_utc; exe_sha256 = $hash; cli_smoke_passed = $true
     gui_smoke = 'not run; installation-only change'; session = (Get-Content -LiteralPath $sessionFile -Raw | ConvertFrom-Json) }

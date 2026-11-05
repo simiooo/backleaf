@@ -14,10 +14,10 @@ function Get-BackleafRelease {
     $api = 'https://api.github.com/repos/simiooo/backleaf/releases'
     if ($Tag) {
         if ($Tag -notmatch '^test-v[0-9]+\.[0-9]+\.[0-9]+-preview\.[0-9]+-[a-f0-9]{8}$') { throw 'Invalid Backleaf release tag.' }
-        $release = Invoke-RestMethod -Uri "$api/tags/$Tag" -Headers $headers -ErrorAction Stop
+        $release = Invoke-RestMethod -Uri "$api/tags/$Tag" -Headers $headers -TimeoutSec 30 -ErrorAction Stop
     } else {
         # /latest excludes prereleases. Select the newest published Backleaf test package.
-        $releases = Invoke-RestMethod -Uri "${api}?per_page=100" -Headers $headers -ErrorAction Stop
+        $releases = Invoke-RestMethod -Uri "${api}?per_page=100" -Headers $headers -TimeoutSec 30 -ErrorAction Stop
         $release = @($releases | Where-Object { !$_.draft -and $_.tag_name -match '^test-v[0-9]+\.[0-9]+\.[0-9]+-preview\.[0-9]+-[a-f0-9]{8}$' } |
             Sort-Object { [DateTimeOffset]$_.published_at } -Descending | Select-Object -First 1)
         if ($release.Count -ne 1) { throw 'No published Backleaf test package found.' }
@@ -32,10 +32,23 @@ function Save-BackleafAsset {
     if ($Asset.digest -notmatch '^sha256:[a-f0-9]{64}$' -or $Asset.size -le 0 -or $Asset.size -gt 256MB) { throw 'Release asset has no SHA256 digest or exceeds the size limit.' }
     $uri = [Uri]$Asset.browser_download_url
     if ($uri.Scheme -ne 'https' -or $uri.Host -ne 'github.com' -or !$uri.AbsolutePath.StartsWith('/simiooo/backleaf/releases/download/')) { throw 'Unexpected release download URL.' }
-    Invoke-WebRequest -Uri $uri.AbsoluteUri -UseBasicParsing -OutFile $Destination -ErrorAction Stop
+    Write-Host "Downloading $($Asset.name)..."
+    Invoke-BackleafDownload $uri.AbsoluteUri $Destination
     if ((Get-Item -LiteralPath $Destination).Length -ne $Asset.size -or
         ('sha256:' + (Get-FileHash -LiteralPath $Destination -Algorithm SHA256).Hash.ToLowerInvariant()) -ne $Asset.digest) {
         throw "Release asset integrity check failed: $($Asset.name)"
+    }
+}
+
+function Invoke-BackleafDownload {
+    param([string]$Uri, [string]$Destination)
+    # Windows' bundled curl has bounded redirects/timeouts across both PowerShell versions.
+    $curl = Get-Command curl.exe -CommandType Application -ErrorAction SilentlyContinue
+    if ($curl) {
+        & $curl.Source --fail --location --silent --show-error --proto '=https' --proto-redir '=https' --retry 1 --connect-timeout 15 --max-time 300 --speed-limit 1024 --speed-time 30 --max-filesize 268435456 --output $Destination -- $Uri
+        if ($LASTEXITCODE -ne 0) { throw "Release download failed (curl exit $LASTEXITCODE). Retry the install command." }
+    } else {
+        Invoke-WebRequest -Uri $Uri -UseBasicParsing -OutFile $Destination -TimeoutSec 60 -ErrorAction Stop
     }
 }
 
