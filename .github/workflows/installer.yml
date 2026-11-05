@@ -2,9 +2,9 @@ name: PowerShell installer
 on:
   push:
     branches: [staging, main, 'test/**']
-    paths: [install.ps1, 'scripts/native/test-installer*.ps1', .github/workflows/installer.yml]
+    paths: [install.ps1, 'scripts/native/test-installer*.ps1', scripts/native/test-runtime.ps1, .github/workflows/installer.yml]
   pull_request:
-    paths: [install.ps1, 'scripts/native/test-installer*.ps1', .github/workflows/installer.yml]
+    paths: [install.ps1, 'scripts/native/test-installer*.ps1', scripts/native/test-runtime.ps1, .github/workflows/installer.yml]
   workflow_dispatch:
 permissions:
   contents: read

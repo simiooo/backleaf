@@ -10,6 +10,8 @@ $results = New-Object 'System.Collections.Generic.List[object]'
 $script:failPromotion = $false
 $script:running = $false
 $script:downloadFailure = $false
+$originalPath = $env:PATH
+$originalTls = [Net.ServicePointManager]::SecurityProtocol
 
 function Assert-True($Value, [string]$Message) { if (!$Value) { throw $Message } }
 function Expect-Failure([scriptblock]$Action, [string]$Pattern) {
@@ -51,11 +53,17 @@ function New-Fixture([string]$Version = '0.1.0-preview.15', [string]$Content = '
 
 # Only network, process enumeration and one rename fault are substituted. All hashes,
 # ZIP inspection/extraction, locks, install promotion, rollback and cleanup are real.
-function Invoke-RestMethod { param($Uri, $Headers, $TimeoutSec, $ErrorAction) return $script:releases }
+function Invoke-RestMethod {
+    param($Uri, $Headers, $TimeoutSec, $ErrorAction)
+    if ($Uri -like '*/tags/runtime-v1') { return $script:runtimeFixture.release }
+    return $script:releases
+}
 function Invoke-BackleafDownload {
     param($Uri, $Destination)
     if ($script:downloadFailure) { throw 'Simulated download failure.' }
-    Copy-Item -LiteralPath (Join-Path $script:fixture.dir ([Uri]$Uri).Segments[-1]) -Destination $Destination
+    $base = $script:fixture.dir
+    if ($Uri -like '*/runtime-v1/*') { $base = $script:runtimeFixture.dir }
+    Copy-Item -LiteralPath (Join-Path $base ([Uri]$Uri).Segments[-1]) -Destination $Destination
 }
 function Get-Process {
     param($Name, $ErrorAction)
@@ -70,6 +78,23 @@ function Move-Item {
 try {
     New-Item -ItemType Directory -Path $sandbox | Out-Null
     $env:LOCALAPPDATA = Join-Path $sandbox 'local app data'
+    $runtimeDir = Join-Path $sandbox 'runtime-fixture'
+    $runtimePackage = Join-Path $runtimeDir 'package'
+    New-Item -ItemType Directory -Path $runtimePackage -Force | Out-Null
+    $runtimeFiles = foreach ($name in @('msvcp140.dll','vcruntime140.dll','vcruntime140_1.dll')) {
+        $path = Join-Path $runtimePackage $name
+        [IO.File]::WriteAllText($path, 'offline fixture runtime: ' + $name)
+        @{name=$name;sha256=(Get-FileHash -LiteralPath $path).Hash.ToLowerInvariant()}
+    }
+    @{id='runtime-v1';architecture='x64';files=@($runtimeFiles)}|ConvertTo-Json -Depth 5|Set-Content (Join-Path $runtimePackage 'runtime.json') -Encoding UTF8
+    'Offline runtime notice fixture' | Set-Content (Join-Path $runtimePackage 'NOTICE.txt')
+    $runtimeZip = Join-Path $runtimeDir 'Backleaf-runtime-x64.zip'
+    [IO.Compression.ZipFile]::CreateFromDirectory($runtimePackage, $runtimeZip)
+    $script:runtimeFixture = [PSCustomObject]@{dir=$runtimeDir;release=[PSCustomObject]@{tag_name='runtime-v1';draft=$false;assets=@([PSCustomObject]@{
+        name='Backleaf-runtime-x64.zip';state='uploaded';size=(Get-Item -LiteralPath $runtimeZip).Length
+        digest='sha256:'+(Get-FileHash -LiteralPath $runtimeZip).Hash.ToLowerInvariant()
+        browser_download_url='https://github.com/simiooo/backleaf/releases/download/runtime-v1/Backleaf-runtime-x64.zip'
+    })}}
     $script:target = Join-Path $env:LOCALAPPDATA 'Programs/Backleaf'
     $script:fixture = New-Fixture
     $script:releases = @($script:fixture.release)
@@ -183,6 +208,29 @@ try {
     }
     Test-Case 'temporary installation trees are removed after success and failure' {
         Assert-True (@(Get-ChildItem -LiteralPath $script:target -Force | Where-Object { $_.Name -match '^\.(install|previous)-' }).Count -eq 0) 'Temporary tree leaked.'
+    }
+    Test-Case 'runtime is installed app-local with license and receipt' {
+        foreach ($name in @('msvcp140.dll','vcruntime140.dll','vcruntime140_1.dll','licenses/MSVC-runtime/runtime.json','licenses/MSVC-runtime/NOTICE.txt')) {
+            Assert-True (Test-Path -LiteralPath (Join-Path $script:target ('current/'+$name))) 'App-local runtime or license missing.'
+        }
+        $receipt = Get-Content -LiteralPath (Join-Path $script:target 'current/.backleaf-install.json') -Raw|ConvertFrom-Json
+        Assert-True ($receipt.runtime.tag -eq 'runtime-v1') 'Runtime provenance missing.'
+        Assert-True ($receipt.runtime.files[0].sha256 -match '^[a-f0-9]{64}$') 'Runtime receipt was truncated.'
+    }
+    Test-Case 'runtime download corruption prevents application replacement' {
+        $asset = $script:runtimeFixture.release.assets[0]; $old = $asset.digest
+        $asset.digest = 'sha256:' + ('0' * 64)
+        try { Expect-Failure { Install-Backleaf -InstallDir $script:target -NoShortcut } 'integrity check failed' } finally { $asset.digest = $old }
+        Assert-True ((Get-Content (Join-Path $script:target 'current/Backleaf.exe') -Raw) -eq 'second binary') 'Runtime failure replaced existing app.'
+    }
+    Test-Case 'missing LOCALAPPDATA is reported without changing environment' {
+        $saved = $env:LOCALAPPDATA
+        try { $env:LOCALAPPDATA = $null; Expect-Failure { Install-Backleaf -NoShortcut } 'LOCALAPPDATA is unavailable' }
+        finally { $env:LOCALAPPDATA = $saved }
+    }
+    Test-Case 'installer preserves PATH and restores TLS configuration after success and errors' {
+        Assert-True ($env:PATH -ceq $originalPath) 'PATH changed.'
+        Assert-True ([Net.ServicePointManager]::SecurityProtocol -eq $originalTls) 'TLS configuration leaked.'
     }
     $report = [ordered]@{ passed = $true; powershell = $PSVersionTable.PSVersion.ToString(); installer_sha256 = (Get-FileHash (Join-Path $project 'install.ps1')).Hash.ToLowerInvariant(); test_count = $results.Count; tests = @($results.ToArray()); completed_at_utc = [DateTime]::UtcNow.ToString('o') }
     $outputFull = [IO.Path]::GetFullPath($Output)

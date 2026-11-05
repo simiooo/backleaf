@@ -2,7 +2,7 @@
 [CmdletBinding()]
 param(
     [string]$Tag,
-    [string]$InstallDir = (Join-Path $env:LOCALAPPDATA 'Programs\Backleaf'),
+    [string]$InstallDir,
     [switch]$NoShortcut,
     [switch]$DesktopShortcut,
     [switch]$Launch
@@ -50,6 +50,35 @@ function Invoke-BackleafDownload {
     } else {
         Invoke-WebRequest -Uri $Uri -UseBasicParsing -OutFile $Destination -TimeoutSec 60 -ErrorAction Stop
     }
+}
+
+function Add-BackleafRuntime {
+    param([string]$Work, [string]$Stage)
+    $runtimeTag = 'runtime-v1'
+    $release = Invoke-RestMethod -Uri "https://api.github.com/repos/simiooo/backleaf/releases/tags/$runtimeTag" -Headers @{ Accept = 'application/vnd.github+json'; 'User-Agent' = 'Backleaf-Installer' } -TimeoutSec 30 -ErrorAction Stop
+    if ($release.draft -or $release.tag_name -ne $runtimeTag) { throw 'Published Backleaf runtime support package is unavailable.' }
+    $asset = @($release.assets | Where-Object { $_.name -ceq 'Backleaf-runtime-x64.zip' -and $_.state -eq 'uploaded' })
+    if ($asset.Count -ne 1) { throw 'Runtime support asset is missing or ambiguous.' }
+    $archive = Join-Path $Work 'Backleaf-runtime-x64.zip'
+    Save-BackleafAsset $asset[0] $archive
+    $runtime = Join-Path $Work 'runtime'
+    Expand-BackleafPackage $archive $runtime
+    $manifest = Get-Content -LiteralPath (Join-Path $runtime 'runtime.json') -Raw | ConvertFrom-Json
+    if ($manifest.id -ne $runtimeTag -or $manifest.architecture -ne 'x64' -or !$manifest.files -or @($manifest.files).Count -gt 32) { throw 'Runtime support manifest mismatch.' }
+    $names = New-Object 'System.Collections.Generic.HashSet[string]' ([StringComparer]::OrdinalIgnoreCase)
+    foreach ($file in $manifest.files) {
+        if ($file.name -notmatch '^(msvcp140(?:_[a-z0-9_]+)?|vcruntime140(?:_[a-z0-9_]+)?|concrt140|vccorlib140)\.dll$' -or !$names.Add($file.name) -or $file.sha256 -notmatch '^[a-f0-9]{64}$') { throw 'Invalid runtime DLL manifest entry.' }
+        $source = Join-Path $runtime $file.name
+        if ((Get-FileHash -LiteralPath $source).Hash.ToLowerInvariant() -ne $file.sha256) { throw 'Runtime DLL integrity mismatch.' }
+    }
+    foreach ($required in @('msvcp140.dll','vcruntime140.dll','vcruntime140_1.dll')) {
+        if (!$names.Contains($required)) { throw "Required app-local runtime missing: $required" }
+    }
+    foreach ($file in $manifest.files) { Copy-Item -LiteralPath (Join-Path $runtime $file.name) -Destination (Join-Path $Stage $file.name) }
+    $notice = Join-Path $Stage 'licenses/MSVC-runtime'
+    New-Item -ItemType Directory -Path $notice -Force | Out-Null
+    Copy-Item -LiteralPath (Join-Path $runtime 'runtime.json'),(Join-Path $runtime 'NOTICE.txt') -Destination $notice
+    return [PSCustomObject]@{ tag = $runtimeTag; asset_sha256 = $asset[0].digest; files = @($manifest.files) }
 }
 
 function Assert-BackleafPath {
@@ -107,12 +136,13 @@ function Expand-BackleafPackage {
 
 function Install-Backleaf {
     [CmdletBinding()]
-    param([string]$Tag, [string]$InstallDir = (Join-Path $env:LOCALAPPDATA 'Programs\Backleaf'),
+    param([string]$Tag, [string]$InstallDir,
         [switch]$NoShortcut, [switch]$DesktopShortcut, [switch]$Launch)
     $ErrorActionPreference = 'Stop'
     $ProgressPreference = 'SilentlyContinue'
     if ([Environment]::OSVersion.Platform -ne 'Win32NT' -or ![Environment]::Is64BitOperatingSystem) { throw 'Backleaf requires 64-bit Windows.' }
-    [Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::Tls12
+    if ([string]::IsNullOrWhiteSpace($env:LOCALAPPDATA)) { throw 'Windows LOCALAPPDATA is unavailable. Run the installer in a signed-in Windows user session.' }
+    if (!$InstallDir) { $InstallDir = Join-Path $env:LOCALAPPDATA 'Programs\Backleaf' }
     $root = [IO.Path]::GetFullPath($InstallDir).TrimEnd('\')
     if (!$root -or $root -eq [IO.Path]::GetPathRoot($root).TrimEnd('\')) { throw 'InstallDir must be a dedicated application directory.' }
     $data = [IO.Path]::GetFullPath((Join-Path $env:LOCALAPPDATA 'Backleaf')).TrimEnd('\')
@@ -127,7 +157,9 @@ function Install-Backleaf {
     $work = Assert-BackleafPath $root (Join-Path $root ".install-$id")
     $backup = Assert-BackleafPath $root (Join-Path $root ".previous-$id")
     $committed = $false
+    $previousTls = [Net.ServicePointManager]::SecurityProtocol
     try {
+        [Net.ServicePointManager]::SecurityProtocol = $previousTls -bor [Net.SecurityProtocolType]::Tls12
         if (Test-Path -LiteralPath $current) {
             $receiptPath = Join-Path $current '.backleaf-install.json'
             if (!(Test-Path -LiteralPath $receiptPath) -or (Get-Content -LiteralPath $receiptPath -Raw | ConvertFrom-Json).application -ne 'Backleaf') { throw 'Existing current directory is not managed by the Backleaf installer.' }
@@ -159,8 +191,9 @@ function Install-Backleaf {
             $path = Join-Path $stage $pair[0]
             if ($pair[1] -notmatch '^[a-f0-9]{64}$' -or !(Test-Path -LiteralPath $path) -or (Get-FileHash -LiteralPath $path).Hash.ToLowerInvariant() -ne $pair[1]) { throw 'Installed executable or archive library integrity mismatch.' }
         }
-        $receipt = [ordered]@{ application = 'Backleaf'; version = $version; tag = $release.tag_name; source_commit = $metadata.source_commit; installed_at_utc = [DateTime]::UtcNow.ToString('o'); exe_sha256 = $metadata.exe_sha256 }
-        $receipt | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $stage '.backleaf-install.json') -Encoding UTF8
+        $runtime = Add-BackleafRuntime $work $stage
+        $receipt = [ordered]@{ application = 'Backleaf'; version = $version; tag = $release.tag_name; source_commit = $metadata.source_commit; installed_at_utc = [DateTime]::UtcNow.ToString('o'); exe_sha256 = $metadata.exe_sha256; runtime = $runtime }
+        $receipt | ConvertTo-Json -Depth 7 | Set-Content -LiteralPath (Join-Path $stage '.backleaf-install.json') -Encoding UTF8
         # Same-volume renames. If promotion fails, restore the previous working install.
         if (Test-Path -LiteralPath $current) { Move-Item -LiteralPath $current -Destination $backup }
         try { Move-Item -LiteralPath $stage -Destination $current }
@@ -191,7 +224,7 @@ function Install-Backleaf {
         if ($committed) { throw "Backleaf was installed, but post-install cleanup failed: $($_.Exception.Message)" }
         throw
     } finally {
-        try { Remove-BackleafWork $root $work } finally { $lock.Dispose() }
+        try { Remove-BackleafWork $root $work } finally { [Net.ServicePointManager]::SecurityProtocol = $previousTls; $lock.Dispose() }
     }
 }
 

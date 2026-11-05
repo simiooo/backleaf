@@ -12,7 +12,7 @@ Windows PowerShell 5.1 / PowerShell 7，一行安装最新测试版，无需管�
 irm https://raw.githubusercontent.com/simiooo/backleaf/staging/install.ps1 | iex
 ```
 
-从开始菜单打开 Backleaf。重复运行同一命令即可升级，升级前请关闭 Backleaf。安装目录为`%LOCALAPPDATA%\Programs\Backleaf\current`，用户数据仍保存在`%LOCALAPPDATA%\Backleaf`。脚本校验 GitHub 资产 SHA256、包内 EXE/归档库及版本来源，失败不替换已安装版本。[安装参数与验证](docs/install.md)。
+从开始菜单打开 Backleaf。重复运行同一命令即可升级，升级前请关闭 Backleaf。安装目录为`%LOCALAPPDATA%\Programs\Backleaf\current`，用户数据仍保存在`%LOCALAPPDATA%\Backleaf`。脚本自动补齐应用目录内的VC++运行库，校验 GitHub 资产 SHA256、包内 EXE/归档库及版本来源，失败不替换已安装版本。无需配置环境变量；不修改全局PATH。[安装参数与验证](docs/install.md)。
 
 Windows/MSVC/Rust 1.99.1：
 
