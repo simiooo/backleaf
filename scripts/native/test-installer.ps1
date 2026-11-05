@@ -8,7 +8,9 @@ $sandbox = Join-Path ([IO.Path]::GetTempPath()) ('backleaf-installer-test-' + [G
 $originalLocal = $env:LOCALAPPDATA
 $results = New-Object 'System.Collections.Generic.List[object]'
 $script:failPromotion = $false
-$script:running = $false
+$script:ghost = $false
+$script:inspectGuard = $false
+$script:guardObserved = $false
 $script:downloadFailure = $false
 $originalPath = $env:PATH
 $originalTls = [Net.ServicePointManager]::SecurityProtocol
@@ -51,8 +53,9 @@ function New-Fixture([string]$Version = '0.1.0-preview.15', [string]$Content = '
     return [PSCustomObject]@{ dir = $dir; release = [PSCustomObject]@{ tag_name = $tag; draft = $false; published_at = '2026-11-05T06:50:20Z'; assets = @($assets) } }
 }
 
-# Only network, process enumeration and one rename fault are substituted. All hashes,
-# ZIP inspection/extraction, locks, install promotion, rollback and cleanup are real.
+# Network and one rename fault are substituted. Get-Process exposes a stale record
+# only to catch a return to name-based detection. Image locks, hashes, ZIP handling,
+# install promotion, rollback and cleanup use the real Windows filesystem.
 function Invoke-RestMethod {
     param($Uri, $Headers, $TimeoutSec, $ErrorAction)
     if ($Uri -like '*/tags/runtime-v2') { return $script:runtimeFixture.release }
@@ -61,13 +64,22 @@ function Invoke-RestMethod {
 function Invoke-BackleafDownload {
     param($Uri, $Destination)
     if ($script:downloadFailure) { throw 'Simulated download failure.' }
+    if ($script:inspectGuard) {
+        $script:inspectGuard = $false
+        $reader = $null
+        try {
+            $reader = [IO.File]::Open((Join-Path $script:target 'current/Backleaf.exe'), 'Open', 'Read', 'ReadWrite,Delete')
+            throw 'Upgrade guard allowed a new image reader.'
+        } catch [IO.IOException] { $script:guardObserved = $true }
+        finally { if ($reader) { $reader.Dispose() } }
+    }
     $base = $script:fixture.dir
     if ($Uri -like '*/runtime-v2/*') { $base = $script:runtimeFixture.dir }
     Copy-Item -LiteralPath (Join-Path $base ([Uri]$Uri).Segments[-1]) -Destination $Destination
 }
 function Get-Process {
     param($Name, $ErrorAction)
-    if ($script:running) { return [PSCustomObject]@{ Path = Join-Path $script:target 'current/Backleaf.exe' } }
+    if ($script:ghost) { return [PSCustomObject]@{ Id = 8236; Path = $null; Threads = @(); HandleCount = 0 } }
 }
 function Move-Item {
     param($LiteralPath, $Destination)
@@ -123,13 +135,48 @@ try {
         Assert-True ((Get-Content (Join-Path $script:target 'personal.txt') -Raw) -eq 'keep me') 'Unrelated file changed.'
     }
     Test-Case 'running application blocks upgrade without termination' {
-        $script:running = $true
-        try { Expect-Failure { Install-Backleaf -InstallDir $script:target -NoShortcut } 'Close Backleaf' } finally { $script:running = $false }
+        # A real Windows executable image, not mocked process.Path or a fake lock.
+        $runningRoot = Join-Path $sandbox 'running-install'
+        $runningCurrent = Join-Path $runningRoot 'current'
+        New-Item -ItemType Directory -Path $runningCurrent -Force | Out-Null
+        $runningExe = Join-Path $runningCurrent 'Backleaf.exe'
+        Copy-Item -LiteralPath (Join-Path $env:WINDIR 'System32/ping.exe') -Destination $runningExe
+        @{application='Backleaf'} | ConvertTo-Json | Set-Content (Join-Path $runningCurrent '.backleaf-install.json') -Encoding UTF8
+        $before = (Get-FileHash -LiteralPath $runningExe).Hash
+        $probe = Start-Process -FilePath $runningExe -ArgumentList @('-n','30','127.0.0.1') -WindowStyle Hidden -PassThru
+        try {
+            Assert-True (!$probe.WaitForExit(200)) 'Owned image probe exited before the lock test.'
+            Expect-Failure { Install-Backleaf -InstallDir $runningRoot -NoShortcut } 'Close Backleaf'
+            Assert-True (!$probe.HasExited) 'Installer terminated a running process.'
+            Assert-True ((Get-FileHash -LiteralPath $runningExe).Hash -eq $before) 'Running image changed.'
+            # It must not block upgrading a different installed executable.
+            Install-Backleaf -InstallDir $script:target -NoShortcut | Out-Null
+        } finally {
+            # Only the exact test process we created above, never a user's instance.
+            if (!$probe.HasExited) { $probe.Kill(); $probe.WaitForExit() }
+            $probe.Dispose()
+        }
+    }
+    Test-Case 'unreadable zero-thread process record does not block an unused installed executable' {
+        $script:ghost = $true
+        try { Install-Backleaf -InstallDir $script:target -NoShortcut | Out-Null }
+        finally { $script:ghost = $false }
+        Assert-True ((Get-Content (Join-Path $script:target 'current/Backleaf.exe') -Raw) -eq 'second binary') 'Installed bytes changed unexpectedly.'
+    }
+    Test-Case 'upgrade guard denies new image readers throughout download and permits promotion' {
+        $script:inspectGuard = $true; $script:guardObserved = $false
+        try { Install-Backleaf -InstallDir $script:target -NoShortcut | Out-Null }
+        finally { $script:inspectGuard = $false }
+        Assert-True $script:guardObserved 'Installed image was not guarded during download.'
+        $reader = [IO.File]::Open((Join-Path $script:target 'current/Backleaf.exe'), 'Open', 'ReadWrite', 'None')
+        $reader.Dispose()
     }
     Test-Case 'failed download leaves the previous installation intact' {
         $script:downloadFailure = $true
         try { Expect-Failure { Install-Backleaf -InstallDir $script:target -NoShortcut } 'download failure' } finally { $script:downloadFailure = $false }
         Assert-True ((Get-Content (Join-Path $script:target 'current/Backleaf.exe') -Raw) -eq 'second binary') 'Previous installation lost.'
+        $reader = [IO.File]::Open((Join-Path $script:target 'current/Backleaf.exe'), 'Open', 'ReadWrite', 'None')
+        $reader.Dispose()
     }
     Test-Case 'asset digest mismatch is rejected before replacing current' {
         $asset = $script:fixture.release.assets[0]; $old = $asset.digest

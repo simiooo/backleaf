@@ -157,17 +157,25 @@ function Install-Backleaf {
     $work = Assert-BackleafPath $root (Join-Path $root ".install-$id")
     $backup = Assert-BackleafPath $root (Join-Path $root ".previous-$id")
     $committed = $false
+    $executableGuard = $null
     $previousTls = [Net.ServicePointManager]::SecurityProtocol
     try {
         [Net.ServicePointManager]::SecurityProtocol = $previousTls -bor [Net.SecurityProtocolType]::Tls12
         if (Test-Path -LiteralPath $current) {
             $receiptPath = Join-Path $current '.backleaf-install.json'
             if (!(Test-Path -LiteralPath $receiptPath) -or (Get-Content -LiteralPath $receiptPath -Raw | ConvertFrom-Json).application -ne 'Backleaf') { throw 'Existing current directory is not managed by the Backleaf installer.' }
-            # No forced termination: users must be able to finish in-flight file operations.
-            foreach ($process in Get-Process -Name Backleaf -ErrorAction SilentlyContinue) {
-                try { $exe = $process.Path } catch { throw 'Cannot determine whether Backleaf is running. Close it and retry.' }
-                if (!$exe -or $exe.StartsWith($current + '\', [StringComparison]::OrdinalIgnoreCase)) { throw 'Close Backleaf before upgrading, then run the same install command again.' }
+            # An executing image cannot be opened for writing. Lock the installed
+            # image itself, not every same-named process (which can be a dead object
+            # with an unreadable Path). No bytes are written and no process is killed.
+            # Deny new readers/launches until promotion, but permit our directory
+            # rename, rollback and backup deletion while this handle is held.
+            $installedExe = Assert-BackleafPath $root (Join-Path $current 'Backleaf.exe')
+            try { $executableGuard = [IO.File]::Open($installedExe, [IO.FileMode]::Open, [IO.FileAccess]::ReadWrite, [IO.FileShare]::Delete) }
+            catch [IO.IOException] {
+                if (($_.Exception.HResult -band 0xffff) -in @(32,33)) { throw 'Close Backleaf before upgrading, then run the same install command again. The installed executable is in use.' }
+                throw "Cannot lock the installed Backleaf executable for upgrade: $($_.Exception.Message)"
             }
+            catch { throw "Cannot lock the installed Backleaf executable for upgrade: $($_.Exception.Message)" }
         }
         Write-Host 'Finding Backleaf release...'
         $release = Get-BackleafRelease $Tag
@@ -224,7 +232,11 @@ function Install-Backleaf {
         if ($committed) { throw "Backleaf was installed, but post-install cleanup failed: $($_.Exception.Message)" }
         throw
     } finally {
-        try { Remove-BackleafWork $root $work } finally { [Net.ServicePointManager]::SecurityProtocol = $previousTls; $lock.Dispose() }
+        try { Remove-BackleafWork $root $work } finally {
+            if ($executableGuard) { $executableGuard.Dispose() }
+            [Net.ServicePointManager]::SecurityProtocol = $previousTls
+            $lock.Dispose()
+        }
     }
 }
 
