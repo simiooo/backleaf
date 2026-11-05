@@ -2,12 +2,12 @@
 
 Current application package: preview.15 source `786c6e53acd66e7e0a139b30aa6b4dc75e464897`, editable OpenPencil v38 (233 pages). Scope SIM-919, constraints SIM-934. The entries below reflect the current queue; the dated records afterwards preserve earlier delivery boundaries.
 
-SIM-998 is the current engineering unit: public PowerShell one-line installation, upgrade/integrity/rollback regressions and CI. SIM-992 implementation and preview.15 package are published; local native-only checks passed, but physical Escape stopped the final downloaded-window check. Its claim was released with a handoff and that remaining check is not counted as passed. Repository visibility was changed to public on 2026-11-05 at the user's explicit request.
+SIM-998 public PowerShell one-line installation is available for product review, with upgrade/integrity/rollback regressions and CI. SIM-992 implementation and preview.15 package are published; local native-only checks passed, but physical Escape stopped the final downloaded-window check. Its claim was released with a handoff and that remaining check is not counted as passed. Repository visibility was changed to public on 2026-11-05 at the user's explicit request.
 
 | Queue | Issue | Current scope |
 | --- | --- | --- |
 | accepted baseline | SIM-921 / SIM-948 | User accepted v6 for implementation; subsequent feedback is retained in v38 |
-| focus_issue | SIM-998 | PowerShell per-user installer and anonymous public release download |
+| review_queue | SIM-998 | Public PowerShell per-user installer, 16 regressions on each PowerShell version, anonymous release installation/CLI smoke, default Start menu installation |
 | remaining acceptance check | SIM-992 | 16 production GPUI headless interactions plus 81 existing tests passed locally and in CI; downloaded visible-window smoke was interrupted by user, no further desktop automation performed |
 | review_queue | SIM-978 | Owned self-drawn context-menu windows and isolated third-party commands; preview.14 staging, CI, download and downloaded-window smoke passed |
 | review_queue | SIM-974 | Native OLE real-file external/cross-window transfer delivered in preview.14; synchronous/asynchronous COM and actual move tested, full Explorer/cross-window mouse gesture remains unverified due tool boundary |
@@ -19,6 +19,8 @@ SIM-998 is the current engineering unit: public PowerShell one-line installation
 `in_review` means engineering delivery is available for product acceptance, not that product acceptance has completed. Product feedback remains authoritative. Preview.14 implementation and checks are described in [the batch record](ole-and-extension-batch.md); binary-specific evidence and limitations are in [preview.14 evidence](evidence/preview-14/README.md). The cancelled fd5368c candidate is superseded and is not a delivered release.
 
 Historical delivery records follow. Statements about missing features refer to their dated version, not to the current queue.
+
+2026-11-05 15:14:42+08: PowerShell installer source `adcf5f8` published on staging; [installation CI 41985734534](https://github.com/simiooo/backleaf/actions/runs/41985734534) passed Windows PowerShell 5.1 and PowerShell 7 regressions and real anonymous installs of preview.15. The public README one-line command installed to the current user's default Programs/Backleaf directory, created a verified Start menu shortcut and passed installed CLI smoke. [Installation evidence](evidence/installer/README.md) includes downloaded CI reports and source-byte verification. Application binary source remains `786c6e53`; no new application package was needed for this installer change.
 
 2026-11-05 14:50:20+08: [preview.15](https://github.com/simiooo/backleaf/releases/tag/test-v0.1.0-preview.15-786c6e53) published from source `786c6e53`. [Headless CI 41981505538](https://github.com/simiooo/backleaf/actions/runs/41981505538) and [package CI 41981507643](https://github.com/simiooo/backleaf/actions/runs/41981507643) completed successfully. Asset digests/downloaded bytes, packaged executable and 16-case report matched CI provenance; anonymous installation and installed CLI smoke also passed during SIM-998. The separately hashed local build passed independent owned-popup and 100k/10M visible probes. [Evidence](evidence/preview-15/README.md) records exact scope; the downloaded build's final visible-window check remains unverified after the user stopped Computer Use. [Search/index status](search-index-status.md) distinguishes the implemented persistent incremental index from the unimplemented cross-query result cache.
 

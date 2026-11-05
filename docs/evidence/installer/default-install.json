@@ -1,0 +1,22 @@
+{
+  "installed": true,
+  "shortcut_path": "C:\\Users\\qq651\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Backleaf.lnk",
+  "receipt": {
+    "application": "Backleaf",
+    "version": "0.1.0-preview.15",
+    "tag": "test-v0.1.0-preview.15-786c6e53",
+    "source_commit": "786c6e53acd66e7e0a139b30aa6b4dc75e464897",
+    "installed_at_utc": "2026-11-05T07:14:42.737045Z",
+    "exe_sha256": "acf3aef0547f608cb7113e31967255c4fd8bcac4c888092ad4dcd4b5db87b4bc"
+  },
+  "install_path": "C:\\Users\\qq651\\AppData\\Local\\Programs\\Backleaf\\current",
+  "completed_at_utc": "2026-11-05T07:15:56.623845Z",
+  "exe_sha256": "acf3aef0547f608cb7113e31967255c4fd8bcac4c888092ad4dcd4b5db87b4bc",
+  "shortcut_exists": true,
+  "cli_smoke_passed": true,
+  "session": {
+    "locked": false,
+    "error": null
+  },
+  "shortcut_target": "C:\\Users\\qq651\\AppData\\Local\\Programs\\Backleaf\\current\\Backleaf.exe"
+}

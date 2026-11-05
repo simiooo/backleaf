@@ -1,0 +1,28 @@
+{
+  "passed": true,
+  "verified_at_utc": "2026-11-05T07:17:46.8108873Z",
+  "installer_crlf_sha256": "aa8bc7ed6e6e82ed1c99a916c5198fe41e83b692ed989bd1030e215888636017",
+  "reports": [
+    {
+      "passed": true,
+      "name": "installer-online-5.json",
+      "sha256": "feb7b612b64c7f9ac8f61eb103101651aa2ee31274c60b12b57124e2c958e976"
+    },
+    {
+      "passed": true,
+      "name": "installer-online-7.json",
+      "sha256": "e288dd28f7dca26355b3d1eb54805aa7faff3e45e1b1f226a971cb90bb58d338"
+    },
+    {
+      "passed": true,
+      "name": "installer-tests-5.json",
+      "sha256": "6e46bae31c27076429d669d6c8e35a38340c437694585d8d9369daace1aaa6fb"
+    },
+    {
+      "passed": true,
+      "name": "installer-tests-7.json",
+      "sha256": "af1912b80bd0ebedc0071f30b6e6810d50e0e424c8b7f3b143605d2212da0d68"
+    }
+  ],
+  "installer_commit": "adcf5f8834d4421d775cd478001075b5811e801d"
+}
