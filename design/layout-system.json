@@ -12,7 +12,7 @@
     "Normal, hover, selected and focus keep the same layout cell and measured identity bounds. Cell whitespace is not a file hit target.",
     "The visible file state surface hugs the 44px icon and measured text; it does not fill the 112px layout cell.",
     "A short name produces a 92px visual surface; a two-line name produces 108px. The fixed row step is 128px.",
-    "Menu text starts 12px from the outer edge and 16px from its top: 4+8 horizontally and 8+(32-16)/2 vertically, repeating the content inset.",
+    "Menu rows share 4px surface padding + 8px row inset; a repeated 12px check/radio gutter and 8px gap align every label at 32px. Labels remain vertically centered in 32px rows; surface Y padding is 8px.",
     "Control 8, file identity 10 and floating surface 12 are role-based radii; only real floating surfaces receive shadows.",
     "Keyboard focus raises the measured filename caption with a neutral fill and faint shadow; font weight, layout, text insets and hit bounds remain stable in all states.",
     "Primary actions receive 4px more horizontal room than secondary actions; section breaks are larger than the repeated row beat."

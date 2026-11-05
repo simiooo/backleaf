@@ -32,6 +32,14 @@ pub struct Detail {
     pub identity: Option<[u8; 33]>,
 }
 pub enum Event {
+    OleChanged,
+    OleTask(u64),
+    OlePin {
+        path: PathBuf,
+        before: Option<String>,
+        revision: u64,
+    },
+    OleSourceEnded(i32),
     ApplicationIconsChanged,
     WindowStateSaved {
         revision: u64,
@@ -39,6 +47,7 @@ pub enum Event {
         result: Result<(), String>,
     },
     ShellMenuClosed(Result<(), String>),
+    ShellRows(crate::shell_menu::Notice),
     ArchivePrepared {
         token: u64,
         result: Result<crate::app_archive::Prepared, String>,

@@ -48,6 +48,10 @@ impl Backleaf {
             || self.files.menu.is_some()
             || self.selection_busy()
             || self.drag.gesture.is_some()
+            || self
+                .ole
+                .as_ref()
+                .is_some_and(|site| site.busy() || site.pointer().is_some())
             || self.navigation.drag.is_some()
             || self.files.hub.active()
             || !self.source.finished()

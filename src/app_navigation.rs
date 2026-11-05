@@ -7,6 +7,7 @@ pub struct NavigationUi {
     pub resolver: crate::locations::Resolver,
     pub volume_worker: Option<crate::locations::Volumes>,
     pub window_active: bool,
+    pub menu_focus_transfer: bool,
     pub volumes: Vec<Location>,
     pub menu: Option<Entity<crate::menu::FileMenu>>,
     pub pending: Option<u64>,
@@ -43,6 +44,7 @@ impl NavigationUi {
             resolver: crate::locations::Resolver::new(tx.clone()),
             volume_worker: real.then(|| crate::locations::Volumes::new(tx)),
             window_active: true,
+            menu_focus_transfer: false,
             volumes: vec![],
             menu: None,
             pending: None,
@@ -115,7 +117,11 @@ impl Backleaf {
         self.navigation.menu_subscription = Some(cx.subscribe_in(
             &menu,
             window,
-            move |this, _, event: &MenuEvent, window, cx| {
+            move |this, source, event: &MenuEvent, window, cx| {
+                if this.navigation.menu.as_ref().map(Entity::entity_id) != Some(source.entity_id())
+                {
+                    return;
+                }
                 this.navigation.menu = None;
                 if let Some(focus) = &restore {
                     window.focus(focus, cx);
@@ -142,9 +148,12 @@ impl Backleaf {
                 cx.notify();
             },
         ));
-        window.focus(&menu.focus_handle(cx), cx);
         self.files.focus_grid = false;
-        self.navigation.menu = Some(menu);
+        self.navigation.menu = Some(menu.clone());
+        if let Err(error) = crate::popup_menu::open(menu, window, cx.entity().downgrade(), cx) {
+            self.navigation.menu = None;
+            self.navigation_error(error.to_string(), cx);
+        }
         cx.notify();
     }
     pub fn navigation_overlay(&self, window: &Window) -> AnyElement {
@@ -152,7 +161,6 @@ impl Backleaf {
         div()
             .absolute()
             .inset_0()
-            .children(self.navigation.menu.clone())
             .when_some(self.navigation.toast.clone(), |d, error| {
                 d.child(
                     div()

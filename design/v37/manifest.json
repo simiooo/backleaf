@@ -1,0 +1,61 @@
+{
+  "version": "v37-ole-and-custom-extensions",
+  "retainedPages": 221,
+  "pages": [
+    {
+      "key": "222-cross-window-move",
+      "name": "222 · v37 cross-window-move",
+      "nodes": 237,
+      "state": "cross"
+    },
+    {
+      "key": "223-external-copy",
+      "name": "223 · v37 external-copy",
+      "nodes": 118,
+      "state": "copy"
+    },
+    {
+      "key": "224-external-move",
+      "name": "224 · v37 external-move",
+      "nodes": 118,
+      "state": "move"
+    },
+    {
+      "key": "225-external-pin",
+      "name": "225 · v37 external-pin",
+      "nodes": 118,
+      "state": "pin"
+    },
+    {
+      "key": "226-invalid-drop",
+      "name": "226 · v37 invalid-drop",
+      "nodes": 118,
+      "state": "invalid"
+    },
+    {
+      "key": "227-outbound-files",
+      "name": "227 · v37 outbound-files",
+      "nodes": 118,
+      "state": "outbound"
+    },
+    {
+      "key": "228-extension-rows",
+      "name": "228 · v37 extension-rows",
+      "nodes": 126,
+      "state": "menu"
+    },
+    {
+      "key": "229-extension-submenu",
+      "name": "229 · v37 extension-submenu",
+      "nodes": 130,
+      "state": "submenu"
+    },
+    {
+      "key": "230-extension-unavailable",
+      "name": "230 · v37 extension-unavailable",
+      "nodes": 118,
+      "state": "error"
+    }
+  ],
+  "source": "scripts/design/ole-menus-v37.mjs"
+}

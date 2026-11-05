@@ -1,0 +1,25 @@
+{
+  "version": "v38-owned-menu-windows",
+  "retainedPages": 230,
+  "pages": [
+    {
+      "key": "231-owned-context-window",
+      "name": "231 · v38 owned-context-window",
+      "nodes": 155,
+      "state": "main"
+    },
+    {
+      "key": "232-owned-submenu-window",
+      "name": "232 · v38 owned-submenu-window",
+      "nodes": 168,
+      "state": "submenu"
+    },
+    {
+      "key": "233-menu-focus-return",
+      "name": "233 · v38 menu-focus-return",
+      "nodes": 116,
+      "state": "dismissed"
+    }
+  ],
+  "source": "scripts/design/menu-windows-v38.mjs"
+}

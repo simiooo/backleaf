@@ -1,0 +1,44 @@
+{
+  "recorded_at": "2026-11-05T05:16:54.370521+00:00",
+  "builds": [
+    {
+      "build": "app-v5",
+      "exe_sha256": "cf5d3656148f90693a9b3a264c200a6909a42da4bea373cfcb4c06260f6d325a"
+    },
+    {
+      "build": "app-v6",
+      "exe_sha256": "13f480fdfcb10b6053021518e78ff50cc014d473e394ea90b14ead6f7066b103"
+    },
+    {
+      "build": "app-v8",
+      "exe_sha256": "67b695c883b35d094a1367e82e6a10a32f5ce065655ba297c775a20b08bb1388"
+    },
+    {
+      "build": "app-final",
+      "exe_sha256": "2735261e29f292b280e13bf7703b9abb2f7b1d80b3678dcc8db028be2ebf667d"
+    }
+  ],
+  "scope": {
+    "app-v5": "Owned menu + dynamic 7-Zip submenu and actual single archive test",
+    "app-v6": "Actual multi-archive 7-Zip test; initial OLE move result, with release-message defect still being repaired",
+    "app-v8": "Fast native OLE move completed without further key input; Beta.txt 1/1,20/20 bytes. Later pin placement/protocol-test and documentation changes are tracked separately.",
+    "app-final": "Final binary: native folder pin inserted before Desktop, source preserved; owned blank menu observed outside parent bounds; Esc dismissal and normal main-window close."
+  },
+  "limitations": "Sky rejected outbound drag endpoint beyond source window bounds; no cross-window/Explorer GUI drag pass claimed.",
+  "initial_outside_popup_geometry": {
+    "scale_factor": 1.25,
+    "owner_screenshot": {
+      "originX": 579,
+      "originY": 236,
+      "logical_width": 1122,
+      "logical_height": 721
+    },
+    "popup_screenshot": {
+      "originX": 1928,
+      "originY": 1048,
+      "logical_width": 276,
+      "logical_height": 192
+    },
+    "state": "initial loading; provider rows later resized normally"
+  }
+}

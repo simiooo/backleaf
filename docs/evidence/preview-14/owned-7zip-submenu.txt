@@ -1,0 +1,123 @@
+Window: "拾径 · Backleaf", App: Backleaf.exe.
+	0 区域 拾径 · Backleaf Secondary Actions: Raise
+		39 区域 Backleaf 文件菜单 Secondary Actions: Raise
+			40 菜单 文件菜单
+				41 菜单项 打开
+				42 菜单项 复制
+				43 菜单项 剪切
+				44 菜单项 复制路径
+				45 菜单项 重命名
+				46 菜单项 移至回收站
+				47 菜单项 详情
+				48 菜单项 压缩为 ZIP…
+				49 菜单项 解压到…
+				50 菜单项 火绒安全软件
+				52 菜单项 上传到迅雷云盘
+				53 菜单项 Open with Zed
+				54 菜单项 通过QQ发送到
+				55 菜单项 添加到收藏夹(F)
+				56 菜单项 全部解压缩(T)...
+				57 菜单项 7-Zip
+				58 菜单项 固定到“开始”(P)
+				59 菜单项 Edit with Vim
+				60 菜单项 打开方式(H)
+				61 菜单项 WPS解压
+				62 菜单项 上传或同步到WPS
+				63 菜单项 通过WPS发送
+				64 菜单项 复制文件地址(A)
+				65 菜单项 共享(S)
+				66 菜单项 还原以前的版本(V)
+				67 菜单项 发送到(N)
+				68 菜单项 创建快捷方式(S)
+				69 菜单项 打开压缩包
+				70 菜单项 打开压缩包
+				71 菜单项 解压文件...
+				72 菜单项 解压到当前位置
+				73 菜单项 解压到 "Archive\"
+				74 菜单项 测试压缩包
+				75 菜单项 添加到压缩包...
+				76 菜单项 压缩并发送邮件...
+				77 菜单项 添加到 "Archive_2.7z"
+				78 菜单项 压缩 "Archive_2.7z" 并发送邮件
+				79 菜单项 添加到 "Archive_2.zip"
+				80 菜单项 压缩 "Archive_2.zip" 并发送邮件
+				81 菜单项 CRC SHA
+		1 标题栏 (settable, string) Value: 拾径 · Backleaf
+			2 菜单栏 系统 ID: MenuBar
+				3 菜单项 系统
+			4 按钮 最小化
+			5 按钮 最大化
+			6 按钮 关闭
+		7 应用程序 拾径 Backleaf
+			8 按钮 后退
+			9 按钮 上一级
+			10 导航 当前位置 D:/work/backleaf/.local/ole-ui-test/source
+				11 链接 前往 D:/
+				12 按钮 显示折叠的上级路径
+				13 链接 前往 D:/work/backleaf/.local/ole-ui-test
+				14 按钮 编辑当前位置 D:/work/backleaf/.local/ole-ui-test/source Value: D:/work/backleaf/.local/ole-ui-test/source
+				15 按钮 浏览当前目录层级
+			16 按钮 搜索文件名，Ctrl+F
+			17 按钮 最小化
+			18 按钮 最大化或还原
+			19 按钮 关闭
+			20 导航 快捷访问
+				21 按钮 个人文件夹，C:\Users\qq651
+				22 按钮 桌面，C:\Users\qq651\Desktop
+				23 按钮 下载，C:\Users\qq651\Downloads
+				24 按钮 文档，C:\Users\qq651\Documents
+				25 按钮 图片，C:\Users\qq651\Pictures
+				26 按钮 音乐，C:\Users\qq651\Music
+				27 按钮 视频，C:\Users\qq651\Videos
+				28 按钮 Windows-SSD (C:)，C:\
+				29 按钮 Data (D:)，D:\
+			30 列表 文件
+				35 选项 (selectable) Alpha.txt
+				36 选项 (selectable) Archive.zip
+				37 选项 (selectable) Beta.txt
+				38 选项 (selectable) Folder-A
+			51 文本 已选 1 项
+		39 区域 Backleaf 文件菜单 Secondary Actions: Raise
+			40 菜单 文件菜单
+				41 菜单项 打开
+				42 菜单项 复制
+				43 菜单项 剪切
+				44 菜单项 复制路径
+				45 菜单项 重命名
+				46 菜单项 移至回收站
+				47 菜单项 详情
+				48 菜单项 压缩为 ZIP…
+				49 菜单项 解压到…
+				50 菜单项 火绒安全软件
+				52 菜单项 上传到迅雷云盘
+				53 菜单项 Open with Zed
+				54 菜单项 通过QQ发送到
+				55 菜单项 添加到收藏夹(F)
+				56 菜单项 全部解压缩(T)...
+				57 菜单项 7-Zip
+				58 菜单项 固定到“开始”(P)
+				59 菜单项 Edit with Vim
+				60 菜单项 打开方式(H)
+				61 菜单项 WPS解压
+				62 菜单项 上传或同步到WPS
+				63 菜单项 通过WPS发送
+				64 菜单项 复制文件地址(A)
+				65 菜单项 共享(S)
+				66 菜单项 还原以前的版本(V)
+				67 菜单项 发送到(N)
+				68 菜单项 创建快捷方式(S)
+				69 菜单项 打开压缩包
+				70 菜单项 打开压缩包
+				71 菜单项 解压文件...
+				72 菜单项 解压到当前位置
+				73 菜单项 解压到 "Archive\"
+				74 菜单项 测试压缩包
+				75 菜单项 添加到压缩包...
+				76 菜单项 压缩并发送邮件...
+				77 菜单项 添加到 "Archive_2.7z"
+				78 菜单项 压缩 "Archive_2.7z" 并发送邮件
+				79 菜单项 添加到 "Archive_2.zip"
+				80 菜单项 压缩 "Archive_2.zip" 并发送邮件
+				81 菜单项 CRC SHA
+
+The focused UI element is 40 菜单 文件菜单.

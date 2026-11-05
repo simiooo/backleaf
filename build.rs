@@ -6,6 +6,17 @@ fn main() {
     if env::var("CARGO_CFG_TARGET_OS").as_deref() != Ok("windows") {
         return;
     }
+    println!("cargo:rerun-if-changed=src/native/ole_bridge.cpp");
+    cc::Build::new()
+        .cpp(true)
+        .file("src/native/ole_bridge.cpp")
+        .flag("/std:c++20")
+        .flag("/EHsc")
+        .flag("/utf-8")
+        .compile("backleaf_ole");
+    for library in ["ole32", "oleaut32", "uuid", "shell32", "user32"] {
+        println!("cargo:rustc-link-lib={library}");
+    }
     println!("cargo:rerun-if-changed=src/native/archive_helper.cpp");
     println!("cargo:rerun-if-changed=assets/archive-engine/7z2605-src.tar.xz");
     let archive_out = PathBuf::from(env::var_os("OUT_DIR").unwrap());
@@ -43,6 +54,7 @@ fn main() {
         "Native archive helper compilation failed"
     );
     println!("cargo:rerun-if-changed=src/native/shell_helper.cpp");
+    println!("cargo:rerun-if-changed=src/native/shell_common.hpp");
     let shell = compiler
         .to_command()
         .args(["/nologo", "/EHsc", "/std:c++20", "/O2", "/utf-8", "/MT"])

@@ -1,0 +1,24 @@
+{
+  "masterSha256": "b8333145eea88f5b7647684a549d3fab812bc883d5f04e13acb1052121db1b16",
+  "retainedPages": 230,
+  "pages": 233,
+  "result": "passed",
+  "results": [
+    {
+      "key": "231-owned-context-window",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "232-owned-submenu-window",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "233-menu-focus-return",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    }
+  ],
+  "verifiedAt": "2026-11-05T04:28:43.018Z"
+}

@@ -79,6 +79,20 @@ impl Backleaf {
             self.suppress_click = true;
             self.pressed_id = None;
         }
+        // Enter OLE as soon as the gesture is committed. Waiting for the pointer to
+        // leave our bounds misses overlapping windows and can retarget a drop behind them.
+        if self.ole.is_some() {
+            let selection = self.drag.gesture.take().and_then(|g| g.selection);
+            if let Some(selection) = selection
+                && let Some(site) = &self.ole
+                && let Err(error) = site.start(selection)
+            {
+                self.navigation_error(error.to_string(), cx);
+            }
+            self.suppress_click = true;
+            cx.notify();
+            return;
+        }
         let target_id = self.hit_file(event.position, window).filter(|id| {
             !self.selection.contains(*id) && self.cache.get(id).is_some_and(|i| i.directory)
         });
@@ -138,9 +152,26 @@ impl Backleaf {
             }
         };
         if let Some(selection) = g.selection {
+            let source_volume = selection
+                .snapshot
+                .parent_identity
+                .get()
+                .and_then(|raw| operations::windows::identity::Identity::decode(raw))
+                .map(|id| id.volume);
+            let keys =
+                u32::from(event.modifiers.control) * 8 + u32::from(event.modifiers.shift) * 4;
+            let effect = crate::ole::effect(keys, 3, source_volume, Some(target.resolved.volume));
+            if effect == 0 {
+                self.navigation_error("暂不支持创建链接".into(), cx);
+                return;
+            }
             match self.files.hub.selection_guarded(
                 selection,
-                operations::service::Operation::Move,
+                if effect == 2 {
+                    operations::service::Operation::Move
+                } else {
+                    operations::service::Operation::Copy
+                },
                 target.path.clone(),
                 self.native_owner_handle,
                 Some(target),

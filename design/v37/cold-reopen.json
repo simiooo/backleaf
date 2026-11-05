@@ -1,0 +1,54 @@
+{
+  "masterSha256": "f4925cbb858a4a8a76647495c28bd28e06326fc7d0633a2b8fdaacdb0b225d40",
+  "retainedPages": 221,
+  "pages": 230,
+  "result": "passed",
+  "results": [
+    {
+      "key": "222-cross-window-move",
+      "changedPixels": 0,
+      "totalPixels": 1612800
+    },
+    {
+      "key": "223-external-copy",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "224-external-move",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "225-external-pin",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "226-invalid-drop",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "227-outbound-files",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "228-extension-rows",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "229-extension-submenu",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "230-extension-unavailable",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    }
+  ],
+  "verifiedAt": "2026-11-05T03:46:46.301Z"
+}

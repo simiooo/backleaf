@@ -22,7 +22,7 @@ manifest={
     'profile':'release; --locked','exe_sha256':sha(binary),'exe_bytes':binary.stat().st_size,
     'inputs':[{'path':p,'sha256':sha(root/p)} for p in paths],
     'check_logs':[{'path':f'{name}.log','sha256':sha(root/f'.local/batch-{name}.log')} for name in ['fmt','clippy','tests','build']],
-    'check_scope':'Source checks and CPU model tests only; visible native/staging acceptance is recorded separately.'
+    'check_scope':'fmt, all-target Clippy, unit/model and isolated Windows filesystem/COM protocol tests; visible native/staging acceptance is recorded separately.'
 }
 output=root/'.local/native-build-manifest.json'
 output.write_text(json.dumps(manifest,indent=2),encoding='utf-8')

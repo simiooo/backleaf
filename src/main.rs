@@ -2,6 +2,7 @@
 mod app_archive;
 mod app_drag;
 mod app_navigation;
+mod app_ole;
 mod app_operations;
 mod app_quick_drag;
 mod app_restore;
@@ -26,8 +27,10 @@ mod metrics;
 mod model;
 mod native_icons;
 mod navigation;
+mod ole;
 mod operations;
 mod paint;
+mod popup_menu;
 mod quick_access;
 mod scrollbar;
 mod search;
@@ -71,6 +74,8 @@ struct Backleaf {
     navigation: app_navigation::NavigationUi,
     files: app_operations::FileOperations,
     drag: app_drag::DragUi,
+    ole: Option<ole::Site>,
+    ole_target: Option<usize>,
     views: app_views::ViewsUi,
     archive: app_archive::ArchiveUi,
     restore: app_restore::RestoreUi,
@@ -424,6 +429,8 @@ impl Backleaf {
                 worker.set_active(this.navigation.window_active && !this.session_locked);
             }
             if !window.is_window_active() {
+                this.navigation.menu_focus_transfer =
+                    this.files.menu.is_some() || this.navigation.menu.is_some();
                 this.reset_typeahead();
                 this.cancel_file_drag();
                 this.navigation.drag = None;
@@ -439,7 +446,9 @@ impl Backleaf {
                 this.pressed_id = None;
                 this.hovered_id = None;
             }
-            if window.is_window_active() {
+            if window.is_window_active()
+                && !std::mem::take(&mut this.navigation.menu_focus_transfer)
+            {
                 this.mark_directory_dirty(cx);
                 this.refresh_search();
             }
@@ -475,8 +484,27 @@ impl Backleaf {
         if options.marquee_smoke {
             marquee_smoke::schedule(window, cx);
         }
+        let mut ole_error = None;
+        let ole = if options.fixture.is_none() {
+            ole::Site::new(
+                Self::native_owner(window),
+                options.state_dir.join("ole"),
+                hub.clone(),
+                tx.clone(),
+                window.window_handle(),
+                cx,
+            )
+            .map_err(|error| {
+                ole_error = Some(error.to_string());
+            })
+            .ok()
+        } else {
+            None
+        };
         Self {
             application_icons,
+            ole,
+            ole_target: None,
             drag,
             index,
             index_status: index::Status::default(),
@@ -523,7 +551,7 @@ impl Backleaf {
             detail_token: 0,
             detail_pending: false,
             open_pending: false,
-            error: None,
+            error: ole_error,
             panel,
             task,
             flow_cache,
@@ -561,6 +589,44 @@ impl Backleaf {
             return;
         }
         match event {
+            Event::OleChanged => {
+                if let Some(site) = &self.ole {
+                    site.changed();
+                }
+                cx.notify();
+            }
+            Event::OleTask(id) => {
+                self.show_operation(id);
+                cx.notify();
+            }
+            Event::OlePin {
+                path,
+                before,
+                revision,
+            } => {
+                let title = navigation::display_name(&path);
+                if let Err(error) = self.navigation.store.send(quick_access::Action::Pin {
+                    path,
+                    title,
+                    before,
+                    revision,
+                }) {
+                    self.navigation_error(error.to_string(), cx);
+                }
+            }
+            Event::OleSourceEnded(result) => {
+                if result < 0 {
+                    self.navigation_error("拖放未完成".into(), cx);
+                }
+                if result == 0x00040100 {
+                    self.mark_directory_dirty(cx);
+                }
+            }
+            Event::ShellRows(notice) => {
+                if let Some(menu) = self.files.menu.clone() {
+                    menu.update(cx, |m, cx| m.shell_notice(notice, cx));
+                }
+            }
             Event::ShellMenuClosed(result) => {
                 if let Err(error) = result {
                     self.navigation_error(error, cx);
@@ -1147,6 +1213,10 @@ impl Backleaf {
         self.update_marquee_band(window, cx);
     }
     fn key(&mut self, event: &KeyDownEvent, window: &mut Window, cx: &mut Context<Self>) {
+        if self.ole.as_ref().is_some_and(|site| site.busy()) {
+            cx.stop_propagation();
+            return;
+        }
         if self.restore.closing.is_some() {
             cx.stop_propagation();
             return;
@@ -1394,12 +1464,13 @@ impl Backleaf {
             selected: self.is_selected(id),
             active,
             focused: focused && self.keyboard_focus && grid_focused,
-            hovered: active
-                && (self.hovered_id == Some(id)
-                    || self.drag.gesture.as_ref().is_some_and(|g| {
-                        g.active && g.target_id == Some(id) && matches!(g.target, Some(Ok(_)))
-                    }))
-                && self.marquee.is_none(),
+            hovered: self.ole_target == Some(id)
+                || active
+                    && (self.hovered_id == Some(id)
+                        || self.drag.gesture.as_ref().is_some_and(|g| {
+                            g.active && g.target_id == Some(id) && matches!(g.target, Some(Ok(_)))
+                        }))
+                    && self.marquee.is_none(),
             pressed: active && self.pressed_id == Some(id),
         };
         let colors = self.colors;
@@ -2076,6 +2147,7 @@ impl Backleaf {
 }
 impl Render for Backleaf {
     fn render(&mut self, window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
+        self.sync_ole(window, cx);
         self.sync_operation_focus(window, cx);
         self.sync_watcher(window, cx);
         self.sync_view_focus(window, cx);
@@ -2319,6 +2391,7 @@ impl Render for Backleaf {
                 )
             })
             .child(self.drag_overlay(window))
+            .child(self.ole_overlay(window))
             .child(self.quick_drag_overlay(window))
             .child(self.operation_overlay(window, cx))
             .child(self.navigation_overlay(window))

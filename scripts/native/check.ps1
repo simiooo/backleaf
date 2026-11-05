@@ -4,7 +4,7 @@ Push-Location $projectRoot
 try {
     cargo fmt -p backleaf --check
     if ($LASTEXITCODE -ne 0) { throw 'Rust formatting failed' }
-    cargo clippy -p backleaf --locked --no-deps -- -D warnings
+    cargo clippy --release -p backleaf --locked --all-targets --no-deps -- -D warnings
     if ($LASTEXITCODE -ne 0) { throw 'Clippy failed' }
     cargo test --release --locked
     if ($LASTEXITCODE -ne 0) { throw 'Native behavior tests failed' }

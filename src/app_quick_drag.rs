@@ -167,7 +167,11 @@ impl Backleaf {
         self.navigation.menu_subscription = Some(cx.subscribe_in(
             &menu,
             window,
-            move |this, _, event: &MenuEvent, window, cx| {
+            move |this, source, event: &MenuEvent, window, cx| {
+                if this.navigation.menu.as_ref().map(Entity::entity_id) != Some(source.entity_id())
+                {
+                    return;
+                }
                 this.navigation.menu = None;
                 window.focus(&this.focus, cx);
                 if let MenuEvent::Command(command) = event {
@@ -208,8 +212,11 @@ impl Backleaf {
                 cx.notify();
             },
         ));
-        window.focus(&menu.focus_handle(cx), cx);
-        self.navigation.menu = Some(menu);
+        self.navigation.menu = Some(menu.clone());
+        if let Err(error) = crate::popup_menu::open(menu, window, cx.entity().downgrade(), cx) {
+            self.navigation.menu = None;
+            self.navigation_error(error.to_string(), cx);
+        }
         cx.notify();
     }
     pub fn pin_dragged_folder(
@@ -243,7 +250,21 @@ impl Backleaf {
         true
     }
     pub fn quick_drag_velocity(&self, window: &Window) -> f64 {
-        if self.session_locked || !window.is_window_active() || !window.is_visible() {
+        let native = self
+            .ole
+            .as_ref()
+            .and_then(|s| s.pointer())
+            .map(|p| {
+                point(
+                    px(p.x as f32 / window.scale_factor()),
+                    px(p.y as f32 / window.scale_factor()),
+                )
+            })
+            .filter(|p| f32::from(p.x) < self.sidebar_width());
+        if self.session_locked
+            || (!window.is_window_active() && native.is_none())
+            || !window.is_visible()
+        {
             return 0.;
         }
         let pointer = self
@@ -258,7 +279,8 @@ impl Backleaf {
                     .as_ref()
                     .filter(|g| g.active && f32::from(g.pointer.x) < self.sidebar_width())
                     .map(|g| g.pointer)
-            });
+            })
+            .or(native);
         let Some(pointer) = pointer else {
             return 0.;
         };
@@ -304,6 +326,22 @@ impl Backleaf {
         let Some((pointer, slot)) = gesture
             .map(|g| (g.pointer, g.slot))
             .or_else(|| file.map(|g| (g.pointer, self.quick_slot(g.pointer))))
+            .or_else(|| {
+                self.ole
+                    .as_ref()
+                    .and_then(|s| s.pointer())
+                    .map(|p| {
+                        point(
+                            px(p.x as f32 / window.scale_factor()),
+                            px(p.y as f32 / window.scale_factor()),
+                        )
+                    })
+                    .filter(|p| {
+                        f32::from(p.x) < self.sidebar_width()
+                            && f32::from(p.y) >= layout::CHROME.bar_height
+                    })
+                    .map(|p| (p, self.quick_slot(p)))
+            })
         else {
             return div().into_any_element();
         };

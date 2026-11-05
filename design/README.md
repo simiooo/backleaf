@@ -1,3 +1,5 @@
+当前版本：[Backleaf-v38.fig](Backleaf-v38.fig)，233页。v37补齐OLE拖入/拖出、跨窗、侧栏固定及自绘扩展菜单；v38补齐独立owned菜单窗口、动态子菜单与焦点返回。冷重开验证：[v38/cold-reopen.json](v38/cold-reopen.json)。所有此前页面和历史文件均保留。
+
 最新主稿：[Backleaf-v22.fig](Backleaf-v22.fig)，149页，保留已发布v20的143页，新增6个渐进框选状态。持续加速的参数和行为见[交互契约](marquee-scroll-contract.md)。v21路径/磁盘设计仍属于另一个未交付候选单元。
 
 最新主稿：[Backleaf-v20.fig](Backleaf-v20.fig)，143页；保留前137页，补充短/长名称、空白清选、重命名输入与明暗/窄窗命中状态。

@@ -1,0 +1,38 @@
+Window: "拾径 · Backleaf", App: Backleaf.exe.
+	0 区域 拾径 · Backleaf Secondary Actions: Raise
+		1 标题栏 (settable, string) Value: 拾径 · Backleaf
+			2 菜单栏 系统 ID: MenuBar
+				3 菜单项 系统
+			4 按钮 最小化
+			5 按钮 最大化
+			6 按钮 关闭
+		7 应用程序 拾径 Backleaf
+			8 按钮 后退
+			9 按钮 上一级
+			10 导航 当前位置 D:/work/backleaf/.local/ole-ui-test/source
+				11 链接 前往 D:/
+				12 按钮 显示折叠的上级路径
+				13 链接 前往 D:/work/backleaf/.local/ole-ui-test
+				14 按钮 编辑当前位置 D:/work/backleaf/.local/ole-ui-test/source Value: D:/work/backleaf/.local/ole-ui-test/source
+				15 按钮 浏览当前目录层级
+			16 按钮 搜索文件名，Ctrl+F
+			17 按钮 最小化
+			18 按钮 最大化或还原
+			19 按钮 关闭
+			20 导航 快捷访问
+				21 按钮 个人文件夹，C:\Users\qq651
+				38 按钮 Folder-A，D:\work\backleaf\.local\ole-ui-test\source\Folder-A
+				22 按钮 桌面，C:\Users\qq651\Desktop
+				23 按钮 下载，C:\Users\qq651\Downloads
+				24 按钮 文档，C:\Users\qq651\Documents
+				25 按钮 图片，C:\Users\qq651\Pictures
+				26 按钮 音乐，C:\Users\qq651\Music
+				27 按钮 视频，C:\Users\qq651\Videos
+				28 按钮 Windows-SSD (C:)，C:\
+				29 按钮 Data (D:)，D:\
+			30 列表 文件
+				39 选项 (selectable) Archive.zip
+				40 选项 (selectable) Archive2.zip
+				41 选项 (selectable) Folder-A
+
+The focused UI element is 7 应用程序 拾径 Backleaf.

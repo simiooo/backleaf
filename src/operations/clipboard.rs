@@ -194,7 +194,7 @@ fn dword(value: u32) -> anyhow::Result<Global> {
     Ok(block)
 }
 /// Validate the bounded array before asking DragQueryFileW to parse it.
-fn checked_drop_count(handle: HGLOBAL) -> anyhow::Result<u32> {
+pub(crate) fn checked_drop_count(handle: HGLOBAL) -> anyhow::Result<u32> {
     let size = unsafe { GlobalSize(handle) };
     anyhow::ensure!(
         (std::mem::size_of::<DROPFILES>()..=MAX_PAYLOAD_BYTES).contains(&size),
@@ -241,6 +241,75 @@ fn checked_drop_count(handle: HGLOBAL) -> anyhow::Result<u32> {
         "Incomplete clipboard array"
     );
     Ok(count)
+}
+/// Import a drop object on its receiving STA. No clipboard state is read or changed.
+pub fn import_object(
+    object: &IDataObject,
+    ledger: &Ledger,
+    canceled: impl Fn() -> bool,
+) -> anyhow::Result<(u64, u64, bool)> {
+    let medium = data(object, CF_HDROP.0 as u32)?;
+    let handle = unsafe { medium.0.u.hGlobal };
+    let count = checked_drop_count(handle)?;
+    anyhow::ensure!(count > 0, "拖放中没有文件");
+    let mut bytes = 0u64;
+    let mut directories = false;
+    ledger.begin()?;
+    for index in 0..count {
+        anyhow::ensure!(!canceled(), "已取消");
+        let length = unsafe { DragQueryFileW(HDROP(handle.0), index, None) } as usize;
+        anyhow::ensure!(length > 0 && length <= 32767, "拖放路径无效");
+        let mut text = vec![0u16; length + 1];
+        anyhow::ensure!(
+            unsafe { DragQueryFileW(HDROP(handle.0), index, Some(&mut text)) } as usize == length,
+            "拖放数据已改变"
+        );
+        let path = PathBuf::from(OsString::from_wide(&text[..length]));
+        anyhow::ensure!(path.is_absolute(), "拖放路径必须是绝对路径");
+        let metadata = identity::capture(&path)?;
+        bytes = bytes.saturating_add(metadata.bytes.unwrap_or(0));
+        directories |= metadata.directory;
+        ledger.add_root(index as u64, &path, Some(&metadata))?;
+        if index % 256 == 255 {
+            ledger.commit()?;
+            ledger.begin()?;
+        }
+    }
+    ledger.commit()?;
+    Ok((count as u64, bytes, directories))
+}
+/// Build standard CF_HDROP only when an external target requests it, off the GPUI thread.
+pub fn render_drop(ledger: &Ledger, canceled: impl Fn() -> bool) -> anyhow::Result<HGLOBAL> {
+    let mut size = std::mem::size_of::<DROPFILES>() + 2;
+    let mut count = 0;
+    ledger.visit_roots(false, |root| {
+        anyhow::ensure!(!canceled(), "已取消");
+        anyhow::ensure!(
+            root.identity.as_ref() == Some(&identity::capture(&root.path)?.identity),
+            "源文件已改变"
+        );
+        let path = shell::clipboard_path(&root.path)?;
+        size = size
+            .checked_add(path.len() * 2)
+            .ok_or_else(|| anyhow::anyhow!("拖放数据过大"))?;
+        anyhow::ensure!(size <= MAX_PAYLOAD_BYTES, "拖放路径超过256 MiB，请减少选择");
+        count += 1;
+        Ok(())
+    })?;
+    anyhow::ensure!(count > 0, "没有可拖放的文件");
+    let mut payload = Payload::new(size)?;
+    ledger.visit_roots(false, |root| {
+        anyhow::ensure!(!canceled(), "已取消");
+        anyhow::ensure!(
+            root.identity.as_ref() == Some(&identity::capture(&root.path)?.identity),
+            "源文件已改变"
+        );
+        payload.push(&shell::clipboard_path(&root.path)?)
+    })?;
+    let mut block = payload.finish()?;
+    let result = block.0;
+    block.disown();
+    Ok(result)
 }
 unsafe extern "system" fn procedure(
     hwnd: HWND,
@@ -776,6 +845,67 @@ mod tests {
                 *expected
             );
         }
+    }
+
+    #[test]
+    fn real_shell_data_object_import_preserves_paths_and_captured_identity() {
+        let _apartment = OleApartment::new().unwrap();
+        let base = std::env::temp_dir().canonicalize().unwrap();
+        let root = base.join(format!(
+            "Backleaf-hdrop-test-{}-{}",
+            std::process::id(),
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .unwrap()
+                .as_nanos()
+        ));
+        std::fs::create_dir(&root).unwrap();
+        let path = root.join("资料_👩🏽‍💻_é.txt");
+        std::fs::write(&path, b"native hdrop fixture").unwrap();
+        let source = Ledger::open(&root.join("source.sqlite")).unwrap();
+        let captured = identity::capture(&path).unwrap();
+        source.begin().unwrap();
+        source.add_root(0, &path, Some(&captured)).unwrap();
+        source.commit().unwrap();
+        let h = render_drop(&source, || false).unwrap();
+        let object: IDataObject = unsafe {
+            windows::Win32::UI::Shell::SHCreateDataObject(None, None, None::<&IDataObject>)
+        }
+        .unwrap();
+        let mut medium = STGMEDIUM {
+            tymed: TYMED_HGLOBAL.0 as u32,
+            ..Default::default()
+        };
+        medium.u.hGlobal = h;
+        unsafe { object.SetData(&format(CF_HDROP.0 as u32).unwrap(), &medium, true) }.unwrap();
+        let imported = Ledger::open(&root.join("imported.sqlite")).unwrap();
+        assert_eq!(
+            import_object(&object, &imported, || false).unwrap(),
+            (1, 20, false)
+        );
+        imported
+            .visit_roots(false, |r| {
+                assert_eq!(r.path.canonicalize().unwrap(), path.canonicalize().unwrap());
+                assert_eq!(r.identity, Some(captured.identity.clone()));
+                Ok(())
+            })
+            .unwrap();
+        std::fs::rename(&path, root.join("original.txt")).unwrap();
+        std::fs::write(&path, b"replacement").unwrap();
+        assert!(render_drop(&imported, || false).is_err());
+        drop(imported);
+        drop(source);
+        drop(object);
+        let resolved = root.canonicalize().unwrap();
+        assert!(
+            resolved.starts_with(&base)
+                && resolved
+                    .file_name()
+                    .unwrap()
+                    .to_string_lossy()
+                    .starts_with("Backleaf-hdrop-test-")
+        );
+        std::fs::remove_dir_all(resolved).unwrap();
     }
     #[test]
     fn oversized_payload_fails_before_any_clipboard_publication() {

@@ -755,6 +755,61 @@ impl Hub {
             Ok(())
         }))
     }
+    pub fn dropped_manifest(
+        &self,
+        manifest: Arc<crate::ole::Manifest>,
+        operation: Operation,
+        target: super::move_guard::Target,
+        owner: usize,
+    ) -> anyhow::Result<u64> {
+        anyhow::ensure!(
+            matches!(operation, Operation::Copy | Operation::Move),
+            "无效的拖放操作"
+        );
+        let task = self.register(operation, target.path.clone(), None)?;
+        Ok(self.launch(task, move |shared, task| {
+            let ledger = create_ledger(&task)?;
+            let input = Ledger::read_only(&manifest.path)?;
+            task.update(true, |v| {
+                v.phase = Phase::Preparing;
+                v.total = Some(manifest.count);
+                v.tree = manifest.directories;
+                v.size_available = !manifest.directories;
+                v.bytes_total = (!manifest.directories).then_some(manifest.bytes);
+            });
+            let mut prepared = 0;
+            ledger.begin()?;
+            input.visit_roots(false, |root| {
+                anyhow::ensure!(!task.canceled(), "已取消");
+                ledger.add_captured_root(&root)?;
+                prepared += 1;
+                if prepared % 256 == 0 {
+                    ledger.commit()?;
+                    task.update(false, |v| v.prepared = prepared);
+                    ledger.begin()?;
+                }
+                Ok(())
+            })?;
+            ledger.commit()?;
+            super::move_guard::validate_ledger(&ledger, &target, || task.canceled())?;
+            run_files_with_target(
+                &shared,
+                &task,
+                ledger,
+                if operation == Operation::Move {
+                    Kind::Move
+                } else {
+                    Kind::Copy
+                },
+                &target.path,
+                None,
+                Some(target.identity),
+                owner,
+            )?;
+            finish(&task);
+            Ok(())
+        }))
+    }
     pub fn clipboard(
         &self,
         selection: FrozenSelection,

@@ -270,6 +270,7 @@ impl Backleaf {
         window: &mut Window,
         cx: &mut Context<Self>,
     ) {
+        crate::popup_menu::trace("file open_menu");
         self.close_path_tree();
         self.navigation.menu = None;
         if self.files.editor.is_some() {
@@ -323,21 +324,40 @@ impl Backleaf {
             )
         });
         self.files.menu_generation = self.generation;
-        self.files.menu_subscription =
-            Some(
-                cx.subscribe_in(&menu, window, |this, _, event: &MenuEvent, window, cx| {
-                    let valid = this.files.menu_generation == this.generation;
-                    this.files.menu = None;
-                    window.focus(&this.focus, cx);
-                    if valid && let MenuEvent::Command(command) = event {
-                        this.file_command(*command, window, cx);
-                    }
-                    cx.notify();
-                }),
+        self.files.menu_subscription = Some(cx.subscribe_in(
+            &menu,
+            window,
+            |this, source, event: &MenuEvent, window, cx| {
+                if this.files.menu.as_ref().map(Entity::entity_id) != Some(source.entity_id()) {
+                    return;
+                }
+                crate::popup_menu::trace("file menu event");
+                let valid = this.files.menu_generation == this.generation;
+                this.files.menu = None;
+                window.focus(&this.focus, cx);
+                if valid && let MenuEvent::Command(command) = event {
+                    this.file_command(*command, window, cx);
+                }
+                cx.notify();
+            },
+        ));
+        if self.options.fixture.is_none()
+            && let Some(selection) = self.source.freeze_selection(self.selection.mask.clone())
+        {
+            let session = crate::shell_menu::Session::new(
+                selection,
+                self.options.state_dir.clone(),
+                Self::native_owner(window),
+                self.tx.clone(),
             );
-        window.focus(&menu.focus_handle(cx), cx);
+            menu.update(cx, |m, cx| m.attach_shell(session, cx));
+        }
         self.files.focus_grid = false;
-        self.files.menu = Some(menu);
+        self.files.menu = Some(menu.clone());
+        if let Err(error) = crate::popup_menu::open(menu, window, cx.entity().downgrade(), cx) {
+            self.files.menu = None;
+            self.navigation_error(error.to_string(), cx);
+        }
         cx.notify();
     }
     pub fn file_command(&mut self, command: Command, window: &mut Window, cx: &mut Context<Self>) {
@@ -441,29 +461,7 @@ impl Backleaf {
                         .map_err(|e| e.to_string())
                 }
             }
-            Command::ShellActions => {
-                if let Some(selection) = self.source.freeze_selection(self.selection.mask.clone()) {
-                    use windows::Win32::{
-                        Foundation::{HWND, POINT},
-                        Graphics::Gdi::ClientToScreen,
-                    };
-                    let mut point = POINT {
-                        x: (f32::from(window.mouse_position().x) * window.scale_factor()) as i32,
-                        y: (f32::from(window.mouse_position().y) * window.scale_factor()) as i32,
-                    };
-                    unsafe {
-                        let _ = ClientToScreen(HWND(owner as *mut _), &mut point);
-                    }
-                    crate::shell_menu::open(
-                        selection,
-                        self.options.state_dir.clone(),
-                        owner,
-                        [point.x, point.y],
-                        self.tx.clone(),
-                    )?;
-                }
-                Ok(None)
-            }
+            Command::Extension(_, _) => Ok(None),
             Command::Compress | Command::Extract => {
                 self.begin_archive(
                     if command == Command::Compress {
@@ -973,6 +971,10 @@ impl Backleaf {
         false
     }
     pub fn request_close(&mut self, window: &mut Window, cx: &mut Context<Self>) {
+        if self.ole.as_ref().is_some_and(|site| site.busy()) {
+            self.navigation_error("请先完成或取消拖放".into(), cx);
+            return;
+        }
         if !self.flush_view_fields(window, cx) || !self.flush_archive_name(cx) {
             return;
         }
@@ -990,7 +992,14 @@ impl Backleaf {
             return;
         }
         self.close_path_tree();
-        if self.files.hub.active() && cx.windows().len() <= 1 {
+        if self.files.hub.active()
+            && cx
+                .windows()
+                .iter()
+                .filter(|w| w.downcast::<Backleaf>().is_some())
+                .count()
+                <= 1
+        {
             self.files.close_guard = true;
             self.files.open = false;
             self.files.menu = None;
@@ -1407,7 +1416,7 @@ impl Backleaf {
     }
     pub fn operation_overlay(&mut self, window: &Window, cx: &mut Context<Self>) -> AnyElement {
         let colors = self.colors;
-        let mut layer = div().absolute().inset_0().children(self.files.menu.clone());
+        let mut layer = div().absolute().inset_0();
         if self.files.open {
             let content =
                 if let Some(view) = self.files.selected.and_then(|id| self.files.hub.view(id)) {
@@ -1941,22 +1950,6 @@ fn same_location(a: &std::path::Path, b: &std::path::Path) -> bool {
     }
     key(a) == key(b)
 }
-#[cfg(test)]
-mod location_tests {
-    use super::same_location;
-    #[test]
-    fn refresh_matches_normal_and_shell_path_spellings() {
-        for (a, b) in [
-            (r"D:/work/资料", r"\\?\D:\work\资料"),
-            (r"\\server\share\文档", r"\\?\UNC\server\share\文档"),
-            (r"C:\Users\Simo\", r"c:/users/simo"),
-        ] {
-            assert!(same_location(a.as_ref(), b.as_ref()));
-        }
-        assert!(!same_location(r"D:\a".as_ref(), r"D:\ab".as_ref()));
-    }
-}
-
 fn phase_label(phase: Phase) -> &'static str {
     match phase {
         Phase::Queued => "已排队",
@@ -2036,5 +2029,21 @@ fn fraction(v: &View) -> f32 {
         (v.successful as f64 / total as f64).clamp(0., 1.) as f32
     } else {
         0.
+    }
+}
+
+#[cfg(test)]
+mod location_tests {
+    use super::same_location;
+    #[test]
+    fn refresh_matches_normal_and_shell_path_spellings() {
+        for (a, b) in [
+            (r"D:/work/资料", r"\\?\D:\work\资料"),
+            (r"\\server\share\文档", r"\\?\UNC\server\share\文档"),
+            (r"C:\Users\Simo\", r"c:/users/simo"),
+        ] {
+            assert!(same_location(a.as_ref(), b.as_ref()));
+        }
+        assert!(!same_location(r"D:\a".as_ref(), r"D:\ab".as_ref()));
     }
 }

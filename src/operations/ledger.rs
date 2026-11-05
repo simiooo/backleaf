@@ -295,6 +295,22 @@ impl Ledger {
         )?;
         Ok(())
     }
+    /// Copy the captured identity instead of recapturing a possibly replaced source.
+    pub fn add_captured_root(&self, root: &RootRecord) -> anyhow::Result<()> {
+        let metadata = root
+            .identity
+            .clone()
+            .map(|identity| shell::identity::Metadata {
+                identity,
+                directory: root.directory,
+                bytes: root.bytes,
+                reparse: false,
+                modified: 0,
+                modified_raw: 0,
+                attributes: 0,
+            });
+        self.add_root(root.key, &root.path, metadata.as_ref())
+    }
     #[cfg(test)]
     pub fn identity(&self, key: u64) -> anyhow::Result<Option<shell::identity::Identity>> {
         let value: Option<Vec<u8>> = self.db.query_row(

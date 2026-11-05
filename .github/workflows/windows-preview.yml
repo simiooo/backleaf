@@ -31,7 +31,7 @@ jobs:
           New-Item -ItemType Directory -Force .local/ci | Out-Null
           cargo fmt -p backleaf --check *> .local/ci/fmt.log
           if ($LASTEXITCODE) { Get-Content .local/ci/fmt.log; throw 'Format failed' }
-          cargo clippy --release --locked -p backleaf --no-deps -- -D warnings *> .local/ci/clippy.log
+          cargo clippy --release --locked -p backleaf --all-targets --no-deps -- -D warnings *> .local/ci/clippy.log
           if ($LASTEXITCODE) { Get-Content .local/ci/clippy.log; throw 'Clippy failed' }
           cargo test --release --locked *> .local/ci/tests.log
           if ($LASTEXITCODE) { Get-Content .local/ci/tests.log; throw 'Tests failed' }
