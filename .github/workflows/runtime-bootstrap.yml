@@ -1,0 +1,37 @@
+name: App-local Windows runtime
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  runtime:
+    runs-on: windows-2025
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ilammy/msvc-dev-cmd@v1
+      - name: Verify Microsoft signatures and package x64 runtime
+        shell: pwsh
+        run: ./scripts/native/package-runtime.ps1
+      - uses: actions/upload-artifact@v4
+        with:
+          name: app-local-runtime
+          path: .local/runtime-ci
+          include-hidden-files: true
+          if-no-files-found: error
+      - name: Publish verified runtime support asset
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create runtime-v1 --draft --prerelease --target $env:GITHUB_SHA --title 'Backleaf app-local runtime v1 (x64)' --notes 'Unmodified Microsoft-signed Visual C++ runtime from the Visual Studio x64 redist directory, for per-user Backleaf deployment. See packaged NOTICE.txt and runtime.json for source, terms and hashes.'
+          if ($LASTEXITCODE) { throw 'Runtime draft creation failed; no overwrite is allowed' }
+          gh release upload runtime-v1 .local/runtime-ci/Backleaf-runtime-x64.zip .local/runtime-ci/runtime.json
+          if ($LASTEXITCODE) { throw 'Runtime asset upload failed' }
+          $remote = gh release view runtime-v1 --json assets | ConvertFrom-Json
+          foreach ($file in Get-Item .local/runtime-ci/Backleaf-runtime-x64.zip,.local/runtime-ci/runtime.json) {
+            $asset = @($remote.assets | Where-Object name -eq $file.Name)
+            if ($asset.Count -ne 1 -or $asset[0].digest -ne ('sha256:' + (Get-FileHash $file.FullName).Hash.ToLowerInvariant())) { throw 'Runtime remote digest mismatch' }
+          }
+          gh release edit runtime-v1 --draft=false
+          if ($LASTEXITCODE) { throw 'Runtime publication failed' }
