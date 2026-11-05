@@ -1,0 +1,11 @@
+   Compiling backleaf v0.1.0-preview.23 (D:\work\backleaf)
+    Finished `release` profile [optimized] target(s) in 51.89s
+     Running unittests src\main.rs (target\release\deps\backleaf-b156fbb90ab9b5a4.exe)
+
+running 3 tests
+test search::tests::indexed_cache_root_case_alias_keeps_incremental_and_nonrecursive_coverage ... ok
+test search::tests::legacy_duplicate_root_case_aliases_merge_on_startup_and_keep_watching ... ok
+test headless_tests::indexed_root_case_rename_rebuilds_without_duplicates_and_keeps_nonrecursive_updates ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 130 filtered out; finished in 3.35s
+

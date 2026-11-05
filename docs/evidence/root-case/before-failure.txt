@@ -1,0 +1,21 @@
+   Compiling backleaf v0.1.0-preview.22 (D:\work\backleaf)
+    Finished `release` profile [optimized] target(s) in 34.39s
+     Running unittests src\main.rs (target\release\deps\backleaf-ab7cbff2fbedb8f7.exe)
+
+running 1 test
+
+thread 'search::tests::indexed_cache_root_case_alias_keeps_incremental_and_nonrecursive_coverage' (41372) panicked at src\search.rs:1012:9:
+assertion `left == right` failed: Root case alias lost a matching file
+  left: 7
+ right: 4
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test search::tests::indexed_cache_root_case_alias_keeps_incremental_and_nonrecursive_coverage ... FAILED
+
+failures:
+
+failures:
+    search::tests::indexed_cache_root_case_alias_keeps_incremental_and_nonrecursive_coverage
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 130 filtered out; finished in 0.12s
+
+error: test failed, to rerun pass `-p backleaf --bin backleaf`

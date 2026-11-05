@@ -1,0 +1,229 @@
+{
+  "recorded_at_utc": "2026-11-05T14:13:37.841374+00:00",
+  "source_commit": "2573f9127ab45d73d78658d0a7f798794ecc10ae",
+  "version": "0.1.0-preview.23",
+  "ci_exe_sha256": "032e59b6966609a60f366ded17137726f2b931cdd22ef92d0f5c59b24a18f6b1",
+  "scope": "Exact report bytes; excludes this manifest itself. Product source and artifact remain source2573f912; final evidence commit changes documentation only.",
+  "files": [
+    {
+      "path": "before-failure.txt",
+      "sha256": "a995d6e097c70ff5514c456ab362b9efda89ee7a456aa208996dcc597d9113b9",
+      "bytes": 941
+    },
+    {
+      "path": "benchmark.json",
+      "sha256": "019995d225501cc0bb6cd8bbee5d96eda9a9556629646bff7933342106ebe5a9",
+      "bytes": 972
+    },
+    {
+      "path": "benchmark.txt",
+      "sha256": "17f16b27a7530c16434a1baf515adbcb5fca7fa60c95120d11dd03def459a45f",
+      "bytes": 991
+    },
+    {
+      "path": "build.json",
+      "sha256": "266f477a9800adb4e2979a9e4b6e301688cd4ac000bdf85be41318a89e67fda5",
+      "bytes": 26562
+    },
+    {
+      "path": "build.txt",
+      "sha256": "451664a0046e9c1a32ffdc0d15b337b92f71545a7bd262f4f270bf2e9026ae0b",
+      "bytes": 124
+    },
+    {
+      "path": "checksum-output.txt",
+      "sha256": "edd47014b066d59247f68ac9c9636397c3d9d772d74544e55565e6b3888a5931",
+      "bytes": 80
+    },
+    {
+      "path": "ci-build.json",
+      "sha256": "e4abe0cc306b76b20db28887c2bfb135bf359fbe3352900e3707d45add29287a",
+      "bytes": 4393
+    },
+    {
+      "path": "ci-build.txt",
+      "sha256": "b914b22f0a8bab51cce07ffc2c71ad0adb38814ed773453a073c2a3f5da5280f",
+      "bytes": 554
+    },
+    {
+      "path": "ci-clippy.txt",
+      "sha256": "101c108ac6c816a462d85f24775c400b618057e96dcba1ed45d1552e28442794",
+      "bytes": 1313
+    },
+    {
+      "path": "ci-fmt.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "ci-install.json",
+      "sha256": "f5e9b47b1d2d56f9ee4dea8857b8713fa24bdcc5d84e011429cde0ea4cee4dd7",
+      "bytes": 4656
+    },
+    {
+      "path": "ci-install.txt",
+      "sha256": "e8e40851e4d92b5a62f63b70353def0ba315bb50c26a7e9e1fd34dbfec8db211",
+      "bytes": 409
+    },
+    {
+      "path": "ci-tests.txt",
+      "sha256": "426c77273f923eb4ad8468e5267bbd17b01c56d3a94b3a490635a93c52fbd212",
+      "bytes": 11253
+    },
+    {
+      "path": "clippy.txt",
+      "sha256": "0d7f80dbc53c556074d20ca82029e9653d6df18273676ebfd5dade952894929f",
+      "bytes": 123
+    },
+    {
+      "path": "download-verification.json",
+      "sha256": "e1eefb34a8709549ebb7f18ed51dd73be6324f32b7559094fd653a8b6fd7856a",
+      "bytes": 1122
+    },
+    {
+      "path": "fmt.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "focused-after.txt",
+      "sha256": "d01b9a55658c85bdaef8bad37812f2793e38cb8620917f07c2fd1e46d2b42a56",
+      "bytes": 645
+    },
+    {
+      "path": "headless-ci-run.json",
+      "sha256": "3ef12722ef565a9db7fde1a6911273b9aadb0eed3844900b9956249f9ca22afe",
+      "bytes": 238
+    },
+    {
+      "path": "headless-ci.json",
+      "sha256": "cf5bbe5ac0ae5a0e88c782389f1feddbc4a221b0f9a27d4cab12bfad6f24e6f5",
+      "bytes": 4791
+    },
+    {
+      "path": "headless-ci.txt",
+      "sha256": "2800f53c8cda528a547357d351cb6c96b65976c63d160b20fb460d3853aa74b8",
+      "bytes": 4361
+    },
+    {
+      "path": "headless.json",
+      "sha256": "124a9a472bffc76967118a57ba0b0acdfccb570800b69e73d957e128f3e63467",
+      "bytes": 4791
+    },
+    {
+      "path": "headless.txt",
+      "sha256": "a8fe2ed28cf2e6be633f83bf7e696471f040f847adf5a5f537107ae63192c19a",
+      "bytes": 3111
+    },
+    {
+      "path": "host.json",
+      "sha256": "b27ec117f1d9d208b22879273901af50f02598389cd02c9f87e26b48ea9da1a2",
+      "bytes": 1164
+    },
+    {
+      "path": "installer-5.json",
+      "sha256": "9cd1272a09fe219b7c9056734f8a5db23f1a364e8b858ba3c91ae5e8c15ce30d",
+      "bytes": 3804
+    },
+    {
+      "path": "installer-7.json",
+      "sha256": "ebf4ea395b64427eb65cd81f572c3bd108420082dba60e9aa4fbfce2b47d0033",
+      "bytes": 2521
+    },
+    {
+      "path": "local-staging.json",
+      "sha256": "e37a7273171576f1aebf94891341901cdda85eac95aa965354c7d7200b2fa031",
+      "bytes": 776
+    },
+    {
+      "path": "native-command.json",
+      "sha256": "af15801c833b1aa1c6b9c7a6a281e9cd157869dfa0d29b79517a3d3446df7c16",
+      "bytes": 668
+    },
+    {
+      "path": "native-end-session.json",
+      "sha256": "03cd39fc83f20d45739cc1ad5a892539820e85667ed42cb33dfa8cad7efd7df4",
+      "bytes": 29
+    },
+    {
+      "path": "native-exit-confirmed.json",
+      "sha256": "6a6e42f49ff840eb14cd730553c0416b8e2f210e7edd4ea2352a37884ce30dd0",
+      "bytes": 70
+    },
+    {
+      "path": "native-exit-immediate.json",
+      "sha256": "99e442d1c4b6c4b483840588b293f35b46f94ce8a66921d0d526274ed4bedca5",
+      "bytes": 322
+    },
+    {
+      "path": "native-exit.json",
+      "sha256": "f5ea36e850177ba655af9fc5cde4e4fb85fb54f084fa2bcf0be01d5693dfcb92",
+      "bytes": 324
+    },
+    {
+      "path": "native-fixture.json",
+      "sha256": "b275e27ab30c61a156035a658e343691fe67d0e104a26c44c36bd858f053023c",
+      "bytes": 250
+    },
+    {
+      "path": "native-observations.json",
+      "sha256": "933e6f233da6d99746d8b19b1160a7e04d8e5420fcf2e618b0fbadf338d9a4b1",
+      "bytes": 27908
+    },
+    {
+      "path": "native-process.json",
+      "sha256": "5d2750542202777a1d4e0d3cb5cac5a70b4f736ebb580854a26b93a3d004ab8e",
+      "bytes": 414
+    },
+    {
+      "path": "native-stability.json",
+      "sha256": "e3f8920d72f102e95701e5baf3eafce34402eb86c651cb8803c0fc5b12a046f1",
+      "bytes": 1279
+    },
+    {
+      "path": "native-start-session.json",
+      "sha256": "03cd39fc83f20d45739cc1ad5a892539820e85667ed42cb33dfa8cad7efd7df4",
+      "bytes": 29
+    },
+    {
+      "path": "package-ci-run.json",
+      "sha256": "f28ae2ab6e156db6054fdd4acbc5b1021ee9b32a685c8523f977632464091e20",
+      "bytes": 238
+    },
+    {
+      "path": "package-headless.json",
+      "sha256": "74b1d66caf85c9b957c8e172afb17a4db57865bfd8e4d36bfb745ecb301754ef",
+      "bytes": 4791
+    },
+    {
+      "path": "package-headless.txt",
+      "sha256": "3763d7263ded2f9554173ad990bc7695c2f7287f9d76097a620ec75cb3170eb3",
+      "bytes": 3111
+    },
+    {
+      "path": "prior-hidden-process-cleanup.json",
+      "sha256": "37d3a782864a45bbf9f681f5f72dee4abc9781b053e6307a1c0bc34006862d6a",
+      "bytes": 597
+    },
+    {
+      "path": "README.md",
+      "sha256": "499ad82b680d4cf6eae8df41e0dd665d34f25fe45d89729624df43e70ed1d57d",
+      "bytes": 5121
+    },
+    {
+      "path": "release.json",
+      "sha256": "de7dfdb4fed8a5e58ea9443a060e2b070a18280557e8bf9b562cabdb16953a4e",
+      "bytes": 2229
+    },
+    {
+      "path": "SHA256SUMS.txt",
+      "sha256": "2e08a85a5c14b48877d86ff2ab8c282b5c50c7cd849fcafe8258579ddacf1f41",
+      "bytes": 198
+    },
+    {
+      "path": "tests.txt",
+      "sha256": "f38dd07b29e3f8a22e727c8583ce94bcb612dcc908673dce4d2fcf43e4164c80",
+      "bytes": 10387
+    }
+  ]
+}

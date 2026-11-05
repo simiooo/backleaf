@@ -14,6 +14,8 @@ The default TestPlatform text system uses synthetic metrics and has no pixel ren
 
 PRs and relevant pushes to staging/main run the read-only `GPUI headless regressions` workflow. Test-package publishing runs the same gate again and refuses missing, failing or dirty-source reports. Hosted CI stores logs/JSON as artifacts; packaged builds include headless.json. Native checking remains for HWND ownership/monitor placement/DWM, actual IME, Explorer/OLE gestures, third-party Shell behavior, UIA/NVDA, GPU pixels and real performance. These are verified only when changed/relevant, not by repeating all headless scenarios on the user's desktop.
 
+The resumed final preview23 check is complete on the downloaded CI executable: visible startup, self-drawn registered 7-Zip checksum-file command, stable parent menu geometry, automatic external-result refresh and normal exit. Both CI gates, anonymous installation, adjacent runtime loads and asset digests passed. Exact binary/source mapping and remaining platform compatibility limits are in [final evidence](evidence/root-case/README.md). The earlier physical-Escape interruption remains a historical failed-to-complete attempt, not the final result.
+
 The SIM-951 notes below are historical version-specific evidence.
 
 The locked-desktop gate was resolved on 2026-11-04 after the user unlocked Windows and authorized continued automated checks. The final installed source is `edfcfc674d8a309f5e2e780c870f0269530208ef`. See [deployment](evidence/native/staging-candidate.json), [final raw evidence](evidence/native/README.md) and [method/results](native-render-validation.md).

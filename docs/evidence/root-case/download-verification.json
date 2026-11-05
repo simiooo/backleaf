@@ -1,0 +1,36 @@
+{
+  "passed": true,
+  "verified_at_utc": "2026-11-05T14:11:27.5159548Z",
+  "tag": "test-v0.1.0-preview.23-2573f912",
+  "assets": [
+    {
+      "name": "Backleaf-0.1.0-preview.23-2573f912-win-x64.zip",
+      "bytes": 16346910,
+      "sha256": "fcdacf6abb227f1ab61aea971ebb3161d3390a996acba1bc1d317ad5910c0368",
+      "github_digest_matches": true,
+      "ci_artifact_matches": true
+    },
+    {
+      "name": "Backleaf-v43.fig",
+      "bytes": 1689711,
+      "sha256": "d93eb44e7a3fd2a0caaeb1fb29798aa061530d2baab74b637236031982b5759f",
+      "github_digest_matches": true,
+      "ci_artifact_matches": true
+    },
+    {
+      "name": "build.json",
+      "bytes": 4393,
+      "sha256": "e4abe0cc306b76b20db28887c2bfb135bf359fbe3352900e3707d45add29287a",
+      "github_digest_matches": true,
+      "ci_artifact_matches": true
+    },
+    {
+      "name": "SHA256SUMS.txt",
+      "bytes": 198,
+      "sha256": "2e08a85a5c14b48877d86ff2ab8c282b5c50c7cd849fcafe8258579ddacf1f41",
+      "github_digest_matches": true,
+      "ci_artifact_matches": true
+    }
+  ],
+  "anonymous_download": true
+}

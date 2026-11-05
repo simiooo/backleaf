@@ -1,0 +1,7 @@
+   Compiling gpui v0.2.2 (D:\a\backleaf\backleaf\vendor\zed\crates\gpui)
+   Compiling collections v0.1.0 (D:\a\backleaf\backleaf\vendor\zed\crates\collections)
+   Compiling scheduler v0.1.0 (D:\a\backleaf\backleaf\vendor\zed\crates\scheduler)
+   Compiling http_client v0.1.0 (D:\a\backleaf\backleaf\vendor\zed\crates\http_client)
+   Compiling gpui_windows v0.1.0 (D:\a\backleaf\backleaf\vendor\zed\crates\gpui_windows)
+   Compiling backleaf v0.1.0-preview.23 (D:\a\backleaf\backleaf)
+    Finished `release` profile [optimized] target(s) in 1m 51s

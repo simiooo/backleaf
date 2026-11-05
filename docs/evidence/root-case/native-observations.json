@@ -1,0 +1,191 @@
+[
+  {
+    "stage": "visible-startup",
+    "at": "2026-11-05T14:08:56.690Z",
+    "tree": "Window: \"拾径 · Backleaf\", App: Backleaf.exe.\n\t0 区域 拾径 · Backleaf Secondary Actions: Raise\n\t\t1 标题栏 (settable, string) Value: 拾径 · Backleaf\n\t\t\t2 菜单栏 系统 ID: MenuBar\n\t\t\t\t3 菜单项 系统\n\t\t\t4 按钮 最小化\n\t\t\t5 按钮 最大化\n\t\t\t6 按钮 关闭\n\t\t7 应用程序 拾径 Backleaf\n\t\t\t8 按钮 后退\n\t\t\t9 按钮 上一级\n\t\t\t10 导航 当前位置 D:\\work\\backleaf\\.local\\shell-ci23-fixture\n\t\t\t\t11 链接 前往 D:\\\n\t\t\t\t12 按钮 显示折叠的上级路径\n\t\t\t\t13 链接 前往 D:\\work\\backleaf\\.local\n\t\t\t\t14 按钮 编辑当前位置 D:\\work\\backleaf\\.local\\shell-ci23-fixture Value: D:\\work\\backleaf\\.local\\shell-ci23-fixture\n\t\t\t\t15 按钮 浏览当前目录层级\n\t\t\t16 按钮 搜索文件名，Ctrl+F\n\t\t\t17 按钮 最小化\n\t\t\t18 按钮 最大化或还原\n\t\t\t19 按钮 关闭\n\t\t\t20 导航 快捷访问\n\t\t\t\t21 按钮 个人文件夹，C:\\Users\\qq651\n\t\t\t\t22 按钮 桌面，C:\\Users\\qq651\\Desktop\n\t\t\t\t23 按钮 下载，C:\\Users\\qq651\\Downloads\n\t\t\t\t24 按钮 文档，C:\\Users\\qq651\\Documents\n\t\t\t\t25 按钮 图片，C:\\Users\\qq651\\Pictures\n\t\t\t\t26 按钮 音乐，C:\\Users\\qq651\\Music\n\t\t\t\t27 按钮 视频，C:\\Users\\qq651\\Videos\n\t\t\t\t28 按钮 Windows-SSD (C:)，C:\\，总容量 400 GB；已使用 330 GB；剩余 70.5 GB；当前用户可用 70.5 GB\n\t\t\t\t29 按钮 Data (D:)，D:\\，总容量 461 GB；已使用 427 GB；剩余 33.9 GB；当前用户可用 33.9 GB\n\t\t\t30 列表 文件\n\t\t\t\t31 选项 (selectable) report α.txt\n\nThe focused UI element is 7 应用程序 拾径 Backleaf.",
+    "windows": [
+      {
+        "width": 1122,
+        "height": 721,
+        "originX": 579,
+        "originY": 236,
+        "zIndex": 0
+      }
+    ]
+  },
+  {
+    "stage": "menu-discovery-pending",
+    "at": "2026-11-05T14:09:03.525Z",
+    "tree": "Window: \"拾径 · Backleaf\", App: Backleaf.exe.\n\t0 区域 拾径 · Backleaf Secondary Actions: Raise\n\t\t1 标题栏 (settable, string) Value: 拾径 · Backleaf\n\t\t\t2 菜单栏 系统 ID: MenuBar\n\t\t\t\t3 菜单项 系统\n\t\t\t4 按钮 最小化\n\t\t\t5 按钮 最大化\n\t\t\t6 按钮 关闭\n\t\t7 应用程序 拾径 Backleaf\n\t\t\t8 按钮 后退\n\t\t\t9 按钮 上一级\n\t\t\t10 导航 当前位置 D:\\work\\backleaf\\.local\\shell-ci23-fixture\n\t\t\t\t11 链接 前往 D:\\\n\t\t\t\t12 按钮 显示折叠的上级路径\n\t\t\t\t13 链接 前往 D:\\work\\backleaf\\.local\n\t\t\t\t14 按钮 编辑当前位置 D:\\work\\backleaf\\.local\\shell-ci23-fixture Value: D:\\work\\backleaf\\.local\\shell-ci23-fixture\n\t\t\t\t15 按钮 浏览当前目录层级\n\t\t\t16 按钮 搜索文件名，Ctrl+F\n\t\t\t17 按钮 最小化\n\t\t\t18 按钮 最大化或还原\n\t\t\t19 按钮 关闭\n\t\t\t20 导航 快捷访问\n\t\t\t\t21 按钮 个人文件夹，C:\\Users\\qq651\n\t\t\t\t22 按钮 桌面，C:\\Users\\qq651\\Desktop\n\t\t\t\t23 按钮 下载，C:\\Users\\qq651\\Downloads\n\t\t\t\t24 按钮 文档，C:\\Users\\qq651\\Documents\n\t\t\t\t25 按钮 图片，C:\\Users\\qq651\\Pictures\n\t\t\t\t26 按钮 音乐，C:\\Users\\qq651\\Music\n\t\t\t\t27 按钮 视频，C:\\Users\\qq651\\Videos\n\t\t\t\t28 按钮 Windows-SSD (C:)，C:\\，总容量 400 GB；已使用 330 GB；剩余 70.5 GB；当前用户可用 70.5 GB\n\t\t\t\t29 按钮 Data (D:)，D:\\，总容量 461 GB；已使用 427 GB；剩余 33.9 GB；当前用户可用 33.9 GB\n\t\t\t30 列表 文件\n\t\t\t\t31 选项 (selectable) report α.txt\n\t\t\t32 文本 已选 1 项 · …\n\t\t33 区域 Backleaf 文件菜单 Secondary Actions: Raise\n\t\t\t34 菜单 文件菜单\n\t\t\t\t35 菜单项 打开\n\t\t\t\t36 菜单项 复制\n\t\t\t\t37 菜单项 剪切\n\t\t\t\t38 菜单项 复制路径\n\t\t\t\t39 菜单项 重命名\n\t\t\t\t40 菜单项 移至回收站\n\t\t\t\t41 菜单项 详情\n\t\t\t\t42 菜单项 压缩为 ZIP…\n\t\t\t\t43 菜单项 解压到…\n\t\t\t\t44 菜单项 应用操作，不可用\n\nThe focused UI element is 34 菜单 文件菜单.",
+    "windows": [
+      {
+        "width": 1122,
+        "height": 721,
+        "originX": 579,
+        "originY": 236,
+        "zIndex": 0
+      },
+      {
+        "width": 276,
+        "height": 432,
+        "originX": 893,
+        "originY": 364,
+        "zIndex": 1
+      }
+    ]
+  },
+  {
+    "stage": "menu-discovery-ready",
+    "at": "2026-11-05T14:09:10.154Z",
+    "tree": "Window: \"拾径 · Backleaf\", App: Backleaf.exe.\n\t0 区域 拾径 · Backleaf Secondary Actions: Raise\n\t\t33 区域 Backleaf 文件菜单 Secondary Actions: Raise\n\t\t\t34 菜单 文件菜单\n\t\t\t\t35 菜单项 打开\n\t\t\t\t36 菜单项 复制\n\t\t\t\t37 菜单项 剪切\n\t\t\t\t38 菜单项 复制路径\n\t\t\t\t39 菜单项 重命名\n\t\t\t\t40 菜单项 移至回收站\n\t\t\t\t41 菜单项 详情\n\t\t\t\t42 菜单项 压缩为 ZIP…\n\t\t\t\t43 菜单项 解压到…\n\t\t\t\t44 菜单项 应用操作\n\t\t1 标题栏 (settable, string) Value: 拾径 · Backleaf\n\t\t\t2 菜单栏 系统 ID: MenuBar\n\t\t\t\t3 菜单项 系统\n\t\t\t4 按钮 最小化\n\t\t\t5 按钮 最大化\n\t\t\t6 按钮 关闭\n\t\t7 应用程序 拾径 Backleaf\n\t\t\t8 按钮 后退\n\t\t\t9 按钮 上一级\n\t\t\t10 导航 当前位置 D:\\work\\backleaf\\.local\\shell-ci23-fixture\n\t\t\t\t11 链接 前往 D:\\\n\t\t\t\t12 按钮 显示折叠的上级路径\n\t\t\t\t13 链接 前往 D:\\work\\backleaf\\.local\n\t\t\t\t14 按钮 编辑当前位置 D:\\work\\backleaf\\.local\\shell-ci23-fixture Value: D:\\work\\backleaf\\.local\\shell-ci23-fixture\n\t\t\t\t15 按钮 浏览当前目录层级\n\t\t\t16 按钮 搜索文件名，Ctrl+F\n\t\t\t17 按钮 最小化\n\t\t\t18 按钮 最大化或还原\n\t\t\t19 按钮 关闭\n\t\t\t20 导航 快捷访问\n\t\t\t\t21 按钮 个人文件夹，C:\\Users\\qq651\n\t\t\t\t22 按钮 桌面，C:\\Users\\qq651\\Desktop\n\t\t\t\t23 按钮 下载，C:\\Users\\qq651\\Downloads\n\t\t\t\t24 按钮 文档，C:\\Users\\qq651\\Documents\n\t\t\t\t25 按钮 图片，C:\\Users\\qq651\\Pictures\n\t\t\t\t26 按钮 音乐，C:\\Users\\qq651\\Music\n\t\t\t\t27 按钮 视频，C:\\Users\\qq651\\Videos\n\t\t\t\t28 按钮 Windows-SSD (C:)，C:\\，总容量 400 GB；已使用 330 GB；剩余 70.5 GB；当前用户可用 70.5 GB\n\t\t\t\t29 按钮 Data (D:)，D:\\，总容量 461 GB；已使用 427 GB；剩余 33.9 GB；当前用户可用 33.9 GB\n\t\t\t30 列表 文件\n\t\t\t\t31 选项 (selectable) report α.txt\n\t\t\t32 文本 已选 1 项 · 5 KB\n\t\t33 区域 Backleaf 文件菜单 Secondary Actions: Raise\n\t\t\t34 菜单 文件菜单\n\t\t\t\t35 菜单项 打开\n\t\t\t\t36 菜单项 复制\n\t\t\t\t37 菜单项 剪切\n\t\t\t\t38 菜单项 复制路径\n\t\t\t\t39 菜单项 重命名\n\t\t\t\t40 菜单项 移至回收站\n\t\t\t\t41 菜单项 详情\n\t\t\t\t42 菜单项 压缩为 ZIP…\n\t\t\t\t43 菜单项 解压到…\n\t\t\t\t44 菜单项 应用操作\n\nThe focused UI element is 34 菜单 文件菜单.",
+    "windows": [
+      {
+        "width": 1122,
+        "height": 721,
+        "originX": 579,
+        "originY": 236,
+        "zIndex": 0
+      },
+      {
+        "width": 276,
+        "height": 432,
+        "originX": 893,
+        "originY": 364,
+        "zIndex": 1
+      }
+    ]
+  },
+  {
+    "stage": "application-submenu",
+    "at": "2026-11-05T14:09:16.965Z",
+    "tree": "Window: \"拾径 · Backleaf\", App: Backleaf.exe.\n\t0 区域 拾径 · Backleaf Secondary Actions: Raise\n\t\t45 区域 Backleaf 文件菜单 Secondary Actions: Raise\n\t\t\t46 菜单 文件菜单\n\t\t\t\t47 菜单项 编辑\n\t\t\t\t48 菜单项 打印\n\t\t\t\t49 菜单项 添加到收藏夹(F)\n\t\t\t\t50 菜单项 7-Zip\n\t\t\t\t51 菜单项 Edit with Vim\n\t\t\t\t52 菜单项 打开方式(H)\n\t\t\t\t53 菜单项 文件压缩\n\t\t\t\t54 菜单项 批量改文档格式\n\t\t\t\t55 菜单项 上传或同步到WPS\n\t\t\t\t56 菜单项 通过WPS发送\n\t\t\t\t57 菜单项 复制文件地址(A)\n\t\t\t\t58 菜单项 共享(S)\n\t\t\t\t59 菜单项 还原以前的版本(V)\n\t\t\t\t60 菜单项 发送到(N)\n\t\t\t\t61 菜单项 创建快捷方式(S)\n\t\t33 区域 Backleaf 文件菜单 Secondary Actions: Raise\n\t\t\t34 菜单 文件菜单\n\t\t\t\t35 菜单项 打开\n\t\t\t\t36 菜单项 复制\n\t\t\t\t37 菜单项 剪切\n\t\t\t\t38 菜单项 复制路径\n\t\t\t\t39 菜单项 重命名\n\t\t\t\t40 菜单项 移至回收站\n\t\t\t\t41 菜单项 详情\n\t\t\t\t42 菜单项 压缩为 ZIP…\n\t\t\t\t43 菜单项 解压到…\n\t\t\t\t44 菜单项 应用操作\n\t\t1 标题栏 (settable, string) Value: 拾径 · Backleaf\n\t\t\t2 菜单栏 系统 ID: MenuBar\n\t\t\t\t3 菜单项 系统\n\t\t\t4 按钮 最小化\n\t\t\t5 按钮 最大化\n\t\t\t6 按钮 关闭\n\t\t7 应用程序 拾径 Backleaf\n\t\t\t8 按钮 后退\n\t\t\t9 按钮 上一级\n\t\t\t10 导航 当前位置 D:\\work\\backleaf\\.local\\shell-ci23-fixture\n\t\t\t\t11 链接 前往 D:\\\n\t\t\t\t12 按钮 显示折叠的上级路径\n\t\t\t\t13 链接 前往 D:\\work\\backleaf\\.local\n\t\t\t\t14 按钮 编辑当前位置 D:\\work\\backleaf\\.local\\shell-ci23-fixture Value: D:\\work\\backleaf\\.local\\shell-ci23-fixture\n\t\t\t\t15 按钮 浏览当前目录层级\n\t\t\t16 按钮 搜索文件名，Ctrl+F\n\t\t\t17 按钮 最小化\n\t\t\t18 按钮 最大化或还原\n\t\t\t19 按钮 关闭\n\t\t\t20 导航 快捷访问\n\t\t\t\t21 按钮 个人文件夹，C:\\Users\\qq651\n\t\t\t\t22 按钮 桌面，C:\\Users\\qq651\\Desktop\n\t\t\t\t23 按钮 下载，C:\\Users\\qq651\\Downloads\n\t\t\t\t24 按钮 文档，C:\\Users\\qq651\\Documents\n\t\t\t\t25 按钮 图片，C:\\Users\\qq651\\Pictures\n\t\t\t\t26 按钮 音乐，C:\\Users\\qq651\\Music\n\t\t\t\t27 按钮 视频，C:\\Users\\qq651\\Videos\n\t\t\t\t28 按钮 Windows-SSD (C:)，C:\\，总容量 400 GB；已使用 330 GB；剩余 70.5 GB；当前用户可用 70.5 GB\n\t\t\t\t29 按钮 Data (D:)，D:\\，总容量 461 GB；已使用 427 GB；剩余 33.9 GB；当前用户可用 33.9 GB\n\t\t\t30 列表 文件\n\t\t\t\t31 选项 (selectable) report α.txt\n\t\t\t32 文本 已选 1 项 · 5 KB\n\t\t45 区域 Backleaf 文件菜单 Secondary Actions: Raise\n\t\t\t46 菜单 文件菜单\n\t\t\t\t47 菜单项 编辑\n\t\t\t\t48 菜单项 打印\n\t\t\t\t49 菜单项 添加到收藏夹(F)\n\t\t\t\t50 菜单项 7-Zip\n\t\t\t\t51 菜单项 Edit with Vim\n\t\t\t\t52 菜单项 打开方式(H)\n\t\t\t\t53 菜单项 文件压缩\n\t\t\t\t54 菜单项 批量改文档格式\n\t\t\t\t55 菜单项 上传或同步到WPS\n\t\t\t\t56 菜单项 通过WPS发送\n\t\t\t\t57 菜单项 复制文件地址(A)\n\t\t\t\t58 菜单项 共享(S)\n\t\t\t\t59 菜单项 还原以前的版本(V)\n\t\t\t\t60 菜单项 发送到(N)\n\t\t\t\t61 菜单项 创建快捷方式(S)\n\t\t33 区域 Backleaf 文件菜单 Secondary Actions: Raise\n\t\t\t34 菜单 文件菜单\n\t\t\t\t35 菜单项 打开\n\t\t\t\t36 菜单项 复制\n\t\t\t\t37 菜单项 剪切\n\t\t\t\t38 菜单项 复制路径\n\t\t\t\t39 菜单项 重命名\n\t\t\t\t40 菜单项 移至回收站\n\t\t\t\t41 菜单项 详情\n\t\t\t\t42 菜单项 压缩为 ZIP…\n\t\t\t\t43 菜单项 解压到…\n\t\t\t\t44 菜单项 应用操作\n\nThe focused UI element is 34 菜单 文件菜单.",
+    "windows": [
+      {
+        "width": 1122,
+        "height": 721,
+        "originX": 579,
+        "originY": 236,
+        "zIndex": 0
+      },
+      {
+        "width": 276,
+        "height": 432,
+        "originX": 893,
+        "originY": 364,
+        "zIndex": 1
+      },
+      {
+        "width": 276,
+        "height": 592,
+        "originX": 1228,
+        "originY": 640,
+        "zIndex": 2
+      }
+    ]
+  },
+  {
+    "stage": "7zip-submenu",
+    "at": "2026-11-05T14:09:24.597Z",
+    "tree": "Window: \"拾径 · Backleaf\", App: Backleaf.exe.\n\t0 区域 拾径 · Backleaf Secondary Actions: Raise\n\t\t45 区域 Backleaf 文件菜单 Secondary Actions: Raise\n\t\t\t46 菜单 文件菜单\n\t\t\t\t47 菜单项 编辑\n\t\t\t\t48 菜单项 打印\n\t\t\t\t49 菜单项 添加到收藏夹(F)\n\t\t\t\t50 菜单项 7-Zip\n\t\t\t\t51 菜单项 Edit with Vim\n\t\t\t\t52 菜单项 打开方式(H)\n\t\t\t\t53 菜单项 文件压缩\n\t\t\t\t54 菜单项 批量改文档格式\n\t\t\t\t55 菜单项 上传或同步到WPS\n\t\t\t\t56 菜单项 通过WPS发送\n\t\t\t\t57 菜单项 复制文件地址(A)\n\t\t\t\t58 菜单项 共享(S)\n\t\t\t\t59 菜单项 还原以前的版本(V)\n\t\t\t\t60 菜单项 发送到(N)\n\t\t\t\t61 菜单项 创建快捷方式(S)\n\t\t62 区域 Backleaf 文件菜单 Secondary Actions: Raise\n\t\t\t63 菜单 文件菜单\n\t\t\t\t64 菜单项 添加到压缩包...\n\t\t\t\t65 菜单项 压缩并发送邮件...\n\t\t\t\t66 菜单项 添加到 \"report α.7z\"\n\t\t\t\t67 菜单项 压缩 \"report α.7z\" 并发送邮件\n\t\t\t\t68 菜单项 添加到 \"report α.zip\"\n\t\t\t\t69 菜单项 压缩 \"report α.zip\" 并发送邮件\n\t\t\t\t70 菜单项 CRC SHA\n\t\t33 区域 Backleaf 文件菜单 Secondary Actions: Raise\n\t\t\t34 菜单 文件菜单\n\t\t\t\t35 菜单项 打开\n\t\t\t\t36 菜单项 复制\n\t\t\t\t37 菜单项 剪切\n\t\t\t\t38 菜单项 复制路径\n\t\t\t\t39 菜单项 重命名\n\t\t\t\t40 菜单项 移至回收站\n\t\t\t\t41 菜单项 详情\n\t\t\t\t42 菜单项 压缩为 ZIP…\n\t\t\t\t43 菜单项 解压到…\n\t\t\t\t44 菜单项 应用操作\n\t\t1 标题栏 (settable, string) Value: 拾径 · Backleaf\n\t\t\t2 菜单栏 系统 ID: MenuBar\n\t\t\t\t3 菜单项 系统\n\t\t\t4 按钮 最小化\n\t\t\t5 按钮 最大化\n\t\t\t6 按钮 关闭\n\t\t7 应用程序 拾径 Backleaf\n\t\t\t8 按钮 后退\n\t\t\t9 按钮 上一级\n\t\t\t10 导航 当前位置 D:\\work\\backleaf\\.local\\shell-ci23-fixture\n\t\t\t\t11 链接 前往 D:\\\n\t\t\t\t12 按钮 显示折叠的上级路径\n\t\t\t\t13 链接 前往 D:\\work\\backleaf\\.local\n\t\t\t\t14 按钮 编辑当前位置 D:\\work\\backleaf\\.local\\shell-ci23-fixture Value: D:\\work\\backleaf\\.local\\shell-ci23-fixture\n\t\t\t\t15 按钮 浏览当前目录层级\n\t\t\t16 按钮 搜索文件名，Ctrl+F\n\t\t\t17 按钮 最小化\n\t\t\t18 按钮 最大化或还原\n\t\t\t19 按钮 关闭\n\t\t\t20 导航 快捷访问\n\t\t\t\t21 按钮 个人文件夹，C:\\Users\\qq651\n\t\t\t\t22 按钮 桌面，C:\\Users\\qq651\\Desktop\n\t\t\t\t23 按钮 下载，C:\\Users\\qq651\\Downloads\n\t\t\t\t24 按钮 文档，C:\\Users\\qq651\\Documents\n\t\t\t\t25 按钮 图片，C:\\Users\\qq651\\Pictures\n\t\t\t\t26 按钮 音乐，C:\\Users\\qq651\\Music\n\t\t\t\t27 按钮 视频，C:\\Users\\qq651\\Videos\n\t\t\t\t28 按钮 Windows-SSD (C:)，C:\\，总容量 400 GB；已使用 330 GB；剩余 70.5 GB；当前用户可用 70.5 GB\n\t\t\t\t29 按钮 Data (D:)，D:\\，总容量 461 GB；已使用 427 GB；剩余 33.9 GB；当前用户可用 33.9 GB\n\t\t\t30 列表 文件\n\t\t\t\t31 选项 (selectable) report α.txt\n\t\t\t32 文本 已选 1 项 · 5 KB\n\t\t45 区域 Backleaf 文件菜单 Secondary Actions: Raise\n\t\t\t46 菜单 文件菜单\n\t\t\t\t47 菜单项 编辑\n\t\t\t\t48 菜单项 打印\n\t\t\t\t49 菜单项 添加到收藏夹(F)\n\t\t\t\t50 菜单项 7-Zip\n\t\t\t\t51 菜单项 Edit with Vim\n\t\t\t\t52 菜单项 打开方式(H)\n\t\t\t\t53 菜单项 文件压缩\n\t\t\t\t54 菜单项 批量改文档格式\n\t\t\t\t55 菜单项 上传或同步到WPS\n\t\t\t\t56 菜单项 通过WPS发送\n\t\t\t\t57 菜单项 复制文件地址(A)\n\t\t\t\t58 菜单项 共享(S)\n\t\t\t\t59 菜单项 还原以前的版本(V)\n\t\t\t\t60 菜单项 发送到(N)\n\t\t\t\t61 菜单项 创建快捷方式(S)\n\t\t62 区域 Backleaf 文件菜单 Secondary Actions: Raise\n\t\t\t63 菜单 文件菜单\n\t\t\t\t64 菜单项 添加到压缩包...\n\t\t\t\t65 菜单项 压缩并发送邮件...\n\t\t\t\t66 菜单项 添加到 \"report α.7z\"\n\t\t\t\t67 菜单项 压缩 \"report α.7z\" 并发送邮件\n\t\t\t\t68 菜单项 添加到 \"report α.zip\"\n\t\t\t\t69 菜单项 压缩 \"report α.zip\" 并发送邮件\n\t\t\t\t70 菜单项 CRC SHA\n\t\t33 区域 Backleaf 文件菜单 Secondary Actions: Raise\n\t\t\t34 菜单 文件菜单\n\t\t\t\t35 菜单项 打开\n\t\t\t\t36 菜单项 复制\n\t\t\t\t37 菜单项 剪切\n\t\t\t\t38 菜单项 复制路径\n\t\t\t\t39 菜单项 重命名\n\t\t\t\t40 菜单项 移至回收站\n\t\t\t\t41 菜单项 详情\n\t\t\t\t42 菜单项 压缩为 ZIP…\n\t\t\t\t43 菜单项 解压到…\n\t\t\t\t44 菜单项 应用操作\n\nThe focused UI element is 45 区域 Backleaf 文件菜单 Secondary Actions: Raise.",
+    "windows": [
+      {
+        "width": 1122,
+        "height": 721,
+        "originX": 579,
+        "originY": 236,
+        "zIndex": 0
+      },
+      {
+        "width": 276,
+        "height": 432,
+        "originX": 893,
+        "originY": 364,
+        "zIndex": 1
+      },
+      {
+        "width": 276,
+        "height": 256,
+        "originX": 1563,
+        "originY": 760,
+        "zIndex": 2
+      },
+      {
+        "width": 276,
+        "height": 592,
+        "originX": 1228,
+        "originY": 640,
+        "zIndex": 3
+      }
+    ]
+  },
+  {
+    "stage": "dynamic-crc-submenu",
+    "at": "2026-11-05T14:09:37.964Z",
+    "tree": "Window: \"拾径 · Backleaf\", App: Backleaf.exe.\n\t0 区域 拾径 · Backleaf Secondary Actions: Raise\n\t\t71 区域 Backleaf 文件菜单 Secondary Actions: Raise\n\t\t\t72 菜单 文件菜单\n\t\t\t\t73 菜单项 CRC-32\n\t\t\t\t74 菜单项 CRC-64\n\t\t\t\t75 菜单项 XXH64\n\t\t\t\t76 菜单项 MD5\n\t\t\t\t77 菜单项 SHA-1\n\t\t\t\t78 菜单项 SHA-256\n\t\t\t\t79 菜单项 SHA-384\n\t\t\t\t80 菜单项 SHA-512\n\t\t\t\t81 菜单项 SHA3-256\n\t\t\t\t82 菜单项 BLAKE2sp\n\t\t\t\t83 菜单项 *\n\t\t\t\t84 菜单项 SHA-256 -> report α.txt.sha256\n\t\t\t\t85 菜单项 测试压缩包 : 校验和\n\t\t62 区域 Backleaf 文件菜单 Secondary Actions: Raise\n\t\t\t63 菜单 文件菜单\n\t\t\t\t64 菜单项 添加到压缩包...\n\t\t\t\t65 菜单项 压缩并发送邮件...\n\t\t\t\t66 菜单项 添加到 \"report α.7z\"\n\t\t\t\t67 菜单项 压缩 \"report α.7z\" 并发送邮件\n\t\t\t\t68 菜单项 添加到 \"report α.zip\"\n\t\t\t\t69 菜单项 压缩 \"report α.zip\" 并发送邮件\n\t\t\t\t70 菜单项 CRC SHA\n\t\t45 区域 Backleaf 文件菜单 Secondary Actions: Raise\n\t\t\t46 菜单 文件菜单\n\t\t\t\t47 菜单项 编辑\n\t\t\t\t48 菜单项 打印\n\t\t\t\t49 菜单项 添加到收藏夹(F)\n\t\t\t\t50 菜单项 7-Zip\n\t\t\t\t51 菜单项 Edit with Vim\n\t\t\t\t52 菜单项 打开方式(H)\n\t\t\t\t53 菜单项 文件压缩\n\t\t\t\t54 菜单项 批量改文档格式\n\t\t\t\t55 菜单项 上传或同步到WPS\n\t\t\t\t56 菜单项 通过WPS发送\n\t\t\t\t57 菜单项 复制文件地址(A)\n\t\t\t\t58 菜单项 共享(S)\n\t\t\t\t59 菜单项 还原以前的版本(V)\n\t\t\t\t60 菜单项 发送到(N)\n\t\t\t\t61 菜单项 创建快捷方式(S)\n\t\t33 区域 Backleaf 文件菜单 Secondary Actions: Raise\n\t\t\t34 菜单 文件菜单\n\t\t\t\t35 菜单项 打开\n\t\t\t\t36 菜单项 复制\n\t\t\t\t37 菜单项 剪切\n\t\t\t\t38 菜单项 复制路径\n\t\t\t\t39 菜单项 重命名\n\t\t\t\t40 菜单项 移至回收站\n\t\t\t\t41 菜单项 详情\n\t\t\t\t42 菜单项 压缩为 ZIP…\n\t\t\t\t43 菜单项 解压到…\n\t\t\t\t44 菜单项 应用操作\n\t\t1 标题栏 (settable, string) Value: 拾径 · Backleaf\n\t\t\t2 菜单栏 系统 ID: MenuBar\n\t\t\t\t3 菜单项 系统\n\t\t\t4 按钮 最小化\n\t\t\t5 按钮 最大化\n\t\t\t6 按钮 关闭\n\t\t7 应用程序 拾径 Backleaf\n\t\t\t8 按钮 后退\n\t\t\t9 按钮 上一级\n\t\t\t10 导航 当前位置 D:\\work\\backleaf\\.local\\shell-ci23-fixture\n\t\t\t\t11 链接 前往 D:\\\n\t\t\t\t12 按钮 显示折叠的上级路径\n\t\t\t\t13 链接 前往 D:\\work\\backleaf\\.local\n\t\t\t\t14 按钮 编辑当前位置 D:\\work\\backleaf\\.local\\shell-ci23-fixture Value: D:\\work\\backleaf\\.local\\shell-ci23-fixture\n\t\t\t\t15 按钮 浏览当前目录层级\n\t\t\t16 按钮 搜索文件名，Ctrl+F\n\t\t\t17 按钮 最小化\n\t\t\t18 按钮 最大化或还原\n\t\t\t19 按钮 关闭\n\t\t\t20 导航 快捷访问\n\t\t\t\t21 按钮 个人文件夹，C:\\Users\\qq651\n\t\t\t\t22 按钮 桌面，C:\\Users\\qq651\\Desktop\n\t\t\t\t23 按钮 下载，C:\\Users\\qq651\\Downloads\n\t\t\t\t24 按钮 文档，C:\\Users\\qq651\\Documents\n\t\t\t\t25 按钮 图片，C:\\Users\\qq651\\Pictures\n\t\t\t\t26 按钮 音乐，C:\\Users\\qq651\\Music\n\t\t\t\t27 按钮 视频，C:\\Users\\qq651\\Videos\n\t\t\t\t28 按钮 Windows-SSD (C:)，C:\\，总容量 400 GB；已使用 330 GB；剩余 70.5 GB；当前用户可用 70.5 GB\n\t\t\t\t29 按钮 Data (D:)，D:\\，总容量 461 GB；已使用 427 GB；剩余 33.9 GB；当前用户可用 33.9 GB\n\t\t\t30 列表 文件\n\t\t\t\t31 选项 (selectable) report α.txt\n\t\t\t32 文本 已选 1 项 · 5 KB\n\t\t71 区域 Backleaf 文件菜单 Secondary Actions: Raise\n\t\t\t72 菜单 文件菜单\n\t\t\t\t73 菜单项 CRC-32\n\t\t\t\t74 菜单项 CRC-64\n\t\t\t\t75 菜单项 XXH64\n\t\t\t\t76 菜单项 MD5\n\t\t\t\t77 菜单项 SHA-1\n\t\t\t\t78 菜单项 SHA-256\n\t\t\t\t79 菜单项 SHA-384\n\t\t\t\t80 菜单项 SHA-512\n\t\t\t\t81 菜单项 SHA3-256\n\t\t\t\t82 菜单项 BLAKE2sp\n\t\t\t\t83 菜单项 *\n\t\t\t\t84 菜单项 SHA-256 -> report α.txt.sha256\n\t\t\t\t85 菜单项 测试压缩包 : 校验和\n\t\t62 区域 Backleaf 文件菜单 Secondary Actions: Raise\n\t\t\t63 菜单 文件菜单\n\t\t\t\t64 菜单项 添加到压缩包...\n\t\t\t\t65 菜单项 压缩并发送邮件...\n\t\t\t\t66 菜单项 添加到 \"report α.7z\"\n\t\t\t\t67 菜单项 压缩 \"report α.7z\" 并发送邮件\n\t\t\t\t68 菜单项 添加到 \"report α.zip\"\n\t\t\t\t69 菜单项 压缩 \"report α.zip\" 并发送邮件\n\t\t\t\t70 菜单项 CRC SHA\n\t\t45 区域 Backleaf 文件菜单 Secondary Actions: Raise\n\t\t\t46 菜单 文件菜单\n\t\t\t\t47 菜单项 编辑\n\t\t\t\t48 菜单项 打印\n\t\t\t\t49 菜单项 添加到收藏夹(F)\n\t\t\t\t50 菜单项 7-Zip\n\t\t\t\t51 菜单项 Edit with Vim\n\t\t\t\t52 菜单项 打开方式(H)\n\t\t\t\t53 菜单项 文件压缩\n\t\t\t\t54 菜单项 批量改文档格式\n\t\t\t\t55 菜单项 上传或同步到WPS\n\t\t\t\t56 菜单项 通过WPS发送\n\t\t\t\t57 菜单项 复制文件地址(A)\n\t\t\t\t58 菜单项 共享(S)\n\t\t\t\t59 菜单项 还原以前的版本(V)\n\t\t\t\t60 菜单项 发送到(N)\n\t\t\t\t61 菜单项 创建快捷方式(S)\n\t\t33 区域 Backleaf 文件菜单 Secondary Actions: Raise\n\t\t\t34 菜单 文件菜单\n\t\t\t\t35 菜单项 打开\n\t\t\t\t36 菜单项 复制\n\t\t\t\t37 菜单项 剪切\n\t\t\t\t38 菜单项 复制路径\n\t\t\t\t39 菜单项 重命名\n\t\t\t\t40 菜单项 移至回收站\n\t\t\t\t41 菜单项 详情\n\t\t\t\t42 菜单项 压缩为 ZIP…\n\t\t\t\t43 菜单项 解压到…\n\t\t\t\t44 菜单项 应用操作\n\nThe focused UI element is 62 区域 Backleaf 文件菜单 Secondary Actions: Raise.",
+    "windows": [
+      {
+        "width": 1122,
+        "height": 721,
+        "originX": 579,
+        "originY": 236,
+        "zIndex": 0
+      },
+      {
+        "width": 276,
+        "height": 432,
+        "originX": 893,
+        "originY": 364,
+        "zIndex": 1
+      },
+      {
+        "width": 276,
+        "height": 592,
+        "originX": 1228,
+        "originY": 640,
+        "zIndex": 2
+      },
+      {
+        "width": 276,
+        "height": 256,
+        "originX": 1563,
+        "originY": 760,
+        "zIndex": 3
+      },
+      {
+        "width": 276,
+        "height": 464,
+        "originX": 1898,
+        "originY": 800,
+        "zIndex": 4
+      }
+    ]
+  },
+  {
+    "stage": "checksum-command-invoked",
+    "at": "2026-11-05T14:09:38.312Z",
+    "tree": "Window: \"拾径 · Backleaf\", App: Backleaf.exe.\n\t0 区域 拾径 · Backleaf Secondary Actions: Raise\n\t\t1 标题栏 (settable, string) Value: 拾径 · Backleaf\n\t\t\t2 菜单栏 系统 ID: MenuBar\n\t\t\t\t3 菜单项 系统\n\t\t\t4 按钮 最小化\n\t\t\t5 按钮 最大化\n\t\t\t6 按钮 关闭\n\t\t7 应用程序 拾径 Backleaf\n\t\t\t8 按钮 后退\n\t\t\t9 按钮 上一级\n\t\t\t10 导航 当前位置 D:\\work\\backleaf\\.local\\shell-ci23-fixture\n\t\t\t\t11 链接 前往 D:\\\n\t\t\t\t12 按钮 显示折叠的上级路径\n\t\t\t\t13 链接 前往 D:\\work\\backleaf\\.local\n\t\t\t\t14 按钮 编辑当前位置 D:\\work\\backleaf\\.local\\shell-ci23-fixture Value: D:\\work\\backleaf\\.local\\shell-ci23-fixture\n\t\t\t\t15 按钮 浏览当前目录层级\n\t\t\t16 按钮 搜索文件名，Ctrl+F\n\t\t\t17 按钮 最小化\n\t\t\t18 按钮 最大化或还原\n\t\t\t19 按钮 关闭\n\t\t\t20 导航 快捷访问\n\t\t\t\t21 按钮 个人文件夹，C:\\Users\\qq651\n\t\t\t\t22 按钮 桌面，C:\\Users\\qq651\\Desktop\n\t\t\t\t23 按钮 下载，C:\\Users\\qq651\\Downloads\n\t\t\t\t24 按钮 文档，C:\\Users\\qq651\\Documents\n\t\t\t\t25 按钮 图片，C:\\Users\\qq651\\Pictures\n\t\t\t\t26 按钮 音乐，C:\\Users\\qq651\\Music\n\t\t\t\t27 按钮 视频，C:\\Users\\qq651\\Videos\n\t\t\t\t28 按钮 Windows-SSD (C:)，C:\\，总容量 400 GB；已使用 330 GB；剩余 70.5 GB；当前用户可用 70.5 GB\n\t\t\t\t29 按钮 Data (D:)，D:\\，总容量 461 GB；已使用 427 GB；剩余 33.9 GB；当前用户可用 33.9 GB\n\t\t\t30 列表 文件\n\t\t\t\t31 选项 (selectable) report α.txt\n\t\t\t32 文本 已选 1 项 · 5 KB",
+    "windows": [
+      {
+        "width": 1122,
+        "height": 721,
+        "originX": 579,
+        "originY": 236,
+        "zIndex": 0
+      }
+    ]
+  },
+  {
+    "stage": "external-checksum-file-displayed",
+    "at": "2026-11-05T14:09:51.243Z",
+    "tree": "Window: \"拾径 · Backleaf\", App: Backleaf.exe.\n\t0 区域 拾径 · Backleaf Secondary Actions: Raise\n\t\t1 标题栏 (settable, string) Value: 拾径 · Backleaf\n\t\t\t2 菜单栏 系统 ID: MenuBar\n\t\t\t\t3 菜单项 系统\n\t\t\t4 按钮 最小化\n\t\t\t5 按钮 最大化\n\t\t\t6 按钮 关闭\n\t\t7 应用程序 拾径 Backleaf\n\t\t\t8 按钮 后退\n\t\t\t9 按钮 上一级\n\t\t\t10 导航 当前位置 D:\\work\\backleaf\\.local\\shell-ci23-fixture\n\t\t\t\t11 链接 前往 D:\\\n\t\t\t\t12 按钮 显示折叠的上级路径\n\t\t\t\t13 链接 前往 D:\\work\\backleaf\\.local\n\t\t\t\t14 按钮 编辑当前位置 D:\\work\\backleaf\\.local\\shell-ci23-fixture Value: D:\\work\\backleaf\\.local\\shell-ci23-fixture\n\t\t\t\t15 按钮 浏览当前目录层级\n\t\t\t16 按钮 搜索文件名，Ctrl+F\n\t\t\t17 按钮 最小化\n\t\t\t18 按钮 最大化或还原\n\t\t\t19 按钮 关闭\n\t\t\t20 导航 快捷访问\n\t\t\t\t21 按钮 个人文件夹，C:\\Users\\qq651\n\t\t\t\t22 按钮 桌面，C:\\Users\\qq651\\Desktop\n\t\t\t\t23 按钮 下载，C:\\Users\\qq651\\Downloads\n\t\t\t\t24 按钮 文档，C:\\Users\\qq651\\Documents\n\t\t\t\t25 按钮 图片，C:\\Users\\qq651\\Pictures\n\t\t\t\t26 按钮 音乐，C:\\Users\\qq651\\Music\n\t\t\t\t27 按钮 视频，C:\\Users\\qq651\\Videos\n\t\t\t\t28 按钮 Windows-SSD (C:)，C:\\，总容量 400 GB；已使用 330 GB；剩余 70.5 GB；当前用户可用 70.5 GB\n\t\t\t\t29 按钮 Data (D:)，D:\\，总容量 461 GB；已使用 427 GB；剩余 33.9 GB；当前用户可用 33.9 GB\n\t\t\t30 列表 文件\n\t\t\t\t86 选项 (selectable) report α.txt\n\t\t\t\t87 选项 (selectable) report α.txt.sha256\n\t\t\t32 文本 已选 1 项 · 5 KB\n\nThe focused UI element is 86 选项 (selectable) report α.txt.",
+    "windows": [
+      {
+        "width": 1122,
+        "height": 721,
+        "originX": 579,
+        "originY": 236,
+        "zIndex": 0
+      }
+    ]
+  }
+]

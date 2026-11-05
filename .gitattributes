@@ -36,3 +36,5 @@ docs/evidence/brand-v2/** -text whitespace=cr-at-eol,-blank-at-eof
 docs/evidence/capacity-v42/** -text whitespace=cr-at-eol,-blank-at-eof
 docs/evidence/search-cache-v43/** -text whitespace=cr-at-eol,-blank-at-eof
 docs/evidence/shell-commands/** -text whitespace=cr-at-eol,-blank-at-eof
+
+docs/evidence/root-case/** -text whitespace=cr-at-eol,-blank-at-eof

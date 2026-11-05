@@ -1,0 +1,11 @@
+{
+  "passed": true,
+  "verified_at_utc": "2026-11-05T14:09:39.3122808Z",
+  "source_commit": "2573f9127ab45d73d78658d0a7f798794ecc10ae",
+  "exe_sha256": "032e59b6966609a60f366ded17137726f2b931cdd22ef92d0f5c59b24a18f6b1",
+  "trigger": "Real mouse right-click > self-drawn independent menus > registered 7-Zip > CRC SHA > generate SHA-256 file",
+  "expected_sha256": "2d9999e290799b63b065ccabbe0ddc580b52d8d8d73f19871e22ef9ce15122c5",
+  "checksum_line": "2d9999e290799b63b065ccabbe0ddc580b52d8d8d73f19871e22ef9ce15122c5  report α.txt",
+  "source_unchanged": true,
+  "checksum_file_sha256": "edd47014b066d59247f68ac9c9636397c3d9d772d74544e55565e6b3888a5931"
+}

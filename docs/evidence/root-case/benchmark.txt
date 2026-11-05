@@ -1,0 +1,10 @@
+    Finished `release` profile [optimized] target(s) in 2.13s
+     Running unittests src\main.rs (target\release\deps\backleaf-b156fbb90ab9b5a4.exe)
+
+running 1 test
+test search::tests::indexed_search_cache_real_files_benchmark has been running for over 60 seconds
+SEARCH_CACHE_BENCH {"real_files":10004,"matching_files":10003,"runs":5,"cold_ms":[4856.1574,4827.1486,6146.7238,5229.5112,4538.8244],"warm_ms":[26.112099999999998,25.5652,29.2719,20.913999999999998,25.1504],"incremental_one_file_ms":[187.4716,199.9871,188.6495,171.68140000000002,193.62009999999998],"warm_candidate_checks":0,"incremental_candidate_checks":1,"page_identity_checks_max":32,"scope":"Actual owned files, persistent SQLite index, production search worker and first bounded page; warm OS disk cache, no UI/GPU or input-to-photon claim"}
+test search::tests::indexed_search_cache_real_files_benchmark ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 132 filtered out; finished in 71.39s
+

@@ -1,0 +1,8 @@
+{
+  "pid": 26972,
+  "exe": "D:\\work\\backleaf\\.local\\installer-staging\\7-510a6498d6b64cd28cec6d7614fa3e7e\\current\\Backleaf.exe",
+  "exe_sha256": "032e59b6966609a60f366ded17137726f2b931cdd22ef92d0f5c59b24a18f6b1",
+  "source_commit": "2573f9127ab45d73d78658d0a7f798794ecc10ae",
+  "started_at_utc": "2026-11-05T14:08:25.3902156Z",
+  "scope": "Visible isolated fixture requested for native validation"
+}

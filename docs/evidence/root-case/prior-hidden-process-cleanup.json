@@ -1,0 +1,7 @@
+{
+  "pid": 43036,
+  "exe": "D:\\work\\backleaf\\.local\\installer-staging\\7-510a6498d6b64cd28cec6d7614fa3e7e\\current\\Backleaf.exe",
+  "command_line": "\"D:\\work\\backleaf\\.local\\installer-staging\\7-510a6498d6b64cd28cec6d7614fa3e7e\\current\\Backleaf.exe\" --path \"D:\\work\\backleaf\\.local\\shell-ci23-fixture\" --state-dir \"D:\\work\\backleaf\\.local\\shell-ci23-state\" --no-index --flow 0",
+  "creation_date": "2026-11-05T21:46:43.775664+08:00",
+  "reason": "Prior test harness was launched hidden; replace only this isolated test process with requested visible test window"
+}

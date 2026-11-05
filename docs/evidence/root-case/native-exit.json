@@ -1,0 +1,9 @@
+{
+  "passed": true,
+  "checked_at_utc": "2026-11-05T14:10:03.7280333Z",
+  "pid": 26972,
+  "exe_sha256": "032e59b6966609a60f366ded17137726f2b931cdd22ef92d0f5c59b24a18f6b1",
+  "normal_alt_f4_exit": true,
+  "process_absent": true,
+  "scope": "Isolated preview23 CI executable; GUI close followed by process absence"
+}

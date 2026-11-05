@@ -1,0 +1,41 @@
+{
+  "recorded_at_utc": "2026-11-05T13:41:58.4585784Z",
+  "cpu": {
+    "Name": "AMD Ryzen 7 8745H w/ Radeon 780M Graphics",
+    "NumberOfCores": 8,
+    "NumberOfLogicalProcessors": 16
+  },
+  "os": {
+    "Caption": "Microsoft Windows 11 家庭版 中文版",
+    "Version": "10.0.26200",
+    "BuildNumber": "26200",
+    "OSArchitecture": "64 位",
+    "TotalVisibleMemorySize": 20771700
+  },
+  "physical_disks": [
+    {
+      "Model": "SKHynix_HFS001TEJ4X112N",
+      "MediaType": "Fixed hard disk media",
+      "InterfaceType": "SCSI",
+      "Size": 1024203640320
+    }
+  ],
+  "volumes": [
+    {
+      "DeviceID": "C:",
+      "FileSystem": "NTFS",
+      "VolumeName": "Windows-SSD",
+      "Size": 429497774080,
+      "FreeSpace": 76050477056
+    },
+    {
+      "DeviceID": "D:",
+      "FileSystem": "NTFS",
+      "VolumeName": "Data",
+      "Size": 494722998272,
+      "FreeSpace": 36603346944
+    }
+  ],
+  "fixture_parent": "C:\\Users\\qq651\\AppData\\Local\\Temp\\",
+  "scope": "Backend production worker timings, ordinary unlocked desktop background load; OS disk cache not flushed; no GPU or input-to-pixel assertion"
+}

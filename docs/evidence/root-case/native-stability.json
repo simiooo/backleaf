@@ -1,0 +1,50 @@
+{
+  "passed": true,
+  "observed_parent_geometry_stable": [
+    {
+      "column": "root",
+      "stages": [
+        "menu-discovery-pending",
+        "menu-discovery-ready",
+        "application-submenu",
+        "7zip-submenu",
+        "dynamic-crc-submenu"
+      ],
+      "unchanged_geometry": {
+        "originX": 893,
+        "originY": 364,
+        "width": 276,
+        "height": 432
+      }
+    },
+    {
+      "column": "applications",
+      "stages": [
+        "application-submenu",
+        "7zip-submenu",
+        "dynamic-crc-submenu"
+      ],
+      "unchanged_geometry": {
+        "originX": 1228,
+        "originY": 640,
+        "width": 276,
+        "height": 592
+      }
+    },
+    {
+      "column": "7zip",
+      "stages": [
+        "7zip-submenu",
+        "dynamic-crc-submenu"
+      ],
+      "unchanged_geometry": {
+        "originX": 1563,
+        "originY": 760,
+        "width": 276,
+        "height": 256
+      }
+    }
+  ],
+  "external_result_automatically_displayed": true,
+  "scope": "Settled window geometry at captured stages, not high-speed flicker measurement; match columns by observed horizontal origin, not transient z-order. Screenshots inspected inline through Computer Use; payloads not copied."
+}
