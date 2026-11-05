@@ -124,15 +124,6 @@ impl Palette {
             })
             .collect()
     }
-    pub fn focus_ring(&self) -> BoxShadow {
-        BoxShadow {
-            color: self.color(Role::Focus),
-            offset: point(px(0.), px(0.)),
-            blur_radius: px(0.),
-            spread_radius: px(crate::layout::LAYOUT.control.focus_width),
-            inset: false,
-        }
-    }
     pub fn input_shadows(&self) -> Vec<BoxShadow> {
         self.control_shadows(true)
     }

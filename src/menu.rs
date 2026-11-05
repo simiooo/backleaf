@@ -400,7 +400,8 @@ impl Render for FileMenu {
                             d.bg(colors.color(ColorRole::Hover))
                         })
                         .when(selected && self.keyboard && !disabled, |d| {
-                            d.shadow(vec![colors.focus_ring()])
+                            d.bg(colors.color(ColorRole::InputActive))
+                                .shadow(colors.control_shadows(true))
                         })
                         .when_some(entry.disabled, |d, reason| {
                             d.tooltip(tooltip(reason.into(), colors))

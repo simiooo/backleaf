@@ -1349,7 +1349,10 @@ impl Backleaf {
             .focusable()
             .tab_stop(true)
             .hover(move |d| d.bg(colors.color(ColorRole::Hover)))
-            .focus_visible(move |d| d.shadow(vec![colors.focus_ring()]))
+            .focus_visible(move |d| {
+                d.bg(colors.color(ColorRole::InputActive))
+                    .shadow(colors.control_shadows(true))
+            })
             .on_key_down(move |e, w, cx| {
                 if paint::activation_key(e) {
                     cx.stop_propagation();
@@ -1466,6 +1469,7 @@ impl Backleaf {
                     .text_size(px(12.))
                     .text_color(colors.color(ColorRole::Negative))
                     .role(Role::Alert)
+                    .aria_label(error.clone())
                     .child(error.clone()),
             );
         }
@@ -1583,7 +1587,10 @@ impl Backleaf {
                             .focusable()
                             .tab_stop(true)
                             .hover(move |d| d.bg(colors.color(ColorRole::Hover)))
-                            .focus_visible(move |d| d.shadow(vec![colors.focus_ring()]))
+                            .focus_visible(move |d| {
+                                d.bg(colors.color(ColorRole::InputActive))
+                                    .shadow(colors.control_shadows(true))
+                            })
                             .tooltip(tooltip(
                                 format!("{label}\n{}", phase_label(v.phase)),
                                 colors,
@@ -1701,7 +1708,10 @@ impl Backleaf {
                             ))
                             .focusable()
                             .tab_stop(true)
-                            .focus_visible(move |d| d.shadow(vec![colors.focus_ring()]))
+                            .focus_visible(move |d| {
+                                d.bg(colors.color(ColorRole::InputActive))
+                                    .shadow(colors.control_shadows(true))
+                            })
                             .on_click(cx.listener(|this, _, _, cx| {
                                 this.files.expanded = !this.files.expanded;
                                 this.request_operation_page();

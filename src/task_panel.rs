@@ -69,7 +69,10 @@ impl Render for TaskPanel {
                             .aria_label("展开或折叠渲染样本")
                             .focusable()
                             .tab_stop(true)
-                            .focus_visible(move |d| d.shadow(vec![colors.focus_ring()]))
+                            .focus_visible(move |d| {
+                                d.bg(colors.color(ColorRole::InputActive))
+                                    .shadow(colors.control_shadows(true))
+                            })
                             .on_key_down(cx.listener(|this, event: &KeyDownEvent, _, cx| {
                                 if crate::paint::activation_key(event) {
                                     this.expanded = !this.expanded;
@@ -106,7 +109,10 @@ impl Render for TaskPanel {
                             .tab_stop(true)
                             .hover(move |d| d.bg(colors.color(ColorRole::Hover)))
                             .active(move |d| d.bg(colors.color(ColorRole::Pressed)))
-                            .focus_visible(move |d| d.shadow(vec![colors.focus_ring()]))
+                            .focus_visible(move |d| {
+                                d.bg(colors.color(ColorRole::InputActive))
+                                    .shadow(colors.control_shadows(true))
+                            })
                             .on_key_down(cx.listener(|_, event: &KeyDownEvent, _, cx| {
                                 if crate::paint::activation_key(event) {
                                     cx.stop_propagation();

@@ -207,7 +207,7 @@ pub fn grid_name(
             let l = &crate::layout::LAYOUT;
             window.with_content_mask(
                 Some(ContentMask {
-                    bounds: bounds.dilate(px(l.control.focus_width + 1.)),
+                    bounds: bounds.dilate(px(8.)),
                 }),
                 |window| {
                     let width = lines
@@ -229,12 +229,17 @@ pub fn grid_name(
                         ),
                     );
                     if state.focused && state.active {
+                        window.paint_drop_shadows(
+                            name_bounds,
+                            Corners::all(px(l.control.radius)),
+                            &colors.control_shadows(true),
+                        );
                         window.paint_quad(quad(
-                            name_bounds.dilate(px(l.control.focus_width)),
+                            name_bounds,
                             px(l.control.radius),
+                            colors.color(ColorRole::InputActive),
+                            px(0.),
                             transparent_black(),
-                            px(l.control.focus_width),
-                            colors.color(ColorRole::Focus),
                             BorderStyle::Solid,
                         ));
                     }

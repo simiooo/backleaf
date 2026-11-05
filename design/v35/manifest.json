@@ -1,0 +1,31 @@
+{
+  "version": "v35-focus-and-input",
+  "retainedPages": 215,
+  "pages": [
+    {
+      "key": "216-keyboard-caption",
+      "name": "216 · v35 keyboard-caption",
+      "nodes": 116,
+      "state": "light"
+    },
+    {
+      "key": "217-keyboard-caption-dark",
+      "name": "217 · v35 keyboard-caption-dark",
+      "nodes": 116,
+      "state": "dark"
+    },
+    {
+      "key": "218-invalid-input-focus",
+      "name": "218 · v35 invalid-input-focus",
+      "nodes": 120,
+      "state": "error"
+    },
+    {
+      "key": "219-shell-menu",
+      "name": "219 · v35 shell-menu",
+      "nodes": 120,
+      "state": "shell"
+    }
+  ],
+  "source": "scripts/design/focus-v35.mjs"
+}

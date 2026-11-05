@@ -1,0 +1,29 @@
+{
+  "masterSha256": "b8f879c67169fc4deb4ca957361e528d7888a2906738d143351851e562a0ca74",
+  "retainedPages": 215,
+  "pages": 219,
+  "result": "passed",
+  "results": [
+    {
+      "key": "216-keyboard-caption",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "217-keyboard-caption-dark",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "218-invalid-input-focus",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "219-shell-menu",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    }
+  ],
+  "verifiedAt": "2026-11-05T02:48:59.785Z"
+}

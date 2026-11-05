@@ -15,6 +15,16 @@ void require(bool value){if(!value)throw std::runtime_error("shell");}
 void exact(HANDLE h,void*data,DWORD n){DWORD count=0;require(ReadFile(h,data,n,&count,nullptr)&&count==n);}
 std::wstring text(HANDLE h){uint32_t n=0;exact(h,&n,4);require(n>0&&n<32760);std::wstring s(n,0);exact(h,s.data(),n*2);require(s.find(L'\0')==std::wstring::npos);return s;}
 std::array<unsigned char,33> identity(const std::wstring&p){HANDLE h=CreateFileW(p.c_str(),FILE_READ_ATTRIBUTES,FILE_SHARE_READ|FILE_SHARE_WRITE|FILE_SHARE_DELETE,nullptr,OPEN_EXISTING,FILE_FLAG_BACKUP_SEMANTICS|FILE_FLAG_OPEN_REPARSE_POINT,nullptr);require(h!=INVALID_HANDLE_VALUE);BY_HANDLE_FILE_INFORMATION b{};FILE_ID_INFO v{};std::array<unsigned char,33>r{};bool ok=GetFileInformationByHandle(h,&b);if(GetFileInformationByHandleEx(h,FileIdInfo,&v,sizeof(v))){r[0]=1;memcpy(r.data()+1,&v.VolumeSerialNumber,8);memcpy(r.data()+9,v.FileId.Identifier,16);}else{uint64_t volume=b.dwVolumeSerialNumber,id=((uint64_t)b.nFileIndexHigh<<32)|b.nFileIndexLow;memcpy(r.data()+1,&volume,8);memcpy(r.data()+9,&id,8);}CloseHandle(h);require(ok);uint64_t created=((uint64_t)b.ftCreationTime.dwHighDateTime<<32)|b.ftCreationTime.dwLowDateTime;memcpy(r.data()+25,&created,8);return r;}
+// Check the filesystem object represented by the parsed PIDL, not just its spelling.
+PIDLIST_ABSOLUTE parse(const std::wstring& path,const std::array<unsigned char,33>& expected){
+ PIDLIST_ABSOLUTE pidl=nullptr;require(SUCCEEDED(SHParseDisplayName(path.c_str(),nullptr,&pidl,0,nullptr)));
+ IShellItem* item=nullptr;PWSTR resolved=nullptr;
+ HRESULT hr=SHCreateItemFromIDList(pidl,IID_PPV_ARGS(&item));
+ if(SUCCEEDED(hr))hr=item->GetDisplayName(SIGDN_FILESYSPATH,&resolved);
+ bool same=false;try{same=SUCCEEDED(hr)&&resolved&&identity(resolved)==expected;}catch(...){}
+ if(resolved)CoTaskMemFree(resolved);if(item)item->Release();
+ if(!same){CoTaskMemFree(pidl);require(false);}return pidl;
+}
 int wmain(int argc,wchar_t**argv){try{
   require(argc==6);SetErrorMode(SEM_FAILCRITICALERRORS|SEM_NOGPFAULTERRORBOX);SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
   require(SUCCEEDED(CoInitializeEx(nullptr,COINIT_APARTMENTTHREADED)));
@@ -24,9 +34,9 @@ int wmain(int argc,wchar_t**argv){try{
   std::vector<std::wstring>paths;std::vector<std::array<unsigned char,33>>ids;size_t units=folderPath.size();
   for(uint32_t i=0;i<count;i++){paths.push_back(text(file));units+=paths.back().size();require(units<=256*1024);std::array<unsigned char,33>id;exact(file,id.data(),33);require(identity(paths.back())==id);ids.push_back(id);}CloseHandle(file);
   WNDCLASSW wc{};wc.lpfnWndProc=proc;wc.hInstance=GetModuleHandleW(nullptr);wc.lpszClassName=L"BackleafShellHost";RegisterClassW(&wc);HWND owner=CreateWindowExW(WS_EX_TOOLWINDOW|WS_EX_LAYERED,wc.lpszClassName,L"",WS_POPUP,0,0,1,1,parent,nullptr,wc.hInstance,nullptr);require(owner!=nullptr);
-  IShellFolder*desktop=nullptr;IShellFolder*folder=nullptr;require(SUCCEEDED(SHGetDesktopFolder(&desktop)));PIDLIST_ABSOLUTE root=nullptr;require(SUCCEEDED(SHParseDisplayName(folderPath.c_str(),nullptr,&root,0,nullptr)));require(SUCCEEDED(desktop->BindToObject(root,nullptr,IID_PPV_ARGS(&folder))));
+  IShellFolder*desktop=nullptr;IShellFolder*folder=nullptr;require(SUCCEEDED(SHGetDesktopFolder(&desktop)));PIDLIST_ABSOLUTE root=parse(folderPath,folderId);require(SUCCEEDED(desktop->BindToObject(root,nullptr,IID_PPV_ARGS(&folder))));
   IContextMenu*context=nullptr;std::vector<PIDLIST_ABSOLUTE>absolute;std::vector<PCUITEMID_CHILD>children;
-  for(auto&p:paths){PIDLIST_ABSOLUTE item=nullptr;require(SUCCEEDED(SHParseDisplayName(p.c_str(),nullptr,&item,0,nullptr)));absolute.push_back(item);children.push_back(ILFindLastID(item));}
+  for(size_t i=0;i<paths.size();i++){PIDLIST_ABSOLUTE item=parse(paths[i],ids[i]);require(ILIsParent(root,item,TRUE));absolute.push_back(item);children.push_back(ILFindLastID(item));}
   if(count){require(SUCCEEDED(folder->GetUIObjectOf(owner,count,children.data(),IID_IContextMenu,nullptr,(void**)&context)));}
   else{require(SUCCEEDED(folder->CreateViewObject(owner,IID_IContextMenu,(void**)&context)));}
   context->QueryInterface(IID_PPV_ARGS(&menu3));if(!menu3)context->QueryInterface(IID_PPV_ARGS(&menu2));

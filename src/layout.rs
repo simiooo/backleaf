@@ -30,7 +30,6 @@ pub struct Control {
     pub hit_size: f32,
     pub icon_size: f32,
     pub radius: f32,
-    pub focus_width: f32,
 }
 #[derive(Deserialize)]
 #[serde(rename_all = "camelCase")]

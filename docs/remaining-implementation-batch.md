@@ -49,3 +49,9 @@ v24–v34逐版冷重开共215页通过。真实窗口进程已启动且可读�
 发布前补查：定位查询显式上下界避免多余扫描；索引空闲building状态只在变化时写入，writer锁每2秒重试；恢复组在IMMEDIATE事务中更新所有者并递增revision，第二实例不重复接管。补查后74项测试通过。首轮CI41899797640已取消，不发布过渡版本。
 
 统一候选已发布：https://github.com/simiooo/backleaf/releases/tag/test-v0.1.0-preview.12-abb4e1c7 。源码abb4e1c7，CI41901564259成功、74项测试；下载包摘要/CLI本机冒烟通过。74项测试不代替可见输入、混合DPI/NVDA或海量性能复测，后者仍需解锁后完成。
+
+## 解锁后实际窗口回归与修复（2026-11-05）
+
+preview.12真实CI包通过：中文输入搜索、FileView命名blur持久化、无效筛选草稿恢复、编辑路径鼠标blur导航、分级路径复制、typeahead/F2、重命名中右键其他文件、OS鼠标拖动移动/侧栏固定/重排、外部CRUD自动刷新、双窗口独立路径与共享剪切粘贴、正常退出查询保存。记录.local/visible-regression-12。
+
+发现并在v35设计后修复：TextInput Tab/ShiftTab未遍历，Alert缺少可访问名称，Shell宿主规范化DOS/UNC与CRLF协议不兼容，文件名键盘焦点仍用亮蓝描边。新增Shell协议与无损UTF16路径回归，Release76项测试及严格Clippy通过；修复版实机与海量性能回归正在进行，不将源码通过计为实际交付。

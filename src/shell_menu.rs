@@ -1,7 +1,7 @@
 //! Compatible Shell menus run on a separate STA. An invoked external command is never killed as cancellation.
 use crate::{
     model::{Event, FrozenSelection},
-    operations::{ledger::encode_path, windows::identity},
+    operations::windows::{clipboard_path, identity},
 };
 use sha2::{Digest, Sha256};
 use std::{
@@ -127,8 +127,7 @@ pub fn open(
                         break;
                     };
                     if value == b'\n' {
-                        if let Ok(s) = std::str::from_utf8(&line)
-                            && matches!(s, "shown" | "invoking" | "closed" | "error")
+                        if let Some(s) = protocol_message(&line)
                             && sender.send(s.to_owned()).is_err()
                         {
                             return;
@@ -165,9 +164,60 @@ pub fn open(
     Ok(())
 }
 fn write_path(file: &mut File, path: &std::path::Path) -> anyhow::Result<()> {
-    let raw = encode_path(path);
+    let raw = shell_path(path)?;
     anyhow::ensure!(!raw.is_empty() && raw.len() / 2 < 32760, "路径过长");
     file.write_all(&((raw.len() / 2) as u32).to_le_bytes())?;
     file.write_all(&raw)?;
     Ok(())
+}
+fn shell_path(path: &std::path::Path) -> anyhow::Result<Vec<u8>> {
+    let mut units = clipboard_path(path)?;
+    anyhow::ensure!(units.pop() == Some(0), "系统菜单路径格式无效");
+    Ok(units.into_iter().flat_map(u16::to_le_bytes).collect())
+}
+fn protocol_message(line: &[u8]) -> Option<&str> {
+    let line = line.strip_suffix(b"\r").unwrap_or(line);
+    let message = std::str::from_utf8(line).ok()?;
+    matches!(message, "shown" | "invoking" | "closed" | "error").then_some(message)
+}
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::{ffi::OsString, os::windows::ffi::OsStringExt, path::Path};
+    #[test]
+    fn native_text_protocol_accepts_crlf_without_accepting_noise() {
+        for message in ["shown", "invoking", "closed", "error"] {
+            assert_eq!(protocol_message(message.as_bytes()), Some(message));
+            assert_eq!(
+                protocol_message(format!("{message}\r").as_bytes()),
+                Some(message)
+            );
+        }
+        for line in [b"shown \r".as_slice(), b"shown\r\r", b"unknown", b"\xff"] {
+            assert_eq!(protocol_message(line), None);
+        }
+    }
+    #[test]
+    fn shell_paths_preserve_utf16_and_normalize_only_safe_prefixes() {
+        let mut source = r"\\?\C:\test\".encode_utf16().collect::<Vec<_>>();
+        source.extend([0xd800, b'.' as u16, b't' as u16]);
+        let path = OsString::from_wide(&source);
+        let actual = shell_path(Path::new(&path)).unwrap();
+        assert_eq!(
+            actual,
+            source[4..]
+                .iter()
+                .flat_map(|u| u.to_le_bytes())
+                .collect::<Vec<_>>()
+        );
+        assert_eq!(
+            shell_path(Path::new(r"\\?\UNC\server\share\file")).unwrap(),
+            r"\\server\share\file"
+                .encode_utf16()
+                .flat_map(u16::to_le_bytes)
+                .collect::<Vec<_>>()
+        );
+        assert!(shell_path(Path::new(r"\\?\C:\test\unsafe.")).is_err());
+        assert!(shell_path(Path::new(r"\\.\C:\test")).is_err());
+    }
 }

@@ -834,11 +834,20 @@ impl Render for TextInput {
             .line_height(px(20.))
             .text_color(colors.color(ColorRole::Primary))
             .cursor(CursorStyle::IBeam)
-            .on_key_down(cx.listener(|this, event: &KeyDownEvent, _, cx| {
+            .on_key_down(cx.listener(|this, event: &KeyDownEvent, window, cx| {
                 if event.keystroke.modifiers.platform || event.keystroke.modifiers.alt {
                     return;
                 }
-                if event.keystroke.key == "enter" && this.marked_range.is_none() {
+                if event.keystroke.key == "tab" && !event.keystroke.modifiers.control {
+                    cx.stop_propagation();
+                    if this.enabled && this.marked_range.is_none() && !this.paste_pending {
+                        if event.keystroke.modifiers.shift {
+                            window.focus_prev(cx);
+                        } else {
+                            window.focus_next(cx);
+                        }
+                    }
+                } else if event.keystroke.key == "enter" && this.marked_range.is_none() {
                     cx.stop_propagation();
                     if this.enabled && !event.is_held {
                         if this.paste_pending {

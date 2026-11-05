@@ -173,6 +173,7 @@ impl Backleaf {
                         .text_size(px(12.))
                         .text_color(colors.color(ColorRole::Negative))
                         .role(Role::Alert)
+                        .aria_label(error.clone())
                         .child(error),
                 )
             })

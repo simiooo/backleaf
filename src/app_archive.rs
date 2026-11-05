@@ -295,6 +295,7 @@ impl Backleaf {
                 div()
                     .id("archive-error")
                     .role(Role::Alert)
+                    .aria_label(error.clone())
                     .text_size(px(12.))
                     .text_color(self.colors.color(ColorRole::Negative))
                     .child(error.clone())
