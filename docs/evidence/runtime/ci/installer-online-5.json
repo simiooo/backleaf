@@ -1,0 +1,101 @@
+﻿{
+    "passed":  true,
+    "powershell":  "5.1.26100.33648",
+    "installer_sha256":  "58f2949d504139890a185cfb38b424c80b5ae2ac84af9374782bff8fb0dabda5",
+    "anonymous_download":  true,
+    "tag":  "test-v0.1.0-preview.15-786c6e53",
+    "version":  "0.1.0-preview.15",
+    "source_commit":  "786c6e53acd66e7e0a139b30aa6b4dc75e464897",
+    "installed_path":  "D:\\a\\backleaf\\backleaf\\.local\\installer-staging\\5-beb93b06822d4b81b9664528c667a610",
+    "installed_at_utc":  "2026-11-05T07:46:53.2068680Z",
+    "exe_sha256":  "acf3aef0547f608cb7113e31967255c4fd8bcac4c888092ad4dcd4b5db87b4bc",
+    "cli_smoke_passed":  true,
+    "runtime":  {
+                    "tag":  "runtime-v1",
+                    "asset_sha256":  "sha256:058e48347c973ad4c314cdc3997cb09419b46ab7c07b7e2a4466357716040797",
+                    "files":  [
+                                  {
+                                      "name":  "concrt140.dll",
+                                      "sha256":  "2405355f0a58067b258f8df33c327e3a3d716eaac5a3a5aebb757842d85bd376",
+                                      "version":  "14.44.35211.0",
+                                      "signer":  "CN=Microsoft Windows Software Compatibility Publisher, O=Microsoft Corporation, L=Redmond, S=Washington, C=US"
+                                  },
+                                  {
+                                      "name":  "msvcp140_1.dll",
+                                      "sha256":  "bfad5aef4c63a669e3c140655cdfdf395b6c979b400a447bd5dcb65ed8826c3d",
+                                      "version":  "14.44.35211.0",
+                                      "signer":  "CN=Microsoft Windows Software Compatibility Publisher, O=Microsoft Corporation, L=Redmond, S=Washington, C=US"
+                                  },
+                                  {
+                                      "name":  "msvcp140_2.dll",
+                                      "sha256":  "3ea06f0ee098b4823cb79599df3780e7f23cce52c19aac31d2a0d47efe33a5e9",
+                                      "version":  "14.44.35211.0",
+                                      "signer":  "CN=Microsoft Windows Software Compatibility Publisher, O=Microsoft Corporation, L=Redmond, S=Washington, C=US"
+                                  },
+                                  {
+                                      "name":  "msvcp140_atomic_wait.dll",
+                                      "sha256":  "640b2aefced484d0368eea5bdd06addd0658a3a70a49256e560d6923b404a479",
+                                      "version":  "14.44.35211.0",
+                                      "signer":  "CN=Microsoft Windows Software Compatibility Publisher, O=Microsoft Corporation, L=Redmond, S=Washington, C=US"
+                                  },
+                                  {
+                                      "name":  "msvcp140_codecvt_ids.dll",
+                                      "sha256":  "f2069a52880ec885ee7f0511186100eb7fada0411a2b4948fafea7735b878a18",
+                                      "version":  "14.44.35211.0",
+                                      "signer":  "CN=Microsoft Windows Software Compatibility Publisher, O=Microsoft Corporation, L=Redmond, S=Washington, C=US"
+                                  },
+                                  {
+                                      "name":  "msvcp140.dll",
+                                      "sha256":  "0f885b509a685d2bbfa652fed26b5fb31d88fbdab0a978c641d1c7b8aa460aa9",
+                                      "version":  "14.44.35211.0",
+                                      "signer":  "CN=Microsoft Windows Software Compatibility Publisher, O=Microsoft Corporation, L=Redmond, S=Washington, C=US"
+                                  },
+                                  {
+                                      "name":  "vccorlib140.dll",
+                                      "sha256":  "19839407c3fdbc824e5bce189bf68ddf8097f12ec28b757797ffa0415c144ddd",
+                                      "version":  "14.44.35211.0",
+                                      "signer":  "CN=Microsoft Windows Software Compatibility Publisher, O=Microsoft Corporation, L=Redmond, S=Washington, C=US"
+                                  },
+                                  {
+                                      "name":  "vcruntime140_1.dll",
+                                      "sha256":  "1f2d41c4aa5db0bc33ebf7b66d72943a817d7ce6cbe880502a9403823633093f",
+                                      "version":  "14.44.35211.0",
+                                      "signer":  "CN=Microsoft Windows Software Compatibility Publisher, O=Microsoft Corporation, L=Redmond, S=Washington, C=US"
+                                  },
+                                  {
+                                      "name":  "vcruntime140_threads.dll",
+                                      "sha256":  "219915cf20822f34d5e7c1fdd4e21ae7f3396881096c51036225fb8f84b47afa",
+                                      "version":  "14.44.35211.0",
+                                      "signer":  "CN=Microsoft Windows Software Compatibility Publisher, O=Microsoft Corporation, L=Redmond, S=Washington, C=US"
+                                  },
+                                  {
+                                      "name":  "vcruntime140.dll",
+                                      "sha256":  "d5e4d9a3e835fa679450145d6a7d94e36573a509317111904d9b3712c30d9066",
+                                      "version":  "14.44.35211.0",
+                                      "signer":  "CN=Microsoft Windows Software Compatibility Publisher, O=Microsoft Corporation, L=Redmond, S=Washington, C=US"
+                                  }
+                              ]
+                },
+    "app_local_runtime_loads":  [
+                                    {
+                                        "name":  "vcruntime140.dll",
+                                        "loaded_path":  "D:\\a\\backleaf\\backleaf\\.local\\installer-staging\\5-beb93b06822d4b81b9664528c667a610\\current\\vcruntime140.dll",
+                                        "app_local":  true
+                                    },
+                                    {
+                                        "name":  "vcruntime140_1.dll",
+                                        "loaded_path":  "D:\\a\\backleaf\\backleaf\\.local\\installer-staging\\5-beb93b06822d4b81b9664528c667a610\\current\\vcruntime140_1.dll",
+                                        "app_local":  true
+                                    },
+                                    {
+                                        "name":  "msvcp140.dll",
+                                        "loaded_path":  "D:\\a\\backleaf\\backleaf\\.local\\installer-staging\\5-beb93b06822d4b81b9664528c667a610\\current\\msvcp140.dll",
+                                        "app_local":  true
+                                    }
+                                ],
+    "gui_smoke":  "not run; installation-only change",
+    "session":  {
+                    "locked":  false,
+                    "error":  null
+                }
+}

@@ -8,6 +8,9 @@ SIM-998 public PowerShell one-line installation is available for product review,
 | --- | --- | --- |
 | accepted baseline | SIM-921 / SIM-948 | User accepted v6 for implementation; subsequent feedback is retained in v38 |
 | review_queue | SIM-998 | Public PowerShell per-user installer, 16 regressions on each PowerShell version, anonymous release installation/CLI smoke, default Start menu installation |
+| review_queue | SIM-999 | App-local Microsoft VC runtime, 20 installer regressions per PowerShell version, explicit adjacent-DLL load probes and installed CLI smoke |
+| ready_queue | SIM-1001 | Stabilize context-menu/submenu geometry and asynchronous third-party discovery |
+| ready_queue | SIM-1000 | Drive capacity/media updates, file-only selected-byte totals and repeated-letter cycling |
 | remaining acceptance check | SIM-992 | 16 production GPUI headless interactions plus 81 existing tests passed locally and in CI; downloaded visible-window smoke was interrupted by user, no further desktop automation performed |
 | review_queue | SIM-978 | Owned self-drawn context-menu windows and isolated third-party commands; preview.14 staging, CI, download and downloaded-window smoke passed |
 | review_queue | SIM-974 | Native OLE real-file external/cross-window transfer delivered in preview.14; synchronous/asynchronous COM and actual move tested, full Explorer/cross-window mouse gesture remains unverified due tool boundary |
@@ -19,6 +22,8 @@ SIM-998 public PowerShell one-line installation is available for product review,
 `in_review` means engineering delivery is available for product acceptance, not that product acceptance has completed. Product feedback remains authoritative. Preview.14 implementation and checks are described in [the batch record](ole-and-extension-batch.md); binary-specific evidence and limitations are in [preview.14 evidence](evidence/preview-14/README.md). The cancelled fd5368c candidate is superseded and is not a delivered release.
 
 Historical delivery records follow. Statements about missing features refer to their dated version, not to the current queue.
+
+2026-11-05 15:46:40+08: SIM-999 app-local VC runtime support published separately from the unchanged application ZIP. Final installer source c6507e07 passed [20-case installation CI on both PowerShell versions](https://github.com/simiooo/backleaf/actions/runs/41989590242); the actual runtime source/signatures and release were checked by [runtime CI](https://github.com/simiooo/backleaf/actions/runs/41988409665). Local isolated staging combined the already verified CI app with the real runtime installer step, checked adjacent DLL load paths and passed EXE diagnostics. [Runtime evidence](evidence/runtime/README.md). This corrects the original installer's missing VC runtime prerequisite; it does not modify global PATH or require an administrator.
 
 2026-11-05 15:14:42+08: PowerShell installer source `adcf5f8` published on staging; [installation CI 41985734534](https://github.com/simiooo/backleaf/actions/runs/41985734534) passed Windows PowerShell 5.1 and PowerShell 7 regressions and real anonymous installs of preview.15. The public README one-line command installed to the current user's default Programs/Backleaf directory, created a verified Start menu shortcut and passed installed CLI smoke. [Installation evidence](evidence/installer/README.md) includes downloaded CI reports and source-byte verification. Application binary source remains `786c6e53`; no new application package was needed for this installer change.
 
