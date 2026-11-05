@@ -48,3 +48,8 @@ Windows staging means a private downloadable desktop build installed into an iso
 以上不等同于 Meta 所有产品共用唯一 RGB 表；所查公开资料中，Horizon 的角色定义最完整，但属于其 XR/Android UI Set。Backleaf 借用角色组织与配对方法，Windows 密度和键鼠操作仍遵循既定基线。`design/color-system.json` 的具体色值是本项目提案，不能标作 Meta 内部规范。
 
 本轮推导：普通文件保持开放排版；选择由覆盖图标与名称的单一浅色状态层承载，名称不再另加实心色块，图标不再叠独立灰底；名称字重作为额外识别线索。焦点独立，仅键盘出现；浮层靠层级、边界与影子区分，普通文件没有阴影。以相同位置、尺寸、留白和状态优先级形成重复与节奏。明暗方案、状态组合、对比度和实际窗口一起验收后再实施。
+# Independent properties / 2026-11-06
+
+Use a separate information window, following the explicit properties/Get Info entry in [GNOME Files](https://help.gnome.org/gnome-help/nautilus-file-properties-basic.html) and [Finder](https://support.apple.com/en-euro/guide/mac-help/mchlp1774/27/mac/27). Backleaf keeps the full name/path selectable, uses logical bytes with familiar automatic units, and calculates a folder only when its properties are requested.
+
+The scanner uses cached Windows entry metadata where available; [Rust documents that DirEntry metadata does not traverse symlinks](https://doc.rust-lang.org/std/fs/struct.DirEntry.html). Before descending it rechecks directory attributes and skips detected reparse/offline/recall entries, following the meaning of [Windows file attribute flags](https://learn.microsoft.com/windows/win32/fileio/file-attribute-constants). Two workers, a 16-job queue, depth-bounded iterative traversal and 200ms latest-snapshot publication bound resource use. Closing cancels between filesystem calls; an already-blocked OS call cannot be forcibly interrupted. This is an on-demand logical-size scan, not a physical-allocation measurement or transactionally frozen tree; F5 rechecks the selected identity and recomputes.

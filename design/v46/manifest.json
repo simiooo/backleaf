@@ -1,0 +1,36 @@
+{
+  "version": "v46-independent-properties",
+  "retainedPages": 266,
+  "pages": [
+    {
+      "key": "267-file-properties",
+      "name": "267 · v46 file-properties",
+      "state": "file",
+      "nodes": 155
+    },
+    {
+      "key": "268-folder-counting",
+      "name": "268 · v46 folder-counting",
+      "state": "counting",
+      "nodes": 154
+    },
+    {
+      "key": "269-folder-complete",
+      "name": "269 · v46 folder-complete",
+      "state": "complete",
+      "nodes": 154
+    },
+    {
+      "key": "270-folder-partial",
+      "name": "270 · v46 folder-partial",
+      "state": "partial",
+      "nodes": 155
+    },
+    {
+      "key": "271-properties-dark",
+      "name": "271 · v46 properties-dark",
+      "state": "dark",
+      "nodes": 154
+    }
+  ]
+}

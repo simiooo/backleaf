@@ -245,13 +245,6 @@ impl Backleaf {
             184.
         }
     }
-    pub fn inline_details_width(&self, window: &Window) -> f32 {
-        if self.details.is_some() && f32::from(window.viewport_size().width) >= 900. {
-            320.
-        } else {
-            0.
-        }
-    }
     pub fn accept_navigation(&mut self, notice: Notice, cx: &mut Context<Self>) {
         match notice {
             Notice::Common(locations) => {

@@ -160,16 +160,6 @@ impl Backleaf {
         self.pressed_id = None;
         self.detail_token += 1;
         self.detail_pending = false;
-        if let Some(id) = self.selection.focus {
-            if self.details.is_some() {
-                self.detail_pending = true;
-                self.source.detail(self.detail_token, id);
-            }
-        } else {
-            self.details = None;
-            self.detail_name = None;
-            self.detail_path = None;
-        }
         self.set_scroll_offset(
             app_scroll::Kind::Files,
             (ready.top / self.columns.max(1)) as f64 * f64::from(layout::row_step()) + fraction,

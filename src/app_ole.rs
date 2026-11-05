@@ -13,11 +13,7 @@ impl Backleaf {
         let over_task = (self.panel || self.files.open)
             && f32::from(position.x) >= f32::from(window.viewport_size().width) - 424.
             && f32::from(position.y) >= f32::from(window.viewport_size().height) - 640.;
-        let over_details = self.details.is_some()
-            && self.inline_details_width(window) == 0.
-            && f32::from(position.x) >= f32::from(window.viewport_size().width) - 336.;
         let editable = over_task
-            || over_details
             || self.navigation.open
             || self.watch_stale()
             || self.files.editor.is_some()
@@ -48,7 +44,6 @@ impl Backleaf {
                 size(
                     px((f32::from(window.viewport_size().width)
                         - self.sidebar_width()
-                        - self.inline_details_width(window)
                         - 2. * layout::SURFACE.margin_x)
                         .max(0.)),
                     px((f32::from(window.viewport_size().height)

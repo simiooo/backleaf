@@ -1,0 +1,34 @@
+{
+  "masterSha256": "216c6ffd8f632f908406d4765a9be010b59c24e70d59f7b8a63bc1e5055ab179",
+  "retainedPages": 266,
+  "pages": 271,
+  "result": "passed",
+  "results": [
+    {
+      "key": "267-file-properties",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "268-folder-counting",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "269-folder-complete",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "270-folder-partial",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "271-properties-dark",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    }
+  ],
+  "verifiedAt": "2026-11-05T16:12:22.324Z"
+}

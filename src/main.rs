@@ -33,6 +33,8 @@ mod ole;
 mod operations;
 mod paint;
 mod popup_menu;
+mod properties;
+mod properties_capacity;
 mod quick_access;
 mod scrollbar;
 mod search;
@@ -60,7 +62,6 @@ use paint::{
     FileState, FlowCache, GridTextCache, SharedFlowCache, SharedGridTextCache, file_background,
     grid_name, icon, tooltip,
 };
-use selectable::Selectable;
 use selection::{GridBand, SelectionWorker};
 use std::{
     cell::RefCell,
@@ -119,9 +120,6 @@ struct Backleaf {
     scrollbar_hover: Option<app_scroll::Kind>,
     columns: usize,
     origin_row: usize,
-    details: Option<Detail>,
-    detail_name: Option<Entity<Selectable>>,
-    detail_path: Option<Entity<Selectable>>,
     detail_token: u64,
     detail_pending: bool,
     open_pending: bool,
@@ -478,15 +476,6 @@ impl Backleaf {
                 task.cache.borrow_mut().clear();
                 cx.notify();
             });
-            for text in [this.detail_name.as_ref(), this.detail_path.as_ref()]
-                .into_iter()
-                .flatten()
-            {
-                text.update(cx, |text, cx| {
-                    text.colors = colors;
-                    cx.notify();
-                });
-            }
             cx.notify();
         });
         if options.selection_smoke {
@@ -558,9 +547,6 @@ impl Backleaf {
             scrollbar_hover: None,
             columns: 1,
             origin_row: 0,
-            details: None,
-            detail_name: None,
-            detail_path: None,
             detail_token: 0,
             detail_pending: false,
             open_pending: false,
@@ -841,12 +827,11 @@ impl Backleaf {
             self.metrics
                 .borrow_mut()
                 .event(&format!("detail-ready id={}", detail.id));
-            self.detail_name =
-                Some(cx.new(|cx| Selectable::new(detail.name.clone(), self.colors, cx)));
-            self.detail_path = Some(cx.new(|cx| {
-                Selectable::new(detail.path.to_string_lossy().into_owned(), self.colors, cx)
-            }));
-            self.details = Some(detail);
+            if let Err(error) =
+                properties::open(detail, self.colors, self.options.reduced_motion, cx)
+            {
+                self.error = Some(format!("无法打开详情：{error}"));
+            }
             cx.notify();
         }
     }
@@ -880,9 +865,6 @@ impl Backleaf {
         self.navigation.pending = None;
         self.files.removed.clear();
         self.detail_token += 1;
-        self.details = None;
-        self.detail_name = None;
-        self.detail_path = None;
         self.detail_pending = false;
         self.path = path;
         self.cache.clear();
@@ -949,9 +931,7 @@ impl Backleaf {
         m.cache = m.cache.max(self.cache.len());
     }
     fn grid_width(&self, window: &Window) -> f32 {
-        f32::from(window.viewport_size().width)
-            - self.sidebar_width()
-            - self.inline_details_width(window)
+        f32::from(window.viewport_size().width) - self.sidebar_width()
     }
     fn global_point(&self, p: Point<Pixels>) -> (f64, f64) {
         let offset = -f32::from(self.scroll.0.borrow().base_handle.offset().y) as f64;
@@ -1375,11 +1355,9 @@ impl Backleaf {
         self.keyboard_focus = true;
         if key == "escape" {
             window.focus(&self.focus, cx);
-            if self.details.take().is_some() || self.detail_pending {
+            if self.detail_pending {
                 self.detail_token += 1;
                 self.detail_pending = false;
-                self.detail_name = None;
-                self.detail_path = None;
             } else if self.panel {
                 self.panel = false;
             } else {
@@ -1952,7 +1930,6 @@ impl Backleaf {
         let gap = layout::LAYOUT.grid.column_gap;
         let grid_width = (width
             - self.sidebar_width()
-            - self.inline_details_width(window)
             - 2. * (layout::SURFACE.margin_x + layout::SURFACE.padding_x)
             - layout::SCROLL.gutter)
             .max(layout::LAYOUT.grid.minimum_cell_width);
@@ -2072,118 +2049,6 @@ impl Backleaf {
                 .track_scroll(&self.scroll),
             )
             .children(scrollbar)
-            .into_any_element()
-    }
-    fn details_panel(&self, cx: &mut Context<Self>) -> AnyElement {
-        let detail = self.details.as_ref().unwrap();
-        let name = detail.name.clone();
-        let path = detail.path.to_string_lossy().into_owned();
-        div()
-            .id("details")
-            .w(px(320.))
-            .bg(self.colors.color(ColorRole::Canvas))
-            .flex_none()
-            .h_full()
-            .border_l_1()
-            .border_color(self.colors.color(ColorRole::Border))
-            .px(px(12.))
-            .py(px(16.))
-            .flex()
-            .flex_col()
-            .gap(px(16.))
-            .child(
-                div()
-                    .flex()
-                    .items_center()
-                    .justify_between()
-                    .child("详情")
-                    .child(self.button(
-                        "close",
-                        "关闭详情",
-                        cx.listener(|this, _, window, cx| {
-                            this.details = None;
-                            this.detail_name = None;
-                            this.detail_path = None;
-                            window.focus(&this.focus, cx);
-                            cx.notify();
-                        }),
-                    )),
-            )
-            .child(
-                div()
-                    .id("detail-body")
-                    .overflow_y_scroll()
-                    .flex_1()
-                    .min_h_0()
-                    .flex()
-                    .flex_col()
-                    .gap(px(16.))
-                    .child(
-                        div()
-                            .id("detail-name-field")
-                            .flex()
-                            .flex_col()
-                            .gap(px(8.))
-                            .child(
-                                div()
-                                    .flex()
-                                    .items_center()
-                                    .justify_between()
-                                    .text_size(px(12.))
-                                    .text_color(self.colors.color(ColorRole::Secondary))
-                                    .child("名称")
-                                    .child(self.button(
-                                        "copy",
-                                        "复制完整名称",
-                                        move |_, _, cx| {
-                                            cx.write_to_clipboard(ClipboardItem::new_string(
-                                                name.clone(),
-                                            ))
-                                        },
-                                    )),
-                            )
-                            .child(self.detail_name.clone().unwrap()),
-                    )
-                    .child(
-                        div()
-                            .id("detail-path-field")
-                            .flex()
-                            .flex_col()
-                            .gap(px(8.))
-                            .child(
-                                div()
-                                    .flex()
-                                    .items_center()
-                                    .justify_between()
-                                    .text_size(px(12.))
-                                    .text_color(self.colors.color(ColorRole::Secondary))
-                                    .child("位置")
-                                    .child(self.button(
-                                        "copy",
-                                        "复制完整路径",
-                                        move |_, _, cx| {
-                                            cx.write_to_clipboard(ClipboardItem::new_string(
-                                                path.clone(),
-                                            ))
-                                        },
-                                    )),
-                            )
-                            .child(self.detail_path.clone().unwrap()),
-                    )
-                    .child(
-                        div()
-                            .text_size(px(12.))
-                            .text_color(self.colors.color(ColorRole::Secondary))
-                            .child(if detail.directory {
-                                "文件夹".into()
-                            } else {
-                                detail
-                                    .bytes
-                                    .map(|n| format!("{} 字节", number(n as usize)))
-                                    .unwrap_or_else(|| "—".into())
-                            }),
-                    ),
-            )
             .into_any_element()
     }
 }
@@ -2353,10 +2218,6 @@ impl Render for Backleaf {
                                             }),
                                     ),
                             ),
-                    )
-                    .when(
-                        self.details.is_some() && self.inline_details_width(window) > 0.,
-                        |d| d.child(self.details_panel(cx)),
                     ),
             )
             .child(
@@ -2412,22 +2273,6 @@ impl Render for Backleaf {
                                     .line_height(px(layout::SCROLL.status_line_height))
                                     .child(status),
                             ),
-                    )
-                },
-            )
-            .when(
-                self.details.is_some() && self.inline_details_width(window) == 0.,
-                |d| {
-                    d.child(
-                        div()
-                            .absolute()
-                            .right_0()
-                            .top(px(layout::CHROME.bar_height))
-                            .bottom_0()
-                            .bg(colors.color(ColorRole::Floating))
-                            .shadow(vec![colors.shadow()])
-                            .occlude()
-                            .child(self.details_panel(cx)),
                     )
                 },
             )

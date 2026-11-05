@@ -281,6 +281,34 @@ impl Harness {
                 .clone()
         })
     }
+    fn properties(&mut self) -> WindowHandle<crate::properties::Properties> {
+        self.wait("independent properties window", |_, cx| {
+            cx.windows()
+                .iter()
+                .any(|handle| handle.downcast::<crate::properties::Properties>().is_some())
+        });
+        self.cx.update(|cx| {
+            cx.windows()
+                .into_iter()
+                .find_map(|handle| handle.downcast::<crate::properties::Properties>())
+                .unwrap()
+        })
+    }
+    fn properties_ready(&mut self, handle: WindowHandle<crate::properties::Properties>) {
+        let deadline = Instant::now() + Duration::from_secs(10);
+        loop {
+            self.frame();
+            if handle
+                .read_with(&self.cx, |view, _| view.snapshot.done)
+                .unwrap()
+            {
+                return;
+            }
+            self.cx.advance_clock(Duration::from_millis(20));
+            assert!(Instant::now() < deadline, "properties scan timed out");
+            std::thread::sleep(Duration::from_millis(3));
+        }
+    }
     fn rename(&mut self) {
         let (x, y) = self.first_icon();
         self.click(x, y, MouseButton::Left);
@@ -1525,4 +1553,106 @@ fn additive_marquee_escape_restores_original_selection() {
         && this.selection.count() == 1
         && this.selection.contains(0)));
     assert!(h.grid_focused());
+}
+
+#[test]
+fn file_properties_open_separately_keep_geometry_and_preserve_full_long_path() {
+    let name = format!("完整文件名-{}.txt", "long-name-".repeat(15));
+    let mut h = Harness::new(&[&name], None);
+    let geometry = h.read(|this, _| (this.columns, this.cell_width));
+    h.key("home");
+    h.key("alt-enter");
+    let properties = h.properties();
+    h.properties_ready(properties);
+    let path = properties
+        .read_with(&h.cx, |view, _| view.displayed_path())
+        .unwrap();
+    assert_eq!(path, navigation::display_path(&h.file(&name)));
+    let bytes = properties
+        .read_with(&h.cx, |view, _| view.snapshot.bytes)
+        .unwrap();
+    assert_eq!(bytes, format!("contents of {name}").len() as u128);
+    assert_eq!(h.read(|this, _| (this.columns, this.cell_width)), geometry);
+    assert_eq!(h.cx.update(|cx| cx.windows().len()), 2);
+    h.key_in(properties.into(), "ctrl-w");
+    assert_eq!(h.cx.update(|cx| cx.windows().len()), 1);
+}
+
+#[test]
+fn folder_properties_count_nested_files_without_resizing_or_duplicating_windows() {
+    let mut h = Harness::new(&["original.txt"], None);
+    let folder = h.file("资料");
+    std::fs::create_dir_all(folder.join("nested/empty")).unwrap();
+    std::fs::write(folder.join("a"), b"abc").unwrap();
+    std::fs::write(folder.join("nested/b"), b"12345").unwrap();
+    h.invalidate_directory();
+    h.wait("new folder snapshot", |this, _| {
+        this.source.count() == 2 && !this.watch_stale()
+    });
+    h.view.update(&mut h.cx, |this, cx| {
+        let id = this.cache.values().find(|item| item.directory).unwrap().id;
+        this.selection.select(id, false, false);
+        cx.notify();
+    });
+    let geometry = h.read(|this, _| (this.columns, this.cell_width));
+    h.key("alt-enter");
+    let properties = h.properties();
+    h.properties_ready(properties);
+    let snapshot = properties
+        .read_with(&h.cx, |view, _| view.snapshot.clone())
+        .unwrap();
+    assert_eq!(
+        (snapshot.bytes, snapshot.files, snapshot.folders),
+        (8, 2, 2)
+    );
+    assert!(snapshot.error.is_none());
+    h.cx.update_window(h.window.into(), |_, window, cx| {
+        window.activate_window();
+        let focus = h.view.read(cx).focus.clone();
+        window.focus(&focus, cx);
+    })
+    .unwrap();
+    h.key("alt-enter");
+    h.wait("repeat details request", |this, _| !this.detail_pending);
+    assert_eq!(h.cx.update(|cx| cx.windows().len()), 2);
+    assert_eq!(h.read(|this, _| (this.columns, this.cell_width)), geometry);
+    h.key_in(properties.into(), "escape");
+}
+
+#[test]
+fn properties_refresh_rechecks_identity_and_close_cancels_the_reader() {
+    let mut h = Harness::new(&["item.txt"], None);
+    h.key("home");
+    h.key("alt-enter");
+    let properties = h.properties();
+    h.properties_ready(properties);
+    std::fs::write(h.file("item.txt"), b"updated").unwrap();
+    h.key_in(properties.into(), "f5");
+    h.properties_ready(properties);
+    assert_eq!(
+        properties
+            .read_with(&h.cx, |view, _| view.snapshot.bytes)
+            .unwrap(),
+        7
+    );
+    std::fs::rename(h.file("item.txt"), h.file("old.txt")).unwrap();
+    std::fs::write(h.file("item.txt"), b"replacement").unwrap();
+    h.key_in(properties.into(), "f5");
+    h.properties_ready(properties);
+    assert!(
+        properties
+            .read_with(&h.cx, |view, _| view
+                .snapshot
+                .error
+                .as_deref()
+                .is_some_and(|e| e.contains("改变")))
+            .unwrap()
+    );
+    let canceled = properties
+        .read_with(&h.cx, |view, _| view.cancellation_probe())
+        .unwrap();
+    assert!(!canceled());
+    h.key_in(properties.into(), "escape");
+    assert!(canceled());
+    assert_eq!(h.cx.update(|cx| cx.windows().len()), 1);
 }
