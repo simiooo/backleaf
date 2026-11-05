@@ -1,0 +1,89 @@
+﻿{
+    "passed":  true,
+    "powershell":  "5.1.26100.33648",
+    "installer_sha256":  "4b242da0aff7b5173136ccf5a4efcffedf34a6141d30479371d1c6a78ba8cafb",
+    "test_count":  20,
+    "tests":  [
+                  {
+                      "name":  "latest prerelease is selected and drafts are ignored",
+                      "passed":  true
+                  },
+                  {
+                      "name":  "fresh install in a path containing spaces and Unicode",
+                      "passed":  true
+                  },
+                  {
+                      "name":  "upgrade and repeat install preserve user data and unrelated root files",
+                      "passed":  true
+                  },
+                  {
+                      "name":  "running application blocks upgrade without termination",
+                      "passed":  true
+                  },
+                  {
+                      "name":  "failed download leaves the previous installation intact",
+                      "passed":  true
+                  },
+                  {
+                      "name":  "asset digest mismatch is rejected before replacing current",
+                      "passed":  true
+                  },
+                  {
+                      "name":  "failed directory promotion restores the previous installation",
+                      "passed":  true
+                  },
+                  {
+                      "name":  "missing release assets are rejected",
+                      "passed":  true
+                  },
+                  {
+                      "name":  "metadata source/version mismatch is rejected even with valid asset digests",
+                      "passed":  true
+                  },
+                  {
+                      "name":  "inner executable mismatch is rejected even with valid ZIP and manifest digests",
+                      "passed":  true
+                  },
+                  {
+                      "name":  "unmanaged application directory is never overwritten",
+                      "passed":  true
+                  },
+                  {
+                      "name":  "concurrent installation is refused",
+                      "passed":  true
+                  },
+                  {
+                      "name":  "root escape, user data target and unsafe cleanup are refused",
+                      "passed":  true
+                  },
+                  {
+                      "name":  "ZIP traversal, absolute paths, ADS and duplicate names are rejected",
+                      "passed":  true
+                  },
+                  {
+                      "name":  "junction installation paths are rejected",
+                      "passed":  true
+                  },
+                  {
+                      "name":  "temporary installation trees are removed after success and failure",
+                      "passed":  true
+                  },
+                  {
+                      "name":  "runtime is installed app-local with license and receipt",
+                      "passed":  true
+                  },
+                  {
+                      "name":  "runtime download corruption prevents application replacement",
+                      "passed":  true
+                  },
+                  {
+                      "name":  "missing LOCALAPPDATA is reported without changing environment",
+                      "passed":  true
+                  },
+                  {
+                      "name":  "installer preserves PATH and restores TLS configuration after success and errors",
+                      "passed":  true
+                  }
+              ],
+    "completed_at_utc":  "2026-11-05T09:23:01.6312331Z"
+}
