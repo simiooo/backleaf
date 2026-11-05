@@ -1,0 +1,19 @@
+install	Anonymous installation (Windows PowerShell 5.1)	﻿2026-11-05T14:40:43.6088080Z ##[group]Run ./scripts/native/test-installer-online.ps1 -Output .local/installer-online-5.json
+install	Anonymous installation (Windows PowerShell 5.1)	2026-11-05T14:40:43.6088551Z ^[[36;1m./scripts/native/test-installer-online.ps1 -Output .local/installer-online-5.json^[[0m
+install	Anonymous installation (Windows PowerShell 5.1)	2026-11-05T14:40:43.6137874Z shell: C:\Windows\System32\WindowsPowerShell\v1.0\powershell.EXE -command ". '{0}'"
+install	Anonymous installation (Windows PowerShell 5.1)	2026-11-05T14:40:43.6138130Z ##[endgroup]
+install	Anonymous installation (Windows PowerShell 5.1)	2026-11-05T14:40:43.9786917Z Finding Backleaf release...
+install	Anonymous installation (Windows PowerShell 5.1)	2026-11-05T14:40:44.6140029Z Downloading Backleaf-0.1.0-preview.23-2573f912-win-x64.zip...
+install	Anonymous installation (Windows PowerShell 5.1)	2026-11-05T14:40:54.2847746Z Downloading build.json...
+install	Anonymous installation (Windows PowerShell 5.1)	2026-11-05T14:41:02.9808450Z Downloading SHA256SUMS.txt...
+install	Anonymous installation (Windows PowerShell 5.1)	2026-11-05T14:41:12.5452994Z Downloading Backleaf-runtime-x64.zip...
+install	Anonymous installation (Windows PowerShell 5.1)	2026-11-05T14:41:23.6975398Z curl: (22) The requested URL returned error: 504
+install	Anonymous installation (Windows PowerShell 5.1)	2026-11-05T14:41:24.8200884Z curl: (22) The requested URL returned error: 504
+install	Anonymous installation (Windows PowerShell 5.1)	2026-11-05T14:41:24.9694148Z Release download failed (curl exit 22). Retry the install command.
+install	Anonymous installation (Windows PowerShell 5.1)	2026-11-05T14:41:24.9694879Z At D:\a\backleaf\backleaf\install.ps1:49 char:36
+install	Anonymous installation (Windows PowerShell 5.1)	2026-11-05T14:41:24.9695389Z + ... DE -ne 0) { throw "Release download failed (curl exit $LASTEXITCODE). ...
+install	Anonymous installation (Windows PowerShell 5.1)	2026-11-05T14:41:24.9695756Z +                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+install	Anonymous installation (Windows PowerShell 5.1)	2026-11-05T14:41:24.9696189Z     + CategoryInfo          : OperationStopped: (Release downloa...nstall command.:String) [], RuntimeException
+install	Anonymous installation (Windows PowerShell 5.1)	2026-11-05T14:41:24.9696745Z     + FullyQualifiedErrorId : Release download failed (curl exit 22). Retry the install command.
+install	Anonymous installation (Windows PowerShell 5.1)	2026-11-05T14:41:24.9697100Z  
+install	Anonymous installation (Windows PowerShell 5.1)	2026-11-05T14:41:24.9897013Z ##[error]Process completed with exit code 1.

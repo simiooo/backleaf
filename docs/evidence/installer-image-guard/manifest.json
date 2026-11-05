@@ -1,0 +1,92 @@
+{
+  "recorded_at_utc": "2026-11-05T14:47:24.582924+00:00",
+  "installer_source": "965b2623cf6517160c65054bd5c8a4fc7dfca43c",
+  "application_source": "2573f9127ab45d73d78658d0a7f798794ecc10ae",
+  "files": [
+    {
+      "path": "before-failure.txt",
+      "sha256": "b1a7f144a5c63949a39d294d0909b55db4c3520b411662dae8ba96928f636784",
+      "bytes": 1867
+    },
+    {
+      "path": "first-attempt-504.txt",
+      "sha256": "66517b94ae1eaf19a55c67bd36196b3c87b3572b67a1c6fe576b8d6aba4db897",
+      "bytes": 2717
+    },
+    {
+      "path": "headless-ci.json",
+      "sha256": "c04afd8a212ef4bdbe3b2a779ffc61f28fb33c99caf95a104b368d1f604a47dd",
+      "bytes": 168
+    },
+    {
+      "path": "installer-ci.json",
+      "sha256": "8e1d06dabb719b1778d3af3e2625562573c0f0d0f359b0ce54a69fb138c6aed7",
+      "bytes": 1952
+    },
+    {
+      "path": "installer-online-5.json",
+      "sha256": "9d80bf5c179c11a237147b1d814384ec372b86e27c2494cacd3ab9a4a5600177",
+      "bytes": 7218
+    },
+    {
+      "path": "installer-online-7.json",
+      "sha256": "6dbd6543ea25ca101dd4b11be8c24bb20dc22e493d410ebee350ac65faa07768",
+      "bytes": 4684
+    },
+    {
+      "path": "installer-tests-5.json",
+      "sha256": "15dcf2b7b1a8af8f6ea4003438133a68ef04ef4eed15753bae2137b8c9b5c6ec",
+      "bytes": 4203
+    },
+    {
+      "path": "installer-tests-7.json",
+      "sha256": "b7b6d17a845a6d8fcc97f99d2f91e25c9bd55518dd7f0566d09536d84c4c2e01",
+      "bytes": 2796
+    },
+    {
+      "path": "local-online.json",
+      "sha256": "ce7cfc5c948be374370edb07c0e1414afe7de973f4db0394619718ca6a98a83a",
+      "bytes": 4656
+    },
+    {
+      "path": "local-repeat-upgrade.json",
+      "sha256": "016123c65fccc49f302c968c3ac6cbb95441e69a01a7dd16aee27cf911d91e81",
+      "bytes": 3608
+    },
+    {
+      "path": "local-tests-5.json",
+      "sha256": "41af6fbee62e3272f20de15bfa28abd87f66c9e72892e14ba39491293f40e210",
+      "bytes": 4202
+    },
+    {
+      "path": "local-tests-5.txt",
+      "sha256": "0e10e5e20c2ceb5e638251440512dce53d628857ec731f8441ce94a7db6518d0",
+      "bytes": 4660
+    },
+    {
+      "path": "local-tests-7.json",
+      "sha256": "1b47b183df2eef4e6b7242875e7409bd46a354c901d797c54e77f330adfb24ca",
+      "bytes": 2796
+    },
+    {
+      "path": "local-tests-7.txt",
+      "sha256": "2db33813c5b01996339f417f532e3270fff9a307ac666a15b7d766643e6b108a",
+      "bytes": 4660
+    },
+    {
+      "path": "public-script.json",
+      "sha256": "1e269c11e8e602b5cadc0a6aa08130597389d954cb2fa885c8edb9bc54c81668",
+      "bytes": 375
+    },
+    {
+      "path": "README.md",
+      "sha256": "7cc1b4cb1588ca7939bfc2c2eb30c59ebbec0f0191041d1b9c4c27dbb92f5c05",
+      "bytes": 3177
+    },
+    {
+      "path": "target-preflight.json",
+      "sha256": "af8113d29215af89f34b5967c090aa6dc67f5b2d37e411458e5260e9d510ea5e",
+      "bytes": 218
+    }
+  ]
+}
