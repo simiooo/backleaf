@@ -22,6 +22,18 @@
       "sha256": "970226d4ea5b97b616fef51d9b0e49bf86d1890ce2e422cd56f2e22f35dd4466"
     },
     {
+      "path": "ci-package-build.json",
+      "sha256": "c33abce71ac5015678fcbc8e7e78636c5e8e1d12429af4b6ab111e331daa3549"
+    },
+    {
+      "path": "ci-package-status.json",
+      "sha256": "28c0546b267cd9155b58d322dc9e90c56857b0a87e0400a3478613660b3638f4"
+    },
+    {
+      "path": "ci-package-verified.json",
+      "sha256": "4b6a016467450860510b191e5a0ba366c551475eb192119c64534b7d185fa161"
+    },
+    {
       "path": "clippy.log",
       "sha256": "e56d7627d208df7d22407e5f537d54e047bd215d3f8a23fbeb8daeee6e15c1d8"
     },
@@ -62,8 +74,16 @@
       "sha256": "da43222ca4a73747a75409143ca2fdc429a22eb2401c834de49f8f6853aff728"
     },
     {
+      "path": "online-ps5.json",
+      "sha256": "7012258d79db0b6e7a587f7f95802ca96ea5d5f43df553b98ddb2e952bcfbbe3"
+    },
+    {
+      "path": "online-ps7.json",
+      "sha256": "692f238a67d481859175f9380781771f773997af316a07a2e4d77d02daf24d07"
+    },
+    {
       "path": "README.md",
-      "sha256": "821778776634a15e792193f4577212c29f3ac6af52795654b63775fdbb11a929"
+      "sha256": "a82d25fb0ca8f04408e2514490e5a6ca2d85ccd0627a27381e1a433cacb6e155"
     },
     {
       "path": "staging.json",

@@ -1,0 +1,9 @@
+{
+  "passed": true,
+  "source_commit": "aaeef882558363e3cba279b700a0455fde113f73",
+  "ci_exe_sha256": "9ff8f32cda959b030ac14907437df86385e9e8ba7575bc97722c734ce57aa99e",
+  "archive_sha256": "77264e02baa9e706123f48c36935c65d6eb9d00570ec4127bf0b5fb47fff2601",
+  "release": "https://github.com/simiooo/backleaf/releases/tag/test-v0.1.0-preview.24-aaeef882",
+  "verified_at_utc": "2026-11-05T15:51:42.165059+00:00",
+  "scope": "Published CI ZIP/assets and inner executable/runtime/design/headless digests; anonymous isolated installations on Windows PowerShell5.1 and PowerShell7; no default-user installation or GUI input."
+}
