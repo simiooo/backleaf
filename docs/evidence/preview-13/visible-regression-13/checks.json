@@ -1,0 +1,77 @@
+[
+  {
+    "check": "Normal restart restores path and re-executes query",
+    "result": "passed",
+    "query": "sample-0",
+    "matches": 99
+  },
+  {
+    "check": "Search Tab and Shift+Tab",
+    "result": "passed"
+  },
+  {
+    "check": "Keyboard file caption uses elevation without accent outline",
+    "result": "passed"
+  },
+  {
+    "check": "Classic Shell menu stays open beyond discovery timeout and includes registered extensions",
+    "result": "passed",
+    "observed": [
+      "7-Zip",
+      "Zed",
+      "Vim",
+      "WPS"
+    ],
+    "scope": "presence; no third-party command invoked"
+  },
+  {
+    "check": "Path editor Tab blur commits and navigates",
+    "result": "passed",
+    "path": "A-target"
+  },
+  {
+    "check": "Invalid filter Tab blur retains draft and restores focus with named accessible Alert",
+    "result": "passed",
+    "draft": "-1",
+    "alert": "天数无效"
+  },
+  {
+    "check": "Final staged ZIP creation via Tab blur and real progress",
+    "result": "passed",
+    "items": "1/1",
+    "bytes": "25/25",
+    "payloadVerified": true,
+    "exeSha256": "40125a985f1f5299d24fed3f24e136115274c50f6a049522352564f45879627b"
+  },
+  {
+    "check": "Final staged extraction via Tab blur and progress",
+    "result": "passed",
+    "items": "1/1",
+    "bytes": "25/25",
+    "payloadVerified": true
+  },
+  {
+    "check": "Forced process exit restores two independent windows and re-runs their searches",
+    "result": "passed",
+    "queries": [
+      {
+        "query": "move",
+        "matches": 4
+      },
+      {
+        "query": "zip",
+        "matches": 1
+      }
+    ],
+    "operationReplay": false
+  },
+  {
+    "check": "Final keyboard menu focus uses neutral raised row",
+    "result": "passed"
+  },
+  {
+    "check": "1/2/5/10 windows and close nine retains usable window",
+    "result": "passed",
+    "resources": "visible-performance-13/window-*.json"
+  }
+]

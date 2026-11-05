@@ -20,3 +20,5 @@ docs/evidence/marquee-acceleration/raw/* -text whitespace=cr-at-eol,-blank-at-eo
 
 # Preserve this batch's exact validation and artifact-proof bytes.
 docs/evidence/remaining-batch/** -text whitespace=cr-at-eol,-blank-at-eof
+
+docs/evidence/preview-13/** -text whitespace=cr-at-eol,-blank-at-eof

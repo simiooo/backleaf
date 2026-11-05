@@ -1,0 +1,21 @@
+{
+  "exe_sha256": "40125a985f1f5299d24fed3f24e136115274c50f6a049522352564f45879627b",
+  "started_at": "2026-11-05T10:57:04.9164666+08:00",
+  "finished_at": "2026-11-05T10:57:37.9357429+08:00",
+  "count": 10000000,
+  "width": 1120,
+  "height": 720,
+  "flow": 8,
+  "controller_valid": true,
+  "final_identity_pass": true,
+  "selected": 6999826,
+  "furthest_offset": 127999376.0,
+  "maximum_offset": 127999376.0,
+  "scene_p95_ms": 5.383299999999999,
+  "frame_callback_p95_ms": 15.7496,
+  "working_set_peak_mib": 82.49609375,
+  "cached_items_peak": 100,
+  "label_cache_peak": 129,
+  "max_pending_frame_callbacks": 1,
+  "scope": "Visible real GPUI, synthetic controller; no OS input injected"
+}

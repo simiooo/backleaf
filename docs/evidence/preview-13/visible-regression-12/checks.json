@@ -1,0 +1,58 @@
+[
+  {
+    "check": "Chinese literal search input and match",
+    "result": "passed",
+    "query": "文档",
+    "matches": 1
+  },
+  {
+    "check": "Save FileView on blur",
+    "result": "passed",
+    "title": "文档测试视图",
+    "persisted": true
+  },
+  {
+    "check": "Invalid day filter blur preserves draft and restores focus with visible toast",
+    "result": "passed",
+    "draft": "-1",
+    "error": "天数无效"
+  },
+  {
+    "check": "Persistent index query with local relative-date filter",
+    "result": "passed",
+    "matches": 1,
+    "indexedItems": 132
+  },
+  {
+    "check": "Error toast accessibility name",
+    "result": "failed",
+    "detail": "Alert node has no error text in accessibility tree"
+  },
+  {
+    "check": "Path blur navigation, ancestor path copy, typeahead, rename blur with subsequent other-folder context menu",
+    "result": "passed"
+  },
+  {
+    "check": "OS mouse drag move into folder and task completion",
+    "result": "passed"
+  },
+  {
+    "check": "OS mouse drag folder pin and sidebar reorder persisted",
+    "result": "passed"
+  },
+  {
+    "check": "External create/rename/delete reflected while active without F5",
+    "result": "passed"
+  },
+  {
+    "check": "Native Shell menu host",
+    "result": "failed",
+    "detail": "Host closes without showing menu; verbatim Shell path and CRLF protocol need correction"
+  },
+  {
+    "check": "Ctrl+N independent navigation, common quick access and task hub, cross-window Ctrl+X / Ctrl+V",
+    "result": "passed",
+    "source": "batch-fixture/notes-文档.md",
+    "destination": "batch-fixture/B-folder/notes-文档.md"
+  }
+]
