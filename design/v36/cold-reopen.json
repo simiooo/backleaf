@@ -1,0 +1,19 @@
+{
+  "masterSha256": "26cf726e45e67743f31699790c0f9529c6d44b2c3b37a9ef1c4fe6afb2a4d6c6",
+  "retainedPages": 219,
+  "pages": 221,
+  "result": "passed",
+  "results": [
+    {
+      "key": "220-typeahead-non-input",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "221-typeahead-input-protection",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    }
+  ],
+  "verifiedAt": "2026-11-05T03:10:50.514Z"
+}

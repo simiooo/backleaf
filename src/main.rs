@@ -619,12 +619,18 @@ impl Backleaf {
                 && token == self.typeahead.token
                 && self.typeahead.pending
                 && self.files.editor.is_none()
+                && self.archive.draft.is_none()
+                && !self.view_editing()
+                && !self.files.close_guard
+                && self.files.menu.is_none()
+                && !self.navigation.open
                 && !self.search.open =>
             {
                 self.typeahead.pending = false;
                 if let Some(id) = id.filter(|id| !self.files.removed.contains(*id as u64)) {
                     self.selection.select(id, false, false);
                     self.keyboard_focus = true;
+                    self.files.focus_grid = true;
                     self.scroll_global(id / self.columns, ScrollStrategy::Nearest, false);
                 }
                 cx.notify();
@@ -913,12 +919,18 @@ impl Backleaf {
         cx: &mut Context<Self>,
     ) -> bool {
         let m = event.keystroke.modifiers;
-        if !self.focus.is_focused(window)
+        if !window.is_window_active()
+            || !window.is_visible()
             || self.files.editor.is_some()
+            || self.archive.draft.is_some()
+            || self.view_editing()
+            || self.files.close_guard
             || self.search.open
             || self.navigation.open
             || self.files.menu.is_some()
             || self.selection_busy()
+            || self.drag.gesture.is_some()
+            || self.navigation.drag.is_some()
             || m.control
             || m.alt
             || m.platform

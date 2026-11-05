@@ -1,0 +1,19 @@
+{
+  "version": "v36-typeahead-focus",
+  "retainedPages": 219,
+  "pages": [
+    {
+      "key": "220-typeahead-non-input",
+      "name": "220 · v36 typeahead-non-input",
+      "nodes": 116,
+      "state": "navigate"
+    },
+    {
+      "key": "221-typeahead-input-protection",
+      "name": "221 · v36 typeahead-input-protection",
+      "nodes": 120,
+      "state": "protect"
+    }
+  ],
+  "source": "scripts/design/typeahead-v36.mjs"
+}

@@ -30,6 +30,6 @@ Delete 移至回收站；Ctrl+Shift+N 新建文件夹；F5 刷新。
 第三方扩展通过兼容原生菜单承载，不保证全部Windows11现代扩展；选区上限2048项/512KiB，不截断选择。
 恢复只重新执行查询，不自动重放文件操作。归档提交中断后核对结果身份；其他中断操作不推测回滚成功。
 
-包内：EXE、Logo、219页可编辑 OpenPencil v35设计、build.json、许可证及7-Zip对应完整源包。
+包内：EXE、Logo、221页可编辑 OpenPencil v36设计、build.json、许可证及7-Zip对应完整源包。
 7-Zip 动态库位于 lib/7z.dll，可替换兼容的x64修改版；详见 licenses/7-Zip-26.05。
 源码：https://github.com/simiooo/backleaf

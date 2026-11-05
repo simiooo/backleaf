@@ -89,6 +89,9 @@ impl Backleaf {
                     .any(|f| f.input.focus_handle(cx).is_focused(window))
             })
     }
+    pub fn view_editing(&self) -> bool {
+        self.views.editor.is_some() || self.views.filters.is_some()
+    }
     pub fn close_search_checked(&mut self, window: &mut Window, cx: &mut Context<Self>) {
         if self.views.filters.is_some() {
             if !self.apply_view_filters(cx) {
@@ -187,6 +190,7 @@ impl Backleaf {
         self.start_search(definition.query, cx);
     }
     pub fn begin_save_view(&mut self, as_new: bool, window: &mut Window, cx: &mut Context<Self>) {
+        self.reset_typeahead();
         self.views.filters = None;
         let previous = if as_new {
             None

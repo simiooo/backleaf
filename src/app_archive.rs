@@ -53,6 +53,7 @@ impl Backleaf {
         false
     }
     pub fn begin_archive(&mut self, kind: Kind, window: &mut Window, cx: &mut Context<Self>) {
+        self.reset_typeahead();
         if self.defer_archive(kind, cx) {
             return;
         }

@@ -557,6 +557,7 @@ impl Backleaf {
         window: Option<&mut Window>,
         cx: &mut Context<Self>,
     ) {
+        self.reset_typeahead();
         let is_path = matches!(kind, EditKind::Path);
         let input = cx.new(|cx| {
             TextInput::new(
