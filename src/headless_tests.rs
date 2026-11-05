@@ -374,6 +374,68 @@ fn automatic_search_refresh_keeps_rows_until_the_new_page_is_ready() {
 }
 
 #[test]
+fn indexed_search_cache_reuse_incremental_refresh_and_replaced_visible_identity() {
+    let mut h = Harness::new(&["报告-original.txt", "other.txt"], None);
+    h.read(|this, _| {
+        this.index
+            .as_ref()
+            .unwrap()
+            .send(index::Action::Add(this.path.clone()))
+            .unwrap()
+    });
+    h.wait("indexed fixture", |this, _| {
+        !this.index_status.building && this.index_status.count == 2
+    });
+    h.key("ctrl-f");
+    h.view.update(&mut h.cx, |this, cx| {
+        this.search.definition.indexed = true;
+        this.start_search("报".into(), cx);
+    });
+    h.wait("cold indexed result", |this, _| {
+        this.search.done && this.search.rows.len() == 1
+    });
+    let handle = h.read(|this, _| this.search.scroll.0.clone());
+    h.view.update(&mut h.cx, |this, _| this.refresh_search());
+    h.wait("warm reused page", |this, _| {
+        !this.search.refreshing && this.search.done && this.search.scanned == 0
+    });
+    let old = h.file("报告-original.txt");
+    let preserved = h.file("preserved.txt");
+    let revision = h.read(|this, _| this.index_status.revision);
+    std::fs::rename(&old, &preserved).unwrap();
+    std::fs::write(&old, b"replacement identity").unwrap();
+    // Before the index watcher has necessarily caught up, page validation must
+    // reject the old identity and route through the existing refresh handoff.
+    h.view.update(&mut h.cx, |this, _| {
+        this.search.serial += 1;
+        this.search
+            .worker
+            .page(this.search.token, this.search.serial, 0..32);
+        assert_eq!(this.search.rows.len(), 1);
+    });
+    h.wait("watcher and replacement refresh", |this, _| {
+        this.search.done
+            && this.index_status.revision > revision
+            && !this.search.refreshing
+            && this
+                .search
+                .rows
+                .values()
+                .any(|r| r.name == "报告-original.txt")
+    });
+    h.read(|this, _| assert!(Rc::ptr_eq(&handle, &this.search.scroll.0)));
+    let new = h.file("报告-new.txt");
+    std::fs::write(&new, b"new").unwrap();
+    h.wait("incremental cache membership", |this, _| {
+        this.search.done
+            && !this.search.refreshing
+            && this.search.count == 2
+            && this.search.rows.len() == 2
+    });
+    h.read(|this, _| assert!(Rc::ptr_eq(&handle, &this.search.scroll.0)));
+}
+
+#[test]
 fn new_folder_completion_refreshes_in_place_and_enters_rename() {
     let mut h = Harness::new(&["original.txt"], None);
     let handle = h.read(|this, _| this.scroll.0.clone());

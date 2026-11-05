@@ -53,6 +53,17 @@ pub fn open(directory: &Path) -> anyhow::Result<Connection> {
     CREATE TRIGGER IF NOT EXISTS entries_ai AFTER INSERT ON entries BEGIN INSERT INTO names(rowid,name)VALUES(new.id,new.name); END;
     CREATE TRIGGER IF NOT EXISTS entries_ad AFTER DELETE ON entries BEGIN INSERT INTO names(names,rowid,name)VALUES('delete',old.id,old.name); END;
     CREATE TRIGGER IF NOT EXISTS entries_au AFTER UPDATE OF name ON entries BEGIN INSERT INTO names(names,rowid,name)VALUES('delete',old.id,old.name); INSERT INTO names(rowid,name)VALUES(new.id,new.name); END;")?;
+    // These IDs are a bounded invalidation journal, not an OS change journal.
+    // Triggers are in the same transaction as the indexed metadata mutation.
+    db.execute_batch("CREATE TABLE IF NOT EXISTS search_changes(seq INTEGER PRIMARY KEY AUTOINCREMENT,entry INTEGER NOT NULL);
+    CREATE TRIGGER IF NOT EXISTS search_entry_insert AFTER INSERT ON entries BEGIN INSERT INTO search_changes(entry) VALUES(new.id); END;
+    CREATE TRIGGER IF NOT EXISTS search_entry_delete AFTER DELETE ON entries BEGIN INSERT INTO search_changes(entry) VALUES(old.id); END;
+    CREATE TRIGGER IF NOT EXISTS search_entry_update AFTER UPDATE ON entries
+    WHEN old.parent IS NOT new.parent OR old.path IS NOT new.path OR old.name IS NOT new.name OR old.display IS NOT new.display OR old.directory IS NOT new.directory OR old.identity IS NOT new.identity
+    BEGIN INSERT INTO search_changes(entry) VALUES(old.id); INSERT INTO search_changes(entry) VALUES(new.id); END;
+    CREATE TRIGGER IF NOT EXISTS search_object_update AFTER UPDATE ON objects WHEN old.bytes IS NOT new.bytes OR old.modified IS NOT new.modified
+    BEGIN INSERT INTO search_changes(entry) SELECT id FROM entries WHERE identity=new.identity; END;
+    CREATE TRIGGER IF NOT EXISTS search_changes_bound AFTER INSERT ON search_changes BEGIN DELETE FROM search_changes WHERE seq<=new.seq-8192; END;")?;
     Ok(db)
 }
 pub fn register(db: &Connection, path: &Path) -> anyhow::Result<()> {
@@ -145,6 +156,15 @@ fn erase_missing(db: &Connection, root: i64, parent: &Path, epoch: i64) -> anyho
     Ok(db.execute("WITH RECURSIVE gone(path) AS(SELECT path FROM entries WHERE root=?1 AND parent=?2 AND epoch<>?3 UNION ALL SELECT e.path FROM entries e JOIN gone g ON e.parent=g.path WHERE e.root=?1)DELETE FROM entries WHERE root=?1 AND path IN(SELECT path FROM gone)",params![root,encode_path(parent),epoch])?)
 }
 fn erase_path(db: &Connection, root: i64, path: &Path) -> anyhow::Result<()> {
+    let raw = encode_path(path);
+    let mut prefix = raw.clone();
+    if !prefix.ends_with(&[b'\\', 0]) {
+        prefix.extend([b'\\', 0]);
+    }
+    db.execute(
+        "DELETE FROM problems WHERE root=?1 AND (path=?2 OR substr(path,1,length(?3))=?3)",
+        params![root, &raw, &prefix],
+    )?;
     let removed=db.execute("WITH RECURSIVE gone(path)AS(SELECT ?2 UNION ALL SELECT e.path FROM entries e JOIN gone g ON e.parent=g.path WHERE e.root=?1)DELETE FROM entries WHERE root=?1 AND path IN(SELECT path FROM gone)",params![root,encode_path(path)])?;
     db.execute(
         "UPDATE roots SET count=max(0,count-?2) WHERE id=?1",
@@ -162,6 +182,10 @@ fn upsert(
     crawl: bool,
 ) -> anyhow::Result<()> {
     let raw = encode_path(path);
+    db.execute(
+        "DELETE FROM problems WHERE root=?1 AND path=?2",
+        params![root, &raw],
+    )?;
     let identity = metadata.identity.encode();
     let display = path
         .file_name()
@@ -204,7 +228,12 @@ fn upsert(
     }
     Ok(())
 }
-fn incremental(db: &mut Connection, root: i64, path: &Path, excluded: &Path) -> anyhow::Result<()> {
+pub(crate) fn incremental(
+    db: &mut Connection,
+    root: i64,
+    path: &Path,
+    excluded: &Path,
+) -> anyhow::Result<()> {
     if path.starts_with(excluded)
         || path
             .components()
@@ -213,13 +242,38 @@ fn incremental(db: &mut Connection, root: i64, path: &Path, excluded: &Path) -> 
         return Ok(());
     }
     let txn = db.transaction()?;
+    let Some(registered) = txn
+        .query_row("SELECT path FROM roots WHERE id=?1", [root], |r| {
+            r.get::<_, Vec<u8>>(0)
+        })
+        .optional()?
+    else {
+        return Ok(());
+    };
     match identity::capture(path) {
         Ok(metadata) => {
             let epoch = txn.query_row("SELECT value FROM meta WHERE key='epoch'", [], |r| {
                 r.get::<_, i64>(0)
             })?;
-            if let Some(parent) = path.parent() {
-                upsert(&txn, root, parent, path, &metadata, epoch, false)?;
+            // An old-name notification can still resolve after a case-only
+            // rename on Windows. Use the actual spelling, otherwise two UTF-16
+            // keys can describe one directory entry indefinitely.
+            let normalized =
+                if !metadata.reparse && metadata.attributes & (0x1000 | 0x40000 | 0x400000) == 0 {
+                    path.canonicalize().unwrap_or_else(|_| path.to_owned())
+                } else {
+                    path.to_owned()
+                };
+            if normalized != path {
+                erase_path(&txn, root, path)?;
+            }
+            if normalized.starts_with(decode_path(&registered))
+                && let Some(parent) = normalized.parent()
+            {
+                upsert(&txn, root, parent, &normalized, &metadata, epoch, false)?;
+                if metadata.reparse || metadata.attributes & (0x1000 | 0x40000 | 0x400000) != 0 {
+                    enqueue(&txn, root, parent, false)?;
+                }
             }
         }
         Err(error) => {
@@ -430,6 +484,36 @@ impl Service {
     }
 }
 struct WriterLock(windows::Win32::Foundation::HANDLE);
+#[cfg(test)]
+pub(crate) fn build_test_index(root: &Path, state: &Path) -> Connection {
+    let mut db = open(state).unwrap();
+    register(&db, root).unwrap();
+    let (tx, _rx) = async_channel::unbounded();
+    while let Some((id, path, crawl)) = db
+        .query_row("SELECT root,path,crawl FROM frontier LIMIT 1", [], |r| {
+            Ok((
+                r.get::<_, i64>(0)?,
+                decode_path(&r.get::<_, Vec<u8>>(1)?),
+                r.get::<_, bool>(2)?,
+            ))
+        })
+        .optional()
+        .unwrap()
+    {
+        reconcile(
+            &mut db,
+            id,
+            &path,
+            crawl,
+            state,
+            &AtomicBool::new(false),
+            &tx,
+        )
+        .unwrap();
+    }
+    db.execute("UPDATE roots SET building=0", []).unwrap();
+    db
+}
 impl Drop for WriterLock {
     fn drop(&mut self) {
         unsafe {
@@ -468,6 +552,17 @@ mod tests {
         assert_eq!(query_batch(&db, "档", 0, true).unwrap().len(), 2);
         assert_eq!(query_batch(&db, "报告.txt", 0, true).unwrap().len(), 1);
         assert_eq!(query_batch(&db, "readme", 0, true).unwrap().len(), 1);
+        db.execute(
+            "INSERT INTO problems VALUES(?1,?2,'previously unavailable')",
+            params![root_id, encode_path(&root.join("README.md"))],
+        )
+        .unwrap();
+        incremental(&mut db, root_id, &root.join("README.md"), &state).unwrap();
+        assert_eq!(
+            db.query_row("SELECT count(*) FROM problems", [], |r| r.get::<_, i64>(0))
+                .unwrap(),
+            0
+        );
         let old = root.join("文档报告.txt");
         let new = root.join("项目计划.txt");
         std::fs::rename(&old, &new).unwrap();
@@ -483,5 +578,9 @@ mod tests {
                 .unwrap(),
             "ok"
         );
+        db.execute("DELETE FROM roots WHERE id=?1", [root_id])
+            .unwrap();
+        incremental(&mut db, root_id, &root.join("README.md"), &state).unwrap();
+        assert!(query_batch(&db, "readme", 0, true).unwrap().is_empty());
     }
 }

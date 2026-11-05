@@ -235,6 +235,16 @@ impl Backleaf {
         if !self.search.open {
             return;
         }
+        if let Notice::Invalidated { token } = &notice {
+            if *token == self.search.token {
+                self.search.refreshing = false;
+                self.search.refresh = None;
+                self.search.done = true;
+                self.refresh_search();
+                cx.notify();
+            }
+            return;
+        }
         if self.search.refreshing {
             match notice {
                 Notice::Progress {

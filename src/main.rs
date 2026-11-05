@@ -36,6 +36,7 @@ mod popup_menu;
 mod quick_access;
 mod scrollbar;
 mod search;
+mod search_cache;
 mod search_motion;
 mod selectable;
 mod selection;

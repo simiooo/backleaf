@@ -1,12 +1,14 @@
+当前主稿：[OpenPencil v43 · 256页](Backleaf-v43.fig)，搜索缓存复用、增量刷新与不可用状态。独立品牌稿：[圆叶 v2](Backleaf-brand-v2.fig)。
+
 当前版本：[Backleaf-v39.fig](Backleaf-v39.fig)，237页。v39补齐稳定父菜单、固定应用操作入口、就绪后独立子菜单和底部独立翻转；保留v38及此前233页。固定OpenPencil原生CLI生成源：[menu-stability-v39.mjs](../scripts/design/menu-stability-v39.mjs)，独立进程冷重开：[v39/cold-reopen.json](v39/cold-reopen.json)。所有此前页面和历史文件均保留。
 
-最新主稿：[Backleaf-v22.fig](Backleaf-v22.fig)，149页，保留已发布v20的143页，新增6个渐进框选状态。持续加速的参数和行为见[交互契约](marquee-scroll-contract.md)。v21路径/磁盘设计仍属于另一个未交付候选单元。
+历史主稿：[Backleaf-v22.fig](Backleaf-v22.fig)，149页，保留已发布v20的143页，新增6个渐进框选状态。持续加速的参数和行为见[交互契约](marquee-scroll-contract.md)。v21路径/磁盘设计仍属于另一个未交付候选单元。
 
-最新主稿：[Backleaf-v20.fig](Backleaf-v20.fig)，143页；保留前137页，补充短/长名称、空白清选、重命名输入与明暗/窄窗命中状态。
+历史主稿：[Backleaf-v20.fig](Backleaf-v20.fig)，143页；保留前137页，补充短/长名称、空白清选、重命名输入与明暗/窄窗命中状态。
 
-最新主稿：[Backleaf-v19.fig](Backleaf-v19.fig)，137页；8个紧凑计数/无溢出/主区溢出/侧栏hover条件/短窗/深色/千万/空列表状态，保留全部前129页。几何见[scroll-system.json](scroll-system.json)。
+历史主稿：[Backleaf-v19.fig](Backleaf-v19.fig)，137页；8个紧凑计数/无溢出/主区溢出/侧栏hover条件/短窗/深色/千万/空列表状态，保留全部前129页。几何见[scroll-system.json](scroll-system.json)。
 
-最新主稿：[Backleaf-v18.fig](Backleaf-v18.fig)，129页，保留此前124页并补齐侧栏normal、Tab焦点、当前目录+焦点、深色、窄窗5个状态。
+历史主稿：[Backleaf-v18.fig](Backleaf-v18.fig)，129页，保留此前124页并补齐侧栏normal、Tab焦点、当前目录+焦点、深色、窄窗5个状态。
 
 本轮主稿：[Backleaf-v17.fig](Backleaf-v17.fig)，124页。v14/v15图标探索与生图原稿、v16窗口栏8个状态、v17搜索收起4个关键状态均保留。收起过程见[v17](v17/manifest.json)，有限双向动效契约见[search-motion.json](search-motion.json)。
 
@@ -65,4 +67,8 @@ Backleaf-brand-v2.fig为圆叶logo的三页明暗/尺寸展示稿，不替代v41
 
 ## v42 · 统一容量用量组件
 
-当前UI主稿Backleaf-v42.fig，253页，保留247页；新增六态使用10px/14px容量文字和18px一体meter，分区行保持60px。源scripts/design/capacity-v42.mjs，冷重开见v42/cold-reopen.json；独立圆叶品牌稿v2保留。
+v42历史UI主稿Backleaf-v42.fig，253页，保留247页；新增六态使用10px/14px容量文字和18px一体meter，分区行保持60px。源scripts/design/capacity-v42.mjs，冷重开见v42/cold-reopen.json；独立圆叶品牌稿v2保留。
+
+## v43 · 搜索缓存与增量刷新
+
+当前UI主稿Backleaf-v43.fig，256页，保留此前253页；新增复用、后台刷新和不可用三态，沿用现有搜索层级而不增加缓存文案。源scripts/design/search-cache-v43.mjs，冷重开见v43/cold-reopen.json。

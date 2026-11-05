@@ -15,6 +15,7 @@ pub struct Change {
 pub struct Watch {
     stop: Arc<AtomicBool>,
     pub overflow: Arc<AtomicBool>,
+    pub ready: Arc<AtomicBool>,
 }
 impl Drop for Watch {
     fn drop(&mut self) {
@@ -25,6 +26,8 @@ impl Watch {
     pub fn new(root: i64, path: PathBuf, excluded: PathBuf, tx: SyncSender<Change>) -> Self {
         let stop = Arc::new(AtomicBool::new(false));
         let overflow = Arc::new(AtomicBool::new(false));
+        let ready = Arc::new(AtomicBool::new(false));
+        let armed = ready.clone();
         let halted = stop.clone();
         let lost = overflow.clone();
         std::thread::Builder::new()
@@ -96,6 +99,7 @@ impl Watch {
                                     Some(&mut overlap),
                                     None,
                                 )?;
+                                armed.store(true, Ordering::Release);
                                 loop {
                                     if WaitForSingleObject(signal.0, 100) == WAIT_OBJECT_0 {
                                         break;
@@ -202,6 +206,7 @@ impl Watch {
                         }
                     })();
                     if result.is_err() {
+                        armed.store(false, Ordering::Release);
                         lost.store(true, Ordering::Release);
                         for _ in 0..20 {
                             if halted.load(Ordering::Acquire) {
@@ -213,6 +218,10 @@ impl Watch {
                 }
             })
             .expect("recursive directory watcher");
-        Self { stop, overflow }
+        Self {
+            stop,
+            overflow,
+            ready,
+        }
     }
 }

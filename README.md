@@ -1,8 +1,8 @@
 # 拾径 / Backleaf
 
-Windows 原生 GPUI 文件管理器。当前候选版为 0.1.0-preview.21；项目范围跟随 Nuto SIM-919、SIM-934，交付后进入产品验收。
+Windows 原生 GPUI 文件管理器。当前候选版为 0.1.0-preview.22；项目范围跟随 Nuto SIM-919、SIM-934，交付后进入产品验收。
 
-当前可编辑设计稿：[OpenPencil v42](design/Backleaf-v42.fig)，253页，保留此前所有基线与交互修订。版本索引见[设计目录](design/README.md)。设计先于实施；旧版design/Backleaf.fig保留为v6历史基线。
+当前可编辑设计稿：[OpenPencil v43](design/Backleaf-v43.fig)，256页，保留此前所有基线与交互修订。版本索引见[设计目录](design/README.md)。设计先于实施；旧版design/Backleaf.fig保留为v6历史基线。
 
 已实施原生虚拟文件网格、长文本、统一快捷访问与FileView、搜索和本地元数据索引、文件操作及进度、归档、目录变更监听、路径/查询恢复与独立窗口。本版在后台准备文件变化快照，原位更新并保留滚动及身份可验证的选择；搜索自动刷新也保留旧结果直到新页就绪。独立菜单与相邻运行库沿用preview16。本版补齐分区容量与使用率、PnP介质通知、非递归选中文件大小和重复字母循环定位。实测范围和限制见[测试版说明](docs/native-test-release.md)。
 
@@ -24,7 +24,7 @@ Windows/MSVC/Rust 1.99.1：
 
 `--path <directory>`打开真实目录；`--fixture 1000000 --flow 8`使用明确标记的生成元数据渲染场景。测试包需完整解压ZIP，保留lib和许可证目录。
 
-完整检查已包含无头门禁；只运行交互回归可用`./scripts/native/test-headless.ps1`。它覆盖29项GPUI事件、焦点、错误提示、菜单家族稳定性、真实文件/搜索结果、原位刷新与框选滚动，输出日志和JSON；PR及staging/main相关推送自动执行，测试包发布也必须通过。另有真实隐藏Win32菜单样式/父窗边界测试；系统原生集成与GPU验证范围见[回归分层](docs/native-resume-checklist.md)。
+完整检查已包含无头门禁；只运行交互回归可用`./scripts/native/test-headless.ps1`。它覆盖30项GPUI事件、焦点、错误提示、菜单家族稳定性、真实文件/搜索结果、原位刷新与框选滚动，输出日志和JSON；PR及staging/main相关推送自动执行，测试包发布也必须通过。另有真实隐藏Win32菜单样式/父窗边界测试；系统原生集成与GPU验证范围见[回归分层](docs/native-resume-checklist.md)。
 
 [本版证据](docs/evidence/menu-stability)、[上一版证据](docs/evidence/preview-15)、[设计约束](docs/design-contract.md)、[研究](docs/research.md)、[交付记录](docs/delivery.md)。
 
@@ -35,3 +35,5 @@ Windows/MSVC/Rust 1.99.1：
 应用logo已改为圆叶小表情；[独立品牌稿](design/Backleaf-brand-v2.fig)和[生成/导出说明](docs/brand-v2.md)保留明暗与小尺寸检查，界面主稿仍为v41。
 
 容量副文案10px，文案与细用量条一体展示；统一B/KB/MB/GB自动单位及整数舍入，见[容量展示](docs/capacity-v42.md)。
+
+搜索结果按完整查询条件缓存在有界磁盘LRU中；普通路径按递归通知失效，索引搜索按变更ID更新，见[缓存与边界](docs/search-cache-v43.md)。

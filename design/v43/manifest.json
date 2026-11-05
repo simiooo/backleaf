@@ -1,0 +1,25 @@
+{
+  "version": "v43-search-cache-transitions",
+  "retainedPages": 253,
+  "pages": [
+    {
+      "key": "254-cache-ready",
+      "name": "254 · v43 cache-ready",
+      "nodes": 145,
+      "state": "254-cache-ready"
+    },
+    {
+      "key": "255-cache-refresh",
+      "name": "255 · v43 cache-refresh",
+      "nodes": 145,
+      "state": "255-cache-refresh"
+    },
+    {
+      "key": "256-cache-unavailable",
+      "name": "256 · v43 cache-unavailable",
+      "nodes": 145,
+      "state": "256-cache-unavailable"
+    }
+  ],
+  "source": "scripts/design/search-cache-v43.mjs"
+}
