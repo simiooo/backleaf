@@ -1,0 +1,9 @@
+{
+  "scope": "Only the exact 7-Zip hash-result process started by this isolated native test; read-only completed result",
+  "pid": 31544,
+  "parent_pid": 24056,
+  "command_line": "\"C:\\Program Files\\7-Zip\\7zG.exe\" h -scrcSHA256 -i#7zMap13716:120:7zEvent2520",
+  "observed_creation_utc": "2026-11-05T12:36:56.695444Z",
+  "cleaned_at_utc": "2026-11-05T12:50:37.7142118Z",
+  "method": "owned test process cleanup; no Windows UI Automation fallback"
+}

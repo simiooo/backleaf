@@ -1,0 +1,17 @@
+
+7-Zip 26.05 (x64) : Copyright (c) 1999-2026 Igor Pavlov : 2026-10-21
+
+Scanning the drive for archives:
+1 file, 475 bytes (1 KiB)
+
+Testing archive: .local\shell-command-fixture\shell-command-fixture.zip
+--
+Path = .local\shell-command-fixture\shell-command-fixture.zip
+Type = zip
+Physical Size = 475
+
+Everything is Ok
+
+Files: 2
+Size:       5189
+Compressed: 475

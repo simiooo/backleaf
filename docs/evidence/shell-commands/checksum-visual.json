@@ -1,0 +1,8 @@
+{
+  "observed_at_utc": "2026-11-05T12:39:10.074Z",
+  "dialog": "7-Zip 校验信息",
+  "file": "report α.txt",
+  "bytes": 5160,
+  "sha256": "2d9999e290799b63b065ccabbe0ddc580b52d8d8d73f19871e22ef9ce15122c5",
+  "verification": "Native result dialog visually inspected; UIA does not expose this owned third-party dialog. A generated checksum file will provide a separate byte-exact check."
+}

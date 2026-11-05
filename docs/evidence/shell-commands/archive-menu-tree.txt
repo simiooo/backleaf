@@ -1,0 +1,109 @@
+Window: "拾径 · Backleaf", App: Backleaf.exe.
+	0 区域 拾径 · Backleaf Secondary Actions: Raise
+		46 区域 Backleaf 文件菜单 Secondary Actions: Raise
+			47 菜单 文件菜单
+				48 菜单项 编辑
+				49 菜单项 打印
+				50 菜单项 添加到收藏夹(F)
+				51 菜单项 7-Zip
+				52 菜单项 Edit with Vim using tabpages
+				53 菜单项 Edit with single Vim
+				54 菜单项 Diff with Vim
+				55 菜单项 文件压缩
+				56 菜单项 批量改文档格式
+				57 菜单项 批量重命名
+				58 菜单项 上传或同步到WPS
+				59 菜单项 我的设备
+				60 菜单项 复制文件地址(A)
+				61 菜单项 共享(S)
+				62 菜单项 发送到(N)
+				63 菜单项 创建快捷方式(S)
+		64 区域 Backleaf 文件菜单 Secondary Actions: Raise
+			65 菜单 文件菜单
+				66 菜单项 添加到压缩包...
+				67 菜单项 压缩并发送邮件...
+				68 菜单项 添加到 "shell-command-fixture.7z"
+				69 菜单项 压缩 "shell-command-fixture.7z" 并发送邮件
+				70 菜单项 添加到 "shell-command-fixture.zip"
+				71 菜单项 压缩 "shell-command-fixture.zip" 并发送邮件
+				72 菜单项 CRC SHA
+		37 区域 Backleaf 文件菜单 Secondary Actions: Raise
+			38 菜单 文件菜单
+				39 菜单项 复制
+				40 菜单项 剪切
+				41 菜单项 复制路径
+				42 菜单项 重命名，不可用
+				43 菜单项 移至回收站
+				44 菜单项 压缩为 ZIP…
+				45 菜单项 应用操作
+		1 标题栏 (settable, string) Value: 拾径 · Backleaf
+			2 菜单栏 系统 ID: MenuBar
+				33 菜单项 系统
+			4 按钮 最小化
+			5 按钮 最大化
+			6 按钮 关闭
+		7 应用程序 拾径 Backleaf
+			8 按钮 后退
+			9 按钮 上一级
+			10 导航 当前位置 D:\work\backleaf\.local\shell-command-fixture
+				11 链接 前往 D:\
+				12 按钮 显示折叠的上级路径
+				13 链接 前往 D:\work\backleaf\.local
+				14 按钮 编辑当前位置 D:\work\backleaf\.local\shell-command-fixture Value: D:\work\backleaf\.local\shell-command-fixture
+				15 按钮 浏览当前目录层级
+			16 按钮 搜索文件名，Ctrl+F
+			17 按钮 最小化
+			18 按钮 最大化或还原
+			19 按钮 关闭
+			20 导航 快捷访问
+				21 按钮 个人文件夹，C:\Users\qq651
+				22 按钮 桌面，C:\Users\qq651\Desktop
+				23 按钮 下载，C:\Users\qq651\Downloads
+				24 按钮 文档，C:\Users\qq651\Documents
+				25 按钮 图片，C:\Users\qq651\Pictures
+				26 按钮 音乐，C:\Users\qq651\Music
+				27 按钮 视频，C:\Users\qq651\Videos
+				28 按钮 Windows-SSD (C:)，C:\，总容量 400 GB；已使用 329 GB；剩余 71.1 GB；当前用户可用 71.1 GB
+				29 按钮 Data (D:)，D:\，总容量 461 GB；已使用 426 GB；剩余 34.3 GB；当前用户可用 34.3 GB
+			30 列表 文件
+				34 选项 (selectable) report α.txt
+				35 选项 (selectable) 说明.txt
+			36 文本 已选 2 项 · 5.1 KB
+		46 区域 Backleaf 文件菜单 Secondary Actions: Raise
+			47 菜单 文件菜单
+				48 菜单项 编辑
+				49 菜单项 打印
+				50 菜单项 添加到收藏夹(F)
+				51 菜单项 7-Zip
+				52 菜单项 Edit with Vim using tabpages
+				53 菜单项 Edit with single Vim
+				54 菜单项 Diff with Vim
+				55 菜单项 文件压缩
+				56 菜单项 批量改文档格式
+				57 菜单项 批量重命名
+				58 菜单项 上传或同步到WPS
+				59 菜单项 我的设备
+				60 菜单项 复制文件地址(A)
+				61 菜单项 共享(S)
+				62 菜单项 发送到(N)
+				63 菜单项 创建快捷方式(S)
+		64 区域 Backleaf 文件菜单 Secondary Actions: Raise
+			65 菜单 文件菜单
+				66 菜单项 添加到压缩包...
+				67 菜单项 压缩并发送邮件...
+				68 菜单项 添加到 "shell-command-fixture.7z"
+				69 菜单项 压缩 "shell-command-fixture.7z" 并发送邮件
+				70 菜单项 添加到 "shell-command-fixture.zip"
+				71 菜单项 压缩 "shell-command-fixture.zip" 并发送邮件
+				72 菜单项 CRC SHA
+		37 区域 Backleaf 文件菜单 Secondary Actions: Raise
+			38 菜单 文件菜单
+				39 菜单项 复制
+				40 菜单项 剪切
+				41 菜单项 复制路径
+				42 菜单项 重命名，不可用
+				43 菜单项 移至回收站
+				44 菜单项 压缩为 ZIP…
+				45 菜单项 应用操作
+
+The focused UI element is 46 区域 Backleaf 文件菜单 Secondary Actions: Raise.

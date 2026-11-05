@@ -1,0 +1,10 @@
+{
+  "passed": true,
+  "verified_at_utc": "2026-11-05T12:52:40.5826657Z",
+  "source_commit": "78d86152a6d4dec08c8d388ed9920ba8e79b8163",
+  "exe_sha256": "cd4ee1056f6d6ab64802a2e71b344b2e34fa702a8a97878d1930aa285bf0c8a7",
+  "trigger": "Real mouse right-click > Backleaf self-drawn independent menus > registered 7-Zip > CRC SHA > generate SHA-256 file",
+  "expected_sha256": "2d9999e290799b63b065ccabbe0ddc580b52d8d8d73f19871e22ef9ce15122c5",
+  "checksum_line": "2d9999e290799b63b065ccabbe0ddc580b52d8d8d73f19871e22ef9ce15122c5  report α.txt",
+  "source_unchanged": true
+}

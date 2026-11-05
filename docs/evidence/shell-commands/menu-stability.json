@@ -1,0 +1,176 @@
+{
+  "passed": true,
+  "scope": "Observed settled rectangles before and after opening registered 7-Zip and dynamic CRC submenus, including ancestors. Not a high-speed animation/flicker measurement.",
+  "checks": [
+    {
+      "before": "applications-ready",
+      "after": "7zip-submenu-ready",
+      "origin": [
+        579,
+        236
+      ],
+      "size_before": [
+        1122,
+        721
+      ],
+      "size_after": [
+        1122,
+        721
+      ],
+      "unchanged": true
+    },
+    {
+      "before": "applications-ready",
+      "after": "7zip-submenu-ready",
+      "origin": [
+        832,
+        466
+      ],
+      "size_before": [
+        276,
+        304
+      ],
+      "size_after": [
+        276,
+        304
+      ],
+      "unchanged": true
+    },
+    {
+      "before": "applications-ready",
+      "after": "7zip-submenu-ready",
+      "origin": [
+        1167,
+        600
+      ],
+      "size_before": [
+        276,
+        624
+      ],
+      "size_after": [
+        276,
+        624
+      ],
+      "unchanged": true
+    },
+    {
+      "before": "single-applications-ready",
+      "after": "single-7zip-ready",
+      "origin": [
+        579,
+        236
+      ],
+      "size_before": [
+        1122,
+        721
+      ],
+      "size_after": [
+        1122,
+        721
+      ],
+      "unchanged": true
+    },
+    {
+      "before": "single-applications-ready",
+      "after": "single-7zip-ready",
+      "origin": [
+        832,
+        466
+      ],
+      "size_before": [
+        276,
+        432
+      ],
+      "size_after": [
+        276,
+        432
+      ],
+      "unchanged": true
+    },
+    {
+      "before": "single-applications-ready",
+      "after": "single-7zip-ready",
+      "origin": [
+        1167,
+        640
+      ],
+      "size_before": [
+        276,
+        592
+      ],
+      "size_after": [
+        276,
+        592
+      ],
+      "unchanged": true
+    },
+    {
+      "before": "single-7zip-ready",
+      "after": "crc-dynamic-ready",
+      "origin": [
+        579,
+        236
+      ],
+      "size_before": [
+        1122,
+        721
+      ],
+      "size_after": [
+        1122,
+        721
+      ],
+      "unchanged": true
+    },
+    {
+      "before": "single-7zip-ready",
+      "after": "crc-dynamic-ready",
+      "origin": [
+        832,
+        466
+      ],
+      "size_before": [
+        276,
+        432
+      ],
+      "size_after": [
+        276,
+        432
+      ],
+      "unchanged": true
+    },
+    {
+      "before": "single-7zip-ready",
+      "after": "crc-dynamic-ready",
+      "origin": [
+        1502,
+        760
+      ],
+      "size_before": [
+        276,
+        256
+      ],
+      "size_after": [
+        276,
+        256
+      ],
+      "unchanged": true
+    },
+    {
+      "before": "single-7zip-ready",
+      "after": "crc-dynamic-ready",
+      "origin": [
+        1167,
+        640
+      ],
+      "size_before": [
+        276,
+        592
+      ],
+      "size_after": [
+        276,
+        592
+      ],
+      "unchanged": true
+    }
+  ]
+}

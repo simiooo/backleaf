@@ -1,0 +1,19 @@
+{
+  "handler": "7-Zip",
+  "clsid": "{23170F69-40C1-278A-1000-000100020000}",
+  "dll": "C:\\Program Files\\7-Zip\\7-zip.dll",
+  "version": "26.05",
+  "dll_sha256": "37bae1024808e0809116f2b8e7471d53d66cb8e8d3fe5fa3e4b34ffff2762851",
+  "files": [
+    {
+      "name": "说明.txt",
+      "bytes": 29,
+      "sha256": "c44086f7357fafe4c754cc6f7838c7260d36aba927c41ff371de3a00fbce0d4d"
+    },
+    {
+      "name": "report α.txt",
+      "bytes": 5160,
+      "sha256": "2d9999e290799b63b065ccabbe0ddc580b52d8d8d73f19871e22ef9ce15122c5"
+    }
+  ]
+}

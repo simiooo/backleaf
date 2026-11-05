@@ -1,0 +1,25 @@
+{
+  "passed": true,
+  "verified_at_utc": "2026-11-05T12:34:55.294505+00:00",
+  "trigger": "Backleaf self-drawn independent menu > applications > registered 7-Zip > Add to shell-command-fixture.zip",
+  "archive_path": "D:\\work\\backleaf\\.local\\shell-command-fixture\\shell-command-fixture.zip",
+  "archive_sha256": "867ed6ef4a139ce3b1f9b8b677ca4bdd567fdcfd86b04798edf2bee30e33e8c6",
+  "legacy_name_encoding": "cp936",
+  "encoding_note": "7-Zip selected local ANSI encoding for these representable names; default UTF-8-only .NET decoding failed. ZIP flags and actual Windows ACP used; names and uncompressed bytes compared exactly.",
+  "entries": [
+    {
+      "name": "report α.txt",
+      "bytes": 5160,
+      "sha256": "2d9999e290799b63b065ccabbe0ddc580b52d8d8d73f19871e22ef9ce15122c5",
+      "matches_source": true,
+      "zip_utf8_flag": false
+    },
+    {
+      "name": "说明.txt",
+      "bytes": 29,
+      "sha256": "c44086f7357fafe4c754cc6f7838c7260d36aba927c41ff371de3a00fbce0d4d",
+      "matches_source": true,
+      "zip_utf8_flag": false
+    }
+  ]
+}

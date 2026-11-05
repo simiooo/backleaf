@@ -1,0 +1,44 @@
+{
+  "recorded_at_utc": "2026-11-05T12:59:11.3811428Z",
+  "cpu": {
+    "Name": "AMD Ryzen 7 8745H w/ Radeon 780M Graphics",
+    "NumberOfCores": 8,
+    "NumberOfLogicalProcessors": 16
+  },
+  "os": {
+    "Caption": "Microsoft Windows 11 家庭版 中文版",
+    "Version": "10.0.26200",
+    "BuildNumber": "26200",
+    "OSArchitecture": "64 位",
+    "TotalVisibleMemorySize": 20771700
+  },
+  "physical_disks": [
+    {
+      "Model": "SKHynix_HFS001TEJ4X112N",
+      "MediaType": "Fixed hard disk media",
+      "InterfaceType": "SCSI",
+      "Size": 1024203640320
+    }
+  ],
+  "volumes": [
+    {
+      "DeviceID": "C:",
+      "FileSystem": "NTFS",
+      "VolumeName": "Windows-SSD",
+      "Size": 429497774080,
+      "FreeSpace": 76066029568
+    },
+    {
+      "DeviceID": "D:",
+      "FileSystem": "NTFS",
+      "VolumeName": "Data",
+      "Size": 494722998272,
+      "FreeSpace": 36780138496
+    }
+  ],
+  "fixture_parent": "C:\\Users\\qq651\\AppData\\Local\\Temp\\",
+  "inherited_tmp": "C:\\Users\\qq651\\AppData\\Local\\Temp",
+  "inherited_temp": "C:\\Users\\qq651\\AppData\\Local\\Temp",
+  "profile": "Windows release, rustc 1.99.1, rusqlite 0.41.1 bundled as pinned in Cargo.lock",
+  "conditions": "Owned files under std::env::temp_dir(); warm OS disk cache, ordinary desktop background load, no GPU or input-to-pixel measurement"
+}

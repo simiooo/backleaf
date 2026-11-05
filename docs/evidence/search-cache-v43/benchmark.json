@@ -1,0 +1,49 @@
+{
+  "real_files": 10004,
+  "matching_files": 10003,
+  "runs": 5,
+  "cold_ms": [
+    8823.6408,
+    6926.9024,
+    6273.5337,
+    5943.5378,
+    5909.9335
+  ],
+  "warm_ms": [
+    26.1102,
+    28.1584,
+    43.8742,
+    29.127299999999998,
+    33.2372
+  ],
+  "incremental_one_file_ms": [
+    240.7267,
+    283.12219999999996,
+    251.23790000000002,
+    235.7309,
+    242.7079
+  ],
+  "warm_candidate_checks": 0,
+  "incremental_candidate_checks": 1,
+  "page_identity_checks_max": 32,
+  "scope": "Actual owned files, persistent SQLite index, production search worker and first bounded page; warm OS disk cache, no UI/GPU or input-to-photon claim",
+  "source_commit": "78d86152a6d4dec08c8d388ed9920ba8e79b8163",
+  "recorded_at_utc": "2026-11-05T12:28:20.716368+00:00",
+  "summary": {
+    "cold_ms": {
+      "median_ms": 6273.5337,
+      "min_ms": 5909.9335,
+      "max_ms": 8823.6408
+    },
+    "warm_ms": {
+      "median_ms": 29.127299999999998,
+      "min_ms": 26.1102,
+      "max_ms": 43.8742
+    },
+    "incremental_one_file_ms": {
+      "median_ms": 242.7079,
+      "min_ms": 235.7309,
+      "max_ms": 283.12219999999996
+    }
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "passed": true,
+  "verified_at_utc": "2026-11-05T12:44:13.359715+00:00",
+  "trigger": "Backleaf self-drawn menu > applications > 7-Zip > CRC SHA > SHA-256 -> report α.txt.sha256",
+  "file": "report α.txt",
+  "bytes": 5160,
+  "expected_sha256": "2d9999e290799b63b065ccabbe0ddc580b52d8d8d73f19871e22ef9ce15122c5",
+  "reported_sha256": "2d9999e290799b63b065ccabbe0ddc580b52d8d8d73f19871e22ef9ce15122c5",
+  "reported_name": "report α.txt",
+  "checksum_file_sha256": "edd47014b066d59247f68ac9c9636397c3d9d772d74544e55565e6b3888a5931",
+  "source_unchanged": true
+}

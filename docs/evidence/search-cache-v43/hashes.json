@@ -1,0 +1,97 @@
+[
+  {
+    "file": "benchmark.json",
+    "bytes": 1179,
+    "sha256": "1da3c84dbc356b013dfe3289f0e0f78daf5006e8be80c170c03d979caebae343"
+  },
+  {
+    "file": "benchmark.txt",
+    "bytes": 980,
+    "sha256": "533c22184f589c2ef49b6e39598156c6e9bd085ed7bb0feda4dd27212b24c7e5"
+  },
+  {
+    "file": "build.json",
+    "bytes": 4393,
+    "sha256": "06fa81028b89b4b56b5f6a1fdd36993a0be7869284a339761f053e70cacf44ff"
+  },
+  {
+    "file": "build.txt",
+    "bytes": 124,
+    "sha256": "ab7b6059cd3d81b047d4f865aa6c6ea8c94b45645de4c5d2ca4e51a7ecc935b0"
+  },
+  {
+    "file": "ci-headless-run.json",
+    "bytes": 193,
+    "sha256": "95394480e0c8c700161973d0ec525ea6ed50bc278fac68be5f6aec312cdcc6f9"
+  },
+  {
+    "file": "ci-install.json",
+    "bytes": 4656,
+    "sha256": "1580e792bc01ebe1496f6cb6e3c53aa47eeff031e1620e7392a1c3cc87ca90d6"
+  },
+  {
+    "file": "ci-run.json",
+    "bytes": 263,
+    "sha256": "215ef740eee3e3aec9d291c1d63d6e4a77fd0cc50b2c75635c10cbf23afb3b6a"
+  },
+  {
+    "file": "clippy.txt",
+    "bytes": 179,
+    "sha256": "82d1df4721f3cd6300d54ef75af8eace87fe2dc967be8c2161937a65debf9d36"
+  },
+  {
+    "file": "design-cold-reopen.json",
+    "bytes": 518,
+    "sha256": "56c775196ed8f2b913359319b3d6b2bbfa3c5779527041d5d7e5d76e9917b294"
+  },
+  {
+    "file": "fmt.txt",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "file": "headless.json",
+    "bytes": 4636,
+    "sha256": "6e5686880f3fe663b3e367d068485d47e10756df69fae32eb8f6fb90bda754a6"
+  },
+  {
+    "file": "headless.txt",
+    "bytes": 2998,
+    "sha256": "95e1f149db702fd5da6da9cfdc1f58879eff2cffca1ea068e0ba4b937b146891"
+  },
+  {
+    "file": "host.json",
+    "bytes": 1381,
+    "sha256": "9d71b73f62b125a22887f4949a96fdef27117a6374cfab783bad5d56e66debb8"
+  },
+  {
+    "file": "local-build.json",
+    "bytes": 26399,
+    "sha256": "e6b02009789bd6574e9bb84967f8b7a2d7874a226e11439e8f7b853c335c1cdb"
+  },
+  {
+    "file": "local-staging.json",
+    "bytes": 776,
+    "sha256": "ae3b82c9432c0c7183b4f6273ffda65c658ff1ca7a4df990e5eaf10d17562630"
+  },
+  {
+    "file": "README.md",
+    "bytes": 2967,
+    "sha256": "f031c01c8e4712c1f33906312941faee58c508f797c79b1b2d671fcd67f90b00"
+  },
+  {
+    "file": "release.json",
+    "bytes": 2245,
+    "sha256": "a58f02a32f20f156e0186bae9092fc93dbbf26c793525e4e19ffeb8eb1d9b5d8"
+  },
+  {
+    "file": "SHA256SUMS.txt",
+    "bytes": 198,
+    "sha256": "9eee73ff57ac6162532a039fe1ba160196f8278532c8a76b70029453f9e1323f"
+  },
+  {
+    "file": "tests.txt",
+    "bytes": 10241,
+    "sha256": "688f87dd31b8ef9705399588d024c99d1f6ee0a0308d89742396effdf0e1e127"
+  }
+]
