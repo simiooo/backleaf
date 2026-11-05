@@ -43,7 +43,7 @@ function Save-BackleafAsset {
 function Invoke-BackleafDownload {
     param([string]$Uri, [string]$Destination)
     # Windows' bundled curl has bounded redirects/timeouts across both PowerShell versions.
-    $curl = Get-Command curl.exe -CommandType Application -ErrorAction SilentlyContinue
+    $curl = Get-Command curl.exe -CommandType Application -ErrorAction SilentlyContinue | Select-Object -First 1
     if ($curl) {
         & $curl.Source --fail --location --silent --show-error --proto '=https' --proto-redir '=https' --retry 1 --connect-timeout 15 --max-time 300 --speed-limit 1024 --speed-time 30 --max-filesize 268435456 --output $Destination -- $Uri
         if ($LASTEXITCODE -ne 0) { throw "Release download failed (curl exit $LASTEXITCODE). Retry the install command." }
