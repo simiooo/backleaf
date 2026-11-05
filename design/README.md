@@ -1,6 +1,10 @@
-# 当前：OpenPencil v44 / 261页
+# 当前：OpenPencil v45 / 266页
 
-[可编辑主稿](Backleaf-v44.fig)保留v43全部256页，新建命名、紧凑进度、未完成项目、安静成功及暗色5态见[v44](v44/manifest.json)。独立冷重开5态0像素差。
+[可编辑主稿](Backleaf-v45.fig)保留v44全部261页，新增搜索结果普通、hover、选中、分组及暗色5态。文件名与父目录采用18px/14px行高及2px间距，在固定行高内居中；状态切换保持几何一致。预览与独立进程冷重开记录见[v45](v45/manifest.json)。
+
+生成源为 `scripts/design/search-result-rhythm-v45.mjs`。先生成，再以独立 Bun 进程运行 `--export` 导出对照图，最后以另一个独立进程运行 `--verify`；不将编辑进程中的字体缓存用作冷重开参考。
+
+[v44主稿](Backleaf-v44.fig)保留v43全部256页，新建命名、紧凑进度、未完成项目、安静成功及暗色5态见[v44](v44/manifest.json)。独立冷重开5态0像素差。
 
 当前主稿：[OpenPencil v43 · 256页](Backleaf-v43.fig)，搜索缓存复用、增量刷新与不可用状态。独立品牌稿：[圆叶 v2](Backleaf-brand-v2.fig)。
 

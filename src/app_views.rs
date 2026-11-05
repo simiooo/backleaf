@@ -457,7 +457,14 @@ impl Backleaf {
             1
         };
         self.search.columns = columns;
-        let step = if grid { 112. } else { 48. };
+        let result_layout = &layout::LAYOUT.search_result;
+        let step = if grid {
+            112.
+        } else if self.search.definition.group != Group::None {
+            result_layout.grouped_row_height
+        } else {
+            result_layout.row_height
+        };
         let count = self.search.count;
         let total = count.div_ceil(columns);
         let colors = self.colors;
@@ -551,13 +558,17 @@ impl Backleaf {
                                         } else {
                                             div()
                                                 .w_full()
+                                                .h_full()
                                                 .flex()
                                                 .flex_col()
                                                 .justify_center()
+                                                .gap(px(result_layout.text_gap))
                                                 .children(group.map(|g| {
                                                     div()
                                                         .h(px(12.))
+                                                        .flex_none()
                                                         .text_size(px(11.))
+                                                        .line_height(px(12.))
                                                         .text_color(
                                                             colors.color(ColorRole::Secondary),
                                                         )
@@ -565,7 +576,10 @@ impl Backleaf {
                                                 }))
                                                 .child(
                                                     div()
-                                                        .h(px(32.))
+                                                        .h(px(result_layout.name_line_height
+                                                            + result_layout.parent_line_height
+                                                            + result_layout.text_gap))
+                                                        .flex_none()
                                                         .flex()
                                                         .items_center()
                                                         .gap(px(8.))
@@ -579,11 +593,28 @@ impl Backleaf {
                                                                 .flex()
                                                                 .flex_col()
                                                                 .items_start()
-                                                                .child(title.max_w_full())
+                                                                .gap(px(result_layout.text_gap))
+                                                                .child(
+                                                                    title
+                                                                        .max_w_full()
+                                                                        .h(px(result_layout
+                                                                            .name_line_height))
+                                                                        .line_height(px(
+                                                                            result_layout
+                                                                                .name_line_height,
+                                                                        ))
+                                                                        .text_size(px(13.)),
+                                                                )
                                                                 .child(
                                                                     div()
                                                                         .w_full()
                                                                         .truncate()
+                                                                        .h(px(result_layout
+                                                                            .parent_line_height))
+                                                                        .line_height(px(
+                                                                            result_layout
+                                                                                .parent_line_height,
+                                                                        ))
                                                                         .text_size(px(11.))
                                                                         .text_color(colors.color(
                                                                             ColorRole::Secondary,
@@ -599,7 +630,7 @@ impl Backleaf {
                                             .flex_1()
                                             .min_w_0()
                                             .h(px(step))
-                                            .px(px(6.))
+                                            .px(px(result_layout.padding_x))
                                             .rounded(px(8.))
                                             .role(Role::ListBoxOption)
                                             .aria_label(name)

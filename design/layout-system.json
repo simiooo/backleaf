@@ -7,9 +7,11 @@
   "control": {"hitSize": 32, "iconSize": 18, "radius": 8, "primaryPaddingX": 16, "secondaryPaddingX": 12},
   "floating": {"paddingX": 4, "paddingY": 8, "radius": 12, "rowHeight": 32, "rowPaddingX": 8, "rowRadius": 8, "groupBreakHeight": 16},
   "panel": {"paddingX": 12, "paddingY": 16, "sectionGap": 16, "radius": 12},
+  "searchResult": {"rowHeight": 56, "groupedRowHeight": 64, "nameLineHeight": 18, "parentLineHeight": 14, "textGap": 2, "paddingX": 6},
   "window": {"barHeight": 44, "captionWidth": 46, "minimumDragWidth": 32, "cornerPolicy": "Windows DWM"},
   "relationships": [
     "Normal, hover, selected and focus keep the same layout cell and measured identity bounds. Cell whitespace is not a file hit target.",
+    "Search list rows center the 18px filename and 14px parent lines with a 2px gap in a fixed 56px row, leaving 11px above and below. Grouped rows are 64px with a 12px heading and 2px gap; all states preserve geometry.",
     "The visible file state surface hugs the 44px icon and measured text; it does not fill the 112px layout cell.",
     "A short name produces a 92px visual surface; a two-line name produces 108px. The fixed row step is 128px.",
     "Menu rows share 4px surface padding + 8px row inset; a repeated 12px check/radio gutter and 8px gap align every label at 32px. Labels remain vertically centered in 32px rows; surface Y padding is 8px.",

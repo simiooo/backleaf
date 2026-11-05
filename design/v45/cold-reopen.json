@@ -1,0 +1,34 @@
+{
+  "masterSha256": "616e7857a3c02be8f35f459c412568c0bb15f67914f54a93b85c1f80a12ffb50",
+  "retainedPages": 261,
+  "pages": 266,
+  "result": "passed",
+  "results": [
+    {
+      "key": "262-search-normal",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "263-search-hover",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "264-search-active",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "265-search-grouped",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "266-search-dark",
+      "changedPixels": 0,
+      "totalPixels": 806400
+    }
+  ],
+  "verifiedAt": "2026-11-05T15:57:23.280Z"
+}

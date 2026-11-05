@@ -459,7 +459,7 @@ impl Backleaf {
     }
     pub fn search_width(&self, window: &Window, cx: &App) -> f32 {
         let c = &layout::CHROME;
-        let extra = if self.files.hub.views().is_empty() {
+        let extra = if self.visible_operations().is_empty() {
             0.
         } else {
             64.

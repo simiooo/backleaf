@@ -1,0 +1,36 @@
+{
+  "version": "v45-search-result-rhythm",
+  "retainedPages": 261,
+  "pages": [
+    {
+      "key": "262-search-normal",
+      "name": "262 · v45 search-normal",
+      "state": "normal",
+      "nodes": 170
+    },
+    {
+      "key": "263-search-hover",
+      "name": "263 · v45 search-hover",
+      "state": "hover",
+      "nodes": 170
+    },
+    {
+      "key": "264-search-active",
+      "name": "264 · v45 search-active",
+      "state": "active",
+      "nodes": 170
+    },
+    {
+      "key": "265-search-grouped",
+      "name": "265 · v45 search-grouped",
+      "state": "grouped",
+      "nodes": 171
+    },
+    {
+      "key": "266-search-dark",
+      "name": "266 · v45 search-dark",
+      "state": "dark",
+      "nodes": 170
+    }
+  ]
+}
