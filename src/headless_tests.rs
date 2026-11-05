@@ -438,6 +438,46 @@ fn repeated_letters_cycle_and_wrap_without_intercepting_text_inputs() {
 }
 
 #[test]
+fn pending_letter_activation_finishes_before_directory_refresh_commits() {
+    let mut h = Harness::new(&["alpha.txt", "other.txt"], None);
+    let (path, generation, id, token) = h.read(|this, _| {
+        (
+            this.path.clone(),
+            this.generation,
+            this.cache
+                .values()
+                .find(|i| i.name == "alpha.txt")
+                .unwrap()
+                .id,
+            this.typeahead.token,
+        )
+    });
+    h.view
+        .update(&mut h.cx, |this, _| this.typeahead.pending = true);
+    std::fs::write(path.join("new.txt"), "new").unwrap();
+    h.invalidate_directory();
+    h.read(|this, _| {
+        assert_eq!(this.generation, generation);
+        assert!(this.watch.pending.is_none());
+    });
+    h.view.update(&mut h.cx, |this, cx| {
+        this.receive(
+            Event::PrefixLocated {
+                generation,
+                token,
+                id: Some(id),
+            },
+            cx,
+        )
+    });
+    h.read(|this, _| assert_eq!(this.selection.focus, Some(id)));
+    h.wait("refresh retains completed letter activation", |this, _| {
+        this.source.count() == 3 && !this.watch_stale()
+    });
+    h.read(|this, _| assert_eq!(this.cache[&this.selection.focus.unwrap()].name, "alpha.txt"));
+}
+
+#[test]
 fn selected_bytes_include_empty_files_and_never_recurse_into_folders() {
     let mut h = Harness::new(&["a.txt", "zero.dat"], None);
     let path = h.read(|this, _| this.path.clone());

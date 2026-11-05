@@ -43,6 +43,7 @@ impl Backleaf {
             || self.session_locked
             || self.files.editor.is_some()
             || self.detail_pending
+            || self.typeahead.pending
             || self.files.menu.is_some()
             || self.selection_busy()
             || self.drag.gesture.is_some()
