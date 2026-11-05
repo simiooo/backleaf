@@ -1,0 +1,77 @@
+{
+  "passed": true,
+  "exit_code": 0,
+  "test_count": 16,
+  "cases": [
+    {
+      "name": "headless_tests::additive_marquee_escape_restores_original_selection",
+      "passed": true
+    },
+    {
+      "name": "headless_tests::closing_owner_removes_independent_popup_without_reading_owner_entity",
+      "passed": true
+    },
+    {
+      "name": "headless_tests::headless_platform_is_windowless",
+      "passed": true
+    },
+    {
+      "name": "headless_tests::independent_menu_escape_restores_grid_focus_and_selection",
+      "passed": true
+    },
+    {
+      "name": "headless_tests::independent_menu_owner_activation_dismisses_popup_and_restores_focus",
+      "passed": true
+    },
+    {
+      "name": "headless_tests::independent_menu_rename_returns_action_to_owner_and_focuses_editor",
+      "passed": true
+    },
+    {
+      "name": "headless_tests::marquee_edge_scroll_release_commits_contiguous_selection_and_stops",
+      "passed": true
+    },
+    {
+      "name": "headless_tests::path_blur_error_restores_draft_then_navigates_on_correction",
+      "passed": true
+    },
+    {
+      "name": "headless_tests::rename_blur_commits_real_file_and_preserves_bytes",
+      "passed": true
+    },
+    {
+      "name": "headless_tests::rename_blur_then_other_file_context_menu_completes_both_actions",
+      "passed": true
+    },
+    {
+      "name": "headless_tests::rename_case_only_remains_supported_and_preserves_content",
+      "passed": true
+    },
+    {
+      "name": "headless_tests::rename_escape_cancels_without_filesystem_change",
+      "passed": true
+    },
+    {
+      "name": "headless_tests::rename_existing_destination_reports_error_without_overwrite",
+      "passed": true
+    },
+    {
+      "name": "headless_tests::rename_invalid_blur_preserves_draft_and_refocuses",
+      "passed": true
+    },
+    {
+      "name": "headless_tests::search_debounce_executes_latest_query_after_250ms",
+      "passed": true
+    },
+    {
+      "name": "headless_tests::search_unicode_input_submit_and_escape_use_real_input_routing",
+      "passed": true
+    }
+  ],
+  "workspace_commit": "786c6e53acd66e7e0a139b30aa6b4dc75e464897",
+  "workspace_dirty": false,
+  "gpui_revision": "d36a70661471ec64dce230798121d554930d5c60",
+  "recorded_at_utc": "2026-11-05T06:47:15.9714953Z",
+  "log_sha256": "8d438386c095345e51c2298c1846720dfa550a0bd655ecea363d8fe1df9eb97e",
+  "scope": "Production Backleaf view, GPUI TestPlatform/HeadlessAppContext, native event dispatch, real isolated file workers and painted toast geometry. No HWND, desktop input, GPU pixels, screen-reader adapter or native IME/OLE gestures."
+}

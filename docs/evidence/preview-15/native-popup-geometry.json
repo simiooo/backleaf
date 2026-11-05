@@ -1,0 +1,20 @@
+{
+  "exe_sha256": "7c7564509afe5b305e220c25852cc1d018dfdbfa0459258068f0d4fdd3170527",
+  "scope": "Actual Win32 popup outside owner client bounds; full secondary screenshot, 125% scale",
+  "screenshots": [
+    {
+      "originX": 579,
+      "originY": 236,
+      "width": 1122,
+      "height": 721,
+      "zIndex": 0
+    },
+    {
+      "originX": 1903,
+      "originY": 1048,
+      "width": 276,
+      "height": 192,
+      "zIndex": 1
+    }
+  ]
+}

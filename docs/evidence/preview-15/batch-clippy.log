@@ -1,0 +1,41 @@
+    Checking rand_core v0.10.1
+    Checking futures-io v0.3.34
+    Checking fastrand v2.5.0
+    Checking windows-sys v0.61.2
+    Checking quick-error v1.2.3
+    Checking cpufeatures v0.3.1
+    Checking bit-vec v0.10.1
+    Checking wait-timeout v0.2.1
+    Checking fnv v1.0.7
+    Checking thiserror v1.0.69
+    Checking crossbeam-queue v0.3.14
+    Checking core_detect v1.0.0
+    Checking atomic v0.5.3
+    Checking fixedbitset v0.5.7
+    Checking unarray v0.1.4
+    Checking pollster v0.2.5
+    Checking futures-util v0.3.34
+    Checking collections v0.1.0 (D:\work\backleaf\vendor\zed\crates\collections)
+    Checking getrandom v0.4.3
+    Checking chacha20 v0.10.2
+    Checking rand_xorshift v0.5.0
+   Compiling backleaf v0.1.0-preview.15 (D:\work\backleaf)
+    Checking futures-lite v2.6.1
+    Checking postage v0.5.0
+    Checking bit-set v0.11.1
+    Checking uuid v1.29.0
+    Checking rand v0.10.3
+    Checking tempfile v3.27.0
+    Checking accesskit v0.24.1
+    Checking futures-concurrency v7.7.1
+    Checking rusty-fork v0.3.1
+    Checking accesskit_consumer v0.38.0
+    Checking proptest v1.12.0
+    Checking accesskit_windows v0.34.0
+    Checking futures-executor v0.3.34
+    Checking futures v0.3.34
+    Checking scheduler v0.1.0 (D:\work\backleaf\vendor\zed\crates\scheduler)
+    Checking http_client v0.1.0 (D:\work\backleaf\vendor\zed\crates\http_client)
+    Checking gpui v0.2.2 (D:\work\backleaf\vendor\zed\crates\gpui)
+    Checking gpui_windows v0.1.0 (D:\work\backleaf\vendor\zed\crates\gpui_windows)
+    Finished `release` profile [optimized] target(s) in 28.34s

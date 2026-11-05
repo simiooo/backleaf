@@ -1,0 +1,8 @@
+file open_menu
+open requested
+open deferred
+created hwnd=6622938 foreground=6622938 visible=true style=14c00000
+activation true
+activation false
+dismiss foreground changed
+file menu event

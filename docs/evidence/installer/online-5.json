@@ -1,0 +1,17 @@
+﻿{
+    "passed":  true,
+    "powershell":  "5.1.26100.9711",
+    "anonymous_download":  true,
+    "tag":  "test-v0.1.0-preview.15-786c6e53",
+    "version":  "0.1.0-preview.15",
+    "source_commit":  "786c6e53acd66e7e0a139b30aa6b4dc75e464897",
+    "installed_path":  "D:\\work\\backleaf\\.local\\installer-staging\\5-a554d2656b6941d681ceddf928258a64",
+    "installed_at_utc":  "2026-11-05T07:01:31.8165517Z",
+    "exe_sha256":  "acf3aef0547f608cb7113e31967255c4fd8bcac4c888092ad4dcd4b5db87b4bc",
+    "cli_smoke_passed":  true,
+    "gui_smoke":  "not run; installation-only change",
+    "session":  {
+                    "locked":  false,
+                    "error":  null
+                }
+}

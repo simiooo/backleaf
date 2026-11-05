@@ -1,0 +1,24 @@
+{
+  "version": "0.1.0-preview.15",
+  "source_commit": "786c6e53acd66e7e0a139b30aa6b4dc75e464897",
+  "deployed_at_utc": "2026-11-05T06:36:30.9357978Z",
+  "installation": "portable ZIP extracted to isolated staging directory",
+  "staging_path": "D:\\work\\backleaf\\.local\\staging\\0.1.0-preview.15-786c6e53",
+  "artifact_path": "D:\\work\\backleaf\\.local\\artifacts\\Backleaf-0.1.0-preview.15-candidate-786c6e53-win-x64.zip",
+  "artifact_sha256": "f9ed7925e01dc974ec07aac1568b0a324607a589e72c70779994617a8a246e18",
+  "exe_sha256": "7c7564509afe5b305e220c25852cc1d018dfdbfa0459258068f0d4fdd3170527",
+  "installed_hash_matches": true,
+  "cli_smoke_passed": true,
+  "interactive_smoke_passed": true,
+  "session": {
+    "locked": false,
+    "error": null
+  },
+  "native_only_scope": [
+    "actual Win32 popup visible outside owner client area; separate full bounded screenshot",
+    "native foreground-loss dismissal and owner remains available",
+    "normal native window exit"
+  ],
+  "native_only_at_utc": "2026-11-05T06:40:22.088910+00:00",
+  "capture_note": "One state refresh returned no monitor found after clicking outside popup; fresh window binding recovered, verified menu removed and normal owner exit."
+}

@@ -1,0 +1,16 @@
+{
+  "version": "0.1.0-preview.15",
+  "source_commit": "786c6e53acd66e7e0a139b30aa6b4dc75e464897",
+  "gpui_revision": "d36a70661471ec64dce230798121d554930d5c60",
+  "built_at_utc": "2026-11-05T06:49:48.5394443Z",
+  "exe_sha256": "acf3aef0547f608cb7113e31967255c4fd8bcac4c888092ad4dcd4b5db87b4bc",
+  "archive_library_sha256": "78bf6b668d75801e3aa180b4ccb16e6d8395fba80dec8a065055bb6f8dfabb82",
+  "design_sha256": "b8333145eea88f5b7647684a549d3fab812bc883d5f04e13acb1052121db1b16",
+  "ci_run_url": "https://github.com/simiooo/backleaf/actions/runs/41981507643",
+  "scope": "Native Windows preview: path/drives, typeahead, external changes, internal moves/pinning/reorder, saved FileViews, metadata index, ZIP creation and ZIP/7z/RAR extraction, owned self-drawn extension menus and native OLE file drag/drop, path/search restore and independent windows; see README for limits",
+  "interactive_smoke": "not run on hosted CI; local scope is recorded separately",
+  "headless_test_count": 16,
+  "headless_log_sha256": "835ac39666d35d50afb4383353f7ddee35e8dbb65127df3c983427a0552b2fa1",
+  "headless_report_sha256": "e8496bb6949e71a68d4ffe6acc4d40365247e8ea732ffffff17b6f2b9af262fb",
+  "cli_smoke_passed": true
+}

@@ -1,0 +1,23 @@
+    Finished `release` profile [optimized] target(s) in 1.61s
+     Running unittests src\main.rs (target\release\deps\backleaf-bfa2ffce61a29bee.exe)
+
+running 16 tests
+test headless_tests::additive_marquee_escape_restores_original_selection ... ok
+test headless_tests::closing_owner_removes_independent_popup_without_reading_owner_entity ... ok
+test headless_tests::headless_platform_is_windowless ... ok
+test headless_tests::independent_menu_escape_restores_grid_focus_and_selection ... ok
+test headless_tests::independent_menu_owner_activation_dismisses_popup_and_restores_focus ... ok
+test headless_tests::independent_menu_rename_returns_action_to_owner_and_focuses_editor ... ok
+test headless_tests::marquee_edge_scroll_release_commits_contiguous_selection_and_stops ... ok
+test headless_tests::path_blur_error_restores_draft_then_navigates_on_correction ... ok
+test headless_tests::rename_blur_commits_real_file_and_preserves_bytes ... ok
+test headless_tests::rename_blur_then_other_file_context_menu_completes_both_actions ... ok
+test headless_tests::rename_case_only_remains_supported_and_preserves_content ... ok
+test headless_tests::rename_escape_cancels_without_filesystem_change ... ok
+test headless_tests::rename_existing_destination_reports_error_without_overwrite ... ok
+test headless_tests::rename_invalid_blur_preserves_draft_and_refocuses ... ok
+test headless_tests::search_debounce_executes_latest_query_after_250ms ... ok
+test headless_tests::search_unicode_input_submit_and_escape_use_real_input_routing ... ok
+
+test result: ok. 16 passed; 0 failed; 0 ignored; 0 measured; 81 filtered out; finished in 8.32s
+

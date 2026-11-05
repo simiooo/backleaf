@@ -40,6 +40,12 @@ jobs:
       - name: GPUI headless interaction gate
         shell: pwsh
         run: ./scripts/native/test-headless.ps1 -Output .local/ci/headless.log
+      - name: Installer regression gate (Windows PowerShell 5.1)
+        shell: powershell
+        run: ./scripts/native/test-installer.ps1 -Output .local/ci/installer-tests-5.json
+      - name: Installer regression gate (PowerShell 7)
+        shell: pwsh
+        run: ./scripts/native/test-installer.ps1 -Output .local/ci/installer-tests-7.json
       - name: Package and smoke
         shell: pwsh
         run: ./scripts/native/ci-package.ps1

@@ -1,12 +1,14 @@
 # Delivery index
 
-Current engineering baseline: preview.14 source `ad488a41e6698c6760decb075a69247de44d4cf7`, editable OpenPencil v38 (233 pages). Scope SIM-919, constraints SIM-934. The entries below reflect the current queue; the dated records afterwards preserve earlier delivery boundaries.
+Current application package: preview.15 source `786c6e53acd66e7e0a139b30aa6b4dc75e464897`, editable OpenPencil v38 (233 pages). Scope SIM-919, constraints SIM-934. The entries below reflect the current queue; the dated records afterwards preserve earlier delivery boundaries.
 
-SIM-992 is the sole current engineering unit: preview.15 GPUI headless interaction regressions and CI gates, with v38 UI unchanged. Final source checks, native-only checks and delivery are being consolidated; preview.14 remains the last delivered baseline until the new release is verified.
+SIM-998 is the current engineering unit: public PowerShell one-line installation, upgrade/integrity/rollback regressions and CI. SIM-992 implementation and preview.15 package are published; local native-only checks passed, but physical Escape stopped the final downloaded-window check. Its claim was released with a handoff and that remaining check is not counted as passed. Repository visibility was changed to public on 2026-11-05 at the user's explicit request.
 
 | Queue | Issue | Current scope |
 | --- | --- | --- |
 | accepted baseline | SIM-921 / SIM-948 | User accepted v6 for implementation; subsequent feedback is retained in v38 |
+| focus_issue | SIM-998 | PowerShell per-user installer and anonymous public release download |
+| remaining acceptance check | SIM-992 | 16 production GPUI headless interactions plus 81 existing tests passed locally and in CI; downloaded visible-window smoke was interrupted by user, no further desktop automation performed |
 | review_queue | SIM-978 | Owned self-drawn context-menu windows and isolated third-party commands; preview.14 staging, CI, download and downloaded-window smoke passed |
 | review_queue | SIM-974 | Native OLE real-file external/cross-window transfer delivered in preview.14; synchronous/asynchronous COM and actual move tested, full Explorer/cross-window mouse gesture remains unverified due tool boundary |
 | review_queue | SIM-920 / SIM-922 / SIM-937 / SIM-938 | Saved FileViews in the unique quick-access system, metadata index, search/path recovery and independent windows delivered in preview.13 |
@@ -17,6 +19,8 @@ SIM-992 is the sole current engineering unit: preview.15 GPUI headless interacti
 `in_review` means engineering delivery is available for product acceptance, not that product acceptance has completed. Product feedback remains authoritative. Preview.14 implementation and checks are described in [the batch record](ole-and-extension-batch.md); binary-specific evidence and limitations are in [preview.14 evidence](evidence/preview-14/README.md). The cancelled fd5368c candidate is superseded and is not a delivered release.
 
 Historical delivery records follow. Statements about missing features refer to their dated version, not to the current queue.
+
+2026-11-05 14:50:20+08: [preview.15](https://github.com/simiooo/backleaf/releases/tag/test-v0.1.0-preview.15-786c6e53) published from source `786c6e53`. [Headless CI 41981505538](https://github.com/simiooo/backleaf/actions/runs/41981505538) and [package CI 41981507643](https://github.com/simiooo/backleaf/actions/runs/41981507643) completed successfully. Asset digests/downloaded bytes, packaged executable and 16-case report matched CI provenance; anonymous installation and installed CLI smoke also passed during SIM-998. The separately hashed local build passed independent owned-popup and 100k/10M visible probes. [Evidence](evidence/preview-15/README.md) records exact scope; the downloaded build's final visible-window check remains unverified after the user stopped Computer Use. [Search/index status](search-index-status.md) distinguishes the implemented persistent incremental index from the unimplemented cross-query result cache.
 
 2026-11-05 13:55:34+08: preview.14 source `ad488a41e6698c6760decb075a69247de44d4cf7` published after [CI 41976196744](https://github.com/simiooo/backleaf/actions/runs/41976196744) passed 81 Release tests, strict all-target Clippy, fmt/build and extracted-package CLI smoke. [Windows test package](https://github.com/simiooo/backleaf/releases/tag/test-v0.1.0-preview.14-ad488a41). Local staging deployed 13:47:32+08, archive/menu/actual registered 7-Zip command smoke and same-binary 100k/10M visible GPUI probes passed. At 13:57+08 downloaded assets matched CI artifact bytes and server digests; downloaded executable passed visible startup, owned path menu, returned editor focus, Escape and normal exit. Local and CI executable hashes remain separate in [evidence](evidence/preview-14/README.md). Cross-window/Explorer full mouse gestures, mixed DPI/NVDA and long pressure remain unverified; no universal extension compatibility claim. Product acceptance is pending.
 

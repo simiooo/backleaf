@@ -1,0 +1,32 @@
+name: PowerShell installer
+on:
+  push:
+    branches: [staging, main, 'test/**']
+    paths: [install.ps1, 'scripts/native/test-installer*.ps1', .github/workflows/installer.yml]
+  pull_request:
+    paths: [install.ps1, 'scripts/native/test-installer*.ps1', .github/workflows/installer.yml]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  install:
+    runs-on: windows-2025
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        shell: [powershell, pwsh]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Offline install, integrity and rollback regressions
+        shell: ${{ matrix.shell }}
+        run: ./scripts/native/test-installer.ps1 -Output .local/installer-tests.json
+      - name: Anonymous published package install and executable smoke
+        shell: ${{ matrix.shell }}
+        run: ./scripts/native/test-installer-online.ps1 -Output .local/installer-online.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: installer-${{ matrix.shell }}
+          path: .local/installer-*.json
+          retention-days: 30

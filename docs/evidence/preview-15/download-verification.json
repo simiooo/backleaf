@@ -1,0 +1,39 @@
+{
+  "verified_at_utc": "2026-11-05T06:51:23.213854+00:00",
+  "source_commit": "786c6e53acd66e7e0a139b30aa6b4dc75e464897",
+  "release_url": "https://github.com/simiooo/backleaf/releases/tag/test-v0.1.0-preview.15-786c6e53",
+  "published_at_utc": "2026-11-05T06:50:20Z",
+  "package_ci_url": "https://github.com/simiooo/backleaf/actions/runs/41981507643",
+  "standalone_headless_ci_url": "https://github.com/simiooo/backleaf/actions/runs/41981505538",
+  "checksums_and_server_digests_match": true,
+  "release_equals_ci_artifact": true,
+  "packaged_exe_design_logo_library_headless_report_verified": true,
+  "headless_cases": 16,
+  "native_model_protocol_cases": 81,
+  "headless_log_and_report_chain_verified": true,
+  "ci_exe_sha256": "acf3aef0547f608cb7113e31967255c4fd8bcac4c888092ad4dcd4b5db87b4bc",
+  "local_exe_sha256": "7c7564509afe5b305e220c25852cc1d018dfdbfa0459258068f0d4fdd3170527",
+  "assets": [
+    {
+      "name": "Backleaf-0.1.0-preview.15-786c6e53-win-x64.zip",
+      "sha256": "16b9083625104c8f05acffe14aaf9bf3fbc358fc6d017892c7ea75aa1e8bb397",
+      "bytes": 14768735
+    },
+    {
+      "name": "Backleaf-v38.fig",
+      "sha256": "b8333145eea88f5b7647684a549d3fab812bc883d5f04e13acb1052121db1b16",
+      "bytes": 1629174
+    },
+    {
+      "name": "build.json",
+      "sha256": "27b06c771d02707f46d56f36789b4bd19371f1ff5350b2a2ef1e6647c8164366",
+      "bytes": 1220
+    },
+    {
+      "name": "SHA256SUMS.txt",
+      "sha256": "2f465ef5b8645e77225b197a9045e11a8a3069c07f02565e184a883e476161da",
+      "bytes": 198
+    }
+  ],
+  "downloaded_native_startup_passed": false
+}
