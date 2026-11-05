@@ -9,3 +9,5 @@ fmt、严格all-target Clippy、84项非无头检查及25项生产GPUI无头交�
 2026-11-05 17:43:36+08实际部署到.local/staging/0.1.0-preview.17-1685aeee，EXE诊断及相邻运行库加载通过。EXE SHA256：385e9ba873c3637886c96e69f92a5f2eef7b6aacf82b3478a360059fad7da1d6；本机ZIP：697cefdeb6cd47cc4fb0808dda6bca02850ac03464b4c6cd72bc0b981787c80e。原始日志与构建输入清单见local。
 
 公开包CI42004574177进行中，待附结果。桌面诊断locked=true，可见窗口/GPU/混合DPI检查未计通过，留到最终统一回归。SIM-1000仍待实施，不把容量、介质事件、选区大小或字母循环算作本版已完成。
+
+公开包CI42004574177已成功，test-v0.1.0-preview.17-1685aeee。发布ZIP SHA256 a59397fd4f1928ffc612e247d65b4607ccc5a8a4775b47702682ae05352a1460，CI EXE c175ff1ea9ec1553c5251c2bca1d5b90f94763ec429205f19641bfaf6c6dda6c。本机2026-11-05 17:50:20+08完成真实匿名下载安装、全部摘要校验、三个相邻DLL加载与EXE诊断；ci/local-anonymous-install.json记录实际路径。可见窗口回归未计通过。
