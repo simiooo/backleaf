@@ -1,0 +1,23 @@
+{
+    "captured_at":  "2026-11-06T05:55:39.6968644Z",
+    "os":  "Windows 11 (10.0.26200)",
+    "os_build":  "26200",
+    "desktop":  "2560x1440",
+    "timezone":  "Asia/Shanghai",
+    "preview27_exe_sha256":  "a6e0c95f6cabc5788d361024e0c95321f478c1efa390350f492fba421640a2a7",
+    "fixed_dev_exe_sha256":  "99e80342006851826a6dbc25b059dc01530fc24fd77bea60a894b1fefb0eae2e",
+    "published_exe_sha256":  "2bab27fe0096b7c89b7841d773b1dff8d99c6266c98707dd542d9346f8150626",
+    "package":  {
+                    "tag":  "test-v0.1.0-preview.28-3c45e957",
+                    "published_at":  "2026-11-06T05:51:59Z",
+                    "source_commit":  "3c45e9570fa6f2d4b64290a8792c040fb1282ff5",
+                    "zip_sha256":  "ffac29ab33a847773abd5547949a1d0ff4e68b3dd950e44527b602dfdb4bfd14",
+                    "design_sha256":  "216c6ffd8f632f908406d4765a9be010b59c24e70d59f7b8a63bc1e5055ab179",
+                    "build_json_sha256":  "abe9b478f092d975208ae3c9a819fa6c30edb32384aac7a3c7f194b60b7f128f",
+                    "sums_sha256":  "411dc45a8475da611dc16452d7b7f012baa0277709912480be131f05599270fb"
+                },
+    "fixture":  ".local/verify/bug-repro/fixture: 40 empty directories item-01..item-40",
+    "action":  "select item-08, Shift+Right x6 (7 items), Delete to Recycle Bin; capture full desktop immediately and ~120ms/370ms later, plus settled grid at 3s",
+    "observation_old":  "row 2 (item-08..item-14) rendered as one empty blank row while snapshot refresh pending; tiles returned after ~450ms debounce plus rebuild",
+    "observation_fixed":  "removed row kept as dimmed placeholders until snapshot commit; immediate refresh removes them; no blank row"
+}

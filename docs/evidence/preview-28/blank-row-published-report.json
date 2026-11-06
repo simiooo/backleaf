@@ -1,0 +1,2524 @@
+{
+    "started_utc":  "2026-11-06T05:54:25.8756095Z",
+    "exe":  "D:\\work\\backleaf\\.local\\verify\\preview28\\public-install\\Backleaf.exe",
+    "exe_sha256":  "2bab27fe0096b7c89b7841d773b1dff8d99c6266c98707dd542d9346f8150626",
+    "fixture":  "D:\\work\\backleaf\\.local\\verify\\bug-repro\\fixture-pub28",
+    "initial":  [
+                    {
+                        "name":  "item-01",
+                        "rect":  [
+                                     907,
+                                     301,
+                                     129,
+                                     140
+                                 ]
+                    },
+                    {
+                        "name":  "item-02",
+                        "rect":  [
+                                     1046,
+                                     301,
+                                     129,
+                                     140
+                                 ]
+                    },
+                    {
+                        "name":  "item-03",
+                        "rect":  [
+                                     1185,
+                                     301,
+                                     129,
+                                     140
+                                 ]
+                    },
+                    {
+                        "name":  "item-04",
+                        "rect":  [
+                                     1324,
+                                     301,
+                                     129,
+                                     140
+                                 ]
+                    },
+                    {
+                        "name":  "item-05",
+                        "rect":  [
+                                     1463,
+                                     301,
+                                     129,
+                                     140
+                                 ]
+                    },
+                    {
+                        "name":  "item-06",
+                        "rect":  [
+                                     1602,
+                                     301,
+                                     129,
+                                     140
+                                 ]
+                    },
+                    {
+                        "name":  "item-07",
+                        "rect":  [
+                                     1741,
+                                     301,
+                                     129,
+                                     140
+                                 ]
+                    },
+                    {
+                        "name":  "item-08",
+                        "rect":  [
+                                     907,
+                                     461,
+                                     129,
+                                     140
+                                 ]
+                    },
+                    {
+                        "name":  "item-09",
+                        "rect":  [
+                                     1046,
+                                     461,
+                                     129,
+                                     140
+                                 ]
+                    },
+                    {
+                        "name":  "item-10",
+                        "rect":  [
+                                     1185,
+                                     461,
+                                     129,
+                                     140
+                                 ]
+                    },
+                    {
+                        "name":  "item-11",
+                        "rect":  [
+                                     1324,
+                                     461,
+                                     129,
+                                     140
+                                 ]
+                    },
+                    {
+                        "name":  "item-12",
+                        "rect":  [
+                                     1463,
+                                     461,
+                                     129,
+                                     140
+                                 ]
+                    },
+                    {
+                        "name":  "item-13",
+                        "rect":  [
+                                     1602,
+                                     461,
+                                     129,
+                                     140
+                                 ]
+                    },
+                    {
+                        "name":  "item-14",
+                        "rect":  [
+                                     1741,
+                                     461,
+                                     129,
+                                     140
+                                 ]
+                    },
+                    {
+                        "name":  "item-15",
+                        "rect":  [
+                                     907,
+                                     621,
+                                     129,
+                                     140
+                                 ]
+                    },
+                    {
+                        "name":  "item-16",
+                        "rect":  [
+                                     1046,
+                                     621,
+                                     129,
+                                     140
+                                 ]
+                    },
+                    {
+                        "name":  "item-17",
+                        "rect":  [
+                                     1185,
+                                     621,
+                                     129,
+                                     140
+                                 ]
+                    },
+                    {
+                        "name":  "item-18",
+                        "rect":  [
+                                     1324,
+                                     621,
+                                     129,
+                                     140
+                                 ]
+                    },
+                    {
+                        "name":  "item-19",
+                        "rect":  [
+                                     1463,
+                                     621,
+                                     129,
+                                     140
+                                 ]
+                    },
+                    {
+                        "name":  "item-20",
+                        "rect":  [
+                                     1602,
+                                     621,
+                                     129,
+                                     140
+                                 ]
+                    },
+                    {
+                        "name":  "item-21",
+                        "rect":  [
+                                     1741,
+                                     621,
+                                     129,
+                                     140
+                                 ]
+                    },
+                    {
+                        "name":  "item-22",
+                        "rect":  [
+                                     907,
+                                     781,
+                                     129,
+                                     140
+                                 ]
+                    },
+                    {
+                        "name":  "item-23",
+                        "rect":  [
+                                     1046,
+                                     781,
+                                     129,
+                                     140
+                                 ]
+                    },
+                    {
+                        "name":  "item-24",
+                        "rect":  [
+                                     1185,
+                                     781,
+                                     129,
+                                     140
+                                 ]
+                    },
+                    {
+                        "name":  "item-25",
+                        "rect":  [
+                                     1324,
+                                     781,
+                                     129,
+                                     140
+                                 ]
+                    },
+                    {
+                        "name":  "item-26",
+                        "rect":  [
+                                     1463,
+                                     781,
+                                     129,
+                                     140
+                                 ]
+                    },
+                    {
+                        "name":  "item-27",
+                        "rect":  [
+                                     1602,
+                                     781,
+                                     129,
+                                     140
+                                 ]
+                    },
+                    {
+                        "name":  "item-28",
+                        "rect":  [
+                                     1741,
+                                     781,
+                                     129,
+                                     140
+                                 ]
+                    },
+                    {
+                        "name":  "item-29",
+                        "rect":  [
+                                     907,
+                                     941,
+                                     129,
+                                     140
+                                 ]
+                    },
+                    {
+                        "name":  "item-30",
+                        "rect":  [
+                                     1046,
+                                     941,
+                                     129,
+                                     140
+                                 ]
+                    },
+                    {
+                        "name":  "item-31",
+                        "rect":  [
+                                     1185,
+                                     941,
+                                     129,
+                                     140
+                                 ]
+                    },
+                    {
+                        "name":  "item-32",
+                        "rect":  [
+                                     1324,
+                                     941,
+                                     129,
+                                     140
+                                 ]
+                    },
+                    {
+                        "name":  "item-33",
+                        "rect":  [
+                                     1463,
+                                     941,
+                                     129,
+                                     140
+                                 ]
+                    },
+                    {
+                        "name":  "item-34",
+                        "rect":  [
+                                     1602,
+                                     941,
+                                     129,
+                                     140
+                                 ]
+                    },
+                    {
+                        "name":  "item-35",
+                        "rect":  [
+                                     1741,
+                                     941,
+                                     129,
+                                     140
+                                 ]
+                    },
+                    {
+                        "name":  "item-36",
+                        "rect":  [
+                                     907,
+                                     1101,
+                                     129,
+                                     140
+                                 ]
+                    },
+                    {
+                        "name":  "item-37",
+                        "rect":  [
+                                     1046,
+                                     1101,
+                                     129,
+                                     140
+                                 ]
+                    },
+                    {
+                        "name":  "item-38",
+                        "rect":  [
+                                     1185,
+                                     1101,
+                                     129,
+                                     140
+                                 ]
+                    },
+                    {
+                        "name":  "item-39",
+                        "rect":  [
+                                     1324,
+                                     1101,
+                                     129,
+                                     140
+                                 ]
+                    },
+                    {
+                        "name":  "item-40",
+                        "rect":  [
+                                     1463,
+                                     1101,
+                                     129,
+                                     140
+                                 ]
+                    }
+                ],
+    "after_delete":  [
+                         {
+                             "name":  "item-01",
+                             "rect":  [
+                                          907,
+                                          301,
+                                          129,
+                                          140
+                                      ]
+                         },
+                         {
+                             "name":  "item-02",
+                             "rect":  [
+                                          1046,
+                                          301,
+                                          129,
+                                          140
+                                      ]
+                         },
+                         {
+                             "name":  "item-03",
+                             "rect":  [
+                                          1185,
+                                          301,
+                                          129,
+                                          140
+                                      ]
+                         },
+                         {
+                             "name":  "item-04",
+                             "rect":  [
+                                          1324,
+                                          301,
+                                          129,
+                                          140
+                                      ]
+                         },
+                         {
+                             "name":  "item-05",
+                             "rect":  [
+                                          1463,
+                                          301,
+                                          129,
+                                          140
+                                      ]
+                         },
+                         {
+                             "name":  "item-06",
+                             "rect":  [
+                                          1602,
+                                          301,
+                                          129,
+                                          140
+                                      ]
+                         },
+                         {
+                             "name":  "item-07",
+                             "rect":  [
+                                          1741,
+                                          301,
+                                          129,
+                                          140
+                                      ]
+                         },
+                         {
+                             "name":  "item-15",
+                             "rect":  [
+                                          907,
+                                          461,
+                                          129,
+                                          140
+                                      ]
+                         },
+                         {
+                             "name":  "item-16",
+                             "rect":  [
+                                          1046,
+                                          461,
+                                          129,
+                                          140
+                                      ]
+                         },
+                         {
+                             "name":  "item-17",
+                             "rect":  [
+                                          1185,
+                                          461,
+                                          129,
+                                          140
+                                      ]
+                         },
+                         {
+                             "name":  "item-18",
+                             "rect":  [
+                                          1324,
+                                          461,
+                                          129,
+                                          140
+                                      ]
+                         },
+                         {
+                             "name":  "item-19",
+                             "rect":  [
+                                          1463,
+                                          461,
+                                          129,
+                                          140
+                                      ]
+                         },
+                         {
+                             "name":  "item-20",
+                             "rect":  [
+                                          1602,
+                                          461,
+                                          129,
+                                          140
+                                      ]
+                         },
+                         {
+                             "name":  "item-21",
+                             "rect":  [
+                                          1741,
+                                          461,
+                                          129,
+                                          140
+                                      ]
+                         },
+                         {
+                             "name":  "item-22",
+                             "rect":  [
+                                          907,
+                                          621,
+                                          129,
+                                          140
+                                      ]
+                         },
+                         {
+                             "name":  "item-23",
+                             "rect":  [
+                                          1046,
+                                          621,
+                                          129,
+                                          140
+                                      ]
+                         },
+                         {
+                             "name":  "item-24",
+                             "rect":  [
+                                          1185,
+                                          621,
+                                          129,
+                                          140
+                                      ]
+                         },
+                         {
+                             "name":  "item-25",
+                             "rect":  [
+                                          1324,
+                                          621,
+                                          129,
+                                          140
+                                      ]
+                         },
+                         {
+                             "name":  "item-26",
+                             "rect":  [
+                                          1463,
+                                          621,
+                                          129,
+                                          140
+                                      ]
+                         },
+                         {
+                             "name":  "item-27",
+                             "rect":  [
+                                          1602,
+                                          621,
+                                          129,
+                                          140
+                                      ]
+                         },
+                         {
+                             "name":  "item-28",
+                             "rect":  [
+                                          1741,
+                                          621,
+                                          129,
+                                          140
+                                      ]
+                         },
+                         {
+                             "name":  "item-29",
+                             "rect":  [
+                                          907,
+                                          781,
+                                          129,
+                                          140
+                                      ]
+                         },
+                         {
+                             "name":  "item-30",
+                             "rect":  [
+                                          1046,
+                                          781,
+                                          129,
+                                          140
+                                      ]
+                         },
+                         {
+                             "name":  "item-31",
+                             "rect":  [
+                                          1185,
+                                          781,
+                                          129,
+                                          140
+                                      ]
+                         },
+                         {
+                             "name":  "item-32",
+                             "rect":  [
+                                          1324,
+                                          781,
+                                          129,
+                                          140
+                                      ]
+                         },
+                         {
+                             "name":  "item-33",
+                             "rect":  [
+                                          1463,
+                                          781,
+                                          129,
+                                          140
+                                      ]
+                         },
+                         {
+                             "name":  "item-34",
+                             "rect":  [
+                                          1602,
+                                          781,
+                                          129,
+                                          140
+                                      ]
+                         },
+                         {
+                             "name":  "item-35",
+                             "rect":  [
+                                          1741,
+                                          781,
+                                          129,
+                                          140
+                                      ]
+                         },
+                         {
+                             "name":  "item-36",
+                             "rect":  [
+                                          907,
+                                          941,
+                                          129,
+                                          140
+                                      ]
+                         },
+                         {
+                             "name":  "item-37",
+                             "rect":  [
+                                          1046,
+                                          941,
+                                          129,
+                                          140
+                                      ]
+                         },
+                         {
+                             "name":  "item-38",
+                             "rect":  [
+                                          1185,
+                                          941,
+                                          129,
+                                          140
+                                      ]
+                         },
+                         {
+                             "name":  "item-39",
+                             "rect":  [
+                                          1324,
+                                          941,
+                                          129,
+                                          140
+                                      ]
+                         },
+                         {
+                             "name":  "item-40",
+                             "rect":  [
+                                          1463,
+                                          941,
+                                          129,
+                                          140
+                                      ]
+                         }
+                     ],
+    "texts_before":  [
+                         {
+                             "name":  "拾径 · Backleaf",
+                             "control":  "ControlType.TitleBar"
+                         },
+                         {
+                             "name":  "System Menu Bar",
+                             "control":  "ControlType.MenuBar"
+                         },
+                         {
+                             "name":  "System",
+                             "control":  "ControlType.MenuItem"
+                         },
+                         {
+                             "name":  "Minimize",
+                             "control":  "ControlType.Button"
+                         },
+                         {
+                             "name":  "Maximize",
+                             "control":  "ControlType.Button"
+                         },
+                         {
+                             "name":  "Close",
+                             "control":  "ControlType.Button"
+                         },
+                         {
+                             "name":  "拾径 Backleaf",
+                             "control":  "ControlType.Pane"
+                         },
+                         {
+                             "name":  "后退",
+                             "control":  "ControlType.Button"
+                         },
+                         {
+                             "name":  "上一级",
+                             "control":  "ControlType.Button"
+                         },
+                         {
+                             "name":  "当前位置 D:\\work\\backleaf\\.local\\verify\\bug-repro\\fixture-pub28",
+                             "control":  "ControlType.Group"
+                         },
+                         {
+                             "name":  "前往 D:\\",
+                             "control":  "ControlType.Hyperlink"
+                         },
+                         {
+                             "name":  "显示折叠的上级路径",
+                             "control":  "ControlType.Button"
+                         },
+                         {
+                             "name":  "前往 D:\\work\\backleaf\\.local\\verify\\bug-repro",
+                             "control":  "ControlType.Hyperlink"
+                         },
+                         {
+                             "name":  "编辑当前位置 D:\\work\\backleaf\\.local\\verify\\bug-repro\\fixture-pub28",
+                             "control":  "ControlType.Button"
+                         },
+                         {
+                             "name":  "浏览当前目录层级",
+                             "control":  "ControlType.Button"
+                         },
+                         {
+                             "name":  "搜索文件名，Ctrl+F",
+                             "control":  "ControlType.Button"
+                         },
+                         {
+                             "name":  "最小化",
+                             "control":  "ControlType.Button"
+                         },
+                         {
+                             "name":  "最大化或还原",
+                             "control":  "ControlType.Button"
+                         },
+                         {
+                             "name":  "关闭",
+                             "control":  "ControlType.Button"
+                         },
+                         {
+                             "name":  "快捷访问",
+                             "control":  "ControlType.Group"
+                         },
+                         {
+                             "name":  "个人文件夹，C:\\Users\\qq651",
+                             "control":  "ControlType.Button"
+                         },
+                         {
+                             "name":  "桌面，C:\\Users\\qq651\\Desktop",
+                             "control":  "ControlType.Button"
+                         },
+                         {
+                             "name":  "下载，C:\\Users\\qq651\\Downloads",
+                             "control":  "ControlType.Button"
+                         },
+                         {
+                             "name":  "文档，C:\\Users\\qq651\\Documents",
+                             "control":  "ControlType.Button"
+                         },
+                         {
+                             "name":  "图片，C:\\Users\\qq651\\Pictures",
+                             "control":  "ControlType.Button"
+                         },
+                         {
+                             "name":  "音乐，C:\\Users\\qq651\\Music",
+                             "control":  "ControlType.Button"
+                         },
+                         {
+                             "name":  "视频，C:\\Users\\qq651\\Videos",
+                             "control":  "ControlType.Button"
+                         },
+                         {
+                             "name":  "Windows-SSD (C:)，C:\\，总容量 400 GB；已使用 333 GB；剩余 67.2 GB；当前用户可用 67.2 GB",
+                             "control":  "ControlType.Button"
+                         },
+                         {
+                             "name":  "Data (D:)，D:\\，总容量 461 GB；已使用 430 GB；剩余 30.4 GB；当前用户可用 30.4 GB",
+                             "control":  "ControlType.Button"
+                         },
+                         {
+                             "name":  "文件",
+                             "control":  "ControlType.List"
+                         },
+                         {
+                             "name":  "item-01",
+                             "control":  "ControlType.ListItem"
+                         },
+                         {
+                             "name":  "item-02",
+                             "control":  "ControlType.ListItem"
+                         },
+                         {
+                             "name":  "item-03",
+                             "control":  "ControlType.ListItem"
+                         },
+                         {
+                             "name":  "item-04",
+                             "control":  "ControlType.ListItem"
+                         },
+                         {
+                             "name":  "item-05",
+                             "control":  "ControlType.ListItem"
+                         },
+                         {
+                             "name":  "item-06",
+                             "control":  "ControlType.ListItem"
+                         },
+                         {
+                             "name":  "item-07",
+                             "control":  "ControlType.ListItem"
+                         },
+                         {
+                             "name":  "item-08",
+                             "control":  "ControlType.ListItem"
+                         },
+                         {
+                             "name":  "item-09",
+                             "control":  "ControlType.ListItem"
+                         },
+                         {
+                             "name":  "item-10",
+                             "control":  "ControlType.ListItem"
+                         },
+                         {
+                             "name":  "item-11",
+                             "control":  "ControlType.ListItem"
+                         },
+                         {
+                             "name":  "item-12",
+                             "control":  "ControlType.ListItem"
+                         },
+                         {
+                             "name":  "item-13",
+                             "control":  "ControlType.ListItem"
+                         },
+                         {
+                             "name":  "item-14",
+                             "control":  "ControlType.ListItem"
+                         },
+                         {
+                             "name":  "item-15",
+                             "control":  "ControlType.ListItem"
+                         },
+                         {
+                             "name":  "item-16",
+                             "control":  "ControlType.ListItem"
+                         },
+                         {
+                             "name":  "item-17",
+                             "control":  "ControlType.ListItem"
+                         },
+                         {
+                             "name":  "item-18",
+                             "control":  "ControlType.ListItem"
+                         },
+                         {
+                             "name":  "item-19",
+                             "control":  "ControlType.ListItem"
+                         },
+                         {
+                             "name":  "item-20",
+                             "control":  "ControlType.ListItem"
+                         },
+                         {
+                             "name":  "item-21",
+                             "control":  "ControlType.ListItem"
+                         },
+                         {
+                             "name":  "item-22",
+                             "control":  "ControlType.ListItem"
+                         },
+                         {
+                             "name":  "item-23",
+                             "control":  "ControlType.ListItem"
+                         },
+                         {
+                             "name":  "item-24",
+                             "control":  "ControlType.ListItem"
+                         },
+                         {
+                             "name":  "item-25",
+                             "control":  "ControlType.ListItem"
+                         },
+                         {
+                             "name":  "item-26",
+                             "control":  "ControlType.ListItem"
+                         },
+                         {
+                             "name":  "item-27",
+                             "control":  "ControlType.ListItem"
+                         },
+                         {
+                             "name":  "item-28",
+                             "control":  "ControlType.ListItem"
+                         },
+                         {
+                             "name":  "item-29",
+                             "control":  "ControlType.ListItem"
+                         },
+                         {
+                             "name":  "item-30",
+                             "control":  "ControlType.ListItem"
+                         },
+                         {
+                             "name":  "item-31",
+                             "control":  "ControlType.ListItem"
+                         },
+                         {
+                             "name":  "item-32",
+                             "control":  "ControlType.ListItem"
+                         },
+                         {
+                             "name":  "item-33",
+                             "control":  "ControlType.ListItem"
+                         },
+                         {
+                             "name":  "item-34",
+                             "control":  "ControlType.ListItem"
+                         },
+                         {
+                             "name":  "item-35",
+                             "control":  "ControlType.ListItem"
+                         },
+                         {
+                             "name":  "item-36",
+                             "control":  "ControlType.ListItem"
+                         },
+                         {
+                             "name":  "item-37",
+                             "control":  "ControlType.ListItem"
+                         },
+                         {
+                             "name":  "item-38",
+                             "control":  "ControlType.ListItem"
+                         },
+                         {
+                             "name":  "item-39",
+                             "control":  "ControlType.ListItem"
+                         },
+                         {
+                             "name":  "item-40",
+                             "control":  "ControlType.ListItem"
+                         },
+                         {
+                             "name":  "文件滚动条",
+                             "control":  "ControlType.ScrollBar"
+                         }
+                     ],
+    "texts_after":  [
+                        {
+                            "name":  "拾径 · Backleaf",
+                            "control":  "ControlType.TitleBar"
+                        },
+                        {
+                            "name":  "System Menu Bar",
+                            "control":  "ControlType.MenuBar"
+                        },
+                        {
+                            "name":  "System",
+                            "control":  "ControlType.MenuItem"
+                        },
+                        {
+                            "name":  "Minimize",
+                            "control":  "ControlType.Button"
+                        },
+                        {
+                            "name":  "Maximize",
+                            "control":  "ControlType.Button"
+                        },
+                        {
+                            "name":  "Close",
+                            "control":  "ControlType.Button"
+                        },
+                        {
+                            "name":  "拾径 Backleaf",
+                            "control":  "ControlType.Pane"
+                        },
+                        {
+                            "name":  "后退",
+                            "control":  "ControlType.Button"
+                        },
+                        {
+                            "name":  "上一级",
+                            "control":  "ControlType.Button"
+                        },
+                        {
+                            "name":  "当前位置 D:\\work\\backleaf\\.local\\verify\\bug-repro\\fixture-pub28",
+                            "control":  "ControlType.Group"
+                        },
+                        {
+                            "name":  "前往 D:\\",
+                            "control":  "ControlType.Hyperlink"
+                        },
+                        {
+                            "name":  "显示折叠的上级路径",
+                            "control":  "ControlType.Button"
+                        },
+                        {
+                            "name":  "前往 D:\\work\\backleaf\\.local\\verify\\bug-repro",
+                            "control":  "ControlType.Hyperlink"
+                        },
+                        {
+                            "name":  "编辑当前位置 D:\\work\\backleaf\\.local\\verify\\bug-repro\\fixture-pub28",
+                            "control":  "ControlType.Button"
+                        },
+                        {
+                            "name":  "浏览当前目录层级",
+                            "control":  "ControlType.Button"
+                        },
+                        {
+                            "name":  "搜索文件名，Ctrl+F",
+                            "control":  "ControlType.Button"
+                        },
+                        {
+                            "name":  "最小化",
+                            "control":  "ControlType.Button"
+                        },
+                        {
+                            "name":  "最大化或还原",
+                            "control":  "ControlType.Button"
+                        },
+                        {
+                            "name":  "关闭",
+                            "control":  "ControlType.Button"
+                        },
+                        {
+                            "name":  "快捷访问",
+                            "control":  "ControlType.Group"
+                        },
+                        {
+                            "name":  "个人文件夹，C:\\Users\\qq651",
+                            "control":  "ControlType.Button"
+                        },
+                        {
+                            "name":  "桌面，C:\\Users\\qq651\\Desktop",
+                            "control":  "ControlType.Button"
+                        },
+                        {
+                            "name":  "下载，C:\\Users\\qq651\\Downloads",
+                            "control":  "ControlType.Button"
+                        },
+                        {
+                            "name":  "文档，C:\\Users\\qq651\\Documents",
+                            "control":  "ControlType.Button"
+                        },
+                        {
+                            "name":  "图片，C:\\Users\\qq651\\Pictures",
+                            "control":  "ControlType.Button"
+                        },
+                        {
+                            "name":  "音乐，C:\\Users\\qq651\\Music",
+                            "control":  "ControlType.Button"
+                        },
+                        {
+                            "name":  "视频，C:\\Users\\qq651\\Videos",
+                            "control":  "ControlType.Button"
+                        },
+                        {
+                            "name":  "Windows-SSD (C:)，C:\\，总容量 400 GB；已使用 333 GB；剩余 67.2 GB；当前用户可用 67.2 GB",
+                            "control":  "ControlType.Button"
+                        },
+                        {
+                            "name":  "Data (D:)，D:\\，总容量 461 GB；已使用 430 GB；剩余 30.4 GB；当前用户可用 30.4 GB",
+                            "control":  "ControlType.Button"
+                        },
+                        {
+                            "name":  "文件",
+                            "control":  "ControlType.List"
+                        },
+                        {
+                            "name":  "item-01",
+                            "control":  "ControlType.ListItem"
+                        },
+                        {
+                            "name":  "item-02",
+                            "control":  "ControlType.ListItem"
+                        },
+                        {
+                            "name":  "item-03",
+                            "control":  "ControlType.ListItem"
+                        },
+                        {
+                            "name":  "item-04",
+                            "control":  "ControlType.ListItem"
+                        },
+                        {
+                            "name":  "item-05",
+                            "control":  "ControlType.ListItem"
+                        },
+                        {
+                            "name":  "item-06",
+                            "control":  "ControlType.ListItem"
+                        },
+                        {
+                            "name":  "item-07",
+                            "control":  "ControlType.ListItem"
+                        },
+                        {
+                            "name":  "item-15",
+                            "control":  "ControlType.ListItem"
+                        },
+                        {
+                            "name":  "item-16",
+                            "control":  "ControlType.ListItem"
+                        },
+                        {
+                            "name":  "item-17",
+                            "control":  "ControlType.ListItem"
+                        },
+                        {
+                            "name":  "item-18",
+                            "control":  "ControlType.ListItem"
+                        },
+                        {
+                            "name":  "item-19",
+                            "control":  "ControlType.ListItem"
+                        },
+                        {
+                            "name":  "item-20",
+                            "control":  "ControlType.ListItem"
+                        },
+                        {
+                            "name":  "item-21",
+                            "control":  "ControlType.ListItem"
+                        },
+                        {
+                            "name":  "item-22",
+                            "control":  "ControlType.ListItem"
+                        },
+                        {
+                            "name":  "item-23",
+                            "control":  "ControlType.ListItem"
+                        },
+                        {
+                            "name":  "item-24",
+                            "control":  "ControlType.ListItem"
+                        },
+                        {
+                            "name":  "item-25",
+                            "control":  "ControlType.ListItem"
+                        },
+                        {
+                            "name":  "item-26",
+                            "control":  "ControlType.ListItem"
+                        },
+                        {
+                            "name":  "item-27",
+                            "control":  "ControlType.ListItem"
+                        },
+                        {
+                            "name":  "item-28",
+                            "control":  "ControlType.ListItem"
+                        },
+                        {
+                            "name":  "item-29",
+                            "control":  "ControlType.ListItem"
+                        },
+                        {
+                            "name":  "item-30",
+                            "control":  "ControlType.ListItem"
+                        },
+                        {
+                            "name":  "item-31",
+                            "control":  "ControlType.ListItem"
+                        },
+                        {
+                            "name":  "item-32",
+                            "control":  "ControlType.ListItem"
+                        },
+                        {
+                            "name":  "item-33",
+                            "control":  "ControlType.ListItem"
+                        },
+                        {
+                            "name":  "item-34",
+                            "control":  "ControlType.ListItem"
+                        },
+                        {
+                            "name":  "item-35",
+                            "control":  "ControlType.ListItem"
+                        },
+                        {
+                            "name":  "item-36",
+                            "control":  "ControlType.ListItem"
+                        },
+                        {
+                            "name":  "item-37",
+                            "control":  "ControlType.ListItem"
+                        },
+                        {
+                            "name":  "item-38",
+                            "control":  "ControlType.ListItem"
+                        },
+                        {
+                            "name":  "item-39",
+                            "control":  "ControlType.ListItem"
+                        },
+                        {
+                            "name":  "item-40",
+                            "control":  "ControlType.ListItem"
+                        }
+                    ],
+    "screenshots":  [
+                        {
+                            "name":  "01-initial.png",
+                            "sha256":  "0baf355451bfce5353198ab7f280e811b42beb97e27717131af1c6327b1bfc0a",
+                            "rect":  [
+                                         654,
+                                         211,
+                                         1252,
+                                         951
+                                     ]
+                        },
+                        {
+                            "name":  "02a-after-delete-immediate.png",
+                            "sha256":  "cd5d9223b9df7fd48b507186955b169a4bef8228ece5573e6f709ba14fc540f9"
+                        },
+                        {
+                            "name":  "02b-after-delete-120ms.png",
+                            "sha256":  "9b117494db2a8281e81fd49d26e29050df13a55507df1b24d537dc078c184655"
+                        },
+                        {
+                            "name":  "02c-after-delete-370ms.png",
+                            "sha256":  "c925d25472f452041716b55d372ab55c334d06c628a50c523a8434b186ef5044"
+                        },
+                        {
+                            "name":  "02-after-delete.png",
+                            "sha256":  "8f36c46ff80f57ab073d19fb80153dd91ec7a6034dad85cbd1d8228eeb836671",
+                            "rect":  [
+                                         654,
+                                         211,
+                                         1252,
+                                         951
+                                     ]
+                        },
+                        {
+                            "name":  "03-after-delete-settled.png",
+                            "sha256":  "8f36c46ff80f57ab073d19fb80153dd91ec7a6034dad85cbd1d8228eeb836671",
+                            "rect":  [
+                                         654,
+                                         211,
+                                         1252,
+                                         951
+                                     ]
+                        },
+                        {
+                            "name":  "04-after-pagedown.png",
+                            "sha256":  "77b8441a27fed0380db6a0cb5425d9bb00dd6a4bcc95f9776ff92c7c33e9c9c0",
+                            "rect":  [
+                                         654,
+                                         211,
+                                         1252,
+                                         951
+                                     ]
+                        },
+                        {
+                            "name":  "05-after-external-delete.png",
+                            "sha256":  "77b8441a27fed0380db6a0cb5425d9bb00dd6a4bcc95f9776ff92c7c33e9c9c0",
+                            "rect":  [
+                                         654,
+                                         211,
+                                         1252,
+                                         951
+                                     ]
+                        },
+                        {
+                            "name":  "06-after-external-add.png",
+                            "sha256":  "6ccd8eaa958e9ea75492da0388861ba3c4970a21104e655e27ee8ea0dad8754c",
+                            "rect":  [
+                                         654,
+                                         211,
+                                         1252,
+                                         951
+                                     ]
+                        }
+                    ],
+    "error":  null,
+    "finished_utc":  "2026-11-06T05:54:47.2377074Z",
+    "after_settled":  [
+                          {
+                              "name":  "item-01",
+                              "rect":  [
+                                           907,
+                                           301,
+                                           129,
+                                           140
+                                       ]
+                          },
+                          {
+                              "name":  "item-02",
+                              "rect":  [
+                                           1046,
+                                           301,
+                                           129,
+                                           140
+                                       ]
+                          },
+                          {
+                              "name":  "item-03",
+                              "rect":  [
+                                           1185,
+                                           301,
+                                           129,
+                                           140
+                                       ]
+                          },
+                          {
+                              "name":  "item-04",
+                              "rect":  [
+                                           1324,
+                                           301,
+                                           129,
+                                           140
+                                       ]
+                          },
+                          {
+                              "name":  "item-05",
+                              "rect":  [
+                                           1463,
+                                           301,
+                                           129,
+                                           140
+                                       ]
+                          },
+                          {
+                              "name":  "item-06",
+                              "rect":  [
+                                           1602,
+                                           301,
+                                           129,
+                                           140
+                                       ]
+                          },
+                          {
+                              "name":  "item-07",
+                              "rect":  [
+                                           1741,
+                                           301,
+                                           129,
+                                           140
+                                       ]
+                          },
+                          {
+                              "name":  "item-15",
+                              "rect":  [
+                                           907,
+                                           461,
+                                           129,
+                                           140
+                                       ]
+                          },
+                          {
+                              "name":  "item-16",
+                              "rect":  [
+                                           1046,
+                                           461,
+                                           129,
+                                           140
+                                       ]
+                          },
+                          {
+                              "name":  "item-17",
+                              "rect":  [
+                                           1185,
+                                           461,
+                                           129,
+                                           140
+                                       ]
+                          },
+                          {
+                              "name":  "item-18",
+                              "rect":  [
+                                           1324,
+                                           461,
+                                           129,
+                                           140
+                                       ]
+                          },
+                          {
+                              "name":  "item-19",
+                              "rect":  [
+                                           1463,
+                                           461,
+                                           129,
+                                           140
+                                       ]
+                          },
+                          {
+                              "name":  "item-20",
+                              "rect":  [
+                                           1602,
+                                           461,
+                                           129,
+                                           140
+                                       ]
+                          },
+                          {
+                              "name":  "item-21",
+                              "rect":  [
+                                           1741,
+                                           461,
+                                           129,
+                                           140
+                                       ]
+                          },
+                          {
+                              "name":  "item-22",
+                              "rect":  [
+                                           907,
+                                           621,
+                                           129,
+                                           140
+                                       ]
+                          },
+                          {
+                              "name":  "item-23",
+                              "rect":  [
+                                           1046,
+                                           621,
+                                           129,
+                                           140
+                                       ]
+                          },
+                          {
+                              "name":  "item-24",
+                              "rect":  [
+                                           1185,
+                                           621,
+                                           129,
+                                           140
+                                       ]
+                          },
+                          {
+                              "name":  "item-25",
+                              "rect":  [
+                                           1324,
+                                           621,
+                                           129,
+                                           140
+                                       ]
+                          },
+                          {
+                              "name":  "item-26",
+                              "rect":  [
+                                           1463,
+                                           621,
+                                           129,
+                                           140
+                                       ]
+                          },
+                          {
+                              "name":  "item-27",
+                              "rect":  [
+                                           1602,
+                                           621,
+                                           129,
+                                           140
+                                       ]
+                          },
+                          {
+                              "name":  "item-28",
+                              "rect":  [
+                                           1741,
+                                           621,
+                                           129,
+                                           140
+                                       ]
+                          },
+                          {
+                              "name":  "item-29",
+                              "rect":  [
+                                           907,
+                                           781,
+                                           129,
+                                           140
+                                       ]
+                          },
+                          {
+                              "name":  "item-30",
+                              "rect":  [
+                                           1046,
+                                           781,
+                                           129,
+                                           140
+                                       ]
+                          },
+                          {
+                              "name":  "item-31",
+                              "rect":  [
+                                           1185,
+                                           781,
+                                           129,
+                                           140
+                                       ]
+                          },
+                          {
+                              "name":  "item-32",
+                              "rect":  [
+                                           1324,
+                                           781,
+                                           129,
+                                           140
+                                       ]
+                          },
+                          {
+                              "name":  "item-33",
+                              "rect":  [
+                                           1463,
+                                           781,
+                                           129,
+                                           140
+                                       ]
+                          },
+                          {
+                              "name":  "item-34",
+                              "rect":  [
+                                           1602,
+                                           781,
+                                           129,
+                                           140
+                                       ]
+                          },
+                          {
+                              "name":  "item-35",
+                              "rect":  [
+                                           1741,
+                                           781,
+                                           129,
+                                           140
+                                       ]
+                          },
+                          {
+                              "name":  "item-36",
+                              "rect":  [
+                                           907,
+                                           941,
+                                           129,
+                                           140
+                                       ]
+                          },
+                          {
+                              "name":  "item-37",
+                              "rect":  [
+                                           1046,
+                                           941,
+                                           129,
+                                           140
+                                       ]
+                          },
+                          {
+                              "name":  "item-38",
+                              "rect":  [
+                                           1185,
+                                           941,
+                                           129,
+                                           140
+                                       ]
+                          },
+                          {
+                              "name":  "item-39",
+                              "rect":  [
+                                           1324,
+                                           941,
+                                           129,
+                                           140
+                                       ]
+                          },
+                          {
+                              "name":  "item-40",
+                              "rect":  [
+                                           1463,
+                                           941,
+                                           129,
+                                           140
+                                       ]
+                          }
+                      ],
+    "after_pagedown":  [
+                           {
+                               "name":  "item-01",
+                               "rect":  [
+                                            907,
+                                            301,
+                                            129,
+                                            140
+                                        ]
+                           },
+                           {
+                               "name":  "item-02",
+                               "rect":  [
+                                            1046,
+                                            301,
+                                            129,
+                                            140
+                                        ]
+                           },
+                           {
+                               "name":  "item-03",
+                               "rect":  [
+                                            1185,
+                                            301,
+                                            129,
+                                            140
+                                        ]
+                           },
+                           {
+                               "name":  "item-04",
+                               "rect":  [
+                                            1324,
+                                            301,
+                                            129,
+                                            140
+                                        ]
+                           },
+                           {
+                               "name":  "item-05",
+                               "rect":  [
+                                            1463,
+                                            301,
+                                            129,
+                                            140
+                                        ]
+                           },
+                           {
+                               "name":  "item-06",
+                               "rect":  [
+                                            1602,
+                                            301,
+                                            129,
+                                            140
+                                        ]
+                           },
+                           {
+                               "name":  "item-07",
+                               "rect":  [
+                                            1741,
+                                            301,
+                                            129,
+                                            140
+                                        ]
+                           },
+                           {
+                               "name":  "item-15",
+                               "rect":  [
+                                            907,
+                                            461,
+                                            129,
+                                            140
+                                        ]
+                           },
+                           {
+                               "name":  "item-16",
+                               "rect":  [
+                                            1046,
+                                            461,
+                                            129,
+                                            140
+                                        ]
+                           },
+                           {
+                               "name":  "item-17",
+                               "rect":  [
+                                            1185,
+                                            461,
+                                            129,
+                                            140
+                                        ]
+                           },
+                           {
+                               "name":  "item-18",
+                               "rect":  [
+                                            1324,
+                                            461,
+                                            129,
+                                            140
+                                        ]
+                           },
+                           {
+                               "name":  "item-19",
+                               "rect":  [
+                                            1463,
+                                            461,
+                                            129,
+                                            140
+                                        ]
+                           },
+                           {
+                               "name":  "item-20",
+                               "rect":  [
+                                            1602,
+                                            461,
+                                            129,
+                                            140
+                                        ]
+                           },
+                           {
+                               "name":  "item-21",
+                               "rect":  [
+                                            1741,
+                                            461,
+                                            129,
+                                            140
+                                        ]
+                           },
+                           {
+                               "name":  "item-22",
+                               "rect":  [
+                                            907,
+                                            621,
+                                            129,
+                                            140
+                                        ]
+                           },
+                           {
+                               "name":  "item-23",
+                               "rect":  [
+                                            1046,
+                                            621,
+                                            129,
+                                            140
+                                        ]
+                           },
+                           {
+                               "name":  "item-24",
+                               "rect":  [
+                                            1185,
+                                            621,
+                                            129,
+                                            140
+                                        ]
+                           },
+                           {
+                               "name":  "item-25",
+                               "rect":  [
+                                            1324,
+                                            621,
+                                            129,
+                                            140
+                                        ]
+                           },
+                           {
+                               "name":  "item-26",
+                               "rect":  [
+                                            1463,
+                                            621,
+                                            129,
+                                            140
+                                        ]
+                           },
+                           {
+                               "name":  "item-27",
+                               "rect":  [
+                                            1602,
+                                            621,
+                                            129,
+                                            140
+                                        ]
+                           },
+                           {
+                               "name":  "item-28",
+                               "rect":  [
+                                            1741,
+                                            621,
+                                            129,
+                                            140
+                                        ]
+                           },
+                           {
+                               "name":  "item-29",
+                               "rect":  [
+                                            907,
+                                            781,
+                                            129,
+                                            140
+                                        ]
+                           },
+                           {
+                               "name":  "item-30",
+                               "rect":  [
+                                            1046,
+                                            781,
+                                            129,
+                                            140
+                                        ]
+                           },
+                           {
+                               "name":  "item-31",
+                               "rect":  [
+                                            1185,
+                                            781,
+                                            129,
+                                            140
+                                        ]
+                           },
+                           {
+                               "name":  "item-32",
+                               "rect":  [
+                                            1324,
+                                            781,
+                                            129,
+                                            140
+                                        ]
+                           },
+                           {
+                               "name":  "item-33",
+                               "rect":  [
+                                            1463,
+                                            781,
+                                            129,
+                                            140
+                                        ]
+                           },
+                           {
+                               "name":  "item-34",
+                               "rect":  [
+                                            1602,
+                                            781,
+                                            129,
+                                            140
+                                        ]
+                           },
+                           {
+                               "name":  "item-35",
+                               "rect":  [
+                                            1741,
+                                            781,
+                                            129,
+                                            140
+                                        ]
+                           },
+                           {
+                               "name":  "item-36",
+                               "rect":  [
+                                            907,
+                                            941,
+                                            129,
+                                            140
+                                        ]
+                           },
+                           {
+                               "name":  "item-37",
+                               "rect":  [
+                                            1046,
+                                            941,
+                                            129,
+                                            140
+                                        ]
+                           },
+                           {
+                               "name":  "item-38",
+                               "rect":  [
+                                            1185,
+                                            941,
+                                            129,
+                                            140
+                                        ]
+                           },
+                           {
+                               "name":  "item-39",
+                               "rect":  [
+                                            1324,
+                                            941,
+                                            129,
+                                            140
+                                        ]
+                           },
+                           {
+                               "name":  "item-40",
+                               "rect":  [
+                                            1463,
+                                            941,
+                                            129,
+                                            140
+                                        ]
+                           }
+                       ],
+    "after_external_delete":  [
+                                  {
+                                      "name":  "item-01",
+                                      "rect":  [
+                                                   907,
+                                                   301,
+                                                   129,
+                                                   140
+                                               ]
+                                  },
+                                  {
+                                      "name":  "item-02",
+                                      "rect":  [
+                                                   1046,
+                                                   301,
+                                                   129,
+                                                   140
+                                               ]
+                                  },
+                                  {
+                                      "name":  "item-03",
+                                      "rect":  [
+                                                   1185,
+                                                   301,
+                                                   129,
+                                                   140
+                                               ]
+                                  },
+                                  {
+                                      "name":  "item-04",
+                                      "rect":  [
+                                                   1324,
+                                                   301,
+                                                   129,
+                                                   140
+                                               ]
+                                  },
+                                  {
+                                      "name":  "item-05",
+                                      "rect":  [
+                                                   1463,
+                                                   301,
+                                                   129,
+                                                   140
+                                               ]
+                                  },
+                                  {
+                                      "name":  "item-06",
+                                      "rect":  [
+                                                   1602,
+                                                   301,
+                                                   129,
+                                                   140
+                                               ]
+                                  },
+                                  {
+                                      "name":  "item-07",
+                                      "rect":  [
+                                                   1741,
+                                                   301,
+                                                   129,
+                                                   140
+                                               ]
+                                  },
+                                  {
+                                      "name":  "item-15",
+                                      "rect":  [
+                                                   907,
+                                                   461,
+                                                   129,
+                                                   140
+                                               ]
+                                  },
+                                  {
+                                      "name":  "item-16",
+                                      "rect":  [
+                                                   1046,
+                                                   461,
+                                                   129,
+                                                   140
+                                               ]
+                                  },
+                                  {
+                                      "name":  "item-17",
+                                      "rect":  [
+                                                   1185,
+                                                   461,
+                                                   129,
+                                                   140
+                                               ]
+                                  },
+                                  {
+                                      "name":  "item-18",
+                                      "rect":  [
+                                                   1324,
+                                                   461,
+                                                   129,
+                                                   140
+                                               ]
+                                  },
+                                  {
+                                      "name":  "item-19",
+                                      "rect":  [
+                                                   1463,
+                                                   461,
+                                                   129,
+                                                   140
+                                               ]
+                                  },
+                                  {
+                                      "name":  "item-20",
+                                      "rect":  [
+                                                   1602,
+                                                   461,
+                                                   129,
+                                                   140
+                                               ]
+                                  },
+                                  {
+                                      "name":  "item-21",
+                                      "rect":  [
+                                                   1741,
+                                                   461,
+                                                   129,
+                                                   140
+                                               ]
+                                  },
+                                  {
+                                      "name":  "item-22",
+                                      "rect":  [
+                                                   907,
+                                                   621,
+                                                   129,
+                                                   140
+                                               ]
+                                  },
+                                  {
+                                      "name":  "item-23",
+                                      "rect":  [
+                                                   1046,
+                                                   621,
+                                                   129,
+                                                   140
+                                               ]
+                                  },
+                                  {
+                                      "name":  "item-24",
+                                      "rect":  [
+                                                   1185,
+                                                   621,
+                                                   129,
+                                                   140
+                                               ]
+                                  },
+                                  {
+                                      "name":  "item-25",
+                                      "rect":  [
+                                                   1324,
+                                                   621,
+                                                   129,
+                                                   140
+                                               ]
+                                  },
+                                  {
+                                      "name":  "item-26",
+                                      "rect":  [
+                                                   1463,
+                                                   621,
+                                                   129,
+                                                   140
+                                               ]
+                                  },
+                                  {
+                                      "name":  "item-27",
+                                      "rect":  [
+                                                   1602,
+                                                   621,
+                                                   129,
+                                                   140
+                                               ]
+                                  },
+                                  {
+                                      "name":  "item-28",
+                                      "rect":  [
+                                                   1741,
+                                                   621,
+                                                   129,
+                                                   140
+                                               ]
+                                  },
+                                  {
+                                      "name":  "item-29",
+                                      "rect":  [
+                                                   907,
+                                                   781,
+                                                   129,
+                                                   140
+                                               ]
+                                  },
+                                  {
+                                      "name":  "item-30",
+                                      "rect":  [
+                                                   1046,
+                                                   781,
+                                                   129,
+                                                   140
+                                               ]
+                                  },
+                                  {
+                                      "name":  "item-31",
+                                      "rect":  [
+                                                   1185,
+                                                   781,
+                                                   129,
+                                                   140
+                                               ]
+                                  },
+                                  {
+                                      "name":  "item-32",
+                                      "rect":  [
+                                                   1324,
+                                                   781,
+                                                   129,
+                                                   140
+                                               ]
+                                  },
+                                  {
+                                      "name":  "item-33",
+                                      "rect":  [
+                                                   1463,
+                                                   781,
+                                                   129,
+                                                   140
+                                               ]
+                                  },
+                                  {
+                                      "name":  "item-34",
+                                      "rect":  [
+                                                   1602,
+                                                   781,
+                                                   129,
+                                                   140
+                                               ]
+                                  },
+                                  {
+                                      "name":  "item-35",
+                                      "rect":  [
+                                                   1741,
+                                                   781,
+                                                   129,
+                                                   140
+                                               ]
+                                  },
+                                  {
+                                      "name":  "item-36",
+                                      "rect":  [
+                                                   907,
+                                                   941,
+                                                   129,
+                                                   140
+                                               ]
+                                  },
+                                  {
+                                      "name":  "item-37",
+                                      "rect":  [
+                                                   1046,
+                                                   941,
+                                                   129,
+                                                   140
+                                               ]
+                                  },
+                                  {
+                                      "name":  "item-38",
+                                      "rect":  [
+                                                   1185,
+                                                   941,
+                                                   129,
+                                                   140
+                                               ]
+                                  },
+                                  {
+                                      "name":  "item-39",
+                                      "rect":  [
+                                                   1324,
+                                                   941,
+                                                   129,
+                                                   140
+                                               ]
+                                  },
+                                  {
+                                      "name":  "item-40",
+                                      "rect":  [
+                                                   1463,
+                                                   941,
+                                                   129,
+                                                   140
+                                               ]
+                                  }
+                              ],
+    "after_external_add":  [
+                               {
+                                   "name":  "item-01",
+                                   "rect":  [
+                                                907,
+                                                301,
+                                                129,
+                                                140
+                                            ]
+                               },
+                               {
+                                   "name":  "item-02",
+                                   "rect":  [
+                                                1046,
+                                                301,
+                                                129,
+                                                140
+                                            ]
+                               },
+                               {
+                                   "name":  "item-03",
+                                   "rect":  [
+                                                1185,
+                                                301,
+                                                129,
+                                                140
+                                            ]
+                               },
+                               {
+                                   "name":  "item-04",
+                                   "rect":  [
+                                                1324,
+                                                301,
+                                                129,
+                                                140
+                                            ]
+                               },
+                               {
+                                   "name":  "item-05",
+                                   "rect":  [
+                                                1463,
+                                                301,
+                                                129,
+                                                140
+                                            ]
+                               },
+                               {
+                                   "name":  "item-06",
+                                   "rect":  [
+                                                1602,
+                                                301,
+                                                129,
+                                                140
+                                            ]
+                               },
+                               {
+                                   "name":  "item-07",
+                                   "rect":  [
+                                                1741,
+                                                301,
+                                                129,
+                                                140
+                                            ]
+                               },
+                               {
+                                   "name":  "item-15",
+                                   "rect":  [
+                                                907,
+                                                461,
+                                                129,
+                                                140
+                                            ]
+                               },
+                               {
+                                   "name":  "item-16",
+                                   "rect":  [
+                                                1046,
+                                                461,
+                                                129,
+                                                140
+                                            ]
+                               },
+                               {
+                                   "name":  "item-17",
+                                   "rect":  [
+                                                1185,
+                                                461,
+                                                129,
+                                                140
+                                            ]
+                               },
+                               {
+                                   "name":  "item-18",
+                                   "rect":  [
+                                                1324,
+                                                461,
+                                                129,
+                                                140
+                                            ]
+                               },
+                               {
+                                   "name":  "item-19",
+                                   "rect":  [
+                                                1463,
+                                                461,
+                                                129,
+                                                140
+                                            ]
+                               },
+                               {
+                                   "name":  "item-20",
+                                   "rect":  [
+                                                1602,
+                                                461,
+                                                129,
+                                                140
+                                            ]
+                               },
+                               {
+                                   "name":  "item-21",
+                                   "rect":  [
+                                                1741,
+                                                461,
+                                                129,
+                                                140
+                                            ]
+                               },
+                               {
+                                   "name":  "item-22",
+                                   "rect":  [
+                                                907,
+                                                621,
+                                                129,
+                                                140
+                                            ]
+                               },
+                               {
+                                   "name":  "item-23",
+                                   "rect":  [
+                                                1046,
+                                                621,
+                                                129,
+                                                140
+                                            ]
+                               },
+                               {
+                                   "name":  "item-24",
+                                   "rect":  [
+                                                1185,
+                                                621,
+                                                129,
+                                                140
+                                            ]
+                               },
+                               {
+                                   "name":  "item-25",
+                                   "rect":  [
+                                                1324,
+                                                621,
+                                                129,
+                                                140
+                                            ]
+                               },
+                               {
+                                   "name":  "item-26",
+                                   "rect":  [
+                                                1463,
+                                                621,
+                                                129,
+                                                140
+                                            ]
+                               },
+                               {
+                                   "name":  "item-27",
+                                   "rect":  [
+                                                1602,
+                                                621,
+                                                129,
+                                                140
+                                            ]
+                               },
+                               {
+                                   "name":  "item-28",
+                                   "rect":  [
+                                                1741,
+                                                621,
+                                                129,
+                                                140
+                                            ]
+                               },
+                               {
+                                   "name":  "item-29",
+                                   "rect":  [
+                                                907,
+                                                781,
+                                                129,
+                                                140
+                                            ]
+                               },
+                               {
+                                   "name":  "item-30",
+                                   "rect":  [
+                                                1046,
+                                                781,
+                                                129,
+                                                140
+                                            ]
+                               },
+                               {
+                                   "name":  "item-31",
+                                   "rect":  [
+                                                1185,
+                                                781,
+                                                129,
+                                                140
+                                            ]
+                               },
+                               {
+                                   "name":  "item-32",
+                                   "rect":  [
+                                                1324,
+                                                781,
+                                                129,
+                                                140
+                                            ]
+                               },
+                               {
+                                   "name":  "item-33",
+                                   "rect":  [
+                                                1463,
+                                                781,
+                                                129,
+                                                140
+                                            ]
+                               },
+                               {
+                                   "name":  "item-34",
+                                   "rect":  [
+                                                1602,
+                                                781,
+                                                129,
+                                                140
+                                            ]
+                               },
+                               {
+                                   "name":  "item-35",
+                                   "rect":  [
+                                                1741,
+                                                781,
+                                                129,
+                                                140
+                                            ]
+                               },
+                               {
+                                   "name":  "item-36",
+                                   "rect":  [
+                                                907,
+                                                941,
+                                                129,
+                                                140
+                                            ]
+                               },
+                               {
+                                   "name":  "item-37",
+                                   "rect":  [
+                                                1046,
+                                                941,
+                                                129,
+                                                140
+                                            ]
+                               },
+                               {
+                                   "name":  "item-38",
+                                   "rect":  [
+                                                1185,
+                                                941,
+                                                129,
+                                                140
+                                            ]
+                               },
+                               {
+                                   "name":  "item-39",
+                                   "rect":  [
+                                                1324,
+                                                941,
+                                                129,
+                                                140
+                                            ]
+                               },
+                               {
+                                   "name":  "item-40",
+                                   "rect":  [
+                                                1463,
+                                                941,
+                                                129,
+                                                140
+                                            ]
+                               },
+                               {
+                                   "name":  "item-41",
+                                   "rect":  [
+                                                1602,
+                                                941,
+                                                129,
+                                                140
+                                            ]
+                               },
+                               {
+                                   "name":  "item-42",
+                                   "rect":  [
+                                                1741,
+                                                941,
+                                                129,
+                                                140
+                                            ]
+                               },
+                               {
+                                   "name":  "item-43",
+                                   "rect":  [
+                                                907,
+                                                1101,
+                                                129,
+                                                140
+                                            ]
+                               },
+                               {
+                                   "name":  "item-44",
+                                   "rect":  [
+                                                1046,
+                                                1101,
+                                                129,
+                                                140
+                                            ]
+                               },
+                               {
+                                   "name":  "item-45",
+                                   "rect":  [
+                                                1185,
+                                                1101,
+                                                129,
+                                                140
+                                            ]
+                               }
+                           ]
+}

@@ -1,0 +1,126 @@
+{
+    "generated_at":  "2026-11-06T05:55:54.0038783Z",
+    "directory":  "docs/evidence/preview-28",
+    "entries":  [
+                    {
+                        "path":  ".gitattributes",
+                        "bytes":  72,
+                        "sha256":  "2a8804fa85b94d48f7b5ece75d70e2cbbdd4293a81ac19f831b054c94ae5a19b"
+                    },
+                    {
+                        "path":  "blank-row-preview27-report.json",
+                        "bytes":  112315,
+                        "sha256":  "2c0bb119ea558a261ebd030d3d49163344f096aba68136b85ebf1012fae13da1"
+                    },
+                    {
+                        "path":  "blank-row-preview28-report.json",
+                        "bytes":  112289,
+                        "sha256":  "8de2d54f1fa6f5fe036215238b44b3bf70a1dd5890b7d3503b7e94a777273480"
+                    },
+                    {
+                        "path":  "blank-row-published-report.json",
+                        "bytes":  112345,
+                        "sha256":  "a40c2a34be26d62cc8b8cca305dce23d4e979618e56c99cfb0e3d91daa1ce8b9"
+                    },
+                    {
+                        "path":  "ci-headless-status.json",
+                        "bytes":  325,
+                        "sha256":  "0a574730421f2af81c8f2fad2b1ad2858c825c9b7373d8b132e1c6b725205153"
+                    },
+                    {
+                        "path":  "ci-package-status.json",
+                        "bytes":  325,
+                        "sha256":  "77aee61bfff7c244ac0756e18ddb3660988bdbd1cd36d7d0c12421a11796f07a"
+                    },
+                    {
+                        "path":  "ci-package-verified.json",
+                        "bytes":  801,
+                        "sha256":  "26bcee1e52195221b679db99e672607ba27a6dda54efebda37c63eb9e4424b5b"
+                    },
+                    {
+                        "path":  "environment.json",
+                        "bytes":  1716,
+                        "sha256":  "2bdd80a7efffb4d987d59c31dfd94e7dfc191fceff44d3735c57341ae2a36655"
+                    },
+                    {
+                        "path":  "fix-commit.diff",
+                        "bytes":  6464,
+                        "sha256":  "2a1f168d2ba1e6f99a942e0c9980bde8821bd4c6da1e0b51b98990c8df82316b"
+                    },
+                    {
+                        "path":  "fix-commit-stat.txt",
+                        "bytes":  554,
+                        "sha256":  "6612a22288c96d1392c1219dbbe16edbf7392ba7fdd27519b3ccc2b1e4c26edb"
+                    },
+                    {
+                        "path":  "online-ps5.json",
+                        "bytes":  7189,
+                        "sha256":  "b8b9d2b1c43f79db2cae7abfe8de774a8aced5c024221641a5804588e50dd564"
+                    },
+                    {
+                        "path":  "online-ps7.json",
+                        "bytes":  4656,
+                        "sha256":  "712ca0a91715416007da41107b6c3feb43d9e9859808aea1b120cdb2b70c4107"
+                    },
+                    {
+                        "path":  "public-assets.json",
+                        "bytes":  528,
+                        "sha256":  "4035c6671ecce11412faba226646c54bcfd15a3e4055b6a0de453b5f540cbc2f"
+                    },
+                    {
+                        "path":  "public-build.json",
+                        "bytes":  4393,
+                        "sha256":  "abe9b478f092d975208ae3c9a819fa6c30edb32384aac7a3c7f194b60b7f128f"
+                    },
+                    {
+                        "path":  "public-SHA256SUMS.txt",
+                        "bytes":  198,
+                        "sha256":  "411dc45a8475da611dc16452d7b7f012baa0277709912480be131f05599270fb"
+                    },
+                    {
+                        "path":  "README.md",
+                        "bytes":  5726,
+                        "sha256":  "8c4a8115551fd1db970e97a8af23435b6244c70566272a5e3a800eb7072a3abe"
+                    },
+                    {
+                        "path":  "retry-visible.log",
+                        "bytes":  5582,
+                        "sha256":  "ccf81c4e3f78b55c912f57b51c286b8047ae2762c3348dff4567eea5246db441"
+                    },
+                    {
+                        "path":  "retry-visible-report.json",
+                        "bytes":  9897,
+                        "sha256":  "96dd3d80c7d37e1422f0a97adcba26b8a231c7d60ed786102bc6754188c6fac9"
+                    },
+                    {
+                        "path":  "screenshots/03-task-panel-with-retry.png",
+                        "bytes":  53916,
+                        "sha256":  "76c44d2630ee006ef6e2c24c3560e526a790601da1b84823136cb0879884d570"
+                    },
+                    {
+                        "path":  "screenshots/04-after-retry.png",
+                        "bytes":  31302,
+                        "sha256":  "4e25b18b8c258458f93fdd5ed6c2a4465bfd07d82e75697ae10c2033dd3b027a"
+                    },
+                    {
+                        "path":  "screenshots/blank-row-preview27.png",
+                        "bytes":  77056,
+                        "sha256":  "ea77073b58c29e439d3dccc78b70e1b288423ae591353db45cc82b5d78f0f6e7"
+                    },
+                    {
+                        "path":  "screenshots/blank-row-preview28.png",
+                        "bytes":  88982,
+                        "sha256":  "7f877db65c65304c9db54279203519a124d0737a2c6bfffe5cb821976a2b4583"
+                    },
+                    {
+                        "path":  "screenshots/blank-row-published-preview28.png",
+                        "bytes":  82070,
+                        "sha256":  "df5427a30baa5115f994e971ef2ba1c9eb55b4800f0d13675104b1befb30f9b6"
+                    },
+                    {
+                        "path":  "task-panel-uia.json",
+                        "bytes":  9105,
+                        "sha256":  "df3deb8791aa5ed9a4297226d86fafb2ac43f41499900c4767236430fa18ed8f"
+                    }
+                ]
+}
