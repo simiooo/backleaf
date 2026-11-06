@@ -1,0 +1,293 @@
+{
+    "passed":  true,
+    "source_commit":  "892eb0e296f6e54ea759aafa3a7021de42c78ad8",
+    "exe":  "D:\\work\\backleaf\\.local\\verify\\preview26\\public-install\\Backleaf.exe",
+    "exe_sha256":  "cdbd88b1fb7880881dd30ed4663d9b3f5b9dbdfd3e2c422269c585fe8cc0cfcc",
+    "fixture":  "D:\\work\\backleaf\\.local\\verify\\preview26\\fixture",
+    "session":  {
+                    "locked":  false,
+                    "error":  null
+                },
+    "started_utc":  "2026-11-06T03:09:38.9213128Z",
+    "finished_utc":  "2026-11-06T03:09:54.1807736Z",
+    "steps":  [
+                  {
+                      "name":  "session-unlocked",
+                      "ok":  true
+                  },
+                  {
+                      "name":  "process-started",
+                      "ok":  true
+                  },
+                  {
+                      "name":  "main-window-appeared",
+                      "ok":  true
+                  },
+                  {
+                      "name":  "main-title",
+                      "ok":  true
+                  },
+                  {
+                      "name":  "main-foreground",
+                      "ok":  true
+                  },
+                  {
+                      "name":  "main-uia-root",
+                      "ok":  true
+                  },
+                  {
+                      "name":  "long-file-item-found",
+                      "ok":  true
+                  },
+                  {
+                      "name":  "file-selection",
+                      "ok":  true
+                  },
+                  {
+                      "name":  "properties-window-open",
+                      "ok":  true
+                  },
+                  {
+                      "name":  "properties-window-foreground",
+                      "ok":  true
+                  },
+                  {
+                      "name":  "properties-full-name",
+                      "ok":  true
+                  },
+                  {
+                      "name":  "properties-full-path",
+                      "ok":  true
+                  },
+                  {
+                      "name":  "properties-file-size-188B",
+                      "ok":  true
+                  },
+                  {
+                      "name":  "properties-main-width-unchanged",
+                      "ok":  true
+                  },
+                  {
+                      "name":  "properties-f5-refresh",
+                      "ok":  true
+                  },
+                  {
+                      "name":  "properties-scrollbar-visible-small",
+                      "ok":  true
+                  },
+                  {
+                      "name":  "properties-scrollbar-track-click",
+                      "ok":  true
+                  },
+                  {
+                      "name":  "properties-scrollbar-hidden-large",
+                      "ok":  true
+                  },
+                  {
+                      "name":  "properties-escape-close",
+                      "ok":  true
+                  },
+                  {
+                      "name":  "main-geometry-after-close",
+                      "ok":  true
+                  },
+                  {
+                      "name":  "folder-item-found",
+                      "ok":  true
+                  },
+                  {
+                      "name":  "folder-properties-window-open",
+                      "ok":  true
+                  },
+                  {
+                      "name":  "folder-properties-foreground",
+                      "ok":  true
+                  },
+                  {
+                      "name":  "folder-size-8B",
+                      "ok":  true
+                  },
+                  {
+                      "name":  "folder-f5-12B",
+                      "ok":  true
+                  },
+                  {
+                      "name":  "folder-properties-escape-close",
+                      "ok":  true
+                  },
+                  {
+                      "name":  "app-clean-exit",
+                      "ok":  true
+                  },
+                  {
+                      "name":  "no-leftover-process",
+                      "ok":  true
+                  }
+              ],
+    "failures":  [
+
+                 ],
+    "screenshots":  [
+                        {
+                            "name":  "01-main.png",
+                            "bytes":  37650,
+                            "sha256":  "2645e4c51548279480732b7c7233210ae2a7f814ff7a705992c5c998f4104fe8",
+                            "rect":  [
+                                         579,
+                                         236,
+                                         1402,
+                                         901
+                                     ],
+                            "at_utc":  "2026-11-06T03:09:41.0166982Z"
+                        },
+                        {
+                            "name":  "02-main-file-selected.png",
+                            "bytes":  39456,
+                            "sha256":  "3342d0dc645057bca0145e387110150f525db9fe5dbf052b46799796cdda09b6",
+                            "rect":  [
+                                         579,
+                                         236,
+                                         1402,
+                                         901
+                                     ],
+                            "at_utc":  "2026-11-06T03:09:42.3586461Z"
+                        },
+                        {
+                            "name":  "03-properties-file-open.png",
+                            "bytes":  27177,
+                            "sha256":  "a6e919eee0526c2fecb4481b4b3664dd68912dc094bc1b7aceb62a3f09f5f5e4",
+                            "rect":  [
+                                         1004,
+                                         346,
+                                         552,
+                                         681
+                                     ],
+                            "at_utc":  "2026-11-06T03:09:43.4639943Z"
+                        },
+                        {
+                            "name":  "04-properties-file-f5.png",
+                            "bytes":  27390,
+                            "sha256":  "01d2fc92ad161e39bfce8d8ed43421d975f70f62bff968a17f575a2848e0f832",
+                            "rect":  [
+                                         1004,
+                                         346,
+                                         552,
+                                         681
+                                     ],
+                            "at_utc":  "2026-11-06T03:09:44.4264767Z"
+                        },
+                        {
+                            "name":  "05-properties-small-overflow.png",
+                            "bytes":  15377,
+                            "sha256":  "9893b725026026953ef26a63a669acc6282fb60e2ebbd41d42ed72fb7907b25a",
+                            "rect":  [
+                                         1012,
+                                         346,
+                                         427,
+                                         451
+                                     ],
+                            "at_utc":  "2026-11-06T03:09:45.5719980Z"
+                        },
+                        {
+                            "name":  "06-properties-scrolled.png",
+                            "bytes":  14476,
+                            "sha256":  "befafefac5b724a867cba33135eb3765479b4581dbfcab1f4dbc5ea677e8f70a",
+                            "rect":  [
+                                         1012,
+                                         346,
+                                         427,
+                                         451
+                                     ],
+                            "at_utc":  "2026-11-06T03:09:46.9809386Z"
+                        },
+                        {
+                            "name":  "07-properties-large-hidden.png",
+                            "bytes":  28276,
+                            "sha256":  "791eba37763db4b2e53d5686d844410a109d42c32e734947ad1254b6772a5e5c",
+                            "rect":  [
+                                         1012,
+                                         346,
+                                         604,
+                                         892
+                                     ],
+                            "at_utc":  "2026-11-06T03:09:48.2341870Z"
+                        },
+                        {
+                            "name":  "08-main-after-properties-close.png",
+                            "bytes":  39540,
+                            "sha256":  "ee936fda700233e0f9c8e2398890c080975ba963ff2825c1fbbab545027e2d32",
+                            "rect":  [
+                                         579,
+                                         236,
+                                         1402,
+                                         901
+                                     ],
+                            "at_utc":  "2026-11-06T03:09:49.0241774Z"
+                        },
+                        {
+                            "name":  "09-properties-folder-open.png",
+                            "bytes":  16379,
+                            "sha256":  "7cf9275696a7c05e39c913ee4d5252b52cba07dab5ebf7039b6a2452d2ad4a24",
+                            "rect":  [
+                                         1004,
+                                         346,
+                                         552,
+                                         681
+                                     ],
+                            "at_utc":  "2026-11-06T03:09:50.6378883Z"
+                        },
+                        {
+                            "name":  "10-properties-folder-ready.png",
+                            "bytes":  16379,
+                            "sha256":  "7cf9275696a7c05e39c913ee4d5252b52cba07dab5ebf7039b6a2452d2ad4a24",
+                            "rect":  [
+                                         1004,
+                                         346,
+                                         552,
+                                         681
+                                     ],
+                            "at_utc":  "2026-11-06T03:09:52.1547709Z"
+                        },
+                        {
+                            "name":  "11-properties-folder-f5.png",
+                            "bytes":  16309,
+                            "sha256":  "da4c9d151f042dd3c3273faff28a1f2873098637a87bad6890f4bbfea99d782b",
+                            "rect":  [
+                                         1004,
+                                         346,
+                                         552,
+                                         681
+                                     ],
+                            "at_utc":  "2026-11-06T03:09:53.0711670Z"
+                        },
+                        {
+                            "name":  "12-main-final.png",
+                            "bytes":  39472,
+                            "sha256":  "f8eeb5d9711cd542ef5b9638b46c5cbe627bfaa44966907928da24e44e97b991",
+                            "rect":  [
+                                         579,
+                                         236,
+                                         1402,
+                                         901
+                                     ],
+                            "at_utc":  "2026-11-06T03:09:53.8426080Z"
+                        }
+                    ],
+    "uia_dumps":  [
+                      "uia/main-before.json",
+                      "uia/properties-file-f5.json",
+                      "uia/properties-file-open.json",
+                      "uia/properties-folder-f5.json",
+                      "uia/properties-folder-initial.json",
+                      "uia/properties-folder-ready.json",
+                      "uia/properties-large.json",
+                      "uia/properties-scrolled.json",
+                      "uia/properties-small.json"
+                  ],
+    "visual_review_required":  [
+                                   "03-properties-file-open.png: summary under size should read 188 字节",
+                                   "10-properties-folder-ready.png: folder summary should read 2 files / 2 folders, 8 B",
+                                   "11-properties-folder-f5.png: folder summary should read 3 files / 2 folders, 12 B"
+                               ],
+    "scope":  "Visible-window smoke of the published preview.26 CI executable on an isolated fixture, using the public ZIP-extracted bytes; main window geometry before/after, independent properties window, long name/path, file size, F5 refresh, folder statistics, scrollbar appear/scroll/hide, Escape close and clean exit."
+}

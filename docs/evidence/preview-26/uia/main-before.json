@@ -1,0 +1,451 @@
+[
+    {
+        "depth":  0,
+        "name":  "拾径 · Backleaf",
+        "control":  "ControlType.Window",
+        "automationId":  "",
+        "rect":  [
+                     571,
+                     236,
+                     1418,
+                     909
+                 ],
+        "focused":  false,
+        "offscreen":  false
+    },
+    {
+        "depth":  1,
+        "name":  "拾径 · Backleaf",
+        "control":  "ControlType.TitleBar",
+        "automationId":  "TitleBar",
+        "rect":  [
+                     580,
+                     245,
+                     1400,
+                     29
+                 ],
+        "focused":  false,
+        "offscreen":  false
+    },
+    {
+        "depth":  2,
+        "name":  "System Menu Bar",
+        "control":  "ControlType.MenuBar",
+        "automationId":  "SystemMenuBar",
+        "rect":  [
+                     580,
+                     245,
+                     28,
+                     28
+                 ],
+        "focused":  true,
+        "offscreen":  false
+    },
+    {
+        "depth":  3,
+        "name":  "System",
+        "control":  "ControlType.MenuItem",
+        "automationId":  "Item 1",
+        "rect":  [
+                     580,
+                     245,
+                     28,
+                     28
+                 ],
+        "focused":  false,
+        "offscreen":  false
+    },
+    {
+        "depth":  2,
+        "name":  "Minimize",
+        "control":  "ControlType.Button",
+        "automationId":  "Minimize",
+        "rect":  null,
+        "focused":  false,
+        "offscreen":  true
+    },
+    {
+        "depth":  2,
+        "name":  "Maximize",
+        "control":  "ControlType.Button",
+        "automationId":  "Maximize",
+        "rect":  null,
+        "focused":  false,
+        "offscreen":  true
+    },
+    {
+        "depth":  2,
+        "name":  "Close",
+        "control":  "ControlType.Button",
+        "automationId":  "Close",
+        "rect":  null,
+        "focused":  false,
+        "offscreen":  true
+    },
+    {
+        "depth":  1,
+        "name":  "拾径 Backleaf",
+        "control":  "ControlType.Pane",
+        "automationId":  "",
+        "rect":  [
+                     580,
+                     236,
+                     1400,
+                     900
+                 ],
+        "focused":  false,
+        "offscreen":  false
+    },
+    {
+        "depth":  2,
+        "name":  "后退",
+        "control":  "ControlType.Button",
+        "automationId":  "",
+        "rect":  [
+                     590,
+                     246,
+                     40,
+                     40
+                 ],
+        "focused":  false,
+        "offscreen":  false
+    },
+    {
+        "depth":  2,
+        "name":  "上一级",
+        "control":  "ControlType.Button",
+        "automationId":  "",
+        "rect":  [
+                     640,
+                     246,
+                     40,
+                     40
+                 ],
+        "focused":  false,
+        "offscreen":  false
+    },
+    {
+        "depth":  2,
+        "name":  "当前位置 D:\\work\\backleaf\\.local\\verify\\preview26\\fixture",
+        "control":  "ControlType.Group",
+        "automationId":  "",
+        "rect":  [
+                     690,
+                     246,
+                     299,
+                     40
+                 ],
+        "focused":  false,
+        "offscreen":  false
+    },
+    {
+        "depth":  3,
+        "name":  "前往 D:\\",
+        "control":  "ControlType.Hyperlink",
+        "automationId":  "",
+        "rect":  [
+                     695,
+                     251,
+                     34,
+                     30
+                 ],
+        "focused":  false,
+        "offscreen":  false
+    },
+    {
+        "depth":  3,
+        "name":  "显示折叠的上级路径",
+        "control":  "ControlType.Button",
+        "automationId":  "",
+        "rect":  [
+                     744,
+                     251,
+                     30,
+                     30
+                 ],
+        "focused":  false,
+        "offscreen":  false
+    },
+    {
+        "depth":  3,
+        "name":  "前往 D:\\work\\backleaf\\.local\\verify\\preview26",
+        "control":  "ControlType.Hyperlink",
+        "automationId":  "",
+        "rect":  [
+                     789,
+                     251,
+                     90,
+                     30
+                 ],
+        "focused":  false,
+        "offscreen":  false
+    },
+    {
+        "depth":  3,
+        "name":  "编辑当前位置 D:\\work\\backleaf\\.local\\verify\\preview26\\fixture",
+        "control":  "ControlType.Button",
+        "automationId":  "",
+        "rect":  [
+                     894,
+                     251,
+                     60,
+                     30
+                 ],
+        "focused":  false,
+        "offscreen":  false
+    },
+    {
+        "depth":  3,
+        "name":  "浏览当前目录层级",
+        "control":  "ControlType.Button",
+        "automationId":  "",
+        "rect":  [
+                     954,
+                     251,
+                     30,
+                     30
+                 ],
+        "focused":  false,
+        "offscreen":  false
+    },
+    {
+        "depth":  2,
+        "name":  "搜索文件名，Ctrl+F",
+        "control":  "ControlType.Button",
+        "automationId":  "",
+        "rect":  [
+                     1760,
+                     246,
+                     40,
+                     40
+                 ],
+        "focused":  false,
+        "offscreen":  false
+    },
+    {
+        "depth":  2,
+        "name":  "最小化",
+        "control":  "ControlType.Button",
+        "automationId":  "",
+        "rect":  [
+                     1810,
+                     246,
+                     50,
+                     40
+                 ],
+        "focused":  false,
+        "offscreen":  false
+    },
+    {
+        "depth":  2,
+        "name":  "最大化或还原",
+        "control":  "ControlType.Button",
+        "automationId":  "",
+        "rect":  [
+                     1865,
+                     246,
+                     50,
+                     40
+                 ],
+        "focused":  false,
+        "offscreen":  false
+    },
+    {
+        "depth":  2,
+        "name":  "关闭",
+        "control":  "ControlType.Button",
+        "automationId":  "",
+        "rect":  [
+                     1920,
+                     246,
+                     50,
+                     40
+                 ],
+        "focused":  false,
+        "offscreen":  false
+    },
+    {
+        "depth":  2,
+        "name":  "快捷访问",
+        "control":  "ControlType.Group",
+        "automationId":  "",
+        "rect":  [
+                     580,
+                     296,
+                     230,
+                     840
+                 ],
+        "focused":  false,
+        "offscreen":  false
+    },
+    {
+        "depth":  3,
+        "name":  "个人文件夹，C:\\Users\\qq651",
+        "control":  "ControlType.Button",
+        "automationId":  "",
+        "rect":  [
+                     590,
+                     316,
+                     210,
+                     40
+                 ],
+        "focused":  false,
+        "offscreen":  false
+    },
+    {
+        "depth":  3,
+        "name":  "桌面，C:\\Users\\qq651\\Desktop",
+        "control":  "ControlType.Button",
+        "automationId":  "",
+        "rect":  [
+                     590,
+                     361,
+                     210,
+                     40
+                 ],
+        "focused":  false,
+        "offscreen":  false
+    },
+    {
+        "depth":  3,
+        "name":  "下载，C:\\Users\\qq651\\Downloads",
+        "control":  "ControlType.Button",
+        "automationId":  "",
+        "rect":  [
+                     590,
+                     406,
+                     210,
+                     40
+                 ],
+        "focused":  false,
+        "offscreen":  false
+    },
+    {
+        "depth":  3,
+        "name":  "文档，C:\\Users\\qq651\\Documents",
+        "control":  "ControlType.Button",
+        "automationId":  "",
+        "rect":  [
+                     590,
+                     451,
+                     210,
+                     40
+                 ],
+        "focused":  false,
+        "offscreen":  false
+    },
+    {
+        "depth":  3,
+        "name":  "图片，C:\\Users\\qq651\\Pictures",
+        "control":  "ControlType.Button",
+        "automationId":  "",
+        "rect":  [
+                     590,
+                     496,
+                     210,
+                     40
+                 ],
+        "focused":  false,
+        "offscreen":  false
+    },
+    {
+        "depth":  3,
+        "name":  "音乐，C:\\Users\\qq651\\Music",
+        "control":  "ControlType.Button",
+        "automationId":  "",
+        "rect":  [
+                     590,
+                     541,
+                     210,
+                     40
+                 ],
+        "focused":  false,
+        "offscreen":  false
+    },
+    {
+        "depth":  3,
+        "name":  "视频，C:\\Users\\qq651\\Videos",
+        "control":  "ControlType.Button",
+        "automationId":  "",
+        "rect":  [
+                     590,
+                     586,
+                     210,
+                     40
+                 ],
+        "focused":  false,
+        "offscreen":  false
+    },
+    {
+        "depth":  3,
+        "name":  "Windows-SSD (C:)，C:\\，总容量 400 GB；已使用 332 GB；剩余 67.8 GB；当前用户可用 67.8 GB",
+        "control":  "ControlType.Button",
+        "automationId":  "",
+        "rect":  [
+                     590,
+                     631,
+                     210,
+                     75
+                 ],
+        "focused":  false,
+        "offscreen":  false
+    },
+    {
+        "depth":  3,
+        "name":  "Data (D:)，D:\\，总容量 461 GB；已使用 430 GB；剩余 31.1 GB；当前用户可用 31.1 GB",
+        "control":  "ControlType.Button",
+        "automationId":  "",
+        "rect":  [
+                     590,
+                     711,
+                     210,
+                     75
+                 ],
+        "focused":  false,
+        "offscreen":  false
+    },
+    {
+        "depth":  2,
+        "name":  "文件",
+        "control":  "ControlType.List",
+        "automationId":  "",
+        "rect":  [
+                     817,
+                     306,
+                     1156,
+                     820
+                 ],
+        "focused":  false,
+        "offscreen":  false
+    },
+    {
+        "depth":  3,
+        "name":  "complete-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-.txt",
+        "control":  "ControlType.ListItem",
+        "automationId":  "",
+        "rect":  [
+                     832,
+                     326,
+                     130,
+                     140
+                 ],
+        "focused":  false,
+        "offscreen":  false,
+        "selected":  false
+    },
+    {
+        "depth":  3,
+        "name":  "data",
+        "control":  "ControlType.ListItem",
+        "automationId":  "",
+        "rect":  [
+                     972,
+                     326,
+                     130,
+                     140
+                 ],
+        "focused":  false,
+        "offscreen":  false,
+        "selected":  false
+    }
+]

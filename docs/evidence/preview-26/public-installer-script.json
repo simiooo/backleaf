@@ -1,0 +1,11 @@
+{
+    "url":  "https://raw.githubusercontent.com/simiooo/backleaf/staging/install.ps1",
+    "fetched_at_utc":  "2026-11-06T03:12:06.5880341Z",
+    "repo_install_ps1_sha256":  "2a140b01ea9063f45c0db0b6e0d348af6afe908ab84b9bd0c68c26e6e04eaf93",
+    "repo_install_ps1_bytes":  16207,
+    "public_install_ps1_sha256":  "2a140b01ea9063f45c0db0b6e0d348af6afe908ab84b9bd0c68c26e6e04eaf93",
+    "public_install_ps1_bytes":  16207,
+    "identical":  true,
+    "note":  "The one-line public command fetches this staging script; the anonymous installation tests below dot-source the repository copy for isolation, and this check ties the tested bytes to the public URL.",
+    "sha256sums_file_sha256":  "12bdc3a471291835e0ce662c6a470601018cc944ef2993dd2a66cd16817744d4"
+}

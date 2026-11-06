@@ -1,0 +1,23 @@
+{
+    "captured_at_utc":  "2026-11-06T03:12:19.1502288Z",
+    "os":  "Microsoft Windows 11 家庭版 中文版",
+    "os_version":  "10.0.26200",
+    "build":  "26200",
+    "machine":  "SIMOOO",
+    "screens":  [
+                    {
+                        "device":  "\\\\.\\DISPLAY2",
+                        "primary":  true,
+                        "bounds":  "@(0,0,2048,1152)"
+                    }
+                ],
+    "applied_dpi":  120,
+    "virtual_screen":  "2048x1152",
+    "powershell_5":  "5.1.26100.9711",
+    "note":  "The smoke desktop was unlocked and not the user default installation; the user-installed Backleaf instance was left running and untouched.",
+    "user_default_instance":  {
+                                  "pid":  42072,
+                                  "path":  "C:\\Users\\qq651\\AppData\\Local\\Programs\\Backleaf\\current\\Backleaf.exe",
+                                  "observed_running_during_test":  true
+                              }
+}

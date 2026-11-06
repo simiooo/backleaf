@@ -1,0 +1,169 @@
+[
+    {
+        "depth":  0,
+        "name":  "complete-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-.txt · 详情",
+        "control":  "ControlType.Window",
+        "automationId":  "",
+        "rect":  [
+                     1004,
+                     346,
+                     620,
+                     900
+                 ],
+        "focused":  true,
+        "offscreen":  false
+    },
+    {
+        "depth":  1,
+        "name":  "complete-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-.txt · 详情",
+        "control":  "ControlType.TitleBar",
+        "automationId":  "TitleBar",
+        "rect":  [
+                     1013,
+                     355,
+                     602,
+                     29
+                 ],
+        "focused":  false,
+        "offscreen":  false
+    },
+    {
+        "depth":  2,
+        "name":  "System Menu Bar",
+        "control":  "ControlType.MenuBar",
+        "automationId":  "SystemMenuBar",
+        "rect":  [
+                     1013,
+                     355,
+                     28,
+                     28
+                 ],
+        "focused":  true,
+        "offscreen":  false
+    },
+    {
+        "depth":  3,
+        "name":  "System",
+        "control":  "ControlType.MenuItem",
+        "automationId":  "Item 1",
+        "rect":  [
+                     1013,
+                     355,
+                     28,
+                     28
+                 ],
+        "focused":  false,
+        "offscreen":  false
+    },
+    {
+        "depth":  2,
+        "name":  "Minimize",
+        "control":  "ControlType.Button",
+        "automationId":  "Minimize",
+        "rect":  null,
+        "focused":  false,
+        "offscreen":  true
+    },
+    {
+        "depth":  2,
+        "name":  "Maximize",
+        "control":  "ControlType.Button",
+        "automationId":  "Maximize",
+        "rect":  null,
+        "focused":  false,
+        "offscreen":  true
+    },
+    {
+        "depth":  2,
+        "name":  "Close",
+        "control":  "ControlType.Button",
+        "automationId":  "Close",
+        "rect":  null,
+        "focused":  false,
+        "offscreen":  true
+    },
+    {
+        "depth":  1,
+        "name":  "关闭详情",
+        "control":  "ControlType.Button",
+        "automationId":  "",
+        "rect":  [
+                     1565,
+                     353,
+                     40,
+                     40
+                 ],
+        "focused":  false,
+        "offscreen":  false
+    },
+    {
+        "depth":  1,
+        "name":  "complete-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-.txt",
+        "control":  "ControlType.Text",
+        "automationId":  "",
+        "rect":  [
+                     1098,
+                     421,
+                     432,
+                     104
+                 ],
+        "focused":  false,
+        "offscreen":  false
+    },
+    {
+        "depth":  1,
+        "name":  "复制完整名称",
+        "control":  "ControlType.Button",
+        "automationId":  "",
+        "rect":  [
+                     1545,
+                     468,
+                     40,
+                     40
+                 ],
+        "focused":  false,
+        "offscreen":  false
+    },
+    {
+        "depth":  1,
+        "name":  "288 B",
+        "control":  "ControlType.Text",
+        "automationId":  "",
+        "rect":  [
+                     1028,
+                     603,
+                     557,
+                     40
+                 ],
+        "focused":  false,
+        "offscreen":  false
+    },
+    {
+        "depth":  1,
+        "name":  "复制完整路径",
+        "control":  "ControlType.Button",
+        "automationId":  "",
+        "rect":  [
+                     1545,
+                     690,
+                     40,
+                     40
+                 ],
+        "focused":  false,
+        "offscreen":  false
+    },
+    {
+        "depth":  1,
+        "name":  "D:\\work\\backleaf\\.local\\verify\\preview26\\fixture\\complete-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-.txt",
+        "control":  "ControlType.Text",
+        "automationId":  "",
+        "rect":  [
+                     1028,
+                     735,
+                     557,
+                     104
+                 ],
+        "focused":  false,
+        "offscreen":  false
+    }
+]

@@ -1,0 +1,43 @@
+{
+    "root":  "D:\\work\\backleaf\\.local\\verify\\preview26\\fixture",
+    "created_by":  "preview.26 gui smoke fixture",
+    "note":  "The long file was appended by 100 bytes and data/c.txt was added during the F5 checks; exposed values are asserted in gui-report.json and visual-review.json.",
+    "entries":  [
+                    {
+                        "path":  "data",
+                        "kind":  "directory"
+                    },
+                    {
+                        "path":  "complete-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-.txt",
+                        "kind":  "file",
+                        "bytes":  288,
+                        "sha256":  "aa0eeec4bd64df91dc0472807fcfafb57339ab5877c15ee7d8a5f591574c6847"
+                    },
+                    {
+                        "path":  "data\\nested",
+                        "kind":  "directory"
+                    },
+                    {
+                        "path":  "data\\a.txt",
+                        "kind":  "file",
+                        "bytes":  3,
+                        "sha256":  "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad"
+                    },
+                    {
+                        "path":  "data\\c.txt",
+                        "kind":  "file",
+                        "bytes":  4,
+                        "sha256":  "88d4266fd4e6338d13b845fcf289579d209c897823b9217da3e161936f031589"
+                    },
+                    {
+                        "path":  "data\\nested\\empty",
+                        "kind":  "directory"
+                    },
+                    {
+                        "path":  "data\\nested\\b.txt",
+                        "kind":  "file",
+                        "bytes":  5,
+                        "sha256":  "5994471abb01112afcc18159f6cc74b4f511b99806da59b3caf5a9c173cacfc5"
+                    }
+                ]
+}

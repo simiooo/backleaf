@@ -1,0 +1,758 @@
+{
+    "started_utc":  "2026-11-06T03:09:38.9213128Z",
+    "exe":  "D:\\work\\backleaf\\.local\\verify\\preview26\\public-install\\Backleaf.exe",
+    "exe_sha256":  "cdbd88b1fb7880881dd30ed4663d9b3f5b9dbdfd3e2c422269c585fe8cc0cfcc",
+    "fixture":  "D:\\work\\backleaf\\.local\\verify\\preview26\\fixture",
+    "session":  {
+                    "locked":  false,
+                    "error":  null
+                },
+    "desktop":  {
+                    "locked":  false,
+                    "virtual_screen":  [
+                                           2560,
+                                           1440
+                                       ]
+                },
+    "main":  {
+                 "hwnd":  13305530,
+                 "title":  "拾径 · Backleaf",
+                 "rect":  [
+                              571,
+                              236,
+                              1989,
+                              1145
+                          ],
+                 "dwm":  [
+                             579,
+                             236,
+                             1981,
+                             1137
+                         ]
+             },
+    "phases":  [
+                   {
+                       "phase":  "file-properties-open",
+                       "props":  {
+                                     "hwnd":  7016346,
+                                     "title":  "complete-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-.txt · 详情",
+                                     "rect":  [
+                                                  996,
+                                                  346,
+                                                  1564,
+                                                  1035
+                                              ],
+                                     "dwm":  [
+                                                 1004,
+                                                 346,
+                                                 1556,
+                                                 1027
+                                             ]
+                                 },
+                       "main_dwm":  [
+                                        579,
+                                        236,
+                                        1981,
+                                        1137
+                                    ]
+                   },
+                   {
+                       "phase":  "properties-resized-small",
+                       "window":  {
+                                      "hwnd":  7016346,
+                                      "title":  "complete-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-.txt · 详情",
+                                      "rect":  [
+                                                   1004,
+                                                   346,
+                                                   1447,
+                                                   805
+                                               ],
+                                      "dwm":  [
+                                                  1012,
+                                                  346,
+                                                  1439,
+                                                  797
+                                              ]
+                                  },
+                       "scrollbar":  {
+                                         "control":  "ScrollBar",
+                                         "name":  "详情滚动条",
+                                         "rect":  [
+                                                      1421,
+                                                      421,
+                                                      15,
+                                                      355
+                                                  ],
+                                         "rangeValue":  0,
+                                         "rangeMinimum":  0,
+                                         "rangeMaximum":  100
+                                     }
+                   },
+                   {
+                       "phase":  "properties-scroll-wheeltrack",
+                       "scrollbar_after":  {
+                                               "control":  "ScrollBar",
+                                               "name":  "详情滚动条",
+                                               "rect":  [
+                                                            1421,
+                                                            421,
+                                                            15,
+                                                            355
+                                                        ],
+                                               "rangeValue":  100,
+                                               "rangeMinimum":  0,
+                                               "rangeMaximum":  100
+                                           }
+                   },
+                   {
+                       "phase":  "properties-resized-large",
+                       "scrollbar":  null
+                   }
+               ],
+    "screenshots":  [
+                        {
+                            "name":  "01-main.png",
+                            "path":  "D:\\work\\backleaf\\.local\\verify\\preview26\\gui\\screenshots\\01-main.png",
+                            "sha256":  "2645e4c51548279480732b7c7233210ae2a7f814ff7a705992c5c998f4104fe8",
+                            "rect":  [
+                                         579,
+                                         236,
+                                         1402,
+                                         901
+                                     ],
+                            "at_utc":  "2026-11-06T03:09:41.0166982Z"
+                        },
+                        {
+                            "name":  "02-main-file-selected.png",
+                            "path":  "D:\\work\\backleaf\\.local\\verify\\preview26\\gui\\screenshots\\02-main-file-selected.png",
+                            "sha256":  "3342d0dc645057bca0145e387110150f525db9fe5dbf052b46799796cdda09b6",
+                            "rect":  [
+                                         579,
+                                         236,
+                                         1402,
+                                         901
+                                     ],
+                            "at_utc":  "2026-11-06T03:09:42.3586461Z"
+                        },
+                        {
+                            "name":  "03-properties-file-open.png",
+                            "path":  "D:\\work\\backleaf\\.local\\verify\\preview26\\gui\\screenshots\\03-properties-file-open.png",
+                            "sha256":  "a6e919eee0526c2fecb4481b4b3664dd68912dc094bc1b7aceb62a3f09f5f5e4",
+                            "rect":  [
+                                         1004,
+                                         346,
+                                         552,
+                                         681
+                                     ],
+                            "at_utc":  "2026-11-06T03:09:43.4639943Z"
+                        },
+                        {
+                            "name":  "04-properties-file-f5.png",
+                            "path":  "D:\\work\\backleaf\\.local\\verify\\preview26\\gui\\screenshots\\04-properties-file-f5.png",
+                            "sha256":  "01d2fc92ad161e39bfce8d8ed43421d975f70f62bff968a17f575a2848e0f832",
+                            "rect":  [
+                                         1004,
+                                         346,
+                                         552,
+                                         681
+                                     ],
+                            "at_utc":  "2026-11-06T03:09:44.4264767Z"
+                        },
+                        {
+                            "name":  "05-properties-small-overflow.png",
+                            "path":  "D:\\work\\backleaf\\.local\\verify\\preview26\\gui\\screenshots\\05-properties-small-overflow.png",
+                            "sha256":  "9893b725026026953ef26a63a669acc6282fb60e2ebbd41d42ed72fb7907b25a",
+                            "rect":  [
+                                         1012,
+                                         346,
+                                         427,
+                                         451
+                                     ],
+                            "at_utc":  "2026-11-06T03:09:45.5719980Z"
+                        },
+                        {
+                            "name":  "06-properties-scrolled.png",
+                            "path":  "D:\\work\\backleaf\\.local\\verify\\preview26\\gui\\screenshots\\06-properties-scrolled.png",
+                            "sha256":  "befafefac5b724a867cba33135eb3765479b4581dbfcab1f4dbc5ea677e8f70a",
+                            "rect":  [
+                                         1012,
+                                         346,
+                                         427,
+                                         451
+                                     ],
+                            "at_utc":  "2026-11-06T03:09:46.9809386Z"
+                        },
+                        {
+                            "name":  "07-properties-large-hidden.png",
+                            "path":  "D:\\work\\backleaf\\.local\\verify\\preview26\\gui\\screenshots\\07-properties-large-hidden.png",
+                            "sha256":  "791eba37763db4b2e53d5686d844410a109d42c32e734947ad1254b6772a5e5c",
+                            "rect":  [
+                                         1012,
+                                         346,
+                                         604,
+                                         892
+                                     ],
+                            "at_utc":  "2026-11-06T03:09:48.2341870Z"
+                        },
+                        {
+                            "name":  "08-main-after-properties-close.png",
+                            "path":  "D:\\work\\backleaf\\.local\\verify\\preview26\\gui\\screenshots\\08-main-after-properties-close.png",
+                            "sha256":  "ee936fda700233e0f9c8e2398890c080975ba963ff2825c1fbbab545027e2d32",
+                            "rect":  [
+                                         579,
+                                         236,
+                                         1402,
+                                         901
+                                     ],
+                            "at_utc":  "2026-11-06T03:09:49.0241774Z"
+                        },
+                        {
+                            "name":  "09-properties-folder-open.png",
+                            "path":  "D:\\work\\backleaf\\.local\\verify\\preview26\\gui\\screenshots\\09-properties-folder-open.png",
+                            "sha256":  "7cf9275696a7c05e39c913ee4d5252b52cba07dab5ebf7039b6a2452d2ad4a24",
+                            "rect":  [
+                                         1004,
+                                         346,
+                                         552,
+                                         681
+                                     ],
+                            "at_utc":  "2026-11-06T03:09:50.6378883Z"
+                        },
+                        {
+                            "name":  "10-properties-folder-ready.png",
+                            "path":  "D:\\work\\backleaf\\.local\\verify\\preview26\\gui\\screenshots\\10-properties-folder-ready.png",
+                            "sha256":  "7cf9275696a7c05e39c913ee4d5252b52cba07dab5ebf7039b6a2452d2ad4a24",
+                            "rect":  [
+                                         1004,
+                                         346,
+                                         552,
+                                         681
+                                     ],
+                            "at_utc":  "2026-11-06T03:09:52.1547709Z"
+                        },
+                        {
+                            "name":  "11-properties-folder-f5.png",
+                            "path":  "D:\\work\\backleaf\\.local\\verify\\preview26\\gui\\screenshots\\11-properties-folder-f5.png",
+                            "sha256":  "da4c9d151f042dd3c3273faff28a1f2873098637a87bad6890f4bbfea99d782b",
+                            "rect":  [
+                                         1004,
+                                         346,
+                                         552,
+                                         681
+                                     ],
+                            "at_utc":  "2026-11-06T03:09:53.0711670Z"
+                        },
+                        {
+                            "name":  "12-main-final.png",
+                            "path":  "D:\\work\\backleaf\\.local\\verify\\preview26\\gui\\screenshots\\12-main-final.png",
+                            "sha256":  "f8eeb5d9711cd542ef5b9638b46c5cbe627bfaa44966907928da24e44e97b991",
+                            "rect":  [
+                                         579,
+                                         236,
+                                         1402,
+                                         901
+                                     ],
+                            "at_utc":  "2026-11-06T03:09:53.8426080Z"
+                        }
+                    ],
+    "uia_text_snapshots":  {
+                               "main_before":  [
+                                                   "拾径 · Backleaf",
+                                                   "拾径 · Backleaf",
+                                                   "System Menu Bar",
+                                                   "System",
+                                                   "Minimize",
+                                                   "Maximize",
+                                                   "Close",
+                                                   "拾径 Backleaf",
+                                                   "后退",
+                                                   "上一级",
+                                                   "当前位置 D:\\work\\backleaf\\.local\\verify\\preview26\\fixture",
+                                                   "前往 D:\\",
+                                                   "显示折叠的上级路径",
+                                                   "前往 D:\\work\\backleaf\\.local\\verify\\preview26",
+                                                   "编辑当前位置 D:\\work\\backleaf\\.local\\verify\\preview26\\fixture",
+                                                   "浏览当前目录层级",
+                                                   "搜索文件名，Ctrl+F",
+                                                   "最小化",
+                                                   "最大化或还原",
+                                                   "关闭",
+                                                   "快捷访问",
+                                                   "个人文件夹，C:\\Users\\qq651",
+                                                   "桌面，C:\\Users\\qq651\\Desktop",
+                                                   "下载，C:\\Users\\qq651\\Downloads",
+                                                   "文档，C:\\Users\\qq651\\Documents",
+                                                   "图片，C:\\Users\\qq651\\Pictures",
+                                                   "音乐，C:\\Users\\qq651\\Music",
+                                                   "视频，C:\\Users\\qq651\\Videos",
+                                                   "Windows-SSD (C:)，C:\\，总容量 400 GB；已使用 332 GB；剩余 67.8 GB；当前用户可用 67.8 GB",
+                                                   "Data (D:)，D:\\，总容量 461 GB；已使用 430 GB；剩余 31.1 GB；当前用户可用 31.1 GB",
+                                                   "文件",
+                                                   "complete-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-.txt",
+                                                   "data"
+                                               ],
+                               "properties_file_open":  [
+                                                            "complete-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-.txt · 详情",
+                                                            "complete-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-.txt · 详情",
+                                                            "System Menu Bar",
+                                                            "System",
+                                                            "Minimize",
+                                                            "Maximize",
+                                                            "Close",
+                                                            "关闭详情",
+                                                            "complete-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-.txt",
+                                                            "复制完整名称",
+                                                            "188 B",
+                                                            "复制完整路径",
+                                                            "D:\\work\\backleaf\\.local\\verify\\preview26\\fixture\\complete-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-.txt",
+                                                            "详情滚动条"
+                                                        ],
+                               "properties_file_f5":  [
+                                                          "complete-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-.txt · 详情",
+                                                          "complete-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-.txt · 详情",
+                                                          "System Menu Bar",
+                                                          "System",
+                                                          "Minimize",
+                                                          "Maximize",
+                                                          "Close",
+                                                          "关闭详情",
+                                                          "complete-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-.txt",
+                                                          "复制完整名称",
+                                                          "288 B",
+                                                          "复制完整路径",
+                                                          "D:\\work\\backleaf\\.local\\verify\\preview26\\fixture\\complete-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-.txt",
+                                                          "详情滚动条"
+                                                      ],
+                               "properties_small":  [
+                                                        "complete-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-.txt · 详情",
+                                                        "complete-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-.txt · 详情",
+                                                        "System Menu Bar",
+                                                        "System",
+                                                        "Minimize",
+                                                        "Maximize",
+                                                        "Close",
+                                                        "关闭详情",
+                                                        "complete-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-.txt",
+                                                        "复制完整名称",
+                                                        "288 B",
+                                                        "复制完整路径",
+                                                        "D:\\work\\backleaf\\.local\\verify\\preview26\\fixture\\complete-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-.txt",
+                                                        "详情滚动条"
+                                                    ],
+                               "properties_scrolled":  [
+                                                           "complete-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-.txt · 详情",
+                                                           "complete-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-.txt · 详情",
+                                                           "System Menu Bar",
+                                                           "System",
+                                                           "Minimize",
+                                                           "Maximize",
+                                                           "Close",
+                                                           "关闭详情",
+                                                           "complete-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-.txt",
+                                                           "复制完整名称",
+                                                           "288 B",
+                                                           "复制完整路径",
+                                                           "D:\\work\\backleaf\\.local\\verify\\preview26\\fixture\\complete-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-.txt",
+                                                           "详情滚动条"
+                                                       ],
+                               "properties_large":  [
+                                                        "complete-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-.txt · 详情",
+                                                        "complete-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-.txt · 详情",
+                                                        "System Menu Bar",
+                                                        "System",
+                                                        "Minimize",
+                                                        "Maximize",
+                                                        "Close",
+                                                        "关闭详情",
+                                                        "complete-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-.txt",
+                                                        "复制完整名称",
+                                                        "288 B",
+                                                        "复制完整路径",
+                                                        "D:\\work\\backleaf\\.local\\verify\\preview26\\fixture\\complete-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-.txt"
+                                                    ],
+                               "properties_folder_initial":  [
+                                                                 "data · 详情",
+                                                                 "data · 详情",
+                                                                 "System Menu Bar",
+                                                                 "System",
+                                                                 "Minimize",
+                                                                 "Maximize",
+                                                                 "Close"
+                                                             ],
+                               "properties_folder_ready":  [
+                                                               "data · 详情",
+                                                               "data · 详情",
+                                                               "System Menu Bar",
+                                                               "System",
+                                                               "Minimize",
+                                                               "Maximize",
+                                                               "Close",
+                                                               "关闭详情",
+                                                               "data",
+                                                               "复制完整名称",
+                                                               "8 B",
+                                                               "复制完整路径",
+                                                               "D:\\work\\backleaf\\.local\\verify\\preview26\\fixture\\data"
+                                                           ],
+                               "properties_folder_f5":  [
+                                                            "data · 详情",
+                                                            "data · 详情",
+                                                            "System Menu Bar",
+                                                            "System",
+                                                            "Minimize",
+                                                            "Maximize",
+                                                            "Close",
+                                                            "关闭详情",
+                                                            "data",
+                                                            "复制完整名称",
+                                                            "12 B",
+                                                            "复制完整路径",
+                                                            "D:\\work\\backleaf\\.local\\verify\\preview26\\fixture\\data"
+                                                        ]
+                           },
+    "steps":  [
+                  {
+                      "name":  "session-unlocked",
+                      "ok":  true,
+                      "detail":  {
+                                     "locked":  false,
+                                     "error":  null
+                                 },
+                      "at_utc":  "2026-11-06T03:09:39.7305433Z"
+                  },
+                  {
+                      "name":  "process-started",
+                      "ok":  true,
+                      "detail":  {
+                                     "pid":  10052
+                                 },
+                      "at_utc":  "2026-11-06T03:09:39.7898420Z"
+                  },
+                  {
+                      "name":  "main-window-appeared",
+                      "ok":  true,
+                      "detail":  {
+                                     "pid":  10052
+                                 },
+                      "at_utc":  "2026-11-06T03:09:40.4405291Z"
+                  },
+                  {
+                      "name":  "main-title",
+                      "ok":  true,
+                      "detail":  "拾径 · Backleaf",
+                      "at_utc":  "2026-11-06T03:09:40.4634362Z"
+                  },
+                  {
+                      "name":  "main-foreground",
+                      "ok":  true,
+                      "detail":  {
+                                     "hwnd":  13305530
+                                 },
+                      "at_utc":  "2026-11-06T03:09:40.6343762Z"
+                  },
+                  {
+                      "name":  "main-uia-root",
+                      "ok":  true,
+                      "detail":  {
+                                     "names":  33
+                                 },
+                      "at_utc":  "2026-11-06T03:09:41.5474127Z"
+                  },
+                  {
+                      "name":  "long-file-item-found",
+                      "ok":  true,
+                      "detail":  null,
+                      "at_utc":  "2026-11-06T03:09:41.5667255Z"
+                  },
+                  {
+                      "name":  "file-selection",
+                      "ok":  true,
+                      "detail":  {
+                                     "selectionItemPattern":  true
+                                 },
+                      "at_utc":  "2026-11-06T03:09:42.3670281Z"
+                  },
+                  {
+                      "name":  "properties-window-open",
+                      "ok":  true,
+                      "detail":  {
+                                     "hwnd":  7016346,
+                                     "title":  "complete-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-.txt · 详情",
+                                     "rect":  [
+                                                  996,
+                                                  346,
+                                                  1564,
+                                                  1035
+                                              ],
+                                     "dwm":  [
+                                                 1004,
+                                                 346,
+                                                 1556,
+                                                 1027
+                                             ]
+                                 },
+                      "at_utc":  "2026-11-06T03:09:42.7803740Z"
+                  },
+                  {
+                      "name":  "properties-window-foreground",
+                      "ok":  true,
+                      "detail":  {
+                                     "hwnd":  7016346
+                                 },
+                      "at_utc":  "2026-11-06T03:09:42.9103263Z"
+                  },
+                  {
+                      "name":  "properties-full-name",
+                      "ok":  true,
+                      "detail":  {
+                                     "expected":  "complete-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-.txt"
+                                 },
+                      "at_utc":  "2026-11-06T03:09:43.4936932Z"
+                  },
+                  {
+                      "name":  "properties-full-path",
+                      "ok":  true,
+                      "detail":  {
+                                     "expected":  "D:\\work\\backleaf\\.local\\verify\\preview26\\fixture\\complete-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-long-name-.txt"
+                                 },
+                      "at_utc":  "2026-11-06T03:09:43.4989445Z"
+                  },
+                  {
+                      "name":  "properties-file-size-188B",
+                      "ok":  true,
+                      "detail":  [
+                                     "188 B"
+                                 ],
+                      "at_utc":  "2026-11-06T03:09:43.5022622Z"
+                  },
+                  {
+                      "name":  "properties-main-width-unchanged",
+                      "ok":  true,
+                      "detail":  {
+                                     "before":  [
+                                                    579,
+                                                    236,
+                                                    1981,
+                                                    1137
+                                                ],
+                                     "detail_ready":  true,
+                                     "after":  [
+                                                   579,
+                                                   236,
+                                                   1981,
+                                                   1137
+                                               ]
+                                 },
+                      "at_utc":  "2026-11-06T03:09:43.5173107Z"
+                  },
+                  {
+                      "name":  "properties-f5-refresh",
+                      "ok":  true,
+                      "detail":  {
+                                     "texts":  [
+                                                   "288 B"
+                                               ],
+                                     "file_bytes":  288
+                                 },
+                      "at_utc":  "2026-11-06T03:09:44.4628486Z"
+                  },
+                  {
+                      "name":  "properties-scrollbar-visible-small",
+                      "ok":  true,
+                      "detail":  {
+                                     "control":  "ScrollBar",
+                                     "name":  "详情滚动条",
+                                     "rect":  [
+                                                  1421,
+                                                  421,
+                                                  15,
+                                                  355
+                                              ],
+                                     "rangeValue":  0,
+                                     "rangeMinimum":  0,
+                                     "rangeMaximum":  100
+                                 },
+                      "at_utc":  "2026-11-06T03:09:45.6070572Z"
+                  },
+                  {
+                      "name":  "properties-scrollbar-track-click",
+                      "ok":  true,
+                      "detail":  {
+                                     "before":  0,
+                                     "click":  [
+                                                   1429,
+                                                   712
+                                               ],
+                                     "after":  {
+                                                   "control":  "ScrollBar",
+                                                   "name":  "详情滚动条",
+                                                   "rect":  [
+                                                                1421,
+                                                                421,
+                                                                15,
+                                                                355
+                                                            ],
+                                                   "rangeValue":  100,
+                                                   "rangeMinimum":  0,
+                                                   "rangeMaximum":  100
+                                               }
+                                 },
+                      "at_utc":  "2026-11-06T03:09:47.0165490Z"
+                  },
+                  {
+                      "name":  "properties-scrollbar-hidden-large",
+                      "ok":  true,
+                      "detail":  {
+                                     "scrollbar":  null
+                                 },
+                      "at_utc":  "2026-11-06T03:09:48.2659954Z"
+                  },
+                  {
+                      "name":  "properties-escape-close",
+                      "ok":  true,
+                      "detail":  {
+                                     "windows":  [
+                                                     {
+                                                         "hwnd":  13305530,
+                                                         "title":  "拾径 · Backleaf",
+                                                         "rect":  [
+                                                                      571,
+                                                                      236,
+                                                                      1989,
+                                                                      1145
+                                                                  ],
+                                                         "dwm":  [
+                                                                     579,
+                                                                     236,
+                                                                     1981,
+                                                                     1137
+                                                                 ]
+                                                     }
+                                                 ]
+                                 },
+                      "at_utc":  "2026-11-06T03:09:48.5726753Z"
+                  },
+                  {
+                      "name":  "main-geometry-after-close",
+                      "ok":  true,
+                      "detail":  {
+                                     "before":  [
+                                                    579,
+                                                    236,
+                                                    1981,
+                                                    1137
+                                                ],
+                                     "after":  [
+                                                   579,
+                                                   236,
+                                                   1981,
+                                                   1137
+                                               ]
+                                 },
+                      "at_utc":  "2026-11-06T03:09:48.5812575Z"
+                  },
+                  {
+                      "name":  "folder-item-found",
+                      "ok":  true,
+                      "detail":  null,
+                      "at_utc":  "2026-11-06T03:09:49.0340967Z"
+                  },
+                  {
+                      "name":  "folder-properties-window-open",
+                      "ok":  true,
+                      "detail":  {
+                                     "hwnd":  7081882,
+                                     "title":  "data · 详情",
+                                     "rect":  [
+                                                  996,
+                                                  346,
+                                                  1564,
+                                                  1035
+                                              ],
+                                     "dwm":  [
+                                                 1004,
+                                                 346,
+                                                 1556,
+                                                 1027
+                                             ]
+                                 },
+                      "at_utc":  "2026-11-06T03:09:49.8247563Z"
+                  },
+                  {
+                      "name":  "folder-properties-foreground",
+                      "ok":  true,
+                      "detail":  {
+                                     "hwnd":  7081882
+                                 },
+                      "at_utc":  "2026-11-06T03:09:49.9605766Z"
+                  },
+                  {
+                      "name":  "folder-size-8B",
+                      "ok":  true,
+                      "detail":  [
+                                     "8 B"
+                                 ],
+                      "at_utc":  "2026-11-06T03:09:52.1832637Z"
+                  },
+                  {
+                      "name":  "folder-f5-12B",
+                      "ok":  true,
+                      "detail":  [
+                                     "12 B"
+                                 ],
+                      "at_utc":  "2026-11-06T03:09:53.0976330Z"
+                  },
+                  {
+                      "name":  "folder-properties-escape-close",
+                      "ok":  true,
+                      "detail":  {
+                                     "windows":  [
+                                                     {
+                                                         "hwnd":  13305530,
+                                                         "title":  "拾径 · Backleaf",
+                                                         "rect":  [
+                                                                      571,
+                                                                      236,
+                                                                      1989,
+                                                                      1145
+                                                                  ],
+                                                         "dwm":  [
+                                                                     579,
+                                                                     236,
+                                                                     1981,
+                                                                     1137
+                                                                 ]
+                                                     }
+                                                 ]
+                                 },
+                      "at_utc":  "2026-11-06T03:09:53.3975420Z"
+                  },
+                  {
+                      "name":  "app-clean-exit",
+                      "ok":  true,
+                      "detail":  {
+                                     "exit_code":  0
+                                 },
+                      "at_utc":  "2026-11-06T03:09:54.0164403Z"
+                  },
+                  {
+                      "name":  "no-leftover-process",
+                      "ok":  true,
+                      "detail":  {
+                                     "leftover":  0
+                                 },
+                      "at_utc":  "2026-11-06T03:09:54.0473186Z"
+                  }
+              ],
+    "failures":  [
+
+                 ],
+    "visual_review_required":  [
+                                   "03-properties-file-open.png: summary under size should read 188 字节",
+                                   "10-properties-folder-ready.png: folder summary should read 2 files / 2 folders, 8 B",
+                                   "11-properties-folder-f5.png: folder summary should read 3 files / 2 folders, 12 B"
+                               ],
+    "passed":  true,
+    "error":  null,
+    "finished_utc":  "2026-11-06T03:09:54.1807736Z"
+}

@@ -1,0 +1,18 @@
+{
+    "version":  "0.1.0-preview.26",
+    "source_commit":  "892eb0e296f6e54ea759aafa3a7021de42c78ad8",
+    "deployed_at_utc":  "2026-11-05T16:38:55.4976816Z",
+    "installation":  "portable ZIP extracted to isolated staging directory",
+    "staging_path":  "D:\\work\\backleaf\\.local\\staging\\0.1.0-preview.26-892eb0e2",
+    "artifact_path":  "D:\\work\\backleaf\\.local\\artifacts\\Backleaf-0.1.0-preview.26-candidate-892eb0e2-win-x64.zip",
+    "artifact_sha256":  "aa211d030f20337cee3bd4d77c6876a0cf7d8e0ad8994f148ec4591c953f3b92",
+    "exe_sha256":  "3dcff8edad467b70e10011221b90ad8b174832da891309ff92271f0d7222a01f",
+    "installed_hash_matches":  true,
+    "cli_smoke_passed":  true,
+    "interactive_smoke_passed":  false,
+    "session":  {
+                    "locked":  true,
+                    "error":  null
+                },
+    "note":  "Local candidate build is separately hashed from the CI publication; the visible-window smoke in this directory ran on the published CI ZIP bytes, not this local artifact."
+}

@@ -1,0 +1,9 @@
+{
+    "passed":  true,
+    "source_commit":  "892eb0e296f6e54ea759aafa3a7021de42c78ad8",
+    "ci_exe_sha256":  "cdbd88b1fb7880881dd30ed4663d9b3f5b9dbdfd3e2c422269c585fe8cc0cfcc",
+    "archive_sha256":  "646e6686c634479e34ca6e317e66cd4a50a3f4c35a7c509c9b4540ccab4abb21",
+    "release":  "https://github.com/simiooo/backleaf/releases/tag/test-v0.1.0-preview.26-892eb0e2",
+    "verified_at_utc":  "2026-11-06T03:10:45.0374556Z",
+    "scope":  "Anonymous asset download and inner-package digest verification for published preview.26; local candidate ZIP/EXE are a separate build and stay separately identified."
+}

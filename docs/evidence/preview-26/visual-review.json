@@ -1,0 +1,42 @@
+{
+    "reviewed_by":  "DSH lead (visible screenshots captured on 2026-11-06)",
+    "reviewed_at_utc":  "2026-11-06T03:10:56.1718288Z",
+    "scope":  "Visual confirmation of content that is painted but not exposed as UIA text nodes.",
+    "observations":  [
+                         {
+                             "screenshot":  "screenshots/03-properties-file-open.png",
+                             "sha256":  "a6e919eee0526c2fecb4481b4b3664dd68912dc094bc1b7aceb62a3f09f5f5e4",
+                             "confirmed":  "independent properties window shows full long name, TXT 文件, 188 B, 188 字节 summary, full path and creation/modification times"
+                         },
+                         {
+                             "screenshot":  "screenshots/04-properties-file-f5.png",
+                             "sha256":  "01d2fc92ad161e39bfce8d8ed43421d975f70f62bff968a17f575a2848e0f832",
+                             "confirmed":  "after appending bytes and F5, size reads 288 B and 288 字节"
+                         },
+                         {
+                             "screenshot":  "screenshots/05-properties-small-overflow.png",
+                             "sha256":  "9893b725026026953ef26a63a669acc6282fb60e2ebbd41d42ed72fb7907b25a",
+                             "confirmed":  "minimum-size window shows a visible vertical scrollbar on the right"
+                         },
+                         {
+                             "screenshot":  "screenshots/06-properties-scrolled.png",
+                             "sha256":  "befafefac5b724a867cba33135eb3765479b4581dbfcab1f4dbc5ea677e8f70a",
+                             "confirmed":  "track click scrolls to the bottom; scrollbar thumb at the bottom, location/times visible"
+                         },
+                         {
+                             "screenshot":  "screenshots/07-properties-large-hidden.png",
+                             "sha256":  "791eba37763db4b2e53d5686d844410a109d42c32e734947ad1254b6772a5e5c",
+                             "confirmed":  "enlarged window fits all content and hides the scrollbar"
+                         },
+                         {
+                             "screenshot":  "screenshots/10-properties-folder-ready.png",
+                             "sha256":  "7cf9275696a7c05e39c913ee4d5252b52cba07dab5ebf7039b6a2452d2ad4a24",
+                             "confirmed":  "folder detail reads data / 文件夹 / 8 B / 2 个文件 · 2 个文件夹"
+                         },
+                         {
+                             "screenshot":  "screenshots/11-properties-folder-f5.png",
+                             "sha256":  "da4c9d151f042dd3c3273faff28a1f2873098637a87bad6890f4bbfea99d782b",
+                             "confirmed":  "after adding a file and F5: 12 B / 3 个文件 · 2 个文件夹 and refreshed modification time"
+                         }
+                     ]
+}

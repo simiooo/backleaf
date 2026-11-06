@@ -1,0 +1,182 @@
+{
+    "source_commit":  "892eb0e296f6e54ea759aafa3a7021de42c78ad8",
+    "generated_at_utc":  "2026-11-06T03:50:04.6285746Z",
+    "files":  [
+                  {
+                      "path":  ".gitattributes",
+                      "sha256":  "781dc85570afe8b6721956fd02ff6dbcda32e7d341dc70ceb62a3cbab9844220"
+                  },
+                  {
+                      "path":  "ci-headless-status.json",
+                      "sha256":  "337b452bb733504d80cc542d764526a8ef5892d71f3c6de7edea8b11333ea511"
+                  },
+                  {
+                      "path":  "ci-package-status.json",
+                      "sha256":  "af59c172f4910f5352c19dfc9a34c771c4b17ee86d5ba51e731f25c4d7241d25"
+                  },
+                  {
+                      "path":  "ci-package-verified.json",
+                      "sha256":  "7c3c09b492ab2e304318da0406f718b0bb878b53dcc001c0c5de21ac4f0fa64f"
+                  },
+                  {
+                      "path":  "environment.json",
+                      "sha256":  "2ee95ced24e553cab4d3b1be87ae2ed880a724e6c491537e0577e84809961abb"
+                  },
+                  {
+                      "path":  "fixture.json",
+                      "sha256":  "4382aa8b8bc3e76774ee3d7ccfa60511d1b818b377fa6d069e5e8e2b8cc361f4"
+                  },
+                  {
+                      "path":  "gui-report.json",
+                      "sha256":  "f097e16baa09e46b8a12dcf8f735bde1dc6bf142d9103078b0b14554c8406e65"
+                  },
+                  {
+                      "path":  "gui-run.log",
+                      "sha256":  "ec1432dee51977960b259897d9f0773cdaf013c280ad0dbf9f6bc94385a7c4a5"
+                  },
+                  {
+                      "path":  "gui-smoke.json",
+                      "sha256":  "a716e144de08730108f9a371784c7865568a0fb6d0d7ddde6ac016c19189dca9"
+                  },
+                  {
+                      "path":  "gui-smoke.ps1",
+                      "sha256":  "19a535fc3f35c044b1bdcb9096952456a479d5542c8a98cfd5623e031c8277a6"
+                  },
+                  {
+                      "path":  "local-staging.json",
+                      "sha256":  "6789e0939d6a812e08cf4e8ddd663408120e057806791e911fca87d462e50b60"
+                  },
+                  {
+                      "path":  "online-ps5.json",
+                      "sha256":  "9797b87437d8051ad08494c6064beeba20396d0ba5fa3210f5ce59ca62d199e4"
+                  },
+                  {
+                      "path":  "online-ps5.log",
+                      "sha256":  "1633466992874306cf20b3dac6f847786330ef02ae06f28727df19d9aaef8794"
+                  },
+                  {
+                      "path":  "online-ps7.json",
+                      "sha256":  "d53ea84b27c03fbd64dca91a566c294055c26154fdee0bd37ac259c0ff40ad06"
+                  },
+                  {
+                      "path":  "online-ps7.log",
+                      "sha256":  "87e336374c0896bb574a4887be50219840dcfb812bc080e555bd90766658d763"
+                  },
+                  {
+                      "path":  "powershell7-tool.json",
+                      "sha256":  "89bf48e063c09bdac43b7d4f8f04f30d3cbab35592f5d2d09368c3d90b5fdcb7"
+                  },
+                  {
+                      "path":  "public-assets.json",
+                      "sha256":  "fc2a222af1a11298128ffdd070a4d5f4f4d679d0722d615d8e75bd83d43c2c4b"
+                  },
+                  {
+                      "path":  "public-build.json",
+                      "sha256":  "1e48d148a0b8bd6f69656070273d3feb94f6063b1cd78cb1cb0488c489cc94fe"
+                  },
+                  {
+                      "path":  "public-installer-script.json",
+                      "sha256":  "31b50694fb140635d7c0508dd1cbb68a25b410eb93ccc04e3d59f9fa58585847"
+                  },
+                  {
+                      "path":  "public-SHA256SUMS.txt",
+                      "sha256":  "12bdc3a471291835e0ce662c6a470601018cc944ef2993dd2a66cd16817744d4"
+                  },
+                  {
+                      "path":  "README.md",
+                      "sha256":  "33cee4328df558ff9f1038c912c2cef1e07619d95ba9546ecbc8e8f0915251b4"
+                  },
+                  {
+                      "path":  "screenshots/01-main.png",
+                      "sha256":  "2645e4c51548279480732b7c7233210ae2a7f814ff7a705992c5c998f4104fe8"
+                  },
+                  {
+                      "path":  "screenshots/02-main-file-selected.png",
+                      "sha256":  "3342d0dc645057bca0145e387110150f525db9fe5dbf052b46799796cdda09b6"
+                  },
+                  {
+                      "path":  "screenshots/03-properties-file-open.png",
+                      "sha256":  "a6e919eee0526c2fecb4481b4b3664dd68912dc094bc1b7aceb62a3f09f5f5e4"
+                  },
+                  {
+                      "path":  "screenshots/04-properties-file-f5.png",
+                      "sha256":  "01d2fc92ad161e39bfce8d8ed43421d975f70f62bff968a17f575a2848e0f832"
+                  },
+                  {
+                      "path":  "screenshots/05-properties-small-overflow.png",
+                      "sha256":  "9893b725026026953ef26a63a669acc6282fb60e2ebbd41d42ed72fb7907b25a"
+                  },
+                  {
+                      "path":  "screenshots/06-properties-scrolled.png",
+                      "sha256":  "befafefac5b724a867cba33135eb3765479b4581dbfcab1f4dbc5ea677e8f70a"
+                  },
+                  {
+                      "path":  "screenshots/07-properties-large-hidden.png",
+                      "sha256":  "791eba37763db4b2e53d5686d844410a109d42c32e734947ad1254b6772a5e5c"
+                  },
+                  {
+                      "path":  "screenshots/08-main-after-properties-close.png",
+                      "sha256":  "ee936fda700233e0f9c8e2398890c080975ba963ff2825c1fbbab545027e2d32"
+                  },
+                  {
+                      "path":  "screenshots/09-properties-folder-open.png",
+                      "sha256":  "7cf9275696a7c05e39c913ee4d5252b52cba07dab5ebf7039b6a2452d2ad4a24"
+                  },
+                  {
+                      "path":  "screenshots/10-properties-folder-ready.png",
+                      "sha256":  "7cf9275696a7c05e39c913ee4d5252b52cba07dab5ebf7039b6a2452d2ad4a24"
+                  },
+                  {
+                      "path":  "screenshots/11-properties-folder-f5.png",
+                      "sha256":  "da4c9d151f042dd3c3273faff28a1f2873098637a87bad6890f4bbfea99d782b"
+                  },
+                  {
+                      "path":  "screenshots/12-main-final.png",
+                      "sha256":  "f8eeb5d9711cd542ef5b9638b46c5cbe627bfaa44966907928da24e44e97b991"
+                  },
+                  {
+                      "path":  "session-preflight.json",
+                      "sha256":  "03cd39fc83f20d45739cc1ad5a892539820e85667ed42cb33dfa8cad7efd7df4"
+                  },
+                  {
+                      "path":  "uia/main-before.json",
+                      "sha256":  "ce679311e0230a97fd80a5a9c8018426a57e34aeac230dea323efe2762a7e43f"
+                  },
+                  {
+                      "path":  "uia/properties-file-f5.json",
+                      "sha256":  "abf3a149ec2362b78c7d26ff32a6eb994a6af2af0aa156682ef684583ba490fe"
+                  },
+                  {
+                      "path":  "uia/properties-file-open.json",
+                      "sha256":  "615d484635c7ca267d18f807c0438dcc381d449c8ceaf6a19eb3945f61a508a2"
+                  },
+                  {
+                      "path":  "uia/properties-folder-f5.json",
+                      "sha256":  "7cd1084cf1663984152e058ff5f98a0a6fa64eb03b1222f2bfd3929ae3229829"
+                  },
+                  {
+                      "path":  "uia/properties-folder-initial.json",
+                      "sha256":  "6ad54cd36994bd871944c11f008cab09d6c110c7abaa33ba66209c1d3c64c8b7"
+                  },
+                  {
+                      "path":  "uia/properties-folder-ready.json",
+                      "sha256":  "08a006cbe57bd08bb82b039903cce1c6dc93e068f1a8670945079a13c2b433f7"
+                  },
+                  {
+                      "path":  "uia/properties-large.json",
+                      "sha256":  "fc03cf10d593ae16af1685356c34f873248c53ee011718068904e275eb661782"
+                  },
+                  {
+                      "path":  "uia/properties-scrolled.json",
+                      "sha256":  "11d3c3392be0e6b10160dc9013fd17e61c7ef7d19b310d2dfefed501722759b9"
+                  },
+                  {
+                      "path":  "uia/properties-small.json",
+                      "sha256":  "e42ef60c992711f31bb362c9fbb69e40874ebb8f15e7e00beac7eae8b3797f2d"
+                  },
+                  {
+                      "path":  "visual-review.json",
+                      "sha256":  "041268a7696e6fc03bc8ceed6372bf653ebb8dfa985018a03e8382ac944b3a91"
+                  }
+              ]
+}
