@@ -95,6 +95,8 @@ pub struct View {
     pub prepared: u64,
     pub successful: u64,
     pub failed: u64,
+    pub retryable: u64,
+    pub retried: bool,
     pub unknown: u64,
     pub bytes: u64,
     pub in_flight: u64,
@@ -496,6 +498,98 @@ impl Hub {
             self.cancel(view.id);
         }
     }
+    /// Replay only confirmed failed top-level roots into the original target.
+    /// Successful, skipped, canceled and unverified items are never replayed;
+    /// partial directory roots stay untouched because replaying the root would
+    /// repeat work that already succeeded inside it.
+    pub fn retry(&self, id: u64, owner: usize) -> anyhow::Result<u64> {
+        let source_task = self.task(id).ok_or_else(|| anyhow::anyhow!("任务不存在"))?;
+        let view = {
+            let mut view = source_task.view.lock().unwrap();
+            anyhow::ensure!(
+                matches!(
+                    view.operation,
+                    Operation::Copy | Operation::Move | Operation::Recycle
+                ),
+                "该任务类型不支持重试"
+            );
+            anyhow::ensure!(
+                matches!(view.phase, Phase::Failed | Phase::Partial),
+                "只有已确认失败的任务可以重试"
+            );
+            anyhow::ensure!(view.retryable > 0, "没有可安全重试的失败项");
+            anyhow::ensure!(!view.retried, "该任务已重试过，请在重试任务中继续");
+            view.retried = true;
+            view.clone()
+        };
+        let retry = match self.register(view.operation, (*view.target).clone(), None) {
+            Ok(retry) => retry,
+            Err(error) => {
+                source_task.view.lock().unwrap().retried = false;
+                return Err(error);
+            }
+        };
+        let source_ledger = (*view.ledger).clone();
+        let target = (*view.target).clone();
+        let operation = view.operation;
+        Ok(self.launch(retry, move |shared, task| {
+            let ledger = create_ledger(&task)?;
+            let source = Ledger::read_only(&source_ledger)?;
+            let roots = source.failed_roots()?;
+            anyhow::ensure!(!roots.is_empty(), "没有可安全重试的失败项");
+            let total = roots.len() as u64;
+            let mut prepared = 0u64;
+            let mut tree = false;
+            task.update(true, |v| {
+                v.phase = Phase::Preparing;
+                v.total = Some(total);
+            });
+            ledger.begin()?;
+            for (index, mut root) in roots.into_iter().enumerate() {
+                anyhow::ensure!(!task.canceled(), "已取消");
+                root.key = index as u64;
+                tree |= root.directory;
+                ledger.add_captured_root(&root)?;
+                prepared += 1;
+                if prepared.is_multiple_of(256) {
+                    ledger.commit()?;
+                    task.update(false, |v| {
+                        v.prepared = prepared;
+                        v.total = Some(total);
+                    });
+                    ledger.begin()?;
+                }
+            }
+            ledger.commit()?;
+            let counts = ledger.counts()?;
+            task.counts(&counts);
+            task.update(true, |v| {
+                v.prepared = total;
+                v.total = Some(total);
+                v.tree = tree;
+                v.size_available = !tree;
+                v.bytes_total = if tree {
+                    None
+                } else {
+                    let mut bytes = 0u64;
+                    let _ = ledger.visit_roots(false, |root| {
+                        bytes = bytes.saturating_add(root.bytes.unwrap_or(0));
+                        Ok(())
+                    });
+                    Some(bytes)
+                };
+            });
+            let kind = match operation {
+                Operation::Copy => Kind::Copy,
+                Operation::Move => Kind::Move,
+                Operation::Recycle => Kind::Recycle,
+                _ => anyhow::bail!("Invalid retry operation"),
+            };
+            run_files_with_target(&shared, &task, ledger, kind, &target, None, None, owner)?;
+            finish(&task);
+            Ok(())
+        }))
+    }
     pub fn dismiss(&self, id: u64) {
         self.shared.tasks.lock().unwrap().retain(|t| {
             let v = t.view.lock().unwrap();
@@ -549,6 +643,8 @@ impl Hub {
                 prepared: 0,
                 successful: 0,
                 failed: 0,
+                retryable: 0,
+                retried: false,
                 unknown: 0,
                 bytes: 0,
                 in_flight: 0,
@@ -588,6 +684,8 @@ impl Hub {
                     if path.exists() {
                         match Ledger::open(&path).and_then(|ledger| {
                             let uncertain = ledger.interrupt_unverified()?;
+                            let retryable = ledger.failed_root_count().unwrap_or(0);
+                            worker.update(false, |v| v.retryable = retryable);
                             worker.counts(&ledger.counts()?);
                             Ok(uncertain)
                         }) {
@@ -1209,6 +1307,8 @@ fn recover_archives(shared: Arc<Shared>, directory: PathBuf) {
                         prepared: counts.discovered,
                         successful: counts.successful,
                         failed: counts.failed,
+                        retryable: 0,
+                        retried: false,
                         unknown: if committed {
                             counts.unknown
                         } else {
@@ -1358,6 +1458,8 @@ fn run_files_with_target(
     }
     let counts = ledger.counts()?;
     task.counts(&counts);
+    let retryable = ledger.failed_root_count().unwrap_or(0);
+    task.update(false, |v| v.retryable = retryable);
     if counts.failed
         + counts.unknown
         + counts.partial
@@ -1724,6 +1826,109 @@ mod service_tests {
                     .starts_with("Backleaf-service-test-")
         );
         std::fs::remove_dir_all(resolved).unwrap();
+    }
+    #[test]
+    fn retry_replays_only_confirmed_failed_roots_into_the_original_target() {
+        let base = std::env::temp_dir().canonicalize().unwrap();
+        let root = base.join(format!(
+            "Backleaf-retry-test-{}-{}",
+            std::process::id(),
+            SystemTime::now()
+                .duration_since(UNIX_EPOCH)
+                .unwrap()
+                .as_nanos()
+        ));
+        let source = root.join("source");
+        let target = root.join("target");
+        std::fs::create_dir_all(&source).unwrap();
+        std::fs::create_dir_all(&target).unwrap();
+        let kept = source.join("kept.txt");
+        let failed = source.join("failed.txt");
+        std::fs::write(&kept, b"already copied").unwrap();
+        std::fs::write(&failed, b"retry me").unwrap();
+        let kept_metadata = shell::identity::capture(&kept).unwrap();
+        let failed_metadata = shell::identity::capture(&failed).unwrap();
+        std::fs::copy(&kept, target.join("kept.txt")).unwrap();
+        let (tx, _rx) = async_channel::bounded(1);
+        let hub = Hub::new(root.join("state"), tx);
+        let task = hub.register(Operation::Copy, target.clone(), None).unwrap();
+        let id = task.view.lock().unwrap().id;
+        let ledger_path = task.view.lock().unwrap().ledger.clone();
+        std::fs::create_dir_all(ledger_path.parent().unwrap()).unwrap();
+        {
+            let ledger = Ledger::open(&ledger_path).unwrap();
+            ledger.add_root(0, &kept, Some(&kept_metadata)).unwrap();
+            ledger.add_root(1, &failed, Some(&failed_metadata)).unwrap();
+            ledger
+                .set_root_state(0, super::super::ledger::State::Success)
+                .unwrap();
+            ledger
+                .set_root_state(1, super::super::ledger::State::Failed)
+                .unwrap();
+            assert_eq!(ledger.failed_root_count().unwrap(), 1);
+        }
+        task.update(true, |v| {
+            v.phase = Phase::Failed;
+            v.successful = 1;
+            v.failed = 1;
+            v.retryable = 1;
+            v.total = Some(2);
+        });
+        let retry_id = hub.retry(id, 0).unwrap();
+        assert_ne!(retry_id, id);
+        let deadline = Instant::now() + Duration::from_secs(20);
+        let view = loop {
+            let view = hub.view(retry_id).unwrap();
+            if view.phase.terminal() {
+                break view;
+            }
+            assert!(Instant::now() < deadline, "retry task did not finish");
+            std::thread::sleep(Duration::from_millis(10));
+        };
+        assert_eq!(view.phase, Phase::Complete, "{:?}", view.error);
+        assert_eq!(view.successful, 1);
+        assert_eq!(view.failed, 0);
+        assert_eq!(view.total, Some(1));
+        let mut entries = std::fs::read_dir(&target)
+            .unwrap()
+            .filter_map(Result::ok)
+            .map(|entry| entry.file_name().to_string_lossy().into_owned())
+            .collect::<Vec<_>>();
+        entries.sort();
+        assert_eq!(entries, vec!["failed.txt", "kept.txt"]);
+        assert_eq!(
+            std::fs::read(target.join("failed.txt")).unwrap(),
+            b"retry me"
+        );
+        assert_eq!(
+            std::fs::read(target.join("kept.txt")).unwrap(),
+            b"already copied"
+        );
+        let retry_ledger = Ledger::read_only(&view.ledger).unwrap();
+        assert_eq!(retry_ledger.counts().unwrap().successful, 1);
+        assert_eq!(retry_ledger.failed_root_count().unwrap(), 0);
+        drop(retry_ledger);
+        drop(hub);
+        std::fs::remove_dir_all(root.canonicalize().unwrap()).unwrap();
+    }
+    #[test]
+    fn retry_rejects_tasks_without_confirmed_failed_roots() {
+        let f = crate::test_support::Fixture::new("retry-reject");
+        let (tx, _rx) = async_channel::bounded(1);
+        let hub = Hub::new(f.0.join("state"), tx);
+        let task = hub
+            .register(Operation::Copy, f.0.join("target"), None)
+            .unwrap();
+        let id = task.view.lock().unwrap().id;
+        task.update(true, |v| {
+            v.phase = Phase::Failed;
+            v.failed = 1;
+            v.retryable = 0;
+        });
+        assert!(hub.retry(id, 0).is_err());
+        task.update(true, |v| v.phase = Phase::Running);
+        assert!(hub.retry(id, 0).is_err());
+        drop(hub);
     }
     #[test]
     fn canceled_byte_delta_is_not_promoted_to_confirmed_data() {

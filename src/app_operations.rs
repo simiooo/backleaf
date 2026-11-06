@@ -1801,6 +1801,27 @@ impl Backleaf {
         } else {
             format!("{} → {destination}", v.operation.label())
         };
+        let retry = (matches!(v.phase, Phase::Failed | Phase::Partial)
+            && v.failed > 0
+            && v.retryable > 0
+            && !v.retried
+            && matches!(
+                v.operation,
+                Operation::Copy | Operation::Move | Operation::Recycle
+            ))
+        .then(|| {
+            self.text_action(
+                "retry",
+                "重试",
+                cx.listener(move |this, _, window, cx| {
+                    match this.files.hub.retry(id, Self::native_owner(window)) {
+                        Ok(retry_id) => this.show_operation(retry_id, cx),
+                        Err(error) => this.navigation_error(format!("无法重试：{error}"), cx),
+                    }
+                    cx.notify();
+                }),
+            )
+        });
         let action = self.button(
             "close",
             if terminal {
@@ -1844,6 +1865,7 @@ impl Backleaf {
                             ))
                             .child(title),
                     )
+                    .when_some(retry, |d, retry| d.child(retry))
                     .child(action),
             )
             .child(

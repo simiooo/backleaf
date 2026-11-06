@@ -178,6 +178,50 @@ impl Ledger {
         }
         Ok(())
     }
+    /// Top-level roots whose own Shell item failed. Partial directory roots are
+    /// deliberately excluded: replaying them would repeat already successful work.
+    pub fn failed_roots(&self) -> anyhow::Result<Vec<RootRecord>> {
+        let mut query = self.db.prepare(
+            "SELECT id,path,identity,directory,bytes,state FROM roots WHERE state=4 ORDER BY id",
+        )?;
+        let rows = query.query_map([], |r| {
+            let path: Vec<u8> = r.get(1)?;
+            let identity: Option<Vec<u8>> = r.get(2)?;
+            let bytes: Option<i64> = r.get(4)?;
+            Ok(RootRecord {
+                key: r.get::<_, i64>(0)? as u64,
+                path: decode_path(&path),
+                identity: identity.and_then(|s| shell::identity::Identity::decode(&s)),
+                directory: r.get(3)?,
+                bytes: bytes.map(|n| n as u64),
+                state: State::from_i64(r.get(5)?),
+            })
+        })?;
+        let mut failed = Vec::new();
+        for row in rows {
+            failed.push(row?);
+        }
+        Ok(failed)
+    }
+    pub fn failed_root_count(&self) -> anyhow::Result<u64> {
+        Ok(self
+            .db
+            .query_row("SELECT count(*) FROM roots WHERE state=4", [], |r| {
+                r.get::<_, i64>(0)
+            })? as u64)
+    }
+    #[cfg(test)]
+    pub(crate) fn set_root_state(&self, key: u64, state: State) -> anyhow::Result<()> {
+        self.db.execute(
+            "UPDATE roots SET state=?2 WHERE id=?1 AND state<>3",
+            params![key as i64, state as i64],
+        )?;
+        self.db.execute(
+            "UPDATE results SET state=?2 WHERE root=?1 AND root_item=1",
+            params![key as i64, state as i64],
+        )?;
+        Ok(())
+    }
     pub fn open(path: &Path) -> anyhow::Result<Self> {
         let db = Connection::open(path)?;
         Self::initialize(db)
@@ -648,6 +692,47 @@ mod tests {
         let retry = ledger.retryable(0, 96).unwrap();
         assert_eq!(retry.len(), 1);
         assert!(retry[0].path.ends_with("locked.txt"));
+    }
+    #[test]
+    fn failed_roots_exclude_partial_directories_and_successes() {
+        let ledger = ledger();
+        ledger
+            .add_root(1, Path::new("D:/source/tree"), None)
+            .unwrap();
+        ledger
+            .db
+            .execute("UPDATE results SET directory=1 WHERE root=1", [])
+            .unwrap();
+        ledger
+            .record(&notice(1, true, "D:/source/tree", 0, true))
+            .unwrap();
+        ledger
+            .record(&notice(
+                1,
+                false,
+                "D:/source/tree/locked.txt",
+                0x80270027u32 as i32,
+                false,
+            ))
+            .unwrap();
+        ledger.finish_batch(&[1], &outcome(true), false).unwrap();
+        ledger
+            .add_root(2, Path::new("D:/source/locked.bin"), None)
+            .unwrap();
+        ledger
+            .record(&notice(
+                2,
+                true,
+                "D:/source/locked.bin",
+                0x80270027u32 as i32,
+                false,
+            ))
+            .unwrap();
+        ledger.finish_batch(&[2], &outcome(false), false).unwrap();
+        let failed = ledger.failed_roots().unwrap();
+        assert_eq!(failed.len(), 1);
+        assert!(failed[0].path.ends_with("locked.bin"));
+        assert_eq!(ledger.failed_root_count().unwrap(), 1);
     }
     #[test]
     fn cancellation_does_not_erase_success_or_replay_unstarted_roots() {
