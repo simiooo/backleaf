@@ -1,0 +1,55 @@
+{
+  "masterSha256": "e3e73bc5beddce619e99475d20ee6eeb2891ccafc4f74d027f1ba6eecf50cf68",
+  "retainedPages": 271,
+  "pages": 6,
+  "result": "passed",
+  "pagesChecked": [
+    {
+      "key": "272-v48-apple-light",
+      "name": "272 · v48 Apple 表面 / 浅色",
+      "mode": "Light",
+      "nodes": 49,
+      "changedPixels": 0,
+      "totalPixels": 851200
+    },
+    {
+      "key": "273-v48-apple-dark",
+      "name": "273 · v48 Apple 表面 / 深色",
+      "mode": "Dark",
+      "nodes": 49,
+      "changedPixels": 0,
+      "totalPixels": 851200
+    },
+    {
+      "key": "274-v48-app-study-light",
+      "name": "274 · v48 选中与文件类型 / 浅色",
+      "mode": "Light",
+      "nodes": 100,
+      "changedPixels": 0,
+      "totalPixels": 849728
+    },
+    {
+      "key": "275-v48-app-study-dark",
+      "name": "275 · v48 选中与文件类型 / 深色",
+      "mode": "Dark",
+      "nodes": 100,
+      "changedPixels": 0,
+      "totalPixels": 852720
+    },
+    {
+      "key": "after-04",
+      "page": "04 · 多选与上下文菜单",
+      "nodes": 201,
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "after-08",
+      "page": "08 · 深色模式",
+      "nodes": 142,
+      "changedPixels": 0,
+      "totalPixels": 806400
+    }
+  ],
+  "verifiedAt": "2026-11-06T08:29:19.920Z"
+}
