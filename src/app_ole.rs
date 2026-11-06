@@ -15,7 +15,6 @@ impl Backleaf {
             && f32::from(position.y) >= f32::from(window.viewport_size().height) - 640.;
         let editable = over_task
             || self.navigation.open
-            || self.watch_stale()
             || self.files.editor.is_some()
             || self.search.open
             || self.view_editing()

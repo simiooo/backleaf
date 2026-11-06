@@ -150,7 +150,7 @@ impl Backleaf {
         rename: bool,
         cx: &mut Context<Self>,
     ) {
-        self.mark_directory_dirty(cx);
+        self.mark_directory_dirty_now(cx);
         if let Some(name) = name {
             if rename {
                 self.files.rename_location = Some((self.path.clone(), name.clone()));

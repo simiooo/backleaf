@@ -1455,13 +1455,9 @@ impl Backleaf {
         window: &Window,
         cx: &mut Context<Self>,
     ) -> AnyElement {
-        if self.files.removed.contains(id as u64) {
-            return div()
-                .w(px(width))
-                .h(px(layout::LAYOUT.grid.cell_height))
-                .flex_none()
-                .into_any_element();
-        }
+        // Removed items stay visible (dimmed) until the next snapshot commits instead
+        // of leaving an empty cell that reads as a large blank row.
+        let removed = self.files.removed.contains(id as u64);
         let item = self.cache.get(&id).cloned();
         let icon_kind = item.as_ref().map_or(file_icons::FileIcon::Generic, |i| {
             file_icons::FileIcon::for_name(&i.os_name, i.directory)
@@ -1514,6 +1510,7 @@ impl Backleaf {
             .aria_label(name.clone())
             .aria_selected(state.selected)
             .when(focused && grid_focused, |d| d.aria_active_descendant())
+            .when(removed, |d| d.opacity(0.35))
             .relative()
             .w(px(width))
             .h(px(l.grid.cell_height))

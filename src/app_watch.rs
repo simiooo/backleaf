@@ -35,6 +35,14 @@ impl Backleaf {
         }
         cx.notify();
     }
+    /// A completed in-app file operation does not need watcher debounce: refresh on
+    /// the next frame and drop the debounce timer so removed tiles do not linger as
+    /// empty placeholders.
+    pub fn mark_directory_dirty_now(&mut self, cx: &mut Context<Self>) {
+        self.watch.dirty = true;
+        self.watch.retry = None;
+        cx.notify();
+    }
     pub fn sync_watcher(&mut self, window: &mut Window, cx: &mut Context<Self>) {
         if (!self.watch_stale() && self.watch.pending.is_none()) || self.options.fixture.is_some() {
             return;
