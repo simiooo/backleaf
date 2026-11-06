@@ -1,0 +1,83 @@
+{
+  "masterSha256": "a76cb899e894cad44429ab310bc5326cb09fadf69ea86a5e517b5a5167a71b7c",
+  "retainedPages": 271,
+  "pages": 10,
+  "result": "passed",
+  "pagesChecked": [
+    {
+      "key": "after-01",
+      "page": "01 · Home / 紧凑中性",
+      "nodes": 142,
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "after-03",
+      "page": "03 · 统一快捷访问",
+      "nodes": 177,
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "after-04",
+      "page": "04 · 多选与上下文菜单",
+      "nodes": 201,
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "after-08",
+      "page": "08 · 深色模式",
+      "nodes": 142,
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "after-09",
+      "page": "09 · 多文件详情",
+      "nodes": 208,
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "after-10",
+      "page": "10 · 失败集中呈现",
+      "nodes": 210,
+      "changedPixels": 0,
+      "totalPixels": 806400
+    },
+    {
+      "key": "272-v47-elevation-light",
+      "name": "272 · v47 悬浮层级 / 浅色",
+      "mode": "Light",
+      "nodes": 29,
+      "changedPixels": 0,
+      "totalPixels": 851200
+    },
+    {
+      "key": "273-v47-elevation-dark",
+      "name": "273 · v47 悬浮层级 / 深色",
+      "mode": "Dark",
+      "nodes": 29,
+      "changedPixels": 0,
+      "totalPixels": 855680
+    },
+    {
+      "key": "274-v47-grid-selection-light",
+      "name": "274 · v47 网格选中悬浮 / 浅色",
+      "mode": "Light",
+      "nodes": 67,
+      "changedPixels": 0,
+      "totalPixels": 948832
+    },
+    {
+      "key": "275-v47-grid-selection-dark",
+      "name": "275 · v47 网格选中悬浮 / 深色",
+      "mode": "Dark",
+      "nodes": 67,
+      "changedPixels": 0,
+      "totalPixels": 1001984
+    }
+  ],
+  "verifiedAt": "2026-11-06T07:28:33.332Z"
+}

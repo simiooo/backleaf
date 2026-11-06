@@ -1,0 +1,1228 @@
+{
+  "version": "v47-neutral-elevation-draft",
+  "retainedPages": 271,
+  "pages": [
+    {
+      "key": "after-01",
+      "page": "01 · Home / 紧凑中性",
+      "nodes": 142
+    },
+    {
+      "key": "after-03",
+      "page": "03 · 统一快捷访问",
+      "nodes": 177
+    },
+    {
+      "key": "after-04",
+      "page": "04 · 多选与上下文菜单",
+      "nodes": 201
+    },
+    {
+      "key": "after-08",
+      "page": "08 · 深色模式",
+      "nodes": 142
+    },
+    {
+      "key": "after-09",
+      "page": "09 · 多文件详情",
+      "nodes": 208
+    },
+    {
+      "key": "after-10",
+      "page": "10 · 失败集中呈现",
+      "nodes": 210
+    },
+    {
+      "key": "272-v47-elevation-light",
+      "name": "272 · v47 悬浮层级 / 浅色",
+      "mode": "Light",
+      "nodes": 29
+    },
+    {
+      "key": "273-v47-elevation-dark",
+      "name": "273 · v47 悬浮层级 / 深色",
+      "mode": "Dark",
+      "nodes": 29
+    },
+    {
+      "key": "274-v47-grid-selection-light",
+      "name": "274 · v47 网格选中悬浮 / 浅色",
+      "mode": "Light",
+      "nodes": 67
+    },
+    {
+      "key": "275-v47-grid-selection-dark",
+      "name": "275 · v47 网格选中悬浮 / 深色",
+      "mode": "Dark",
+      "nodes": 67
+    }
+  ],
+  "retained": [
+    {
+      "name": "01 · Home / 紧凑中性",
+      "nodes": 143
+    },
+    {
+      "name": "02 · 当前文件夹搜索",
+      "nodes": 83
+    },
+    {
+      "name": "03 · 统一快捷访问",
+      "nodes": 178
+    },
+    {
+      "name": "04 · 多选与上下文菜单",
+      "nodes": 202
+    },
+    {
+      "name": "05 · 不可用路径恢复",
+      "nodes": 45
+    },
+    {
+      "name": "06 · 重命名 / 保留错误输入",
+      "nodes": 183
+    },
+    {
+      "name": "07 · 560 px / 5 列网格",
+      "nodes": 179
+    },
+    {
+      "name": "08 · 深色模式",
+      "nodes": 143
+    },
+    {
+      "name": "09 · 多文件详情",
+      "nodes": 209
+    },
+    {
+      "name": "10 · 失败集中呈现",
+      "nodes": 211
+    },
+    {
+      "name": "11 · 紧凑组件与状态",
+      "nodes": 93
+    },
+    {
+      "name": "12 · 紧凑窗口栏",
+      "nodes": 141
+    },
+    {
+      "name": "13 · 需要确认时 / 批量回收站删除",
+      "nodes": 190
+    },
+    {
+      "name": "14 · 删除进行中 / 逐项进度",
+      "nodes": 176
+    },
+    {
+      "name": "15 · 多文件已剪切 / 等待粘贴",
+      "nodes": 197
+    },
+    {
+      "name": "16 · 复制进行中",
+      "nodes": 94
+    },
+    {
+      "name": "17 · 剪切后粘贴 / 移动进行中",
+      "nodes": 94
+    },
+    {
+      "name": "18 · 正在取消 / 等待真实终止结果",
+      "nodes": 94
+    },
+    {
+      "name": "19 · 取消后保留已完成项",
+      "nodes": 89
+    },
+    {
+      "name": "20 · 部分失败 / 剪切源状态",
+      "nodes": 98
+    },
+    {
+      "name": "21 · 重命名提交中",
+      "nodes": 184
+    },
+    {
+      "name": "22 · 完成与可用撤销",
+      "nodes": 111
+    },
+    {
+      "name": "23 · 文件操作状态契约",
+      "nodes": 34
+    },
+    {
+      "name": "24 · 重命名完成 / 焦点跟随文件",
+      "nodes": 179
+    },
+    {
+      "name": "25 · 多操作同时处理 / 共享面板",
+      "nodes": 121
+    },
+    {
+      "name": "26 · 多文件批次 / 展开逐项结果",
+      "nodes": 118
+    },
+    {
+      "name": "27 · 多文件冲突 / 本次应用范围",
+      "nodes": 100
+    },
+    {
+      "name": "28 · 窄窗多文件操作",
+      "nodes": 224
+    },
+    {
+      "name": "29 · 准备中 / 总量未知",
+      "nodes": 197
+    },
+    {
+      "name": "30 · 无选中 / 新建与粘贴",
+      "nodes": 152
+    },
+    {
+      "name": "31 · 百万目录 / 全选与排除",
+      "nodes": 832
+    },
+    {
+      "name": "32 · 总览 / 仅目标进度个数与大小",
+      "nodes": 892
+    },
+    {
+      "name": "33 · 文件名明细 / 统一左轴与颜色流光",
+      "nodes": 874
+    },
+    {
+      "name": "34 · 未完成文件 / 颜色与按需详情",
+      "nodes": 863
+    },
+    {
+      "name": "35 · 取消中 / 保留实际完成数据",
+      "nodes": 874
+    },
+    {
+      "name": "36 · 窄窗总览 / 限高与省略",
+      "nodes": 460
+    },
+    {
+      "name": "37 · 剪贴板准备 / 仅真实数据",
+      "nodes": 850
+    },
+    {
+      "name": "38 · 大规模渲染约束",
+      "nodes": 28
+    },
+    {
+      "name": "39 · 长文件名网格 / 省略与tooltip",
+      "nodes": 439
+    },
+    {
+      "name": "40 · 长文件名任务列表 / 省略与tooltip",
+      "nodes": 877
+    },
+    {
+      "name": "41 · 长文件名与路径 / 详情完整展示",
+      "nodes": 192
+    },
+    {
+      "name": "42 · 文件名状态与流光 / 可编辑关键帧",
+      "nodes": 40
+    },
+    {
+      "name": "43 · 总量未知 / 不伪造大小与百分比",
+      "nodes": 850
+    },
+    {
+      "name": "44 · 窄窗长文本 / 保持统一左轴",
+      "nodes": 442
+    },
+    {
+      "name": "45 · v9 视觉系统 / 表面、语义与重复",
+      "nodes": 112
+    },
+    {
+      "name": "46 · v9 状态矩阵 / 明色",
+      "nodes": 103
+    },
+    {
+      "name": "47 · v9 状态矩阵 / 深色",
+      "nodes": 103
+    },
+    {
+      "name": "48 · v9 文件选择 / 单一浅色状态层",
+      "nodes": 144
+    },
+    {
+      "name": "49 · v9 浮层 / 与内容层区分",
+      "nodes": 183
+    },
+    {
+      "name": "50 · v9 框选 / 同一状态语义",
+      "nodes": 145
+    },
+    {
+      "name": "51 · v9 任务浮层 / 明色",
+      "nodes": 34
+    },
+    {
+      "name": "52 · v9 任务浮层 / 深色",
+      "nodes": 34
+    },
+    {
+      "name": "53 · v10 文件菜单",
+      "nodes": 134
+    },
+    {
+      "name": "54 · v10 多选菜单",
+      "nodes": 122
+    },
+    {
+      "name": "55 · v10 空白菜单与禁用",
+      "nodes": 114
+    },
+    {
+      "name": "56 · v10 文件夹菜单",
+      "nodes": 134
+    },
+    {
+      "name": "57 · v10 重命名输入",
+      "nodes": 100
+    },
+    {
+      "name": "58 · v10 新建文件夹输入",
+      "nodes": 100
+    },
+    {
+      "name": "59 · v10 待剪切与键盘菜单",
+      "nodes": 122
+    },
+    {
+      "name": "60 · v10 真实任务进行与失败详情",
+      "nodes": 50
+    },
+    {
+      "name": "61 · v10 删除进行与取消后",
+      "nodes": 69
+    },
+    {
+      "name": "62 · v10 同名冲突决策",
+      "nodes": 17
+    },
+    {
+      "name": "63 · v10 深色真实任务",
+      "nodes": 50
+    },
+    {
+      "name": "64 · v10 路径输入与失效",
+      "nodes": 101
+    },
+    {
+      "name": "65 · v10 有界任务队列",
+      "nodes": 63
+    },
+    {
+      "name": "66 · v10 取消等待与部分结果",
+      "nodes": 69
+    },
+    {
+      "name": "67 · v10 关闭时仍有任务",
+      "nodes": 10
+    },
+    {
+      "name": "68 · v10 剪贴板准备失败",
+      "nodes": 13
+    },
+    {
+      "name": "69 · v10 重命名错误保留输入",
+      "nodes": 102
+    },
+    {
+      "name": "70 · v10 深色文件夹菜单",
+      "nodes": 134
+    },
+    {
+      "name": "71 · v11 左侧统一常用导航",
+      "nodes": 141
+    },
+    {
+      "name": "72 · v11 路径 hover 浮层",
+      "nodes": 158
+    },
+    {
+      "name": "73 · v11 单击路径树导航",
+      "nodes": 156
+    },
+    {
+      "name": "74 · v11 双击路径编辑",
+      "nodes": 127
+    },
+    {
+      "name": "75 · v11 悬浮选择计数",
+      "nodes": 143
+    },
+    {
+      "name": "76 · v11 右键菜单而非详情",
+      "nodes": 178
+    },
+    {
+      "name": "77 · v11 右侧显式详情",
+      "nodes": 153
+    },
+    {
+      "name": "78 · v11 长路径与窄窗",
+      "nodes": 143
+    },
+    {
+      "name": "79 · v11 空目录不占底部行",
+      "nodes": 61
+    },
+    {
+      "name": "80 · v11 深色导航与层级",
+      "nodes": 158
+    },
+    {
+      "name": "81 · v11 面包屑省略菜单",
+      "nodes": 158
+    },
+    {
+      "name": "82 · v11 磁盘根目录",
+      "nodes": 131
+    },
+    {
+      "name": "83 · v11 面包屑键盘导航",
+      "nodes": 158
+    },
+    {
+      "name": "84 · v11 窄窗折叠祖先路径",
+      "nodes": 158
+    },
+    {
+      "name": "85 · v12 搜索 entry",
+      "nodes": 146
+    },
+    {
+      "name": "86 · v12 搜索 input",
+      "nodes": 151
+    },
+    {
+      "name": "87 · v12 搜索 running",
+      "nodes": 174
+    },
+    {
+      "name": "88 · v12 搜索 results",
+      "nodes": 174
+    },
+    {
+      "name": "89 · v12 搜索 empty",
+      "nodes": 154
+    },
+    {
+      "name": "90 · v12 搜索 incomplete",
+      "nodes": 174
+    },
+    {
+      "name": "91 · v12 搜索 narrow",
+      "nodes": 176
+    },
+    {
+      "name": "92 · v12 搜索 dark",
+      "nodes": 174
+    },
+    {
+      "name": "93 · v13 crumb-rest",
+      "nodes": 146
+    },
+    {
+      "name": "94 · v13 crumb-arrow",
+      "nodes": 156
+    },
+    {
+      "name": "95 · v13 search-active",
+      "nodes": 151
+    },
+    {
+      "name": "96 · v13 path-active",
+      "nodes": 149
+    },
+    {
+      "name": "97 · v13 rename-active",
+      "nodes": 164
+    },
+    {
+      "name": "98 · v13 rename-blur-menu",
+      "nodes": 198
+    },
+    {
+      "name": "99 · v13 rename-error",
+      "nodes": 166
+    },
+    {
+      "name": "100 · v13 filename-tooltip",
+      "nodes": 148
+    },
+    {
+      "name": "101 · v13 dark-input",
+      "nodes": 155
+    },
+    {
+      "name": "102 · v14 文件类型图标 / 浅色",
+      "nodes": 659
+    },
+    {
+      "name": "103 · v14 文件类型图标 / 深色",
+      "nodes": 659
+    },
+    {
+      "name": "104 · v14 文件类型网格 / 浅色",
+      "nodes": 343
+    },
+    {
+      "name": "105 · v14 文件类型网格 / 深色",
+      "nodes": 343
+    },
+    {
+      "name": "106 · v14 图标状态与搜索小尺寸",
+      "nodes": 181
+    },
+    {
+      "name": "107 · v15 生图文件图标 / 浅色",
+      "nodes": 379
+    },
+    {
+      "name": "108 · v15 生图文件图标 / 深色",
+      "nodes": 379
+    },
+    {
+      "name": "109 · v15 生图文件网格 / 浅色",
+      "nodes": 231
+    },
+    {
+      "name": "110 · v15 生图文件网格 / 深色",
+      "nodes": 231
+    },
+    {
+      "name": "111 · v15 生图图标状态与小尺寸",
+      "nodes": 118
+    },
+    {
+      "name": "112 · v15 EXE 原生图标 / 读取前、成功、回退",
+      "nodes": 18
+    },
+    {
+      "name": "113 · v16 chrome-normal",
+      "nodes": 342
+    },
+    {
+      "name": "114 · v16 chrome-hover",
+      "nodes": 342
+    },
+    {
+      "name": "115 · v16 chrome-focus",
+      "nodes": 342
+    },
+    {
+      "name": "116 · v16 search-expand-25",
+      "nodes": 343
+    },
+    {
+      "name": "117 · v16 search-expanded",
+      "nodes": 343
+    },
+    {
+      "name": "118 · v16 chrome-dark",
+      "nodes": 342
+    },
+    {
+      "name": "119 · v16 narrow-search",
+      "nodes": 333
+    },
+    {
+      "name": "120 · v16 icon-contours",
+      "nodes": 342
+    },
+    {
+      "name": "121 · v17 search-close-start",
+      "nodes": 344
+    },
+    {
+      "name": "122 · v17 search-close-quarter",
+      "nodes": 344
+    },
+    {
+      "name": "123 · v17 search-close-end",
+      "nodes": 334
+    },
+    {
+      "name": "124 · v17 search-closed",
+      "nodes": 342
+    },
+    {
+      "name": "125 · v18 sidebar-normal",
+      "nodes": 348
+    },
+    {
+      "name": "126 · v18 sidebar-keyboard-focus",
+      "nodes": 348
+    },
+    {
+      "name": "127 · v18 sidebar-current-focus",
+      "nodes": 348
+    },
+    {
+      "name": "128 · v18 sidebar-focus-dark",
+      "nodes": 348
+    },
+    {
+      "name": "129 · v18 sidebar-focus-narrow",
+      "nodes": 348
+    },
+    {
+      "name": "130 · v19 fit-no-scroll",
+      "nodes": 127
+    },
+    {
+      "name": "131 · v19 main-overflow",
+      "nodes": 353
+    },
+    {
+      "name": "132 · v19 sidebar-overflow-hidden",
+      "nodes": 421
+    },
+    {
+      "name": "133 · v19 sidebar-overflow-hover",
+      "nodes": 423
+    },
+    {
+      "name": "134 · v19 short-window",
+      "nodes": 423
+    },
+    {
+      "name": "135 · v19 scroll-dark",
+      "nodes": 423
+    },
+    {
+      "name": "136 · v19 ten-million-scroll",
+      "nodes": 353
+    },
+    {
+      "name": "137 · v19 empty-no-scroll",
+      "nodes": 43
+    },
+    {
+      "name": "138 · v20 short-selected",
+      "nodes": 98
+    },
+    {
+      "name": "139 · v20 blank-cleared",
+      "nodes": 95
+    },
+    {
+      "name": "140 · v20 long-selected",
+      "nodes": 98
+    },
+    {
+      "name": "141 · v20 rename-input",
+      "nodes": 99
+    },
+    {
+      "name": "142 · v20 narrow-hits",
+      "nodes": 98
+    },
+    {
+      "name": "143 · v20 dark-hits",
+      "nodes": 98
+    },
+    {
+      "name": "144 · v22 shallow-fine",
+      "nodes": 105
+    },
+    {
+      "name": "145 · v22 deep-ramp",
+      "nodes": 105
+    },
+    {
+      "name": "146 · v22 large-range",
+      "nodes": 105
+    },
+    {
+      "name": "147 · v22 return-stop",
+      "nodes": 105
+    },
+    {
+      "name": "148 · v22 reverse-fine",
+      "nodes": 105
+    },
+    {
+      "name": "149 · v22 pending-dark",
+      "nodes": 105
+    },
+    {
+      "name": "150 · v23 ancestor-context",
+      "nodes": 120
+    },
+    {
+      "name": "151 · v23 current-context",
+      "nodes": 120
+    },
+    {
+      "name": "152 · v23 edit-address",
+      "nodes": 107
+    },
+    {
+      "name": "153 · v23 blur-submit",
+      "nodes": 107
+    },
+    {
+      "name": "154 · v23 error-preserves-draft",
+      "nodes": 109
+    },
+    {
+      "name": "155 · v23 volumes",
+      "nodes": 115
+    },
+    {
+      "name": "156 · v23 narrow",
+      "nodes": 112
+    },
+    {
+      "name": "157 · v23 dark",
+      "nodes": 120
+    },
+    {
+      "name": "158 · v23 drive-disconnected",
+      "nodes": 117
+    },
+    {
+      "name": "159 · v24 file-surface",
+      "nodes": 116
+    },
+    {
+      "name": "160 · v24 surface-dark",
+      "nodes": 116
+    },
+    {
+      "name": "161 · v24 surface-narrow",
+      "nodes": 116
+    },
+    {
+      "name": "162 · v24 surface-details",
+      "nodes": 119
+    },
+    {
+      "name": "163 · v24 surface-marquee",
+      "nodes": 118
+    },
+    {
+      "name": "164 · v24 surface-scrolled",
+      "nodes": 117
+    },
+    {
+      "name": "165 · v24 surface-maximized",
+      "nodes": 116
+    },
+    {
+      "name": "166 · v25 prefix-match",
+      "nodes": 116
+    },
+    {
+      "name": "167 · v25 prefix-no-match",
+      "nodes": 116
+    },
+    {
+      "name": "168 · v25 prefix-timeout",
+      "nodes": 116
+    },
+    {
+      "name": "169 · v25 prefix-input-protected",
+      "nodes": 108
+    },
+    {
+      "name": "170 · v25 prefix-enumerating",
+      "nodes": 116
+    },
+    {
+      "name": "171 · v26 external-changes",
+      "nodes": 116
+    },
+    {
+      "name": "172 · v26 edit-defers-refresh",
+      "nodes": 118
+    },
+    {
+      "name": "173 · v26 directory-unavailable",
+      "nodes": 118
+    },
+    {
+      "name": "174 · v26 refresh-keeps-position",
+      "nodes": 116
+    },
+    {
+      "name": "175 · v27 drag-moving",
+      "nodes": 118
+    },
+    {
+      "name": "176 · v27 drag-invalid-target",
+      "nodes": 118
+    },
+    {
+      "name": "177 · v27 drag-multiselect",
+      "nodes": 118
+    },
+    {
+      "name": "178 · v27 drag-checking",
+      "nodes": 118
+    },
+    {
+      "name": "179 · v27 drag-cancelled",
+      "nodes": 116
+    },
+    {
+      "name": "180 · v28 search-filters",
+      "nodes": 138
+    },
+    {
+      "name": "181 · v28 save-view",
+      "nodes": 123
+    },
+    {
+      "name": "182 · v28 unified-view-navigation",
+      "nodes": 120
+    },
+    {
+      "name": "183 · v28 view-unsaved-changes",
+      "nodes": 123
+    },
+    {
+      "name": "184 · v28 view-group-type",
+      "nodes": 123
+    },
+    {
+      "name": "185 · v28 view-save-conflict",
+      "nodes": 121
+    },
+    {
+      "name": "186 · v28 view-no-results",
+      "nodes": 118
+    },
+    {
+      "name": "187 · v29 index-building",
+      "nodes": 118
+    },
+    {
+      "name": "188 · v29 index-short-chinese",
+      "nodes": 118
+    },
+    {
+      "name": "189 · v29 index-offline",
+      "nodes": 118
+    },
+    {
+      "name": "190 · v29 index-coverage",
+      "nodes": 118
+    },
+    {
+      "name": "191 · v30 pin-folder",
+      "nodes": 119
+    },
+    {
+      "name": "192 · v30 reorder-view",
+      "nodes": 119
+    },
+    {
+      "name": "193 · v30 quick-access-remove",
+      "nodes": 118
+    },
+    {
+      "name": "194 · v30 quick-access-offline",
+      "nodes": 118
+    },
+    {
+      "name": "195 · v30 quick-access-conflict",
+      "nodes": 118
+    },
+    {
+      "name": "196 · v31 archive-menu",
+      "nodes": 123
+    },
+    {
+      "name": "197 · v31 archive-name",
+      "nodes": 120
+    },
+    {
+      "name": "198 · v31 archive-running",
+      "nodes": 123
+    },
+    {
+      "name": "199 · v31 archive-cancel",
+      "nodes": 123
+    },
+    {
+      "name": "200 · v31 archive-name-conflict",
+      "nodes": 121
+    },
+    {
+      "name": "201 · v31 archive-damaged",
+      "nodes": 118
+    },
+    {
+      "name": "202 · v31 archive-multiple",
+      "nodes": 123
+    },
+    {
+      "name": "203 · v32 shell-entry",
+      "nodes": 118
+    },
+    {
+      "name": "204 · v32 shell-native-submenu",
+      "nodes": 118
+    },
+    {
+      "name": "205 · v32 shell-limit",
+      "nodes": 118
+    },
+    {
+      "name": "206 · v32 shell-unavailable",
+      "nodes": 118
+    },
+    {
+      "name": "207 · v33 restore-path",
+      "nodes": 116
+    },
+    {
+      "name": "208 · v33 restore-search",
+      "nodes": 118
+    },
+    {
+      "name": "209 · v33 restore-offline",
+      "nodes": 118
+    },
+    {
+      "name": "210 · v33 restore-failed-save",
+      "nodes": 118
+    },
+    {
+      "name": "211 · v33 restore-relative-date",
+      "nodes": 118
+    },
+    {
+      "name": "212 · v34 window-a",
+      "nodes": 118
+    },
+    {
+      "name": "213 · v34 window-b",
+      "nodes": 118
+    },
+    {
+      "name": "214 · v34 shared-task-queue",
+      "nodes": 118
+    },
+    {
+      "name": "215 · v34 window-save-conflict",
+      "nodes": 118
+    },
+    {
+      "name": "216 · v35 keyboard-caption",
+      "nodes": 117
+    },
+    {
+      "name": "217 · v35 keyboard-caption-dark",
+      "nodes": 117
+    },
+    {
+      "name": "218 · v35 invalid-input-focus",
+      "nodes": 121
+    },
+    {
+      "name": "219 · v35 shell-menu",
+      "nodes": 121
+    },
+    {
+      "name": "220 · v36 typeahead-non-input",
+      "nodes": 117
+    },
+    {
+      "name": "221 · v36 typeahead-input-protection",
+      "nodes": 121
+    },
+    {
+      "name": "222 · v37 cross-window-move",
+      "nodes": 238
+    },
+    {
+      "name": "223 · v37 external-copy",
+      "nodes": 119
+    },
+    {
+      "name": "224 · v37 external-move",
+      "nodes": 119
+    },
+    {
+      "name": "225 · v37 external-pin",
+      "nodes": 119
+    },
+    {
+      "name": "226 · v37 invalid-drop",
+      "nodes": 119
+    },
+    {
+      "name": "227 · v37 outbound-files",
+      "nodes": 119
+    },
+    {
+      "name": "228 · v37 extension-rows",
+      "nodes": 127
+    },
+    {
+      "name": "229 · v37 extension-submenu",
+      "nodes": 131
+    },
+    {
+      "name": "230 · v37 extension-unavailable",
+      "nodes": 119
+    },
+    {
+      "name": "231 · v38 owned-context-window",
+      "nodes": 156
+    },
+    {
+      "name": "232 · v38 owned-submenu-window",
+      "nodes": 169
+    },
+    {
+      "name": "233 · v38 menu-focus-return",
+      "nodes": 117
+    },
+    {
+      "name": "234 · v39 root-pending-stable",
+      "nodes": 148
+    },
+    {
+      "name": "235 · v39 applications-ready",
+      "nodes": 161
+    },
+    {
+      "name": "236 · v39 child-ready-stable",
+      "nodes": 174
+    },
+    {
+      "name": "237 · v39 bottom-flip-dark",
+      "nodes": 174
+    },
+    {
+      "name": "238 · v40 refresh-before",
+      "nodes": 117
+    },
+    {
+      "name": "239 · v40 refresh-background",
+      "nodes": 117
+    },
+    {
+      "name": "240 · v40 refresh-committed",
+      "nodes": 117
+    },
+    {
+      "name": "241 · v40 refresh-error",
+      "nodes": 119
+    },
+    {
+      "name": "242 · v41 capacity-ready",
+      "nodes": 122
+    },
+    {
+      "name": "243 · v41 capacity-pending",
+      "nodes": 119
+    },
+    {
+      "name": "244 · v41 medium-removed",
+      "nodes": 113
+    },
+    {
+      "name": "245 · v41 selection-mixed",
+      "nodes": 124
+    },
+    {
+      "name": "246 · v41 selection-folders",
+      "nodes": 123
+    },
+    {
+      "name": "247 · v41 capacity-dark",
+      "nodes": 122
+    },
+    {
+      "name": "248 · v42 meter-ready",
+      "nodes": 125
+    },
+    {
+      "name": "249 · v42 meter-unknown",
+      "nodes": 122
+    },
+    {
+      "name": "250 · v42 meter-small-units",
+      "nodes": 125
+    },
+    {
+      "name": "251 · v42 meter-low-space",
+      "nodes": 125
+    },
+    {
+      "name": "252 · v42 meter-selected",
+      "nodes": 127
+    },
+    {
+      "name": "253 · v42 meter-dark",
+      "nodes": 125
+    },
+    {
+      "name": "254 · v43 cache-ready",
+      "nodes": 146
+    },
+    {
+      "name": "255 · v43 cache-refresh",
+      "nodes": 146
+    },
+    {
+      "name": "256 · v43 cache-unavailable",
+      "nodes": 146
+    },
+    {
+      "name": "257 · v44 new-folder-name",
+      "nodes": 127
+    },
+    {
+      "name": "258 · v44 compact-progress",
+      "nodes": 133
+    },
+    {
+      "name": "259 · v44 failed-items",
+      "nodes": 139
+    },
+    {
+      "name": "260 · v44 quiet-success",
+      "nodes": 125
+    },
+    {
+      "name": "261 · v44 dark-progress",
+      "nodes": 133
+    },
+    {
+      "name": "262 · v45 search-normal",
+      "nodes": 171
+    },
+    {
+      "name": "263 · v45 search-hover",
+      "nodes": 171
+    },
+    {
+      "name": "264 · v45 search-active",
+      "nodes": 171
+    },
+    {
+      "name": "265 · v45 search-grouped",
+      "nodes": 172
+    },
+    {
+      "name": "266 · v45 search-dark",
+      "nodes": 171
+    },
+    {
+      "name": "267 · v46 file-properties",
+      "nodes": 156
+    },
+    {
+      "name": "268 · v46 folder-counting",
+      "nodes": 155
+    },
+    {
+      "name": "269 · v46 folder-complete",
+      "nodes": 155
+    },
+    {
+      "name": "270 · v46 folder-partial",
+      "nodes": 156
+    },
+    {
+      "name": "271 · v46 properties-dark",
+      "nodes": 155
+    }
+  ],
+  "recoloredPaints": 73,
+  "colorMap": {
+    "#1C2B33": 5025,
+    "#596975": 3364,
+    "#87929B": 2427,
+    "#292E33": 990,
+    "#58758D": 978,
+    "#F8F9FA": 848,
+    "#DCE2E7": 810,
+    "#AEB7BF": 809,
+    "#A9B6C1": 789,
+    "#E8EEF4": 753,
+    "#F6F8FA": 641,
+    "#676D73": 605,
+    "#E9F2FC": 398,
+    "#FAFCFE": 352,
+    "#BAD0E3": 352,
+    "#AAB8C5": 319,
+    "#BBD0E1": 227,
+    "#D7DEE5": 211,
+    "#E3E7EA": 197,
+    "#27323E": 184,
+    "#17466F": 160,
+    "#F3F5F7": 142,
+    "#9BAAB8": 117,
+    "#1C252F": 92,
+    "#203C58": 45,
+    "#829BAB": 42,
+    "#A8BFCE": 42,
+    "#C9D7E0": 42,
+    "#D4DADE": 38,
+    "#485766": 37,
+    "#161D25": 32,
+    "#799BB8": 32,
+    "#E5E8EB": 31,
+    "#73818A": 30,
+    "#DDE1E5": 28,
+    "#697E8D": 27,
+    "#70777E": 25,
+    "#E0EEFF": 20,
+    "#B5C5D9": 18,
+    "#697781": 15,
+    "#BBC3CA": 13,
+    "#98A4AE": 13,
+    "#95C2FF": 12,
+    "#F0F2F4": 11,
+    "#B2BAC1": 9,
+    "#F6F7F8": 8,
+    "#CDD3D8": 8,
+    "#212B35": 8,
+    "#2E3439": 6,
+    "#F4F6F7": 5,
+    "#8B99A4": 4,
+    "#424A51": 4,
+    "#9ABADA": 4,
+    "#647786": 3,
+    "#687986": 2,
+    "#FAFBFC": 2,
+    "#485F70": 2,
+    "#20262C": 2,
+    "#EDF0F2": 2,
+    "#30373D": 2,
+    "#71818F": 2,
+    "#344454": 2,
+    "#161A1E": 2,
+    "#0966DE": 2,
+    "#202326": 1,
+    "#7D8E9B": 1,
+    "#8F9AA3": 1,
+    "#31566F": 1,
+    "#EDF0F3": 1,
+    "#334450": 1,
+    "#2B3743": 1,
+    "#E0E8EF": 1,
+    "#102B4A": 1
+  },
+  "source": "scripts/design/theme-v47.mjs",
+  "masterSha256": "a76cb899e894cad44429ab310bc5326cb09fadf69ea86a5e517b5a5167a71b7c",
+  "tool": "OpenPencil 0.17.0-beta.1",
+  "colorSystemSha256": "d39461b5c0ef003c91edfb2e2383a0ede6cfe73d816d66d9806f7fb578b3e0e1",
+  "elevationSystemSha256": "10f4cda1c269b32fcc575099ac486ab33a0d98dd46eeec02be75e889305d9316",
+  "coldReopen": "passed"
+}

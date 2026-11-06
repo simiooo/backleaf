@@ -1,6 +1,8 @@
-# 当前：OpenPencil v46 / 271页
+# 当前：OpenPencil v47 设计草稿 / 275页
 
-[可编辑主稿](Backleaf-v46.fig)保留v45全部266页，新增独立文件详情、文件夹统计中、完成、部分未读取及暗色5态。主文件区不变宽；长名称和路径完整换行，逻辑大小按需统计并节流更新。预览及独立冷重开记录见[v46](v46/manifest.json)，生成源为 `scripts/design/properties-v46.mjs`，同样依次以独立进程生成、`--export`、`--verify`。
+[v47 可编辑草稿](Backleaf-v47.fig) 基于 v46 保留全部 271 页，以中性色阶（浅色白底、深色近黑）和悬浮层级替代蓝色填充/文件夹蓝/边框强调；新增 272–275 四页悬浮层级与网格选中示意。所有既有页面已完成颜色映射，几何与节点数保持不变。预览与冷重开记录见 [v47](v47/manifest.json)，生成源为 `scripts/design/theme-v47.mjs`；颜色语义见 [color-system.json](color-system.json)，层级与阴影见 [elevation-system.json](elevation-system.json)。本轮是设计稿草案，原生 UI 尚未切换，等待产品确认后继续逐页调整。
+
+[v46 主稿](Backleaf-v46.fig)保留v45全部266页，新增独立文件详情、文件夹统计中、完成、部分未读取及暗色5态。主文件区不变宽；长名称和路径完整换行，逻辑大小按需统计并节流更新。预览及独立冷重开记录见[v46](v46/manifest.json)，生成源为 `scripts/design/properties-v46.mjs`，同样依次以独立进程生成、`--export`、`--verify`。
 
 [v45主稿](Backleaf-v45.fig)保留v44全部261页，新增搜索结果普通、hover、选中、分组及暗色5态。文件名与父目录采用18px/14px行高及2px间距，在固定行高内居中；状态切换保持几何一致。预览与独立进程冷重开记录见[v45](v45/manifest.json)。
 
