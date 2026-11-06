@@ -1,0 +1,43 @@
+{
+    "captured_at_utc":  "2026-11-06T04:35:53.2394609Z",
+    "os":  "Microsoft Windows 11 家庭版 中文版",
+    "os_version":  "10.0.26200",
+    "build":  "26200",
+    "machine":  "SIMOOO",
+    "screens":  [
+                    {
+                        "device":  "\\\\.\\DISPLAY2",
+                        "primary":  true,
+                        "bounds":  "@(0,0,2048,1152)"
+                    }
+                ],
+    "applied_dpi":  120,
+    "powershell_5":  "5.1.26100.9711",
+    "apartment_state":  "STA",
+    "desktop_locked":  false,
+    "note":  "All visible checks ran on an unlocked desktop; the user default installed Backleaf instance was left running and untouched.",
+    "user_default_instance":  {
+                                  "pid":  42072,
+                                  "path":  "C:\\Users\\qq651\\AppData\\Local\\Programs\\Backleaf\\current\\Backleaf.exe"
+                              },
+    "builds":  [
+                   {
+                       "role":  "Explorer clipboard interop",
+                       "source_commit":  "892eb0e296f6e54ea759aafa3a7021de42c78ad8",
+                       "version":  "0.1.0-preview.26",
+                       "path":  ".local/staging/0.1.0-preview.26-892eb0e2/Backleaf.exe",
+                       "sha256":  "3dcff8edad467b70e10011221b90ad8b174832da891309ff92271f0d7222a01f",
+                       "bytes":  21799936,
+                       "origin":  "locally built preview.26 candidate matching the published source commit"
+                   },
+                   {
+                       "role":  "Failed-item retry UI",
+                       "source_commit":  "5ddfb5ce1ca108694908e479ecc9ee324f92d7f5",
+                       "version":  "0.1.0-preview.26 working tree",
+                       "path":  "target/release/backleaf.exe",
+                       "sha256":  "3f00424c308c8b5ade6a3a7b9b86bacbca1bb786dda41b73f9d4440c0accc2e6",
+                       "bytes":  21821952,
+                       "origin":  "cargo build --release --locked from the files committed as 5ddfb5c"
+                   }
+               ]
+}

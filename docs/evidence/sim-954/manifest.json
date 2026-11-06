@@ -1,0 +1,111 @@
+{
+    "source_commit":  "5ddfb5ce1ca108694908e479ecc9ee324f92d7f5",
+    "clipboard_build":  "892eb0e296f6e54ea759aafa3a7021de42c78ad8",
+    "generated_at_utc":  "2026-11-06T04:40:14.6003106Z",
+    "files":  [
+                  {
+                      "path":  ".gitattributes",
+                      "sha256":  "781dc85570afe8b6721956fd02ff6dbcda32e7d341dc70ceb62a3cbab9844220"
+                  },
+                  {
+                      "path":  "clipboard/clipboard-report.json",
+                      "sha256":  "d3ca5b51803ba6a983b216cf6ba96723343b128f5adbc759665ee0262f50efcf"
+                  },
+                  {
+                      "path":  "clipboard/clipboard-smoke.ps1",
+                      "sha256":  "2b700c2bda325c968e4c9f8517b3f6d27798482ff049db43f6ae3d1f7b754e0b"
+                  },
+                  {
+                      "path":  "clipboard/run.log",
+                      "sha256":  "11b53be7467c43ff2e8213133cdcab367253accba139ce385382fea9d3c0878e"
+                  },
+                  {
+                      "path":  "clipboard/screenshots/01-backleaf-after-copy.png",
+                      "sha256":  "04c3dabfda571356d0f82c50ecf1e986fb0c46fea7ee17fd9f46e1758e620b75"
+                  },
+                  {
+                      "path":  "clipboard/screenshots/02-explorer-after-paste-copy.png",
+                      "sha256":  "b7da453d86bf05ba3e716856746d50af7b5a0b167536b269fbdb778fc47096ce"
+                  },
+                  {
+                      "path":  "clipboard/screenshots/03-backleaf-after-cut.png",
+                      "sha256":  "170859c15bc9fa823eb7483b9ba89292740e4910f841c29570780d30495e6a2f"
+                  },
+                  {
+                      "path":  "clipboard/screenshots/04-explorer-after-paste-cut.png",
+                      "sha256":  "892aeeda62c24e1ceafc078e437fbd9309a2c547d92d3d58a32befff677b5ec7"
+                  },
+                  {
+                      "path":  "clipboard/screenshots/05-explorer-after-copy-beta.png",
+                      "sha256":  "f4ffcb9df1735d7f79ce8f0fcc69ee4e2aae0083a794e81b76a71ca6f2e29cef"
+                  },
+                  {
+                      "path":  "clipboard/screenshots/06-backleaf-after-paste-beta.png",
+                      "sha256":  "a4240b781f330fcce32142d16ed2dc816ef48307cf785ebb070f876c630bb9bb"
+                  },
+                  {
+                      "path":  "clipboard/screenshots/07-backleaf-cut-before-external-change.png",
+                      "sha256":  "06e8b8d7b7ffd64ee38d0e57fda8212189f0fcc390da30b9724297b42958ec23"
+                  },
+                  {
+                      "path":  "clipboard/screenshots/08-backleaf-after-external-change.png",
+                      "sha256":  "970f1822bd20bf241f0114b02bed3ac1b95053beb84a18b450d88eba025ea8ac"
+                  },
+                  {
+                      "path":  "clipboard/screenshots/cut-state-comparison.png",
+                      "sha256":  "6cee3fe547876ce2fef69809d0b2bfc5deb0818b3f0c82ba0c777c57c44a580a"
+                  },
+                  {
+                      "path":  "clipboard/session-preflight.json",
+                      "sha256":  "03cd39fc83f20d45739cc1ad5a892539820e85667ed42cb33dfa8cad7efd7df4"
+                  },
+                  {
+                      "path":  "environment.json",
+                      "sha256":  "2032044259de08913cac800743cf6694e30b3d43d35a4d275cd45a169c814fcb"
+                  },
+                  {
+                      "path":  "README.md",
+                      "sha256":  "ba0cbb87c0384c03a1e4319d6516a1e2154567523641ebd28d30314b1f6cd07c"
+                  },
+                  {
+                      "path":  "retry/retry-report.json",
+                      "sha256":  "74ce23a852a32abffc8e1f67489ead8d80579794bf00f02b2ad65bed246f9c0a"
+                  },
+                  {
+                      "path":  "retry/retry-smoke.ps1",
+                      "sha256":  "40647234116fc35cfb2872d8d8109534fd3b79cc3239813bc1ee8543d40ce2ab"
+                  },
+                  {
+                      "path":  "retry/run.log",
+                      "sha256":  "ccfd40afc57f20181a164b13c7fccb4721529658964342ef65627ae81cbb620b"
+                  },
+                  {
+                      "path":  "retry/screenshots/01-source-selected-and-copied.png",
+                      "sha256":  "43c9255d6457602a0098c088e04a34ca1358cabad4ffe172ea69202735c96be9"
+                  },
+                  {
+                      "path":  "retry/screenshots/02-destination-after-failed-paste.png",
+                      "sha256":  "92091c891b379af89f695c0ef489681b2b1e83dc8edbce6f243eac94bb9a109e"
+                  },
+                  {
+                      "path":  "retry/screenshots/03-task-panel-with-retry.png",
+                      "sha256":  "4d0f8f1b2af2f091930a06fd3a7608f0bc8232a67d4a38cdc2af683f41148d9a"
+                  },
+                  {
+                      "path":  "retry/screenshots/04-after-retry.png",
+                      "sha256":  "2076b815a0b4ab2e666ff6e3052d9cc71b39278ff927ca909c48f316781e6db7"
+                  },
+                  {
+                      "path":  "retry/session-preflight.json",
+                      "sha256":  "03cd39fc83f20d45739cc1ad5a892539820e85667ed42cb33dfa8cad7efd7df4"
+                  },
+                  {
+                      "path":  "retry/task-panel-after-retry-uia.json",
+                      "sha256":  "4364e9b59f01382b77340270b5a43f2acf5a889f9324117773f004f3cb2dbe4e"
+                  },
+                  {
+                      "path":  "retry/task-panel-uia.json",
+                      "sha256":  "05194178b18339e3b85d0be4a5961bfdb329b750a01f3a072a0c95e0daaf9e3c"
+                  }
+              ]
+}

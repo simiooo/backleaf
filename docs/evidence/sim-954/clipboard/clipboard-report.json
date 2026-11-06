@@ -1,0 +1,504 @@
+{
+    "started_utc":  "2026-11-06T04:10:46.4952056Z",
+    "exe":  "D:\\work\\backleaf\\.local\\staging\\0.1.0-preview.26-892eb0e2\\Backleaf.exe",
+    "exe_sha256":  "3dcff8edad467b70e10011221b90ad8b174832da891309ff92271f0d7222a01f",
+    "source_commit":  "892eb0e296f6e54ea759aafa3a7021de42c78ad8",
+    "apartment":  "STA",
+    "desktop_locked":  false,
+    "original_clipboard":  {
+                               "sequence":  3076,
+                               "formats":  [
+                                               "System.String",
+                                               "UnicodeText",
+                                               "Text"
+                                           ],
+                               "files":  [
+
+                                         ],
+                               "effect":  null,
+                               "text":  " launch directories",
+                               "error":  null
+                           },
+    "restored_clipboard":  true,
+    "clipboard_states":  {
+                             "after_backleaf_copy":  {
+                                                         "sequence":  3079,
+                                                         "formats":  [
+                                                                         "FileDrop",
+                                                                         "FileNameW",
+                                                                         "FileName",
+                                                                         "Preferred DropEffect"
+                                                                     ],
+                                                         "files":  [
+                                                                       "D:\\work\\backleaf\\.local\\verify\\clipboard-954\\src\\alpha.txt",
+                                                                       "D:\\work\\backleaf\\.local\\verify\\clipboard-954\\src\\资料-剪贴板.txt"
+                                                                   ],
+                                                         "effect":  1,
+                                                         "text":  "",
+                                                         "error":  null
+                                                     },
+                             "after_backleaf_cut":  {
+                                                        "sequence":  3082,
+                                                        "formats":  [
+                                                                        "FileDrop",
+                                                                        "FileNameW",
+                                                                        "FileName",
+                                                                        "Preferred DropEffect"
+                                                                    ],
+                                                        "files":  [
+                                                                      "D:\\work\\backleaf\\.local\\verify\\clipboard-954\\src\\alpha.txt"
+                                                                  ],
+                                                        "effect":  2,
+                                                        "text":  "",
+                                                        "error":  null
+                                                    },
+                             "after_explorer_copy":  {
+                                                         "sequence":  3096,
+                                                         "formats":  [
+                                                                         "Shell IDList Array",
+                                                                         "DataObjectAttributes",
+                                                                         "DataObjectAttributesRequiringElevation",
+                                                                         "Preferred DropEffect",
+                                                                         "AsyncFlag",
+                                                                         "FileDrop",
+                                                                         "FileNameW",
+                                                                         "FileName",
+                                                                         "FileContents",
+                                                                         "FileGroupDescriptorW",
+                                                                         "ZoneIdentifier"
+                                                                     ],
+                                                         "files":  [
+                                                                       "D:\\work\\backleaf\\.local\\verify\\clipboard-954\\explorer-src\\beta.txt"
+                                                                   ],
+                                                         "effect":  5,
+                                                         "text":  "",
+                                                         "error":  null
+                                                     },
+                             "cut_before_external_change":  {
+                                                                "sequence":  3099,
+                                                                "formats":  [
+                                                                                "FileDrop",
+                                                                                "FileNameW",
+                                                                                "FileName",
+                                                                                "Preferred DropEffect"
+                                                                            ],
+                                                                "files":  [
+                                                                              "D:\\work\\backleaf\\.local\\verify\\clipboard-954\\src\\资料-剪贴板.txt"
+                                                                          ],
+                                                                "effect":  2,
+                                                                "text":  "",
+                                                                "error":  null
+                                                            },
+                             "after_external_text_change":  {
+                                                                "sequence":  3108,
+                                                                "formats":  [
+                                                                                "System.String",
+                                                                                "UnicodeText",
+                                                                                "Text"
+                                                                            ],
+                                                                "files":  [
+
+                                                                          ],
+                                                                "effect":  null,
+                                                                "text":  "backleaf clipboard interop external change marker",
+                                                                "error":  null
+                                                            }
+                         },
+    "fixtures":  {
+                     "src":  "D:\\work\\backleaf\\.local\\verify\\clipboard-954\\src",
+                     "src_files":  [
+                                       "D:\\work\\backleaf\\.local\\verify\\clipboard-954\\src\\alpha.txt",
+                                       "D:\\work\\backleaf\\.local\\verify\\clipboard-954\\src\\资料-剪贴板.txt"
+                                   ],
+                     "src_hashes":  {
+                                        "alpha.txt":  "b9d27be42bf5d8f223189ca837a447b474a480273882845cddccaec38a568e6d",
+                                        "资料-剪贴板.txt":  "678828a0613e2dba64d4227d26f74cf66c36271c781d64a0ee5eff1feb383b53"
+                                    },
+                     "explorer_dest":  "D:\\work\\backleaf\\.local\\verify\\clipboard-954\\explorer-dest",
+                     "explorer_cut_dest":  "D:\\work\\backleaf\\.local\\verify\\clipboard-954\\explorer-cut-dest",
+                     "explorer_src":  "D:\\work\\backleaf\\.local\\verify\\clipboard-954\\explorer-src",
+                     "beta_sha256":  "cf82ff148cc9f237e2bbb2acb590f149366a3d49253186c82775911928c4c7b6",
+                     "backleaf_paste_dir":  "D:\\work\\backleaf\\.local\\verify\\clipboard-954\\backleaf-paste-dir"
+                 },
+    "steps":  [
+                  {
+                      "name":  "session-unlocked",
+                      "ok":  true,
+                      "detail":  {
+                                     "locked":  false,
+                                     "error":  null
+                                 },
+                      "at_utc":  "2026-11-06T04:10:47.1173583Z"
+                  },
+                  {
+                      "name":  "fixture-two-source-files",
+                      "ok":  true,
+                      "detail":  [
+                                     "alpha.txt",
+                                     "资料-剪贴板.txt"
+                                 ],
+                      "at_utc":  "2026-11-06T04:10:47.1886955Z"
+                  },
+                  {
+                      "name":  "bl1-window",
+                      "ok":  true,
+                      "detail":  {
+                                     "hwnd":  6619938,
+                                     "pid":  25172,
+                                     "title":  "拾径 · Backleaf",
+                                     "class":  "Zed::Window",
+                                     "rect":  [
+                                                  646,
+                                                  249,
+                                                  1914,
+                                                  1133
+                                              ],
+                                     "dwm":  [
+                                                 654,
+                                                 249,
+                                                 1906,
+                                                 1125
+                                             ]
+                                 },
+                      "at_utc":  "2026-11-06T04:10:47.9342367Z"
+                  },
+                  {
+                      "name":  "clipboard-copy-two-paths",
+                      "ok":  true,
+                      "detail":  {
+                                     "expected":  [
+                                                      "D:\\work\\backleaf\\.local\\verify\\clipboard-954\\src\\alpha.txt",
+                                                      "D:\\work\\backleaf\\.local\\verify\\clipboard-954\\src\\资料-剪贴板.txt"
+                                                  ],
+                                     "effect":  1,
+                                     "actual":  [
+                                                    "D:\\work\\backleaf\\.local\\verify\\clipboard-954\\src\\alpha.txt",
+                                                    "D:\\work\\backleaf\\.local\\verify\\clipboard-954\\src\\资料-剪贴板.txt"
+                                                ]
+                                 },
+                      "at_utc":  "2026-11-06T04:10:49.4100448Z"
+                  },
+                  {
+                      "name":  "backleaf-copy-keeps-source",
+                      "ok":  true,
+                      "detail":  null,
+                      "at_utc":  "2026-11-06T04:10:49.4243117Z"
+                  },
+                  {
+                      "name":  "explorer-paste-copy-both-files",
+                      "ok":  true,
+                      "detail":  {
+                                     "dest":  "D:\\work\\backleaf\\.local\\verify\\clipboard-954\\explorer-dest",
+                                     "files":  [
+                                                   "alpha.txt",
+                                                   "资料-剪贴板.txt"
+                                               ]
+                                 },
+                      "at_utc":  "2026-11-06T04:10:52.1938732Z"
+                  },
+                  {
+                      "name":  "clipboard-cut-one-path-move-effect",
+                      "ok":  true,
+                      "detail":  {
+                                     "actual":  [
+                                                    "D:\\work\\backleaf\\.local\\verify\\clipboard-954\\src\\alpha.txt"
+                                                ],
+                                     "effect":  2
+                                 },
+                      "at_utc":  "2026-11-06T04:10:53.5507792Z"
+                  },
+                  {
+                      "name":  "explorer-paste-cut-moves-file",
+                      "ok":  true,
+                      "detail":  {
+                                     "source_gone":  true,
+                                     "dest_exists":  true,
+                                     "hash_ok":  true
+                                 },
+                      "at_utc":  "2026-11-06T04:10:56.2421498Z"
+                  },
+                  {
+                      "name":  "bl2-window",
+                      "ok":  true,
+                      "detail":  {
+                                     "hwnd":  43651176,
+                                     "pid":  38592,
+                                     "title":  "拾径 · Backleaf",
+                                     "class":  "Zed::Window",
+                                     "rect":  [
+                                                  646,
+                                                  249,
+                                                  1914,
+                                                  1133
+                                              ],
+                                     "dwm":  [
+                                                 654,
+                                                 249,
+                                                 1906,
+                                                 1125
+                                             ]
+                                 },
+                      "at_utc":  "2026-11-06T04:10:57.1663764Z"
+                  },
+                  {
+                      "name":  "clipboard-explorer-copy-beta",
+                      "ok":  true,
+                      "detail":  {
+                                     "effect":  5,
+                                     "actual":  [
+                                                    "D:\\work\\backleaf\\.local\\verify\\clipboard-954\\explorer-src\\beta.txt"
+                                                ],
+                                     "uia_item":  true
+                                 },
+                      "at_utc":  "2026-11-06T04:11:02.2139815Z"
+                  },
+                  {
+                      "name":  "backleaf-paste-from-explorer",
+                      "ok":  true,
+                      "detail":  {
+                                     "dir":  "D:\\work\\backleaf\\.local\\verify\\clipboard-954\\backleaf-paste-dir",
+                                     "hash_ok":  true,
+                                     "exists":  true
+                                 },
+                      "at_utc":  "2026-11-06T04:11:06.6415943Z"
+                  },
+                  {
+                      "name":  "second-cut-before-external-change",
+                      "ok":  true,
+                      "detail":  {
+                                     "effect":  2
+                                 },
+                      "at_utc":  "2026-11-06T04:11:07.9356369Z"
+                  },
+                  {
+                      "name":  "external-text-clipboard-applied",
+                      "ok":  true,
+                      "detail":  {
+                                     "text":  "backleaf clipboard interop external change marker",
+                                     "effect":  null
+                                 },
+                      "at_utc":  "2026-11-06T04:11:09.7580256Z"
+                  },
+                  {
+                      "name":  "bl1-still-running",
+                      "ok":  true,
+                      "detail":  {
+                                     "pid":  25172
+                                 },
+                      "at_utc":  "2026-11-06T04:11:10.0605265Z"
+                  },
+                  {
+                      "name":  "backleaf-clean-exit",
+                      "ok":  true,
+                      "detail":  {
+                                     "bl1_exit":  0,
+                                     "bl2_exit":  0
+                                 },
+                      "at_utc":  "2026-11-06T04:11:10.1912850Z"
+                  },
+                  {
+                      "name":  "no-leftover-backleaf",
+                      "ok":  true,
+                      "detail":  {
+                                     "leftover":  0
+                                 },
+                      "at_utc":  "2026-11-06T04:11:10.2247996Z"
+                  }
+              ],
+    "failures":  [
+
+                 ],
+    "screenshots":  [
+                        {
+                            "name":  "01-backleaf-after-copy.png",
+                            "path":  "D:\\work\\backleaf\\.local\\verify\\clipboard-954\\run4\\screenshots\\01-backleaf-after-copy.png",
+                            "sha256":  "04c3dabfda571356d0f82c50ecf1e986fb0c46fea7ee17fd9f46e1758e620b75",
+                            "rect":  [
+                                         654,
+                                         249,
+                                         1252,
+                                         876
+                                     ],
+                            "at_utc":  "2026-11-06T04:10:49.7609371Z"
+                        },
+                        {
+                            "name":  "02-explorer-after-paste-copy.png",
+                            "path":  "D:\\work\\backleaf\\.local\\verify\\clipboard-954\\run4\\screenshots\\02-explorer-after-paste-copy.png",
+                            "sha256":  "b7da453d86bf05ba3e716856746d50af7b5a0b167536b269fbdb778fc47096ce",
+                            "rect":  [
+                                         8,
+                                         561,
+                                         1558,
+                                         811
+                                     ],
+                            "at_utc":  "2026-11-06T04:10:52.5099111Z"
+                        },
+                        {
+                            "name":  "03-backleaf-after-cut.png",
+                            "path":  "D:\\work\\backleaf\\.local\\verify\\clipboard-954\\run4\\screenshots\\03-backleaf-after-cut.png",
+                            "sha256":  "170859c15bc9fa823eb7483b9ba89292740e4910f841c29570780d30495e6a2f",
+                            "rect":  [
+                                         654,
+                                         249,
+                                         1252,
+                                         876
+                                     ],
+                            "at_utc":  "2026-11-06T04:10:53.8518177Z"
+                        },
+                        {
+                            "name":  "04-explorer-after-paste-cut.png",
+                            "path":  "D:\\work\\backleaf\\.local\\verify\\clipboard-954\\run4\\screenshots\\04-explorer-after-paste-cut.png",
+                            "sha256":  "892aeeda62c24e1ceafc078e437fbd9309a2c547d92d3d58a32befff677b5ec7",
+                            "rect":  [
+                                         8,
+                                         561,
+                                         1558,
+                                         811
+                                     ],
+                            "at_utc":  "2026-11-06T04:10:56.5537724Z"
+                        },
+                        {
+                            "name":  "05-explorer-after-copy-beta.png",
+                            "path":  "D:\\work\\backleaf\\.local\\verify\\clipboard-954\\run4\\screenshots\\05-explorer-after-copy-beta.png",
+                            "sha256":  "f4ffcb9df1735d7f79ce8f0fcc69ee4e2aae0083a794e81b76a71ca6f2e29cef",
+                            "rect":  [
+                                         8,
+                                         561,
+                                         1558,
+                                         811
+                                     ],
+                            "at_utc":  "2026-11-06T04:11:02.5330057Z"
+                        },
+                        {
+                            "name":  "06-backleaf-after-paste-beta.png",
+                            "path":  "D:\\work\\backleaf\\.local\\verify\\clipboard-954\\run4\\screenshots\\06-backleaf-after-paste-beta.png",
+                            "sha256":  "a4240b781f330fcce32142d16ed2dc816ef48307cf785ebb070f876c630bb9bb",
+                            "rect":  [
+                                         654,
+                                         249,
+                                         1252,
+                                         876
+                                     ],
+                            "at_utc":  "2026-11-06T04:11:06.9510887Z"
+                        },
+                        {
+                            "name":  "07-backleaf-cut-before-external-change.png",
+                            "path":  "D:\\work\\backleaf\\.local\\verify\\clipboard-954\\run4\\screenshots\\07-backleaf-cut-before-external-change.png",
+                            "sha256":  "06e8b8d7b7ffd64ee38d0e57fda8212189f0fcc390da30b9724297b42958ec23",
+                            "rect":  [
+                                         654,
+                                         249,
+                                         1252,
+                                         876
+                                     ],
+                            "at_utc":  "2026-11-06T04:11:08.2414197Z"
+                        },
+                        {
+                            "name":  "08-backleaf-after-external-change.png",
+                            "path":  "D:\\work\\backleaf\\.local\\verify\\clipboard-954\\run4\\screenshots\\08-backleaf-after-external-change.png",
+                            "sha256":  "970f1822bd20bf241f0114b02bed3ac1b95053beb84a18b450d88eba025ea8ac",
+                            "rect":  [
+                                         654,
+                                         249,
+                                         1252,
+                                         876
+                                     ],
+                            "at_utc":  "2026-11-06T04:11:10.0575240Z"
+                        }
+                    ],
+    "windows":  [
+                    {
+                        "hwnd":  6619938,
+                        "pid":  25172,
+                        "title":  "拾径 · Backleaf",
+                        "class":  "Zed::Window",
+                        "rect":  [
+                                     646,
+                                     249,
+                                     1914,
+                                     1133
+                                 ],
+                        "dwm":  [
+                                    654,
+                                    249,
+                                    1906,
+                                    1125
+                                ]
+                    },
+                    {
+                        "hwnd":  2822038,
+                        "pid":  29108,
+                        "title":  "explorer-dest - 文件资源管理器",
+                        "class":  "CabinetWClass",
+                        "rect":  [
+                                     0,
+                                     561,
+                                     1574,
+                                     1380
+                                 ],
+                        "dwm":  [
+                                    8,
+                                    561,
+                                    1566,
+                                    1372
+                                ]
+                    },
+                    {
+                        "hwnd":  5377796,
+                        "pid":  12988,
+                        "title":  "explorer-cut-dest - 文件资源管理器",
+                        "class":  "CabinetWClass",
+                        "rect":  [
+                                     0,
+                                     561,
+                                     1574,
+                                     1380
+                                 ],
+                        "dwm":  [
+                                    8,
+                                    561,
+                                    1566,
+                                    1372
+                                ]
+                    },
+                    {
+                        "hwnd":  43651176,
+                        "pid":  38592,
+                        "title":  "拾径 · Backleaf",
+                        "class":  "Zed::Window",
+                        "rect":  [
+                                     646,
+                                     249,
+                                     1914,
+                                     1133
+                                 ],
+                        "dwm":  [
+                                    654,
+                                    249,
+                                    1906,
+                                    1125
+                                ]
+                    },
+                    {
+                        "hwnd":  72878428,
+                        "pid":  36396,
+                        "title":  "explorer-src - 文件资源管理器",
+                        "class":  "CabinetWClass",
+                        "rect":  [
+                                     0,
+                                     561,
+                                     1574,
+                                     1380
+                                 ],
+                        "dwm":  [
+                                    8,
+                                    561,
+                                    1566,
+                                    1372
+                                ]
+                    }
+                ],
+    "passed":  true,
+    "error":  null,
+    "finished_utc":  "2026-11-06T04:11:10.7536228Z"
+}

@@ -43,3 +43,6 @@ docs/evidence/installer-image-guard/** -text whitespace=cr-at-eol,-blank-at-eof,
 
 # Preserve the preview26 public/install/visible-smoke evidence bytes exactly.
 docs/evidence/preview-26/** -text
+
+# Preserve the SIM-954 clipboard interop and retry evidence bytes exactly.
+docs/evidence/sim-954/** -text
