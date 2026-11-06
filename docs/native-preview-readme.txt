@@ -1,9 +1,11 @@
-拾径 / Backleaf 0.1.0-preview.27
+拾径 / Backleaf 0.1.0-preview.28
 
 Windows x64 便携测试版：解压整个ZIP，运行Backleaf.exe。或在PowerShell执行：
 irm https://raw.githubusercontent.com/simiooo/backleaf/staging/install.ps1 | iex
 
-本批次（新增失败项重试与剪贴板互操作验证，以下含 preview.26 既有内容）：
+本批次（新增拖放/删除刷新修复，含失败项重试与剪贴板互操作验证及 preview.26 既有内容）：
+- 删除等应用内操作完成后立即刷新目录；快照提交前已移除项保留淡化占位，不再出现整行空白。
+- 目录刷新期间仍接受外部OLE拖放，删除文件后立即再次从 Explorer 拖入可正常接收；目标仍按捕获身份校验。
 - 失败任务重试：任务结束且存在确认失败项时显示“重试”；只重放已确认失败的顶层项，成功、未确认、取消及部分完成目录不重放，同一任务只重试一次；真实窗口以锁定文件部分失败后释放再重试验证，目标无重复、源完整。
 - Explorer 文件剪贴板互操作实机通过：Backleaf 复制/剪切到 Explorer 粘贴、Explorer 复制到 Backleaf 粘贴均按真实文件内容验证；外部剪贴板变化会清除剪切标记。
 - 独立详情窗口展示完整名称/路径、大小与时间；文件夹后台统计并节流更新数字，F5刷新、Esc/Ctrl+W关闭取消，不挤占主文件区。
