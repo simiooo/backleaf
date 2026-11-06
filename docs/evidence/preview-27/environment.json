@@ -1,0 +1,46 @@
+{
+    "captured_at_utc":  "2026-11-06T05:13:42.3980512Z",
+    "os":  "Microsoft Windows 11 家庭版 中文版",
+    "os_version":  "10.0.26200",
+    "build":  "26200",
+    "machine":  "SIMOOO",
+    "screens":  [
+                    {
+                        "device":  "\\\\.\\DISPLAY2",
+                        "primary":  true,
+                        "bounds":  "@(0,0,2048,1152)"
+                    }
+                ],
+    "applied_dpi":  120,
+    "powershell_5":  "5.1.26100.9711",
+    "powershell_7":  "7.6.9 (official portable ZIP sha256 ce7484804c0f0ad4dda10c958e71acdaf7eebfb22505c1b480f89e0e9f1da94d, not installed system-wide)",
+    "apartment_state":  "STA",
+    "desktop_locked":  false,
+    "published":  {
+                      "tag":  "test-v0.1.0-preview.27-7b1ae291",
+                      "url":  "https://github.com/simiooo/backleaf/releases/tag/test-v0.1.0-preview.27-7b1ae291",
+                      "source_commit":  "7b1ae2916c1f19197d74de3e6d2902ca4373f55d",
+                      "version":  "0.1.0-preview.27",
+                      "exe_sha256":  "a6e0c95f6cabc5788d361024e0c95321f478c1efa390350f492fba421640a2a7",
+                      "zip_sha256":  "88f7a0231e7fbf27f5a5fc69552736ca269eda92560fae25db15b2e22b8d1909"
+                  },
+    "installs":  [
+                     {
+                         "powershell":  "5.1.26100.9711",
+                         "path":  ".local/installer-staging/5-69db163b5b2f4724a180abe00c363473",
+                         "exe_sha256":  "a6e0c95f6cabc5788d361024e0c95321f478c1efa390350f492fba421640a2a7",
+                         "cli_smoke_passed":  true
+                     },
+                     {
+                         "powershell":  "7.6.9",
+                         "path":  ".local/installer-staging/7-baaf3c6fe63643f99c647f97e448c9e2",
+                         "exe_sha256":  "a6e0c95f6cabc5788d361024e0c95321f478c1efa390350f492fba421640a2a7",
+                         "cli_smoke_passed":  true
+                     }
+                 ],
+    "note":  "Both anonymous installations went to isolated directories; the user default installation was not replaced and remains a separate running instance.",
+    "user_default_instance":  {
+                                  "pid":  42072,
+                                  "path":  "C:\\Users\\qq651\\AppData\\Local\\Programs\\Backleaf\\current\\Backleaf.exe"
+                              }
+}

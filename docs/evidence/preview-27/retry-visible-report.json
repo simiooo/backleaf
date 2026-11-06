@@ -1,0 +1,148 @@
+{
+    "started_utc":  "2026-11-06T05:12:44.8880296Z",
+    "exe":  "D:\\work\\backleaf\\.local\\verify\\preview27\\public-install\\Backleaf.exe",
+    "exe_sha256":  "a6e0c95f6cabc5788d361024e0c95321f478c1efa390350f492fba421640a2a7",
+    "fixture":  {
+                    "src":  "D:\\work\\backleaf\\.local\\verify\\preview27\\retry-fixture\\src",
+                    "dest":  "D:\\work\\backleaf\\.local\\verify\\preview27\\retry-fixture\\dest",
+                    "keep":  "D:\\work\\backleaf\\.local\\verify\\preview27\\retry-fixture\\src\\keep.txt",
+                    "locked":  "D:\\work\\backleaf\\.local\\verify\\preview27\\retry-fixture\\src\\locked.txt"
+                },
+    "steps":  [
+                  {
+                      "name":  "app-a-window",
+                      "ok":  true,
+                      "detail":  "\r\n\r\nhwnd  : 6948942\r\npid   : 41436\r\ntitle : 拾径 · Backleaf\r\nclass : Zed::Window\r\ndwm   : {654, 249, 1906, 1125}\r\n\r\n\r\n\r\n",
+                      "at_utc":  "2026-11-06T05:12:45.9296317Z"
+                  },
+                  {
+                      "name":  "app-a-list-items",
+                      "ok":  true,
+                      "detail":  "keep.txt\r\nlocked.txt\r\n",
+                      "at_utc":  "2026-11-06T05:12:46.4204039Z"
+                  },
+                  {
+                      "name":  "clipboard-copied-two-files",
+                      "ok":  true,
+                      "detail":  "D:\\work\\backleaf\\.local\\verify\\preview27\\retry-fixture\\src\\keep.txt\r\nD:\\work\\backleaf\\.local\\verify\\preview27\\retry-fixture\\src\\locked.txt\r\n",
+                      "at_utc":  "2026-11-06T05:12:47.7410884Z"
+                  },
+                  {
+                      "name":  "app-b-window",
+                      "ok":  true,
+                      "detail":  "\r\n\r\nhwnd  : 29298654\r\npid   : 38408\r\ntitle : 拾径 · Backleaf\r\nclass : Zed::Window\r\ndwm   : {654, 249, 1906, 1125}\r\n\r\n\r\n\r\n",
+                      "at_utc":  "2026-11-06T05:12:48.6929673Z"
+                  },
+                  {
+                      "name":  "first-paste-copies-unlocked-file",
+                      "ok":  true,
+                      "detail":  "\r\nName                           Value                                                                                   \r\n----                           -----                                                                                   \r\nkeep                           True                                                                                    \r\n\r\n\r\n",
+                      "at_utc":  "2026-11-06T05:12:50.8735819Z"
+                  },
+                  {
+                      "name":  "first-paste-leaves-locked-file-failed",
+                      "ok":  true,
+                      "detail":  "\r\nName                           Value                                                                                   \r\n----                           -----                                                                                   \r\ndest_locked                    False                                                                                   \r\n\r\n\r\n",
+                      "at_utc":  "2026-11-06T05:12:50.8815207Z"
+                  },
+                  {
+                      "name":  "task-entry-visible",
+                      "ok":  true,
+                      "detail":  "\r\nName                           Value                                                                                   \r\n----                           -----                                                                                   \r\nname                           文件操作，1 项任务                                                                              \r\n\r\n\r\n",
+                      "at_utc":  "2026-11-06T05:12:53.1138792Z"
+                  },
+                  {
+                      "name":  "retry-button-visible",
+                      "ok":  true,
+                      "detail":  "\r\nName                           Value                                                                                   \r\n----                           -----                                                                                   \r\nname                           重试                                                                                      \r\n\r\n\r\n",
+                      "at_utc":  "2026-11-06T05:12:53.9581450Z"
+                  },
+                  {
+                      "name":  "retry-copies-only-failed-item",
+                      "ok":  true,
+                      "detail":  "\r\nName                           Value                                                                                   \r\n----                           -----                                                                                   \r\ndest_locked                    True                                                                                    \r\ncontent_ok                     True                                                                                    \r\n\r\n\r\n",
+                      "at_utc":  "2026-11-06T05:12:54.9158879Z"
+                  },
+                  {
+                      "name":  "destination-has-exactly-two-items",
+                      "ok":  true,
+                      "detail":  "keep.txt\r\nlocked.txt\r\n",
+                      "at_utc":  "2026-11-06T05:12:56.0592835Z"
+                  },
+                  {
+                      "name":  "keep-not-duplicated",
+                      "ok":  true,
+                      "detail":  "\r\nName                           Value                                                                                   \r\n----                           -----                                                                                   \r\ndest_keep                      keep original...                                                                        \r\n\r\n\r\n",
+                      "at_utc":  "2026-11-06T05:12:56.0633380Z"
+                  },
+                  {
+                      "name":  "sources-intact",
+                      "ok":  true,
+                      "detail":  "",
+                      "at_utc":  "2026-11-06T05:12:56.0664626Z"
+                  }
+              ],
+    "failures":  [
+
+                 ],
+    "screenshots":  [
+                        {
+                            "name":  "01-source-selected-and-copied.png",
+                            "path":  "D:\\work\\backleaf\\.local\\verify\\preview27\\retry-visible\\screenshots\\01-source-selected-and-copied.png",
+                            "sha256":  "e9ff3a2bb5b436a16b84b800aea9ace106fac022fe094402653e18573e9f3227",
+                            "rect":  [
+                                         654,
+                                         249,
+                                         1252,
+                                         876
+                                     ],
+                            "at_utc":  "2026-11-06T05:12:48.0992627Z"
+                        },
+                        {
+                            "name":  "02-destination-after-failed-paste.png",
+                            "path":  "D:\\work\\backleaf\\.local\\verify\\preview27\\retry-visible\\screenshots\\02-destination-after-failed-paste.png",
+                            "sha256":  "edae73f7fbf2ade8f86b792b84eccae7df5f99b695a560069bdce7fea8277a43",
+                            "rect":  [
+                                         654,
+                                         249,
+                                         1252,
+                                         876
+                                     ],
+                            "at_utc":  "2026-11-06T05:12:53.4173924Z"
+                        },
+                        {
+                            "name":  "03-task-panel-with-retry.png",
+                            "path":  "D:\\work\\backleaf\\.local\\verify\\preview27\\retry-visible\\screenshots\\03-task-panel-with-retry.png",
+                            "sha256":  "38b4d903db1369a019771129634a41389fde4ea9d921d8a998cb890b598ef99c",
+                            "rect":  [
+                                         654,
+                                         249,
+                                         1252,
+                                         876
+                                     ],
+                            "at_utc":  "2026-11-06T05:12:54.4013021Z"
+                        },
+                        {
+                            "name":  "04-after-retry.png",
+                            "path":  "D:\\work\\backleaf\\.local\\verify\\preview27\\retry-visible\\screenshots\\04-after-retry.png",
+                            "sha256":  "6cc73275764c3b597009ef45a44bfe64755b41c73a7939dc6a4c19f9084dd0b3",
+                            "rect":  [
+                                         654,
+                                         249,
+                                         1252,
+                                         876
+                                     ],
+                            "at_utc":  "2026-11-06T05:12:56.0511143Z"
+                        }
+                    ],
+    "original_clipboard":  {
+                               "files":  [
+
+                                         ],
+                               "text":  "033362"
+                           },
+    "restored_clipboard":  false,
+    "passed":  true,
+    "error":  null,
+    "finished_utc":  "2026-11-06T05:12:56.0710832Z"
+}

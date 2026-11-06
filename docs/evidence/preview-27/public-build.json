@@ -1,0 +1,83 @@
+{
+  "version": "0.1.0-preview.27",
+  "source_commit": "7b1ae2916c1f19197d74de3e6d2902ca4373f55d",
+  "gpui_revision": "d36a70661471ec64dce230798121d554930d5c60",
+  "built_at_utc": "2026-11-06T05:11:04.2412791Z",
+  "exe_sha256": "a6e0c95f6cabc5788d361024e0c95321f478c1efa390350f492fba421640a2a7",
+  "archive_library_sha256": "78bf6b668d75801e3aa180b4ccb16e6d8395fba80dec8a065055bb6f8dfabb82",
+  "design_sha256": "216c6ffd8f632f908406d4765a9be010b59c24e70d59f7b8a63bc1e5055ab179",
+  "ci_run_url": "https://github.com/simiooo/backleaf/actions/runs/42166140371",
+  "runtime": {
+    "tag": "runtime-v2",
+    "asset_sha256": "sha256:9d80d1aefd403a382b5f3d01be05efa17062c498ea43a317c363d0233184e4ea",
+    "files": [
+      {
+        "name": "concrt140.dll",
+        "sha256": "54716f0738af891f283d213b5c8d11b25896bb8ee3097d301eae718560cf974e",
+        "version": "14.51.36247.0",
+        "signer": "CN=Microsoft Windows Software Compatibility Publisher, O=Microsoft Corporation, L=Redmond, S=Washington, C=US"
+      },
+      {
+        "name": "msvcp140_1.dll",
+        "sha256": "206c931bf90fdad8816de3b5e2ef80b2bcaa9406c89ecc05fe6fddffe251e982",
+        "version": "14.51.36247.0",
+        "signer": "CN=Microsoft Windows Software Compatibility Publisher, O=Microsoft Corporation, L=Redmond, S=Washington, C=US"
+      },
+      {
+        "name": "msvcp140_2.dll",
+        "sha256": "d50d7883f20d1dc6191768d3746f52dd9cac89c346ffaed5be1f110c2f34a838",
+        "version": "14.51.36247.0",
+        "signer": "CN=Microsoft Windows Software Compatibility Publisher, O=Microsoft Corporation, L=Redmond, S=Washington, C=US"
+      },
+      {
+        "name": "msvcp140_atomic_wait.dll",
+        "sha256": "3d0cbfaa1bf3eecf5a3f4491d2960ee803cb994f30292c6adc4a07c498f60e2b",
+        "version": "14.51.36247.0",
+        "signer": "CN=Microsoft Windows Software Compatibility Publisher, O=Microsoft Corporation, L=Redmond, S=Washington, C=US"
+      },
+      {
+        "name": "msvcp140_codecvt_ids.dll",
+        "sha256": "8a65c7596ef2e6938731f5a1058e7e40145b6d97967cc649231a076b9a608d78",
+        "version": "14.51.36247.0",
+        "signer": "CN=Microsoft Windows Software Compatibility Publisher, O=Microsoft Corporation, L=Redmond, S=Washington, C=US"
+      },
+      {
+        "name": "msvcp140.dll",
+        "sha256": "7c26614e1d733892c2deac7e245ce115504b1d80592dd0a01b08e3e5a55f89ca",
+        "version": "14.51.36247.0",
+        "signer": "CN=Microsoft Windows Software Compatibility Publisher, O=Microsoft Corporation, L=Redmond, S=Washington, C=US"
+      },
+      {
+        "name": "vccorlib140.dll",
+        "sha256": "09f93d5ff96ae09767f3e1af3cdd43a5a58f2598654fc63089429bb6f9f4737f",
+        "version": "14.51.36247.0",
+        "signer": "CN=Microsoft Windows Software Compatibility Publisher, O=Microsoft Corporation, L=Redmond, S=Washington, C=US"
+      },
+      {
+        "name": "vcruntime140_1.dll",
+        "sha256": "a7146c08f89fe5b04541ab507cdb59ff7b44534d4ba3c668a426c6450a03434e",
+        "version": "14.51.36247.0",
+        "signer": "CN=Microsoft Windows Software Compatibility Publisher, O=Microsoft Corporation, L=Redmond, S=Washington, C=US"
+      },
+      {
+        "name": "vcruntime140_threads.dll",
+        "sha256": "40f39e8cee5f5a531b4010e18b807e8fe265b908dc58f959ecb7ebc6ea6cb11a",
+        "version": "14.51.36247.0",
+        "signer": "CN=Microsoft Windows Software Compatibility Publisher, O=Microsoft Corporation, L=Redmond, S=Washington, C=US"
+      },
+      {
+        "name": "vcruntime140.dll",
+        "sha256": "d1f4225df2cd877dbf130d5668a021dce3f94118455ff5ec952061c30afc9ce7",
+        "version": "14.51.36247.0",
+        "signer": "CN=Microsoft Windows Software Compatibility Publisher, O=Microsoft Corporation, L=Redmond, S=Washington, C=US"
+      }
+    ]
+  },
+  "scope": "Native Windows preview with atomic directory/search refresh, stable menu windows and app-local runtime; see README for complete scope and limits",
+  "interactive_smoke": "not run on hosted CI; local scope is recorded separately",
+  "headless_test_count": 40,
+  "msvc_tools_version": "14.51.36231",
+  "headless_log_sha256": "6bb11bbc34b927bef49be8782b4df4846a5780a4662f3fa7fb735f80b64930a3",
+  "headless_report_sha256": "70d729f812233032d3592ae7aa64fe57aea032340d9c11ec0ce81e01698744e8",
+  "cli_smoke_passed": true
+}

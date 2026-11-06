@@ -1,0 +1,357 @@
+[
+    {
+        "name":  "拾径 · Backleaf",
+        "control":  "ControlType.TitleBar",
+        "rect":  [
+                     655,
+                     258,
+                     1250,
+                     29
+                 ]
+    },
+    {
+        "name":  "System Menu Bar",
+        "control":  "ControlType.MenuBar",
+        "rect":  [
+                     655,
+                     258,
+                     28,
+                     28
+                 ]
+    },
+    {
+        "name":  "System",
+        "control":  "ControlType.MenuItem",
+        "rect":  [
+                     655,
+                     258,
+                     28,
+                     28
+                 ]
+    },
+    {
+        "name":  "Minimize",
+        "control":  "ControlType.Button",
+        "rect":  null
+    },
+    {
+        "name":  "Maximize",
+        "control":  "ControlType.Button",
+        "rect":  null
+    },
+    {
+        "name":  "Close",
+        "control":  "ControlType.Button",
+        "rect":  null
+    },
+    {
+        "name":  "拾径 Backleaf",
+        "control":  "ControlType.Pane",
+        "rect":  [
+                     655,
+                     249,
+                     1250,
+                     875
+                 ]
+    },
+    {
+        "name":  "后退",
+        "control":  "ControlType.Button",
+        "rect":  [
+                     665,
+                     259,
+                     40,
+                     40
+                 ]
+    },
+    {
+        "name":  "上一级",
+        "control":  "ControlType.Button",
+        "rect":  [
+                     715,
+                     259,
+                     40,
+                     40
+                 ]
+    },
+    {
+        "name":  "当前位置 D:\\work\\backleaf\\.local\\verify\\preview27\\retry-fixture\\dest",
+        "control":  "ControlType.Group",
+        "rect":  [
+                     765,
+                     259,
+                     297,
+                     40
+                 ]
+    },
+    {
+        "name":  "前往 D:\\",
+        "control":  "ControlType.Hyperlink",
+        "rect":  [
+                     770,
+                     264,
+                     34,
+                     30
+                 ]
+    },
+    {
+        "name":  "显示折叠的上级路径",
+        "control":  "ControlType.Button",
+        "rect":  [
+                     819,
+                     264,
+                     30,
+                     30
+                 ]
+    },
+    {
+        "name":  "前往 D:\\work\\backleaf\\.local\\verify\\preview27\\retry-fixture",
+        "control":  "ControlType.Hyperlink",
+        "rect":  [
+                     864,
+                     264,
+                     104,
+                     30
+                 ]
+    },
+    {
+        "name":  "编辑当前位置 D:\\work\\backleaf\\.local\\verify\\preview27\\retry-fixture\\dest",
+        "control":  "ControlType.Button",
+        "rect":  [
+                     983,
+                     264,
+                     44,
+                     30
+                 ]
+    },
+    {
+        "name":  "浏览当前目录层级",
+        "control":  "ControlType.Button",
+        "rect":  [
+                     1027,
+                     264,
+                     30,
+                     30
+                 ]
+    },
+    {
+        "name":  "文件操作，1 项任务",
+        "control":  "ControlType.Button",
+        "rect":  [
+                     1618,
+                     259,
+                     57,
+                     40
+                 ]
+    },
+    {
+        "name":  "搜索文件名，Ctrl+F",
+        "control":  "ControlType.Button",
+        "rect":  [
+                     1685,
+                     259,
+                     40,
+                     40
+                 ]
+    },
+    {
+        "name":  "最小化",
+        "control":  "ControlType.Button",
+        "rect":  [
+                     1735,
+                     259,
+                     50,
+                     40
+                 ]
+    },
+    {
+        "name":  "最大化或还原",
+        "control":  "ControlType.Button",
+        "rect":  [
+                     1790,
+                     259,
+                     50,
+                     40
+                 ]
+    },
+    {
+        "name":  "关闭",
+        "control":  "ControlType.Button",
+        "rect":  [
+                     1845,
+                     259,
+                     50,
+                     40
+                 ]
+    },
+    {
+        "name":  "快捷访问",
+        "control":  "ControlType.Group",
+        "rect":  [
+                     655,
+                     309,
+                     230,
+                     815
+                 ]
+    },
+    {
+        "name":  "个人文件夹，C:\\Users\\qq651",
+        "control":  "ControlType.Button",
+        "rect":  [
+                     665,
+                     329,
+                     210,
+                     40
+                 ]
+    },
+    {
+        "name":  "桌面，C:\\Users\\qq651\\Desktop",
+        "control":  "ControlType.Button",
+        "rect":  [
+                     665,
+                     374,
+                     210,
+                     40
+                 ]
+    },
+    {
+        "name":  "下载，C:\\Users\\qq651\\Downloads",
+        "control":  "ControlType.Button",
+        "rect":  [
+                     665,
+                     419,
+                     210,
+                     40
+                 ]
+    },
+    {
+        "name":  "文档，C:\\Users\\qq651\\Documents",
+        "control":  "ControlType.Button",
+        "rect":  [
+                     665,
+                     464,
+                     210,
+                     40
+                 ]
+    },
+    {
+        "name":  "图片，C:\\Users\\qq651\\Pictures",
+        "control":  "ControlType.Button",
+        "rect":  [
+                     665,
+                     509,
+                     210,
+                     40
+                 ]
+    },
+    {
+        "name":  "音乐，C:\\Users\\qq651\\Music",
+        "control":  "ControlType.Button",
+        "rect":  [
+                     665,
+                     554,
+                     210,
+                     40
+                 ]
+    },
+    {
+        "name":  "视频，C:\\Users\\qq651\\Videos",
+        "control":  "ControlType.Button",
+        "rect":  [
+                     665,
+                     599,
+                     210,
+                     40
+                 ]
+    },
+    {
+        "name":  "Windows-SSD (C:)，C:\\，总容量 400 GB；已使用 333 GB；剩余 67.2 GB；当前用户可用 67.2 GB",
+        "control":  "ControlType.Button",
+        "rect":  [
+                     665,
+                     644,
+                     210,
+                     75
+                 ]
+    },
+    {
+        "name":  "Data (D:)，D:\\，总容量 461 GB；已使用 430 GB；剩余 30.6 GB；当前用户可用 30.6 GB",
+        "control":  "ControlType.Button",
+        "rect":  [
+                     665,
+                     724,
+                     210,
+                     75
+                 ]
+    },
+    {
+        "name":  "文件",
+        "control":  "ControlType.List",
+        "rect":  [
+                     892,
+                     319,
+                     1006,
+                     795
+                 ]
+    },
+    {
+        "name":  "keep.txt",
+        "control":  "ControlType.ListItem",
+        "rect":  [
+                     907,
+                     339,
+                     129,
+                     140
+                 ]
+    },
+    {
+        "name":  "复制，部分完成",
+        "control":  "ControlType.Group",
+        "rect":  [
+                     1490,
+                     848,
+                     400,
+                     231
+                 ]
+    },
+    {
+        "name":  "重试",
+        "control":  "ControlType.Button",
+        "rect":  [
+                     1761,
+                     866,
+                     63,
+                     40
+                 ]
+    },
+    {
+        "name":  "关闭任务结果",
+        "control":  "ControlType.Button",
+        "rect":  [
+                     1834,
+                     866,
+                     40,
+                     40
+                 ]
+    },
+    {
+        "name":  "当前进度",
+        "control":  "ControlType.ProgressBar",
+        "rect":  [
+                     1506,
+                     914,
+                     368,
+                     2
+                 ]
+    },
+    {
+        "name":  "D:\\work\\backleaf\\.local\\verify\\preview27\\retry-fixture\\src\\locked.txt\n文件正在使用",
+        "control":  "ControlType.ListItem",
+        "rect":  [
+                     1506,
+                     994,
+                     368,
+                     64
+                 ]
+    }
+]

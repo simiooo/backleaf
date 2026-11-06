@@ -1,0 +1,95 @@
+{
+    "source_commit":  "7b1ae2916c1f19197d74de3e6d2902ca4373f55d",
+    "published_at_utc":  "2026-11-06T05:11:28Z",
+    "generated_at_utc":  "2026-11-06T05:14:07.3171450Z",
+    "files":  [
+                  {
+                      "path":  ".gitattributes",
+                      "sha256":  "781dc85570afe8b6721956fd02ff6dbcda32e7d341dc70ceb62a3cbab9844220"
+                  },
+                  {
+                      "path":  "ci-headless-status.json",
+                      "sha256":  "a8a941b880e98872346925b84f0ea61422f352c434dc6ecf543abaf4b804ba04"
+                  },
+                  {
+                      "path":  "ci-package-status.json",
+                      "sha256":  "f8faabd09c3e9bd10d3a9fdd39a5e6f48f60bb7c858cfd5cd3995117ae70397c"
+                  },
+                  {
+                      "path":  "ci-package-verified.json",
+                      "sha256":  "96a257eebff7427db06f92c801cbc7bcd151d408ce74e0e45b4d73b4238dc6c4"
+                  },
+                  {
+                      "path":  "environment.json",
+                      "sha256":  "41fc304710623fad1ee90a394755304e6834f5d2796e33d18cf3c6a49ef79e5f"
+                  },
+                  {
+                      "path":  "online-ps5.json",
+                      "sha256":  "a34149b76a094e91eee6459231650200f0ff691f5297d5f9de1d3434613ac555"
+                  },
+                  {
+                      "path":  "online-ps5.log",
+                      "sha256":  "410997d5d87e6b300b03ebd32fccb35b2b09fd1f9b625236c838ffc5927983f2"
+                  },
+                  {
+                      "path":  "online-ps7.json",
+                      "sha256":  "d8b9874c96d709dff4a6b720ca0ca7ebfe81e78425e19419b1bfdc96209be511"
+                  },
+                  {
+                      "path":  "online-ps7.log",
+                      "sha256":  "823b85106e4274dee07ad570531b51d8202f79a5493da3df2fb998799785f63e"
+                  },
+                  {
+                      "path":  "public-assets.json",
+                      "sha256":  "dc8c56fe8132a12d5132dbe0cb8d8f3a5d48f5bb080fa5d90bf417b64edf6593"
+                  },
+                  {
+                      "path":  "public-build.json",
+                      "sha256":  "8a1660199ca2da909e77403e4d094b3222144a4b789364311c61661c1f764324"
+                  },
+                  {
+                      "path":  "public-SHA256SUMS.txt",
+                      "sha256":  "462616d923c86b6b917c2e87dc450bdec44484adc3283edc7d1db4c3ffd56e70"
+                  },
+                  {
+                      "path":  "README.md",
+                      "sha256":  "465fb5200a60b2be3402d584afd613cdaa3b9ffa3282b6b6c4a6b26251575aeb"
+                  },
+                  {
+                      "path":  "retry-visible.log",
+                      "sha256":  "686d002fb5ca9ecd3d260b64d424704b17b03aa9af586bfdb19238418d4e12ad"
+                  },
+                  {
+                      "path":  "retry-visible-report.json",
+                      "sha256":  "f865b81e689a9498248f88357b49b123e8ba0fc9790995096afea02c6d53a574"
+                  },
+                  {
+                      "path":  "screenshots/01-source-selected-and-copied.png",
+                      "sha256":  "e9ff3a2bb5b436a16b84b800aea9ace106fac022fe094402653e18573e9f3227"
+                  },
+                  {
+                      "path":  "screenshots/02-destination-after-failed-paste.png",
+                      "sha256":  "edae73f7fbf2ade8f86b792b84eccae7df5f99b695a560069bdce7fea8277a43"
+                  },
+                  {
+                      "path":  "screenshots/03-task-panel-with-retry.png",
+                      "sha256":  "38b4d903db1369a019771129634a41389fde4ea9d921d8a998cb890b598ef99c"
+                  },
+                  {
+                      "path":  "screenshots/04-after-retry.png",
+                      "sha256":  "6cc73275764c3b597009ef45a44bfe64755b41c73a7939dc6a4c19f9084dd0b3"
+                  },
+                  {
+                      "path":  "session-preflight.json",
+                      "sha256":  "03cd39fc83f20d45739cc1ad5a892539820e85667ed42cb33dfa8cad7efd7df4"
+                  },
+                  {
+                      "path":  "task-panel-after-retry-uia.json",
+                      "sha256":  "49e686b1b3f1563630bd57a92144380fb7c45d5e83aec9ce78a1358d7f454fc0"
+                  },
+                  {
+                      "path":  "task-panel-uia.json",
+                      "sha256":  "fa1d08180fb527c23bc1fa6a4a228d4b6771e7821496b1cdff3213d3bb71c024"
+                  }
+              ]
+}

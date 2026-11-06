@@ -46,3 +46,6 @@ docs/evidence/preview-26/** -text
 
 # Preserve the SIM-954 clipboard interop and retry evidence bytes exactly.
 docs/evidence/sim-954/** -text
+
+# Preserve the preview27 candidate evidence bytes exactly.
+docs/evidence/preview-27/** -text

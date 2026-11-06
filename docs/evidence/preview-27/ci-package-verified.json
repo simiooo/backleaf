@@ -1,0 +1,9 @@
+{
+    "passed":  true,
+    "source_commit":  "7b1ae2916c1f19197d74de3e6d2902ca4373f55d",
+    "ci_exe_sha256":  "a6e0c95f6cabc5788d361024e0c95321f478c1efa390350f492fba421640a2a7",
+    "archive_sha256":  "88f7a0231e7fbf27f5a5fc69552736ca269eda92560fae25db15b2e22b8d1909",
+    "release":  "https://github.com/simiooo/backleaf/releases/tag/test-v0.1.0-preview.27-7b1ae291",
+    "verified_at_utc":  "2026-11-06T05:13:31.1011936Z",
+    "scope":  "Anonymous asset download; inner EXE/headless/7z/design hashes; runtime and packaged smoke; isolated anonymous installation on PowerShell5.1 and PowerShell7; visible retry-window smoke on the published executable."
+}
