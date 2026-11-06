@@ -1,0 +1,17 @@
+﻿[
+    {
+        "name":  "Backleaf-0.1.0-preview.29-5ff6a3db-win-x64.zip",
+        "bytes":  16480335,
+        "sha256":  "316578f9380d0b92a4aa56b0b68b845563d7a61c43c1184b9efa5e536e5e0917"
+    },
+    {
+        "name":  "build.json",
+        "bytes":  4393,
+        "sha256":  "d36f02041db6a2160b2c2b7238631b2e9cbad78df6cc0f39070bbf0f58439531"
+    },
+    {
+        "name":  "SHA256SUMS.txt",
+        "bytes":  198,
+        "sha256":  "7847610fcebed88d19db25a730d80fd8b81df024192134e68ab62b6b4a5504c3"
+    }
+]

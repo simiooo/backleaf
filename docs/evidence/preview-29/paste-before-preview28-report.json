@@ -1,0 +1,59 @@
+{
+    "started_utc":  "2026-11-06T06:21:50.3434384Z",
+    "exe":  "D:\\work\\backleaf\\.local\\verify\\preview28\\public-install\\Backleaf.exe",
+    "exe_sha256":  "2bab27fe0096b7c89b7841d773b1dff8d99c6266c98707dd542d9346f8150626",
+    "scenarios":  [
+                      {
+                          "name":  "app-ready",
+                          "ok":  true,
+                          "detail":  {
+                                         "items":  20
+                                     },
+                          "at":  "2026-11-06T06:21:53.6628840Z"
+                      },
+                      {
+                          "name":  "idle-paste",
+                          "ok":  true,
+                          "detail":  {
+                                         "fs_ms":  360,
+                                         "fs_ok":  true,
+                                         "ui_ms":  469,
+                                         "errors":  [
+
+                                                    ],
+                                         "ui_ok":  true
+                                     },
+                          "at":  "2026-11-06T06:21:55.0459361Z"
+                      },
+                      {
+                          "name":  "paste-during-refresh",
+                          "ok":  false,
+                          "detail":  {
+                                         "fs_ms":  10776,
+                                         "fs_ok":  false,
+                                         "ui_ms":  20783,
+                                         "errors":  [
+                                                        "目录正在更新，请稍后重试"
+                                                    ],
+                                         "ui_ok":  false
+                                     },
+                          "at":  "2026-11-06T06:22:18.2420231Z"
+                      }
+                  ],
+    "screenshots":  [
+                        {
+                            "name":  "01-idle-paste.png",
+                            "sha256":  "216a060fa37531dc582566532880a01aa9f8f748078000c824f0b84ab95726d1"
+                        },
+                        {
+                            "name":  "02a-stale-paste-early.png",
+                            "sha256":  "8964210fe16ad1d36f154d1864b5723620ba3ea05f381bec69b0aea55b4819dc"
+                        },
+                        {
+                            "name":  "02-stale-paste.png",
+                            "sha256":  "3418b5f90f14211efe0f7badbda7dd8ae7e551ed1921610fb564c6e36d59aa45"
+                        }
+                    ],
+    "error":  null,
+    "finished_utc":  "2026-11-06T06:22:18.8144202Z"
+}

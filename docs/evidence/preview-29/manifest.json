@@ -1,0 +1,136 @@
+{
+    "generated_at":  "2026-11-06T06:33:16.8798830Z",
+    "directory":  "docs/evidence/preview-29",
+    "entries":  [
+                    {
+                        "path":  ".gitattributes",
+                        "bytes":  53,
+                        "sha256":  "3db6e4930c8c2bc17428f833c4de1be86091eb81cae74860589d113b3a8fc5cd"
+                    },
+                    {
+                        "path":  "blank-row-preview29-report.json",
+                        "bytes":  112345,
+                        "sha256":  "e5e547ad574ba2c6e6acc170d21c508f8f25774fb00678a586253a08cfe01fa1"
+                    },
+                    {
+                        "path":  "ci-headless-status.json",
+                        "bytes":  325,
+                        "sha256":  "14cbdf146b0a84030cd5b8eaa5808fe3efafa12161b99d0f86f78fd5deebd977"
+                    },
+                    {
+                        "path":  "ci-package-status.json",
+                        "bytes":  325,
+                        "sha256":  "616eb9d738edc006875343a5726f41f2048a0d56f12d26b04ad65ac07693161e"
+                    },
+                    {
+                        "path":  "ci-package-verified.json",
+                        "bytes":  706,
+                        "sha256":  "69afb05147f8d0a732e80df664c298c012fdab8c7c4d0e69ae23f8cc09349f7b"
+                    },
+                    {
+                        "path":  "environment.json",
+                        "bytes":  1630,
+                        "sha256":  "292cb95c45d29c77a2c20ce7327c9bca009eed0314df77e499cdec1c790f7431"
+                    },
+                    {
+                        "path":  "fix.diff",
+                        "bytes":  15396,
+                        "sha256":  "5cdf7b1bfbce3940c491fa0ddf46e87d30e1d5f14804b53d0b3b46ae0cb09e85"
+                    },
+                    {
+                        "path":  "fix-stat.txt",
+                        "bytes":  610,
+                        "sha256":  "883019739106446ac76b0639c2efc4d8c23d750bc767e9a66d02925e7aa06acd"
+                    },
+                    {
+                        "path":  "online-ps5.json",
+                        "bytes":  7189,
+                        "sha256":  "53e4e635d88340f3b0109dded6d1eb62ebacdd82393d54a169745503e8200743"
+                    },
+                    {
+                        "path":  "online-ps7.json",
+                        "bytes":  4656,
+                        "sha256":  "ab909b871e2ae5755c8d824e0300c2a9fabbb3257a8fc19d51428f59cdc0edd6"
+                    },
+                    {
+                        "path":  "paste-after-preview29-latency.json",
+                        "bytes":  2511,
+                        "sha256":  "3a90d8e3dc4e41db025b7dc033d88275972541a782c17514b978ae443c9b3de6"
+                    },
+                    {
+                        "path":  "paste-after-preview29-report.json",
+                        "bytes":  2680,
+                        "sha256":  "13528c3b75d8e2dc6030053af2e4482344c571afaffc00c7c7030daf7aa86760"
+                    },
+                    {
+                        "path":  "paste-before-preview28-report.json",
+                        "bytes":  2781,
+                        "sha256":  "6dc9160efc4dc5113721bfe510116567041c4ac2866ae84cb656909d70dc8434"
+                    },
+                    {
+                        "path":  "public-assets.json",
+                        "bytes":  528,
+                        "sha256":  "25420fd58a0d1410e28675c0719a0f1d2564ea4dd6aa620399a4df39068aee72"
+                    },
+                    {
+                        "path":  "public-build.json",
+                        "bytes":  4393,
+                        "sha256":  "d36f02041db6a2160b2c2b7238631b2e9cbad78df6cc0f39070bbf0f58439531"
+                    },
+                    {
+                        "path":  "public-SHA256SUMS.txt",
+                        "bytes":  198,
+                        "sha256":  "7847610fcebed88d19db25a730d80fd8b81df024192134e68ab62b6b4a5504c3"
+                    },
+                    {
+                        "path":  "README.md",
+                        "bytes":  6842,
+                        "sha256":  "4bc1ef74a9a18b131870b551e9a346e1e8128416a8f51652494f5e2320ebc5ad"
+                    },
+                    {
+                        "path":  "retry-visible.log",
+                        "bytes":  5604,
+                        "sha256":  "8e44a494697830349d9005ed29f124b0b4bff70389a5f1be373c85f3a1f0378f"
+                    },
+                    {
+                        "path":  "retry-visible-report.json",
+                        "bytes":  10404,
+                        "sha256":  "2551c09db1131effbec3427d22be98458dd9eae3c8c1751115300f865a46d02b"
+                    },
+                    {
+                        "path":  "screenshots/04-after-retry.png",
+                        "bytes":  32371,
+                        "sha256":  "a6493b606d4c9ece8eaaf15fc0e5f455ee3199158ad4f63122d38c2460e6aaf4"
+                    },
+                    {
+                        "path":  "screenshots/blank-row-preview29.png",
+                        "bytes":  92232,
+                        "sha256":  "3e978bf7447b217fc00ab6711dad977d62f9054de9446fdb3083686ab7832c51"
+                    },
+                    {
+                        "path":  "screenshots/paste-after-preview29.png",
+                        "bytes":  51871,
+                        "sha256":  "cd362a38cfaf30186bc59ec983e1aec7865dbf4175d8018d2d0952230236ac50"
+                    },
+                    {
+                        "path":  "screenshots/paste-before-preview28.png",
+                        "bytes":  50591,
+                        "sha256":  "8964210fe16ad1d36f154d1864b5723620ba3ea05f381bec69b0aea55b4819dc"
+                    },
+                    {
+                        "path":  "screenshots/sidebar-after-preview29.png",
+                        "bytes":  21137,
+                        "sha256":  "8ab6711cae84712eda328ffaef908c0d18df39207d72092449e305dc6374719f"
+                    },
+                    {
+                        "path":  "screenshots/sidebar-before-preview28.png",
+                        "bytes":  21088,
+                        "sha256":  "2e35a55bd06c624c41da632ade32608c1597449f24314b6d551844d95830aefc"
+                    },
+                    {
+                        "path":  "sidebar-after-preview29-report.json",
+                        "bytes":  3105,
+                        "sha256":  "4a0c6e81fac19cba3274333b57a3a3db4157591cab4ac7b2e9b2930414f58aeb"
+                    }
+                ]
+}

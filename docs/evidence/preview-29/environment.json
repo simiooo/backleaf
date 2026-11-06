@@ -1,0 +1,22 @@
+{
+    "captured_at":  "2026-11-06T06:32:49.1369313Z",
+    "os":  "Windows 11 (10.0.26200)",
+    "os_build":  "26200",
+    "desktop":  "2560x1440",
+    "timezone":  "Asia/Shanghai",
+    "previous_preview28_exe_sha256":  "2bab27fe0096b7c89b7841d773b1dff8d99c6266c98707dd542d9346f8150626",
+    "published_preview29_exe_sha256":  "009902321ee79a18be01bf588e344c68f17938f25965cd00ab248deeb8d39838",
+    "package":  {
+                    "tag":  "test-v0.1.0-preview.29-5ff6a3db",
+                    "published_at":  "2026-11-06T06:28:49Z",
+                    "source_commit":  "5ff6a3db8cbbda64bd4c28917188a896ea2d6f12",
+                    "zip_sha256":  "316578f9380d0b92a4aa56b0b68b845563d7a61c43c1184b9efa5e536e5e0917",
+                    "design_sha256":  "216c6ffd8f632f908406d4765a9be010b59c24e70d59f7b8a63bc1e5055ab179",
+                    "build_json_sha256":  "d36f02041db6a2160b2c2b7238631b2e9cbad78df6cc0f39070bbf0f58439531",
+                    "sums_sha256":  "7847610fcebed88d19db25a730d80fd8b81df024192134e68ab62b6b4a5504c3"
+                },
+    "paste_before":  "preview.28: Ctrl+V during watcher refresh -\u003e “目录正在更新，请稍后重试”, no file",
+    "paste_after":  "preview.29: same scenario succeeds; published EXE 3/3 trials (2 with early capture + 1 clean), 0 error banners",
+    "sidebar_before":  "preview.28: active quick-access row used selection/surface blue (#E9F2FC) with selection/content text",
+    "sidebar_after":  "preview.29: active row uses selection/inactive-surface neutral (#EDF0F3) with paired content (#334450); same geometry and regular weight"
+}

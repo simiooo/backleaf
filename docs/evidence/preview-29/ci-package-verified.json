@@ -1,0 +1,13 @@
+{
+    "verified_at":  "2026-11-06T06:29:57.6901092Z",
+    "tag":  "test-v0.1.0-preview.29-5ff6a3db",
+    "zip_sha256":  "316578f9380d0b92a4aa56b0b68b845563d7a61c43c1184b9efa5e536e5e0917",
+    "exe_sha256":  "009902321ee79a18be01bf588e344c68f17938f25965cd00ab248deeb8d39838",
+    "exe_matches":  true,
+    "headless_sha256":  "26491e39102b96b6bef94a855e6dfcb5c75fe53e1b95b4e97d11178ac1ab9097",
+    "headless_matches":  true,
+    "archive_sha256":  "78bf6b668d75801e3aa180b4ccb16e6d8395fba80dec8a065055bb6f8dfabb82",
+    "archive_matches":  true,
+    "source_commit":  "5ff6a3db8cbbda64bd4c28917188a896ea2d6f12",
+    "ci_run_url":  "https://github.com/simiooo/backleaf/actions/runs/42174117553"
+}

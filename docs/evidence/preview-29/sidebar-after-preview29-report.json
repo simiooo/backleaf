@@ -1,0 +1,62 @@
+{
+    "started_utc":  "2026-11-06T06:30:50.1046820Z",
+    "exe":  "D:\\work\\backleaf\\.local\\verify\\preview29\\public-install\\Backleaf.exe",
+    "exe_sha256":  "009902321ee79a18be01bf588e344c68f17938f25965cd00ab248deeb8d39838",
+    "screenshots":  [
+                        {
+                            "name":  "01-sidebar-default.png",
+                            "sha256":  "31e43cb5ddbc8e823c064b54177c0e7244e750c53316821c8ec5965eed9b2b04",
+                            "rect":  [
+                                         908,
+                                         80,
+                                         984,
+                                         772
+                                     ]
+                        },
+                        {
+                            "name":  "02-sidebar-active.png",
+                            "sha256":  "460f4fcc4fdf1a0ba36fd8517e2e0567fdba2c2e5f7b81bbf461189463f5e3ba",
+                            "rect":  [
+                                         908,
+                                         80,
+                                         984,
+                                         772
+                                     ]
+                        },
+                        {
+                            "name":  "03-sidebar-active-crop.png",
+                            "sha256":  "8ab6711cae84712eda328ffaef908c0d18df39207d72092449e305dc6374719f"
+                        },
+                        {
+                            "name":  "04-sidebar-default-crop.png",
+                            "sha256":  "7c36555849f40eadddec98c8afa4991ea4c4cdc26adb236da2f38bad380d3320"
+                        }
+                    ],
+    "error":  "Exception calling \"FindAll\" with \"2\" argument(s): \"Value cannot be null.\r\nParameter name: condition\"",
+    "finished_utc":  "2026-11-06T06:30:56.1951869Z",
+    "uia_names":  [
+                      "拾径 · Backleaf",
+                      "System Menu Bar",
+                      "System",
+                      "Minimize",
+                      "Maximize",
+                      "Close",
+                      "拾径 Backleaf",
+                      "后退",
+                      "上一级",
+                      "当前位置 D:\\work\\backleaf\\.local\\verify\\bug-repro\\sidebar-fixture",
+                      "前往 D:\\",
+                      "显示折叠的上级路径",
+                      "前往 D:\\work\\backleaf\\.local\\verify\\bug-repro",
+                      "编辑当前位置 D:\\work\\backleaf\\.local\\verify\\bug-repro\\sidebar-fixture",
+                      "浏览当前目录层级",
+                      "搜索文件名，Ctrl+F",
+                      "最小化",
+                      "最大化或还原",
+                      "关闭",
+                      "快捷访问",
+                      "个人文件夹，C:\\Users\\qq651",
+                      "桌面，C:\\Users\\qq651\\Desktop",
+                      "下载，C:\\Users\\qq651\\Downloads"
+                  ]
+}
