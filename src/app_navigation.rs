@@ -519,12 +519,16 @@ impl Backleaf {
                                     .focusable()
                                     .tab_stop(true)
                                     .when(selected, |d| {
-                                        d.bg(colors.color(ColorRole::Selected))
-                                            .text_color(colors.color(ColorRole::OnSelected))
+                                        // Navigation is a persistent location, not a file
+                                        // selection: use the low-emphasis neutral surface so
+                                        // the sidebar does not compete with the blue file
+                                        // selection accent or the chrome background.
+                                        d.bg(colors.color(ColorRole::InactiveSelected))
+                                            .text_color(colors.color(ColorRole::OnInactiveSelected))
                                     })
                                     .hover(move |d| {
                                         d.bg(colors.color(if selected {
-                                            ColorRole::Selected
+                                            ColorRole::InactiveSelected
                                         } else {
                                             ColorRole::Floating
                                         }))
@@ -532,12 +536,12 @@ impl Backleaf {
                                     })
                                     .focus_visible(move |d| {
                                         d.bg(colors.color(if selected {
-                                            ColorRole::Selected
+                                            ColorRole::InactiveSelected
                                         } else {
                                             ColorRole::Floating
                                         }))
                                         .text_color(colors.color(if selected {
-                                            ColorRole::OnSelected
+                                            ColorRole::OnInactiveSelected
                                         } else {
                                             ColorRole::Primary
                                         }))

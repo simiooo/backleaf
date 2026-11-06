@@ -416,7 +416,12 @@ impl Backleaf {
         if self.selection_busy() || self.files.editor.is_some() {
             return;
         }
-        if self.watch_stale() && !matches!(command, Command::Refresh | Command::EditPath) {
+        if self.watch_stale()
+            && !matches!(
+                command,
+                Command::Refresh | Command::EditPath | Command::Paste
+            )
+        {
             self.mark_directory_dirty(cx);
             self.navigation_error("目录正在更新，请稍后重试".into(), cx);
             return;
@@ -493,7 +498,12 @@ impl Backleaf {
                 Ok(Some(id))
             }
             Command::Paste => {
-                if count == 1
+                // Pasting into the current directory only needs the stable target
+                // identity; a pending directory refresh must not turn Ctrl+V into
+                // "目录正在更新". A selected folder still opens its own paste
+                // confirmation once the view is settled.
+                if !self.watch_stale()
+                    && count == 1
                     && id
                         .and_then(|id| self.cache.get(&id))
                         .is_some_and(|i| i.directory)

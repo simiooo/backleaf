@@ -4,6 +4,10 @@ pub struct WatchUi {
     pub monitor: Option<crate::watcher::Monitor>,
     pub applied: u64,
     pub dirty: bool,
+    /// A user/operation-initiated refresh that must not wait for the watcher
+    /// debounce or for the window to be activated. Cleared when committed or
+    /// failed.
+    pub immediate: bool,
     pub(super) search_epoch: u64,
     pub(super) retry: Option<Task<()>>,
     pub generation: u64,
@@ -22,7 +26,7 @@ impl Backleaf {
     }
     pub fn mark_directory_dirty(&mut self, cx: &mut Context<Self>) {
         self.watch.dirty = true;
-        if self.watch.retry.is_none() {
+        if self.watch.retry.is_none() && !self.watch.immediate {
             self.watch.retry = Some(cx.spawn(async move |this, cx| {
                 cx.background_executor()
                     .timer(Duration::from_millis(450))
@@ -37,17 +41,19 @@ impl Backleaf {
     }
     /// A completed in-app file operation does not need watcher debounce: refresh on
     /// the next frame and drop the debounce timer so removed tiles do not linger as
-    /// empty placeholders.
+    /// empty placeholders. The refresh may start while the window is inactive so a
+    /// dropped/pasted file appears without waiting for activation.
     pub fn mark_directory_dirty_now(&mut self, cx: &mut Context<Self>) {
         self.watch.dirty = true;
         self.watch.retry = None;
+        self.watch.immediate = true;
         cx.notify();
     }
     pub fn sync_watcher(&mut self, window: &mut Window, cx: &mut Context<Self>) {
         if (!self.watch_stale() && self.watch.pending.is_none()) || self.options.fixture.is_some() {
             return;
         }
-        if !self.navigation.window_active
+        if (!self.watch.immediate && !self.navigation.window_active)
             || self.session_locked
             || self.files.editor.is_some()
             || self.detail_pending
@@ -64,7 +70,14 @@ impl Backleaf {
             || !self.source.finished()
             || self.watch.retry.is_some()
         {
-            if self.navigation.window_active && !self.session_locked && self.watch.retry.is_none() {
+            // An immediate refresh stays pending without arming the watcher
+            // debounce; otherwise the 450ms timer would start during the running
+            // operation and delay its post-completion refresh.
+            if !self.watch.immediate
+                && self.navigation.window_active
+                && !self.session_locked
+                && self.watch.retry.is_none()
+            {
                 self.mark_directory_dirty(cx);
             }
             return;
@@ -76,6 +89,7 @@ impl Backleaf {
                 self.watch.search_epoch = epoch;
             }
             self.watch.dirty = true;
+            self.watch.immediate = false;
             // Search has its own generation; reconcile the underlying directory when it closes.
             self.watch.applied = self.watch.monitor.as_ref().map_or(0, |m| m.epoch());
             return;
@@ -164,6 +178,7 @@ impl Backleaf {
         self.labels.borrow_mut().clear();
         self.selection = ready.selection;
         self.files.removed.clear();
+        self.watch.immediate = false;
         self.hovered_id = None;
         self.pressed_id = None;
         self.detail_token += 1;
@@ -218,6 +233,7 @@ impl Backleaf {
             .map_or(self.watch.applied, |p| p.epoch);
         self.watch.applied = epoch;
         self.watch.dirty = false;
+        self.watch.immediate = false;
         self.watch.locate = None;
         self.navigation_error(format!("刷新失败：{error}"), cx);
     }
