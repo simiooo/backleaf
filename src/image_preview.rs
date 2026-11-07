@@ -42,6 +42,7 @@ struct State {
     pending: VecDeque<Request>,
     working: Option<(u64, PathBuf)>,
     results: VecDeque<Response>,
+    notice: bool,
     stats: Stats,
 }
 struct Shared {
@@ -104,11 +105,47 @@ impl Cache {
                     }
                     state.results.push_back(Response { request, image });
                     state.stats.result_peak = state.stats.result_peak.max(state.results.len());
-                    // A full wake channel is fine: the next render drains results.
-                    let _ = tx.try_send(crate::model::Event::ImagePreviewsChanged);
+                    state.notice = true;
+                    worker.changed.notify_all();
                 }
             })
             .expect("visible image thumbnail worker");
+        let notifier = shared.clone();
+        std::thread::Builder::new()
+            .name("visible-image-thumbnail-notifier".into())
+            .spawn(move || {
+                loop {
+                    {
+                        let mut state = notifier.state.lock().unwrap();
+                        while !state.stop && !state.notice {
+                            state = notifier.changed.wait(state).unwrap();
+                        }
+                        if state.stop {
+                            return;
+                        }
+                    }
+                    // Coalesce a decode burst into one window render instead of
+                    // one notify per thumbnail.
+                    std::thread::sleep(std::time::Duration::from_millis(20));
+                    let ready = {
+                        let mut state = notifier.state.lock().unwrap();
+                        if state.stop {
+                            return;
+                        }
+                        if state.results.is_empty() {
+                            state.notice = false;
+                            false
+                        } else {
+                            state.notice = false;
+                            true
+                        }
+                    };
+                    if ready {
+                        let _ = tx.try_send(crate::model::Event::ImagePreviewsChanged);
+                    }
+                }
+            })
+            .expect("visible image thumbnail notifier");
         Self {
             shared,
             entries: HashMap::new(),
@@ -193,6 +230,15 @@ impl Cache {
         self.entries
             .get(path)
             .is_some_and(|entry| entry.image.is_some())
+    }
+}
+impl Drop for Cache {
+    fn drop(&mut self) {
+        {
+            let mut state = self.shared.state.lock().unwrap();
+            state.stop = true;
+        }
+        self.shared.changed.notify_all();
     }
 }
 /// The formats this build can actually decode. HEIC/AVIF are intentionally

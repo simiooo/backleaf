@@ -116,6 +116,8 @@ pub fn file_background(
     id: usize,
     label: String,
     state: FileState,
+    art_width: f32,
+    art_height: f32,
     cache: SharedGridTextCache,
     colors: &'static Palette,
 ) -> impl IntoElement {
@@ -143,10 +145,12 @@ pub fn file_background(
                 return;
             }
             let l = &crate::layout::LAYOUT;
-            let surface = crate::file_geometry::surface(
+            let surface = crate::file_geometry::surface_with_art(
                 f32::from(bounds.size.width),
                 name_width,
                 name_height,
+                art_width,
+                art_height,
             );
             let base = if state.selected {
                 if state.active {

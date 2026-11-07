@@ -21,10 +21,23 @@ impl Rect {
     }
 }
 pub fn surface(cell_width: f32, name_width: f32, name_height: f32) -> Rect {
+    let icon = crate::layout::LAYOUT.grid.icon_size;
+    surface_with_art(cell_width, name_width, name_height, icon, icon)
+}
+/// Like `surface`, but the visual plate also encloses a taller/wider artwork
+/// (an image thumbnail), so selection and hover never leave the artwork outside.
+pub fn surface_with_art(
+    cell_width: f32,
+    name_width: f32,
+    name_height: f32,
+    art_width: f32,
+    art_height: f32,
+) -> Rect {
     let l = &crate::layout::LAYOUT;
-    let width = (l.grid.icon_size.max(name_width) + l.file.visual_padding_x * 2.).min(cell_width);
+    let width = (l.grid.icon_size.max(name_width).max(art_width) + l.file.visual_padding_x * 2.)
+        .min(cell_width);
     let height = l.file.visual_padding_top
-        + l.grid.icon_size
+        + l.grid.icon_size.max(art_height)
         + l.file.icon_name_gap
         + name_height
         + l.file.visual_padding_bottom;
@@ -36,10 +49,19 @@ pub fn surface(cell_width: f32, name_width: f32, name_height: f32) -> Rect {
     }
 }
 pub fn caption(cell_width: f32, name_width: f32, name_height: f32) -> Rect {
+    let icon = crate::layout::LAYOUT.grid.icon_size;
+    caption_with_art(cell_width, name_width, name_height, icon)
+}
+pub fn caption_with_art(
+    cell_width: f32,
+    name_width: f32,
+    name_height: f32,
+    art_height: f32,
+) -> Rect {
     let l = &crate::layout::LAYOUT;
     Rect {
         left: (cell_width - name_width) / 2.,
-        top: l.file.visual_padding_top + l.grid.icon_size + l.file.icon_name_gap,
+        top: l.file.visual_padding_top + l.grid.icon_size.max(art_height) + l.file.icon_name_gap,
         width: name_width,
         height: name_height,
     }
@@ -85,5 +107,10 @@ mod tests {
         assert!(!c.contains(56., 90.));
         let long = caption(100., 84., 36.);
         assert!(long.contains(10., 90.));
+        // A 96×48 image preview must be enclosed by a full-width, full-height
+        // plate; the old icon-sized surface let it paint outside the selection.
+        let image = surface_with_art(112., 64., 36., 96., 48.);
+        assert_eq!(image.width, 112.);
+        assert_eq!(image.height, 112.);
     }
 }

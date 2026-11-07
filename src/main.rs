@@ -1521,6 +1521,16 @@ impl Backleaf {
             - l.file.icon_name_gap
             - 36.)
             .max(l.grid.icon_size);
+        let art_width = if image_file {
+            preview_width
+        } else {
+            l.grid.icon_size
+        };
+        let art_height = if image_file {
+            preview_height
+        } else {
+            l.grid.icon_size
+        };
         let editor = self
             .files
             .editor
@@ -1533,7 +1543,13 @@ impl Backleaf {
             .extents
             .get(&id)
             .copied()
-            .map(|(w, h)| crate::file_geometry::caption(width, w, h));
+            .map(|(w, h)| {
+                if image_file {
+                    crate::file_geometry::caption_with_art(width, w, h, art_height)
+                } else {
+                    crate::file_geometry::caption(width, w, h)
+                }
+            });
         div()
             .id(SharedString::from(format!("file-{}-{id}", self.generation)))
             .role(Role::ListBoxOption)
@@ -1633,6 +1649,8 @@ impl Backleaf {
                     id,
                     label.clone(),
                     state,
+                    art_width,
+                    art_height,
                     self.labels.clone(),
                     colors,
                 ))

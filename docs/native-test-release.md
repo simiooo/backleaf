@@ -1,8 +1,10 @@
-Backleaf 0.1.0-preview.36 · Windows x64 测试版
+Backleaf 0.1.0-preview.37 · Windows x64 测试版
+
+图片预览选中溢出与重绘修复：文件底板现在用 `surface_with_art` 把缩略图纳入尺寸计算，选中/悬停背景完整包住图片而不再溢出；名称与提示命中区域同步使用预览高度。缩略图解码结果由独立通知线程按 20ms 批量合并为一次窗口通知，避免每个缩略图触发一次整窗重渲染；已解码图片继续复用缓存，网格仍只为可见行（前后各 2 行预取）请求解码。原有 46 项 headless 与 127 项 native 检查全部通过。
+
+以下保留 preview.36 及更早内容：
 
 可视区内图片缩略图：网格沿用 `uniform_list` 虚拟化，只对可见行（前后各 2 行预取）请求缩略图；单后台线程按需解码、缩小并应用 EXIF 方向，前台 256 项 LRU，切换目录或窗口隐藏时清理/暂停。图片文件（png/jpg/jpeg/gif/webp/bmp/tif/tiff/ico）用内容替换类型图标；缩略图容器为单元格内宽 × 48px，`ObjectFit::Contain` 居中，最大化占用且不溢出，未就绪时回退类型图标。HEIC/AVIF/视频暂不处理；大于 64MB 或解码失败回退图标；GIF/WebP 只显示首帧；搜索结果图片同样使用缩略图。新增无头回归 `visible_image_cells_decode_thumbnails_lazily` 与格式单元测试；headless 现为 46 项、native 逻辑/文件检查 127 项。
-
-以下保留 preview.35 及更早内容：
 
 无任务时不显示任务入口/结果面板：文件操作完成且没有可安全重试的失败项时，不再常驻标题栏“任务”入口（数字+下拉）和右下角结果面板；两者只在有进行中任务，或存在“重试”可操作的失败结果时显示，关闭/重试后同步消失。可重试失败仍保留面板与重试按钮。新增无头回归 `finished_non_retryable_operations_hide_badge_and_panel`，headless 现为 45 项；native 逻辑/文件检查 125 项。其它内容沿用 preview.34/33/32/31/30。
 
