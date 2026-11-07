@@ -1,0 +1,294 @@
+{
+  "benchmark": "default-search-index-vs-live-scan",
+  "generated_at_utc": "2026-11-06T16:29:37.985233500+00:00",
+  "files": 20000,
+  "directories": 200,
+  "index_build_ms": 16189.6,
+  "index_db_bytes": 28299264,
+  "planner": "index::plan_scope + index::scope_size/estimate_matches selectivity guard + scoped query",
+  "matching_counts": {
+    "cjk_1_char": 10000,
+    "note": 4000,
+    "note_prefix": 200,
+    "folder_local": 60
+  },
+  "cold_runs": 3,
+  "warm_runs": 2,
+  "scenarios": [
+    {
+      "scenario": "unique",
+      "query": "needle-unique",
+      "matches": 1,
+      "auto_used_index": true,
+      "cold_runs": 3,
+      "warm_runs": 2,
+      "auto": {
+        "first_page_ms": [
+          76.571,
+          91.102,
+          80.557,
+          56.972,
+          50.917
+        ],
+        "done_ms": [
+          95.58,
+          99.387,
+          90.143,
+          56.973,
+          50.919
+        ]
+      },
+      "live": {
+        "first_page_ms": [
+          32.063,
+          25.057,
+          23.033,
+          9.264,
+          11.372
+        ],
+        "done_ms": [
+          297.289,
+          267.373,
+          260.662,
+          9.266,
+          11.374
+        ]
+      },
+      "auto_done_median_ms": 90.143,
+      "live_done_median_ms": 260.662,
+      "done_speedup": 2.892,
+      "auto_page_median_ms": 76.571,
+      "live_page_median_ms": 23.033,
+      "page_speedup": 0.301
+    },
+    {
+      "scenario": "medium",
+      "query": "note-000",
+      "matches": 200,
+      "auto_used_index": true,
+      "cold_runs": 3,
+      "warm_runs": 2,
+      "auto": {
+        "first_page_ms": [
+          160.869,
+          142.864,
+          157.857,
+          71.232,
+          55.208
+        ],
+        "done_ms": [
+          173.842,
+          150.975,
+          169.142,
+          71.244,
+          55.219
+        ]
+      },
+      "live": {
+        "first_page_ms": [
+          19.544,
+          41.161,
+          22.034,
+          26.504,
+          38.167
+        ],
+        "done_ms": [
+          318.202,
+          345.351,
+          367.437,
+          26.515,
+          38.178
+        ]
+      },
+      "auto_done_median_ms": 150.975,
+      "live_done_median_ms": 318.202,
+      "done_speedup": 2.108,
+      "auto_page_median_ms": 142.864,
+      "live_page_median_ms": 26.504,
+      "page_speedup": 0.186
+    },
+    {
+      "scenario": "cjk_1_char",
+      "query": "报",
+      "matches": 10000,
+      "auto_used_index": false,
+      "cold_runs": 3,
+      "warm_runs": 2,
+      "auto": {
+        "first_page_ms": [
+          102.72,
+          51.735,
+          46.695,
+          41.649,
+          46.461
+        ],
+        "done_ms": [
+          1137.672,
+          875.439,
+          886.597,
+          41.655,
+          46.469
+        ]
+      },
+      "live": {
+        "first_page_ms": [
+          62.775,
+          45.006,
+          74.225,
+          20.215,
+          22.943
+        ],
+        "done_ms": [
+          1088.168,
+          1159.104,
+          1169.896,
+          20.228,
+          22.954
+        ]
+      },
+      "auto_done_median_ms": 875.439,
+      "live_done_median_ms": 1088.168,
+      "done_speedup": 1.243,
+      "auto_page_median_ms": 46.695,
+      "live_page_median_ms": 45.006,
+      "page_speedup": 0.964
+    },
+    {
+      "scenario": "ascii_broad",
+      "query": "note",
+      "matches": 4000,
+      "auto_used_index": false,
+      "cold_runs": 3,
+      "warm_runs": 2,
+      "auto": {
+        "first_page_ms": [
+          49.076,
+          69.186,
+          72.089,
+          48.829,
+          33.115
+        ],
+        "done_ms": [
+          571.25,
+          568.56,
+          591.88,
+          48.833,
+          33.122
+        ]
+      },
+      "live": {
+        "first_page_ms": [
+          37.65,
+          12.456,
+          18.414,
+          22.006,
+          25.872
+        ],
+        "done_ms": [
+          497.317,
+          486.473,
+          468.179,
+          22.014,
+          25.88
+        ]
+      },
+      "auto_done_median_ms": 568.56,
+      "live_done_median_ms": 468.179,
+      "done_speedup": 0.823,
+      "auto_page_median_ms": 49.076,
+      "live_page_median_ms": 22.006,
+      "page_speedup": 0.448
+    },
+    {
+      "scenario": "folder_local",
+      "query": "local",
+      "matches": 60,
+      "auto_used_index": true,
+      "cold_runs": 3,
+      "warm_runs": 2,
+      "auto": {
+        "first_page_ms": [
+          23.097,
+          16.326,
+          15.952,
+          10.798,
+          10.612
+        ],
+        "done_ms": [
+          32.235,
+          20.938,
+          20.568,
+          10.804,
+          10.618
+        ]
+      },
+      "live": {
+        "first_page_ms": [
+          27.179,
+          32.494,
+          33.568,
+          14.886,
+          13.763
+        ],
+        "done_ms": [
+          27.187,
+          32.5,
+          33.572,
+          14.89,
+          13.769
+        ]
+      },
+      "auto_done_median_ms": 20.568,
+      "live_done_median_ms": 27.187,
+      "done_speedup": 1.322,
+      "auto_page_median_ms": 15.952,
+      "live_page_median_ms": 27.179,
+      "page_speedup": 1.704
+    }
+  ],
+  "bulk_validation_ab": {
+    "scenario": "folder_local",
+    "matches": 60,
+    "cold_runs": 3,
+    "warm_runs": 2,
+    "no_bulk": {
+      "first_page_ms": [
+        49.28,
+        39.672,
+        33.421,
+        12.719,
+        13.078
+      ],
+      "done_ms": [
+        55.445,
+        45.631,
+        37.84,
+        12.725,
+        13.083
+      ],
+      "first_page_median_ms": 33.421,
+      "done_median_ms": 37.84
+    },
+    "bulk": {
+      "first_page_ms": [
+        12.853,
+        22.182,
+        29.062,
+        16.492,
+        18.812
+      ],
+      "done_ms": [
+        15.472,
+        31.222,
+        33.838,
+        16.498,
+        18.818
+      ],
+      "first_page_median_ms": 18.812,
+      "done_median_ms": 18.818
+    },
+    "page_speedup": 1.777,
+    "done_speedup": 2.011
+  },
+  "scope": "Real owned files on one NTFS directory tree, production search worker and bounded first page; OS file cache warm after fixture creation; worker-level latency only, no UI/GPU/input-to-photon or cold-disk claim."
+}

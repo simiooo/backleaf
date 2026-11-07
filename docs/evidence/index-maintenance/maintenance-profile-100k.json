@@ -1,0 +1,77 @@
+{
+  "benchmark": "index-maintenance-profile",
+  "generated_at_utc": "2026-11-07T06:21:29.740492400+00:00",
+  "files": 100000,
+  "directories": 1000,
+  "enumeration": {
+    "ms": 411.397,
+    "entries": 101000,
+    "per_entry_us": 4.073
+  },
+  "identity_capture": {
+    "sample_files": 200,
+    "ms": 82.682,
+    "per_file_ms": 0.413,
+    "estimated_full_ms": 41341.05
+  },
+  "build": {
+    "ms": 93253.292,
+    "per_file_ms": 0.933,
+    "entries": 101000,
+    "index_bytes": 205492224,
+    "wal_bytes": 6340712,
+    "profile": {
+      "enumerate_ms": 39.727,
+      "identity_ms": 0.0,
+      "upsert_ms": 60523.006,
+      "entries": 101000
+    },
+    "unprofiled_ms": 32690.559
+  },
+  "startup_rescan_unchanged": {
+    "ms": 3236.177,
+    "wal_bytes": 4128272,
+    "profile": {
+      "rescan_enumerate_ms": 13.149,
+      "rescan_identity_ms": 0.0,
+      "rescan_upsert_ms": 0.0,
+      "rescan_entries": 101000
+    },
+    "revision": 2009
+  },
+  "explicit_rescan_unchanged": {
+    "ms": 3114.482,
+    "wal_bytes": 0,
+    "profile": {
+      "rescan_enumerate_ms": 11.313,
+      "rescan_identity_ms": 0.0,
+      "rescan_upsert_ms": 0.0,
+      "rescan_entries": 101000
+    },
+    "revision": 3010
+  },
+  "incremental_per_change": {
+    "changes": 300,
+    "total_ms": 1597.029,
+    "per_change_ms": 5.323,
+    "capture_ms": 115.285,
+    "root_ms": 358.337,
+    "upsert_ms": 418.969,
+    "commit_ms": 581.272,
+    "sql_ms": 1592.056,
+    "wal_bytes": 4301312
+  },
+  "incremental_batched": {
+    "changes": 300,
+    "batches": 3,
+    "total_ms": 816.649,
+    "per_change_ms": 2.722,
+    "capture_ms": 75.239,
+    "root_ms": 171.836,
+    "upsert_ms": 248.865,
+    "commit_ms": 213.648,
+    "sql_ms": 816.365,
+    "wal_bytes": 3914000
+  },
+  "scope": "Real owned files on one NTFS tree, release build, OS cache warm after fixture creation. Maintenance worker/DB latency only: no UI, GPU, cold-disk or power claim. Profile counters are #[cfg(test)] instrumentation inside reconcile/upsert/incremental."
+}

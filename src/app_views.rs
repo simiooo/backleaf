@@ -119,6 +119,18 @@ impl Backleaf {
             quick_access::Notice::Loaded { revision, entries } => {
                 self.navigation.config_revision = revision;
                 if self.options.fixture.is_none() {
+                    // Saved views that search indexed locations pin their covering
+                    // roots against opportunistic LRU eviction.
+                    let pins = entries
+                        .iter()
+                        .filter_map(|entry| match &entry.destination {
+                            Destination::View(view) => Some(view.root.path()),
+                            Destination::Folder(_) => None,
+                        })
+                        .collect::<Vec<_>>();
+                    if let Some(index) = &self.index {
+                        let _ = index.send(crate::index::Action::SetPins(pins));
+                    }
                     self.navigation.common = entries
                         .into_iter()
                         .map(|e| {

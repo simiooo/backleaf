@@ -1,0 +1,201 @@
+{
+  "benchmark": "selectivity-guard-threshold-sweep",
+  "generated_at_utc": "2026-11-06T14:28:57.684025500+00:00",
+  "files": 20000,
+  "directories": 200,
+  "scope_size": 20201,
+  "divisors": [
+    8,
+    24,
+    64
+  ],
+  "clamp": [
+    96,
+    4096
+  ],
+  "cold_runs": 2,
+  "warm_runs": 1,
+  "rows": [
+    {
+      "divisor": 8,
+      "cap": 2525,
+      "scenario": "unique",
+      "matches": 1,
+      "auto_used_index": true,
+      "auto_done_median_ms": 68.395,
+      "live_done_median_ms": 244.294,
+      "speedup": 3.572
+    },
+    {
+      "divisor": 8,
+      "cap": 2525,
+      "scenario": "small_note_prefix",
+      "matches": 200,
+      "auto_used_index": true,
+      "auto_done_median_ms": 121.716,
+      "live_done_median_ms": 221.489,
+      "speedup": 1.82
+    },
+    {
+      "divisor": 8,
+      "cap": 2525,
+      "scenario": "mid_report_prefix",
+      "matches": 500,
+      "auto_used_index": true,
+      "auto_done_median_ms": 200.994,
+      "live_done_median_ms": 221.433,
+      "speedup": 1.102
+    },
+    {
+      "divisor": 8,
+      "cap": 2525,
+      "scenario": "wide_note_prefix",
+      "matches": 2000,
+      "auto_used_index": true,
+      "auto_done_median_ms": 747.565,
+      "live_done_median_ms": 318.714,
+      "speedup": 0.426
+    },
+    {
+      "divisor": 8,
+      "cap": 2525,
+      "scenario": "broad_note",
+      "matches": 4000,
+      "auto_used_index": false,
+      "auto_done_median_ms": 429.741,
+      "live_done_median_ms": 381.96,
+      "speedup": 0.889
+    },
+    {
+      "divisor": 8,
+      "cap": 2525,
+      "scenario": "cjk_1_char",
+      "matches": 10000,
+      "auto_used_index": false,
+      "auto_done_median_ms": 589.314,
+      "live_done_median_ms": 552.759,
+      "speedup": 0.938
+    },
+    {
+      "divisor": 24,
+      "cap": 841,
+      "scenario": "unique",
+      "matches": 1,
+      "auto_used_index": true,
+      "auto_done_median_ms": 62.793,
+      "live_done_median_ms": 244.294,
+      "speedup": 3.89
+    },
+    {
+      "divisor": 24,
+      "cap": 841,
+      "scenario": "small_note_prefix",
+      "matches": 200,
+      "auto_used_index": true,
+      "auto_done_median_ms": 136.795,
+      "live_done_median_ms": 221.489,
+      "speedup": 1.619
+    },
+    {
+      "divisor": 24,
+      "cap": 841,
+      "scenario": "mid_report_prefix",
+      "matches": 500,
+      "auto_used_index": true,
+      "auto_done_median_ms": 242.864,
+      "live_done_median_ms": 221.433,
+      "speedup": 0.912
+    },
+    {
+      "divisor": 24,
+      "cap": 841,
+      "scenario": "wide_note_prefix",
+      "matches": 2000,
+      "auto_used_index": false,
+      "auto_done_median_ms": 356.231,
+      "live_done_median_ms": 318.714,
+      "speedup": 0.895
+    },
+    {
+      "divisor": 24,
+      "cap": 841,
+      "scenario": "broad_note",
+      "matches": 4000,
+      "auto_used_index": false,
+      "auto_done_median_ms": 388.636,
+      "live_done_median_ms": 381.96,
+      "speedup": 0.983
+    },
+    {
+      "divisor": 24,
+      "cap": 841,
+      "scenario": "cjk_1_char",
+      "matches": 10000,
+      "auto_used_index": false,
+      "auto_done_median_ms": 619.239,
+      "live_done_median_ms": 552.759,
+      "speedup": 0.893
+    },
+    {
+      "divisor": 64,
+      "cap": 315,
+      "scenario": "unique",
+      "matches": 1,
+      "auto_used_index": true,
+      "auto_done_median_ms": 63.191,
+      "live_done_median_ms": 244.294,
+      "speedup": 3.866
+    },
+    {
+      "divisor": 64,
+      "cap": 315,
+      "scenario": "small_note_prefix",
+      "matches": 200,
+      "auto_used_index": true,
+      "auto_done_median_ms": 129.115,
+      "live_done_median_ms": 221.489,
+      "speedup": 1.715
+    },
+    {
+      "divisor": 64,
+      "cap": 315,
+      "scenario": "mid_report_prefix",
+      "matches": 500,
+      "auto_used_index": false,
+      "auto_done_median_ms": 257.688,
+      "live_done_median_ms": 221.433,
+      "speedup": 0.859
+    },
+    {
+      "divisor": 64,
+      "cap": 315,
+      "scenario": "wide_note_prefix",
+      "matches": 2000,
+      "auto_used_index": false,
+      "auto_done_median_ms": 267.287,
+      "live_done_median_ms": 318.714,
+      "speedup": 1.192
+    },
+    {
+      "divisor": 64,
+      "cap": 315,
+      "scenario": "broad_note",
+      "matches": 4000,
+      "auto_used_index": false,
+      "auto_done_median_ms": 385.979,
+      "live_done_median_ms": 381.96,
+      "speedup": 0.99
+    },
+    {
+      "divisor": 64,
+      "cap": 315,
+      "scenario": "cjk_1_char",
+      "matches": 10000,
+      "auto_used_index": false,
+      "auto_done_median_ms": 596.784,
+      "live_done_median_ms": 552.759,
+      "speedup": 0.926
+    }
+  ],
+  "scope": "Real owned files on one NTFS directory tree, production search worker and bounded first page; OS file cache warm after fixture creation; worker-level latency only, no UI/GPU/input-to-photon or cold-disk claim."
+}

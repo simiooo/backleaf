@@ -8,10 +8,17 @@ use std::{
     },
     time::Duration,
 };
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
 pub struct Change {
     pub root: i64,
     pub path: PathBuf,
+    /// Old name for a paired FILE_ACTION_RENAMED_OLD_NAME/NEW_NAME notification. The
+    /// old row is erased in the same batch transaction instead of waiting for a
+    /// separate delete notification.
+    pub from: Option<PathBuf>,
 }
+const RENAMED_OLD_ACTION: u32 = 4;
+const RENAMED_NEW_ACTION: u32 = 5;
 pub struct Watch {
     stop: Arc<AtomicBool>,
     pub overflow: Arc<AtomicBool>,
@@ -75,6 +82,7 @@ impl Watch {
                             let signal = Handle(CreateEventW(None, true, false, None)?);
                             let mut buffer = vec![0u32; 15 * 1024];
                             let mut checked = std::time::Instant::now();
+                            let mut pending_rename: Option<PathBuf> = None;
                             loop {
                                 if halted.load(Ordering::Acquire) {
                                     return Ok(());
@@ -162,6 +170,9 @@ impl Watch {
                                         lost.store(true, Ordering::Release);
                                         break;
                                     }
+                                    let action = u32::from_le_bytes(
+                                        bytes[offset + 4..offset + 8].try_into().unwrap(),
+                                    );
                                     let text = bytes[offset + 12..offset + 12 + n]
                                         .as_chunks::<2>()
                                         .0
@@ -182,11 +193,32 @@ impl Watch {
                                                     .unwrap_or_else(|_| std::env::temp_dir())
                                                     .join("Backleaf"),
                                             )
-                                            && tx.try_send(Change { root, path: full }).is_err()
                                         {
-                                            lost.store(true, Ordering::Release);
+                                            if action == RENAMED_OLD_ACTION {
+                                                pending_rename = Some(full);
+                                            } else {
+                                                let from = if action == RENAMED_NEW_ACTION {
+                                                    pending_rename.take()
+                                                } else {
+                                                    pending_rename = None;
+                                                    None
+                                                };
+                                                if tx
+                                                    .try_send(Change {
+                                                        root,
+                                                        path: full,
+                                                        from,
+                                                    })
+                                                    .is_err()
+                                                {
+                                                    lost.store(true, Ordering::Release);
+                                                }
+                                            }
+                                        } else {
+                                            pending_rename = None;
                                         }
                                     } else {
+                                        pending_rename = None;
                                         lost.store(true, Ordering::Release);
                                     }
                                     if next == 0 {

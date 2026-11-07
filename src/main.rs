@@ -17,11 +17,15 @@ mod file_icons;
 mod file_view;
 #[cfg(test)]
 mod headless_tests;
+mod idle;
 mod index;
+mod index_bulk;
 mod index_watch;
 mod input;
 mod layout;
 mod locations;
+#[cfg(test)]
+mod maintenance_benchmark;
 mod marquee_scroll;
 mod marquee_smoke;
 mod menu;
@@ -38,6 +42,8 @@ mod properties_capacity;
 mod quick_access;
 mod scrollbar;
 mod search;
+#[cfg(test)]
+mod search_benchmark;
 mod search_cache;
 mod search_motion;
 mod selectable;
@@ -673,7 +679,7 @@ impl Backleaf {
                 self.index_status = status;
                 if changed
                     && self.search.open
-                    && self.search.definition.indexed
+                    && self.search.worker.used_index()
                     && self.search.started
                 {
                     self.refresh_search();
@@ -1829,6 +1835,10 @@ impl Backleaf {
                                 .child(icon(name, colors))
                         }),
                     ),
+            )
+            .on_mouse_down(
+                MouseButton::Left,
+                cx.listener(|this, _, window, cx| this.dismiss_titlebar_popups(window, cx)),
             )
             .into_any_element()
     }

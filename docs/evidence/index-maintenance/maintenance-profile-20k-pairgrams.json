@@ -1,0 +1,77 @@
+{
+  "benchmark": "index-maintenance-profile",
+  "generated_at_utc": "2026-11-06T16:44:07.965818600+00:00",
+  "files": 20000,
+  "directories": 200,
+  "enumeration": {
+    "ms": 124.353,
+    "entries": 20200,
+    "per_entry_us": 6.156
+  },
+  "identity_capture": {
+    "sample_files": 200,
+    "ms": 43.064,
+    "per_file_ms": 0.215,
+    "estimated_full_ms": 4306.42
+  },
+  "build": {
+    "ms": 16846.038,
+    "per_file_ms": 0.842,
+    "entries": 20200,
+    "index_bytes": 40632320,
+    "wal_bytes": 5248912,
+    "profile": {
+      "enumerate_ms": 5.001,
+      "identity_ms": 0.0,
+      "upsert_ms": 12822.195,
+      "entries": 20200
+    },
+    "unprofiled_ms": 4018.842
+  },
+  "startup_rescan_unchanged": {
+    "ms": 1121.61,
+    "wal_bytes": 4099432,
+    "profile": {
+      "rescan_enumerate_ms": 1.769,
+      "rescan_identity_ms": 0.0,
+      "rescan_upsert_ms": 0.0,
+      "rescan_entries": 20200
+    },
+    "revision": 403
+  },
+  "explicit_rescan_unchanged": {
+    "ms": 1036.084,
+    "wal_bytes": 0,
+    "profile": {
+      "rescan_enumerate_ms": 1.777,
+      "rescan_identity_ms": 0.0,
+      "rescan_upsert_ms": 0.0,
+      "rescan_entries": 20200
+    },
+    "revision": 604
+  },
+  "incremental_per_change": {
+    "changes": 500,
+    "total_ms": 2141.177,
+    "per_change_ms": 4.282,
+    "capture_ms": 147.376,
+    "root_ms": 386.431,
+    "upsert_ms": 426.392,
+    "commit_ms": 1013.664,
+    "sql_ms": 2133.036,
+    "wal_bytes": 4326032
+  },
+  "incremental_batched": {
+    "changes": 500,
+    "batches": 4,
+    "total_ms": 1579.891,
+    "per_change_ms": 3.16,
+    "capture_ms": 125.278,
+    "root_ms": 252.746,
+    "upsert_ms": 490.232,
+    "commit_ms": 554.295,
+    "sql_ms": 1579.548,
+    "wal_bytes": 749840
+  },
+  "scope": "Real owned files on one NTFS tree, release build, OS cache warm after fixture creation. Maintenance worker/DB latency only: no UI, GPU, cold-disk or power claim. Profile counters are #[cfg(test)] instrumentation inside reconcile/upsert/incremental."
+}

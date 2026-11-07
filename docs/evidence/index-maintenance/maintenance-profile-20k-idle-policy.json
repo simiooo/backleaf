@@ -1,0 +1,77 @@
+{
+  "benchmark": "index-maintenance-profile",
+  "generated_at_utc": "2026-11-07T06:27:47.454874100+00:00",
+  "files": 20000,
+  "directories": 200,
+  "enumeration": {
+    "ms": 59.714,
+    "entries": 20200,
+    "per_entry_us": 2.956
+  },
+  "identity_capture": {
+    "sample_files": 200,
+    "ms": 21.422,
+    "per_file_ms": 0.107,
+    "estimated_full_ms": 2142.24
+  },
+  "build": {
+    "ms": 16475.471,
+    "per_file_ms": 0.824,
+    "entries": 20200,
+    "index_bytes": 40165376,
+    "wal_bytes": 5467272,
+    "profile": {
+      "enumerate_ms": 7.836,
+      "identity_ms": 0.0,
+      "upsert_ms": 12339.581,
+      "entries": 20200
+    },
+    "unprofiled_ms": 4128.054
+  },
+  "startup_rescan_unchanged": {
+    "ms": 1165.635,
+    "wal_bytes": 4099432,
+    "profile": {
+      "rescan_enumerate_ms": 1.759,
+      "rescan_identity_ms": 0.0,
+      "rescan_upsert_ms": 0.0,
+      "rescan_entries": 20200
+    },
+    "revision": 403
+  },
+  "explicit_rescan_unchanged": {
+    "ms": 1020.135,
+    "wal_bytes": 0,
+    "profile": {
+      "rescan_enumerate_ms": 1.753,
+      "rescan_identity_ms": 0.0,
+      "rescan_upsert_ms": 0.0,
+      "rescan_entries": 20200
+    },
+    "revision": 604
+  },
+  "incremental_per_change": {
+    "changes": 300,
+    "total_ms": 1340.264,
+    "per_change_ms": 4.468,
+    "capture_ms": 110.83,
+    "root_ms": 343.0,
+    "upsert_ms": 242.301,
+    "commit_ms": 541.757,
+    "sql_ms": 1334.986,
+    "wal_bytes": 4321912
+  },
+  "incremental_batched": {
+    "changes": 300,
+    "batches": 3,
+    "total_ms": 911.599,
+    "per_change_ms": 3.039,
+    "capture_ms": 114.614,
+    "root_ms": 193.781,
+    "upsert_ms": 270.258,
+    "commit_ms": 241.669,
+    "sql_ms": 911.35,
+    "wal_bytes": 3357800
+  },
+  "scope": "Real owned files on one NTFS tree, release build, OS cache warm after fixture creation. Maintenance worker/DB latency only: no UI, GPU, cold-disk or power claim. Profile counters are #[cfg(test)] instrumentation inside reconcile/upsert/incremental."
+}

@@ -121,6 +121,13 @@ pub fn key(view: &FileView) -> anyhow::Result<String> {
     Ok(serde_json::to_string(&view)?)
 }
 impl Cache {
+    /// Whether a fresh completed result with this key follows the given index
+    /// stamp. Used to skip the selectivity preflight on a cache hit.
+    pub fn contains(&self, key: &str, stamp: &Stamp) -> bool {
+        self.entries.iter().any(|entry| {
+            entry.key == key && entry.created.elapsed() <= MAX_AGE && stamp.follows(&entry.stamp)
+        })
+    }
     pub fn new(state: &Path) -> Self {
         Self {
             entries: VecDeque::new(),
@@ -331,19 +338,66 @@ pub fn candidate(
     db: &Connection,
     id: i64,
     recursive: bool,
+    scope: Option<&crate::index::Scope>,
 ) -> anyhow::Result<Option<crate::index::IndexedItem>> {
-    Ok(db.query_row("SELECT id,display,path,directory,identity FROM entries WHERE id=?1 AND (?2 OR parent IN(SELECT path FROM roots))", rusqlite::params![id,recursive], |r| Ok(crate::index::IndexedItem {id:r.get(0)?,name:r.get(1)?,path:crate::operations::ledger::decode_path(&r.get::<_,Vec<u8>>(2)?),directory:r.get(3)?,identity:r.get(4)?})).optional()?)
+    let Some(item) = db
+        .query_row(
+            "SELECT id,display,path,directory,identity FROM entries WHERE id=?1",
+            [id],
+            |r| {
+                Ok(crate::index::IndexedItem {
+                    id: r.get(0)?,
+                    name: r.get(1)?,
+                    path: crate::operations::ledger::decode_path(&r.get::<_, Vec<u8>>(2)?),
+                    directory: r.get(3)?,
+                    identity: r.get(4)?,
+                })
+            },
+        )
+        .optional()?
+    else {
+        return Ok(None);
+    };
+    if let Some(scope) = scope {
+        let folder = crate::operations::ledger::decode_path(&scope.path);
+        if !crate::index::inside(&folder, &item.path, scope.recursive) {
+            return Ok(None);
+        }
+        return Ok(Some(item));
+    }
+    if !recursive {
+        let Some(parent) = item.path.parent() else {
+            return Ok(None);
+        };
+        let registered: bool = db.query_row(
+            "SELECT EXISTS(SELECT 1 FROM roots WHERE path=?1)",
+            [crate::operations::ledger::encode_path(parent)],
+            |r| r.get(0),
+        )?;
+        if !registered {
+            return Ok(None);
+        }
+    }
+    Ok(Some(item))
 }
 pub fn alternate(
     db: &Connection,
     path: &[u8],
     excluded: i64,
     recursive: bool,
+    scope: Option<&crate::index::Scope>,
 ) -> anyhow::Result<Option<crate::index::IndexedItem>> {
-    let id=db.query_row("SELECT id FROM entries WHERE root IN(SELECT id FROM roots) AND path=?1 AND id<>?2 AND (?3 OR parent IN(SELECT path FROM roots)) LIMIT 1",rusqlite::params![path,excluded,recursive],|r|r.get(0)).optional()?;
-    id.map(|id| candidate(db, id, recursive))
-        .transpose()
-        .map(Option::flatten)
+    let mut q = db.prepare("SELECT id FROM entries WHERE path=?1 AND id<>?2 LIMIT 64")?;
+    let ids = q
+        .query_map(rusqlite::params![path, excluded], |r| r.get::<_, i64>(0))?
+        .collect::<Result<Vec<_>, _>>()?;
+    drop(q);
+    for id in ids {
+        if let Some(item) = candidate(db, id, recursive, scope)? {
+            return Ok(Some(item));
+        }
+    }
+    Ok(None)
 }
 
 #[cfg(test)]

@@ -1001,6 +1001,10 @@ impl Backleaf {
                         d.bg(colors.color(ColorRole::InputActive))
                             .shadow(colors.input_shadows())
                     })
+                    // Keep the dropdown toggle's own press handling instead of
+                    // letting the title bar dismiss handler close the tree that
+                    // this click is about to toggle.
+                    .on_mouse_down(MouseButton::Left, |_, _, cx| cx.stop_propagation())
                     .on_click(cx.listener(|this, _, window, cx| {
                         if this.navigation.open {
                             this.close_path_tree();

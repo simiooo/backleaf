@@ -1358,6 +1358,69 @@ fn search_debounce_executes_latest_query_after_250ms() {
 }
 
 #[test]
+fn automatic_search_uses_covered_index_and_falls_back_after_removal() {
+    let mut h = Harness::new(&["自动索引报告.txt", "other.txt"], None);
+    h.read(|this, _| {
+        this.index
+            .as_ref()
+            .unwrap()
+            .send(index::Action::Add(this.path.clone()))
+            .unwrap()
+    });
+    h.wait("indexed fixture", |this, _| {
+        !this.index_status.building && this.index_status.count == 2
+    });
+    h.key("ctrl-f");
+    h.text("自动索引");
+    h.wait("automatic indexed result", |this, _| {
+        this.search.done && this.search.rows.len() == 1 && this.search.worker.used_index()
+    });
+    let canonical = h.read(|this, _| this.path.canonicalize().unwrap());
+    h.read(move |this, _| {
+        this.index
+            .as_ref()
+            .unwrap()
+            .send(index::Action::Remove(canonical))
+            .unwrap()
+    });
+    h.wait("index root removed", |this, _| {
+        this.index_status.roots.is_empty() && !this.index_status.building
+    });
+    h.view.update(&mut h.cx, |this, cx| {
+        this.start_search("自动索引".into(), cx);
+    });
+    h.wait("fallback live result", |this, _| {
+        this.search.done && this.search.rows.len() == 1 && !this.search.worker.used_index()
+    });
+}
+
+#[test]
+fn titlebar_press_dismisses_path_tree_and_search_but_keeps_search_field_presses() {
+    let mut h = Harness::new(&["note.txt"], None);
+    let view = h.view.clone();
+    h.cx.update_window(h.window.into(), |_, window, cx| {
+        view.update(cx, |this, cx| {
+            this.navigation.rows.clear();
+            this.show_path_tree(true, Some(window), cx);
+        })
+    })
+    .unwrap();
+    h.frame();
+    assert!(h.read(|this, _| this.navigation.open));
+    h.click(820., 24., MouseButton::Left);
+    assert!(!h.read(|this, _| this.navigation.open));
+    assert!(h.grid_focused());
+
+    h.key("ctrl-f");
+    assert!(h.read(|this, _| this.search.open));
+    h.click(800., 24., MouseButton::Left);
+    assert!(h.read(|this, _| this.search.open));
+    h.click(640., 24., MouseButton::Left);
+    assert!(!h.read(|this, _| this.search.open));
+    assert!(h.grid_focused());
+}
+
+#[test]
 fn independent_menu_escape_restores_grid_focus_and_selection() {
     let mut h = Harness::new(&["note.txt"], None);
     let (x, y) = h.first_icon();

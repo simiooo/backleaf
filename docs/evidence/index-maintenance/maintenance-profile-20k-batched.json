@@ -1,0 +1,77 @@
+{
+  "benchmark": "index-maintenance-profile",
+  "generated_at_utc": "2026-11-06T16:19:12.425761+00:00",
+  "files": 20000,
+  "directories": 200,
+  "enumeration": {
+    "ms": 81.437,
+    "entries": 20200,
+    "per_entry_us": 4.032
+  },
+  "identity_capture": {
+    "sample_files": 200,
+    "ms": 29.849,
+    "per_file_ms": 0.149,
+    "estimated_full_ms": 2984.88
+  },
+  "build": {
+    "ms": 13886.803,
+    "per_file_ms": 0.694,
+    "entries": 20200,
+    "index_bytes": 27693056,
+    "wal_bytes": 5104712,
+    "profile": {
+      "enumerate_ms": 5.632,
+      "identity_ms": 0.0,
+      "upsert_ms": 11334.452,
+      "entries": 20200
+    },
+    "unprofiled_ms": 2546.719
+  },
+  "startup_rescan_unchanged": {
+    "ms": 1130.702,
+    "wal_bytes": 4099432,
+    "profile": {
+      "rescan_enumerate_ms": 1.944,
+      "rescan_identity_ms": 0.0,
+      "rescan_upsert_ms": 0.0,
+      "rescan_entries": 20200
+    },
+    "revision": 403
+  },
+  "explicit_rescan_unchanged": {
+    "ms": 1032.462,
+    "wal_bytes": 0,
+    "profile": {
+      "rescan_enumerate_ms": 1.831,
+      "rescan_identity_ms": 0.0,
+      "rescan_upsert_ms": 0.0,
+      "rescan_entries": 20200
+    },
+    "revision": 604
+  },
+  "incremental_per_change": {
+    "changes": 500,
+    "total_ms": 1502.953,
+    "per_change_ms": 3.006,
+    "capture_ms": 138.983,
+    "root_ms": 284.831,
+    "upsert_ms": 353.697,
+    "commit_ms": 555.009,
+    "sql_ms": 1495.376,
+    "wal_bytes": 4210672
+  },
+  "incremental_batched": {
+    "changes": 500,
+    "batches": 4,
+    "total_ms": 1284.99,
+    "per_change_ms": 2.57,
+    "capture_ms": 132.769,
+    "root_ms": 246.296,
+    "upsert_ms": 425.088,
+    "commit_ms": 330.465,
+    "sql_ms": 1284.609,
+    "wal_bytes": 3048800
+  },
+  "scope": "Real owned files on one NTFS tree, release build, OS cache warm after fixture creation. Maintenance worker/DB latency only: no UI, GPU, cold-disk or power claim. Profile counters are #[cfg(test)] instrumentation inside reconcile/upsert/incremental."
+}

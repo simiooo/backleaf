@@ -1,0 +1,447 @@
+{
+  "benchmark": "default-search-index-vs-live-scan",
+  "generated_at_utc": "2026-11-06T16:46:34.695513900+00:00",
+  "files": 20000,
+  "directories": 200,
+  "index_build_ms": 16898.263,
+  "index_db_bytes": 38281216,
+  "planner": "index::plan_scope + index::scope_size/estimate_matches selectivity guard + scoped query",
+  "matching_counts": {
+    "cjk_1_char": 10000,
+    "note": 4000,
+    "note_prefix": 200,
+    "folder_local": 60
+  },
+  "cold_runs": 3,
+  "warm_runs": 2,
+  "scenarios": [
+    {
+      "scenario": "unique",
+      "query": "needle-unique",
+      "matches": 1,
+      "auto_used_index": true,
+      "cold_runs": 3,
+      "warm_runs": 2,
+      "auto": {
+        "first_page_ms": [
+          60.255,
+          67.11,
+          65.111,
+          7.997,
+          7.619
+        ],
+        "done_ms": [
+          67.143,
+          71.148,
+          69.793,
+          7.998,
+          7.62
+        ]
+      },
+      "live": {
+        "first_page_ms": [
+          12.163,
+          12.337,
+          15.565,
+          9.328,
+          10.646
+        ],
+        "done_ms": [
+          237.009,
+          242.921,
+          241.954,
+          9.329,
+          10.647
+        ]
+      },
+      "auto_done_median_ms": 67.143,
+      "live_done_median_ms": 237.009,
+      "done_speedup": 3.53,
+      "auto_page_median_ms": 60.255,
+      "live_page_median_ms": 12.163,
+      "page_speedup": 0.202
+    },
+    {
+      "scenario": "medium",
+      "query": "note-000",
+      "matches": 200,
+      "auto_used_index": true,
+      "cold_runs": 3,
+      "warm_runs": 2,
+      "auto": {
+        "first_page_ms": [
+          96.699,
+          122.395,
+          122.418,
+          12.042,
+          11.096
+        ],
+        "done_ms": [
+          102.879,
+          133.078,
+          137.334,
+          12.049,
+          11.102
+        ]
+      },
+      "live": {
+        "first_page_ms": [
+          19.252,
+          15.267,
+          12.45,
+          14.626,
+          12.374
+        ],
+        "done_ms": [
+          241.543,
+          235.728,
+          248.903,
+          14.705,
+          12.378
+        ]
+      },
+      "auto_done_median_ms": 102.879,
+      "live_done_median_ms": 235.728,
+      "done_speedup": 2.291,
+      "auto_page_median_ms": 96.699,
+      "live_page_median_ms": 14.626,
+      "page_speedup": 0.151
+    },
+    {
+      "scenario": "cjk_1_char",
+      "query": "报",
+      "matches": 10000,
+      "auto_used_index": false,
+      "cold_runs": 3,
+      "warm_runs": 2,
+      "auto": {
+        "first_page_ms": [
+          34.952,
+          45.976,
+          48.823,
+          34.688,
+          46.729
+        ],
+        "done_ms": [
+          627.16,
+          572.189,
+          591.69,
+          34.695,
+          46.733
+        ]
+      },
+      "live": {
+        "first_page_ms": [
+          19.438,
+          13.003,
+          12.409,
+          20.585,
+          27.28
+        ],
+        "done_ms": [
+          535.965,
+          546.46,
+          544.764,
+          20.591,
+          27.287
+        ]
+      },
+      "auto_done_median_ms": 572.189,
+      "live_done_median_ms": 535.965,
+      "done_speedup": 0.937,
+      "auto_page_median_ms": 45.976,
+      "live_page_median_ms": 19.438,
+      "page_speedup": 0.423
+    },
+    {
+      "scenario": "ascii_broad",
+      "query": "note",
+      "matches": 4000,
+      "auto_used_index": false,
+      "cold_runs": 3,
+      "warm_runs": 2,
+      "auto": {
+        "first_page_ms": [
+          44.807,
+          43.293,
+          39.391,
+          48.908,
+          47.67
+        ],
+        "done_ms": [
+          367.418,
+          374.198,
+          396.687,
+          48.931,
+          47.675
+        ]
+      },
+      "live": {
+        "first_page_ms": [
+          20.961,
+          10.727,
+          11.853,
+          14.666,
+          12.206
+        ],
+        "done_ms": [
+          350.326,
+          361.516,
+          403.581,
+          14.67,
+          12.211
+        ]
+      },
+      "auto_done_median_ms": 367.418,
+      "live_done_median_ms": 350.326,
+      "done_speedup": 0.953,
+      "auto_page_median_ms": 44.807,
+      "live_page_median_ms": 12.206,
+      "page_speedup": 0.272
+    },
+    {
+      "scenario": "folder_local",
+      "query": "local",
+      "matches": 60,
+      "auto_used_index": true,
+      "cold_runs": 3,
+      "warm_runs": 2,
+      "auto": {
+        "first_page_ms": [
+          21.457,
+          17.788,
+          12.611,
+          20.54,
+          13.779
+        ],
+        "done_ms": [
+          37.1,
+          22.457,
+          23.526,
+          20.544,
+          13.784
+        ]
+      },
+      "live": {
+        "first_page_ms": [
+          20.809,
+          23.996,
+          16.664,
+          10.546,
+          10.388
+        ],
+        "done_ms": [
+          20.814,
+          24.002,
+          16.672,
+          10.562,
+          10.392
+        ]
+      },
+      "auto_done_median_ms": 22.457,
+      "live_done_median_ms": 16.672,
+      "done_speedup": 0.742,
+      "auto_page_median_ms": 17.788,
+      "live_page_median_ms": 16.664,
+      "page_speedup": 0.937
+    },
+    {
+      "scenario": "ascii_2_short",
+      "query": "ue",
+      "matches": 1,
+      "auto_used_index": true,
+      "cold_runs": 3,
+      "warm_runs": 2,
+      "auto": {
+        "first_page_ms": [
+          63.937,
+          61.159,
+          58.906,
+          7.758,
+          13.484
+        ],
+        "done_ms": [
+          67.081,
+          64.142,
+          66.586,
+          7.759,
+          13.485
+        ]
+      },
+      "live": {
+        "first_page_ms": [
+          13.476,
+          26.119,
+          11.164,
+          9.253,
+          11.212
+        ],
+        "done_ms": [
+          250.139,
+          248.708,
+          235.991,
+          9.254,
+          11.214
+        ]
+      },
+      "auto_done_median_ms": 64.142,
+      "live_done_median_ms": 235.991,
+      "done_speedup": 3.679,
+      "auto_page_median_ms": 58.906,
+      "live_page_median_ms": 11.212,
+      "page_speedup": 0.19
+    },
+    {
+      "scenario": "ascii_1_short",
+      "query": "q",
+      "matches": 1,
+      "auto_used_index": true,
+      "cold_runs": 3,
+      "warm_runs": 2,
+      "auto": {
+        "first_page_ms": [
+          134.514,
+          147.613,
+          135.889,
+          15.493,
+          9.353
+        ],
+        "done_ms": [
+          186.345,
+          202.338,
+          191.942,
+          15.495,
+          9.354
+        ]
+      },
+      "live": {
+        "first_page_ms": [
+          11.136,
+          12.251,
+          15.967,
+          16.798,
+          19.726
+        ],
+        "done_ms": [
+          219.9,
+          208.703,
+          205.979,
+          16.799,
+          19.728
+        ]
+      },
+      "auto_done_median_ms": 186.345,
+      "live_done_median_ms": 205.979,
+      "done_speedup": 1.105,
+      "auto_page_median_ms": 134.514,
+      "live_page_median_ms": 15.967,
+      "page_speedup": 0.119
+    },
+    {
+      "scenario": "folder_local_short",
+      "query": "lo",
+      "matches": 60,
+      "auto_used_index": true,
+      "cold_runs": 3,
+      "warm_runs": 2,
+      "auto": {
+        "first_page_ms": [
+          19.929,
+          10.503,
+          13.96,
+          18.137,
+          16.893
+        ],
+        "done_ms": [
+          23.065,
+          19.988,
+          17.476,
+          18.142,
+          16.897
+        ]
+      },
+      "live": {
+        "first_page_ms": [
+          24.734,
+          24.194,
+          17.483,
+          11.831,
+          12.391
+        ],
+        "done_ms": [
+          24.739,
+          24.199,
+          17.488,
+          11.834,
+          12.395
+        ]
+      },
+      "auto_done_median_ms": 18.142,
+      "live_done_median_ms": 17.488,
+      "done_speedup": 0.964,
+      "auto_page_median_ms": 16.893,
+      "live_page_median_ms": 17.483,
+      "page_speedup": 1.035
+    }
+  ],
+  "bulk_validation_ab": {
+    "scenario": "folder_local",
+    "matches": 60,
+    "cold_runs": 3,
+    "warm_runs": 2,
+    "no_bulk": {
+      "first_page_ms": [
+        24.889,
+        41.362,
+        30.905,
+        16.316,
+        23.366
+      ],
+      "done_ms": [
+        29.883,
+        45.653,
+        42.552,
+        16.321,
+        23.386
+      ],
+      "first_page_median_ms": 24.889,
+      "done_median_ms": 29.883
+    },
+    "bulk": {
+      "first_page_ms": [
+        26.844,
+        20.402,
+        21.485,
+        8.876,
+        7.487
+      ],
+      "done_ms": [
+        31.143,
+        24.926,
+        26.117,
+        8.88,
+        7.491
+      ],
+      "first_page_median_ms": 20.402,
+      "done_median_ms": 24.926
+    },
+    "page_speedup": 1.22,
+    "done_speedup": 1.199
+  },
+  "short_query_gram_ab": {
+    "scenario": "ascii_2_short",
+    "query": "ue",
+    "matches": 1,
+    "grams": {
+      "first_page_median_ms": 59.228,
+      "done_median_ms": 66.942
+    },
+    "instr": {
+      "first_page_median_ms": 129.462,
+      "done_median_ms": 186.169
+    },
+    "page_speedup": 2.186,
+    "done_speedup": 2.781
+  },
+  "scope": "Real owned files on one NTFS directory tree, production search worker and bounded first page; OS file cache warm after fixture creation; worker-level latency only, no UI/GPU/input-to-photon or cold-disk claim."
+}

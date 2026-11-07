@@ -1,0 +1,203 @@
+{
+  "benchmark": "default-search-index-vs-live-scan",
+  "generated_at_utc": "2026-11-06T13:50:31.434596600+00:00",
+  "files": 20000,
+  "directories": 200,
+  "index_build_ms": 24621.686,
+  "index_db_bytes": 28626944,
+  "planner": "index::plan_scope + index::scope_size/estimate_matches selectivity guard + scoped query",
+  "matching_counts": {
+    "cjk_1_char": 10000,
+    "note": 4000,
+    "note_prefix": 200
+  },
+  "cold_runs": 3,
+  "warm_runs": 2,
+  "scenarios": [
+    {
+      "scenario": "unique",
+      "query": "needle-unique",
+      "matches": 1,
+      "auto_used_index": true,
+      "cold_runs": 3,
+      "warm_runs": 2,
+      "auto": {
+        "first_page_ms": [
+          60.269,
+          64.82,
+          62.627,
+          36.953,
+          34.775
+        ],
+        "done_ms": [
+          64.891,
+          68.968,
+          66.758,
+          36.954,
+          34.776
+        ]
+      },
+      "live": {
+        "first_page_ms": [
+          16.521,
+          12.542,
+          14.135,
+          9.063,
+          14.108
+        ],
+        "done_ms": [
+          227.079,
+          234.768,
+          262.174,
+          9.065,
+          14.11
+        ]
+      },
+      "auto_done_median_ms": 64.891,
+      "live_done_median_ms": 227.079,
+      "done_speedup": 3.499,
+      "auto_page_median_ms": 60.269,
+      "live_page_median_ms": 14.108,
+      "page_speedup": 0.234
+    },
+    {
+      "scenario": "medium",
+      "query": "note-000",
+      "matches": 200,
+      "auto_used_index": true,
+      "cold_runs": 3,
+      "warm_runs": 2,
+      "auto": {
+        "first_page_ms": [
+          156.755,
+          100.11,
+          157.813,
+          43.28,
+          46.304
+        ],
+        "done_ms": [
+          161.417,
+          114.048,
+          162.441,
+          43.287,
+          46.315
+        ]
+      },
+      "live": {
+        "first_page_ms": [
+          25.147,
+          10.149,
+          33.325,
+          16.719,
+          12.809
+        ],
+        "done_ms": [
+          292.454,
+          227.24,
+          281.853,
+          16.723,
+          12.818
+        ]
+      },
+      "auto_done_median_ms": 114.048,
+      "live_done_median_ms": 227.24,
+      "done_speedup": 1.993,
+      "auto_page_median_ms": 100.11,
+      "live_page_median_ms": 16.719,
+      "page_speedup": 0.167
+    },
+    {
+      "scenario": "cjk_1_char",
+      "query": "报",
+      "matches": 10000,
+      "auto_used_index": false,
+      "cold_runs": 3,
+      "warm_runs": 2,
+      "auto": {
+        "first_page_ms": [
+          50.239,
+          47.469,
+          52.111,
+          32.956,
+          29.515
+        ],
+        "done_ms": [
+          522.309,
+          603.729,
+          586.633,
+          32.965,
+          29.52
+        ]
+      },
+      "live": {
+        "first_page_ms": [
+          16.782,
+          24.782,
+          15.339,
+          24.539,
+          14.241
+        ],
+        "done_ms": [
+          546.205,
+          533.793,
+          530.423,
+          24.546,
+          14.249
+        ]
+      },
+      "auto_done_median_ms": 522.309,
+      "live_done_median_ms": 530.423,
+      "done_speedup": 1.016,
+      "auto_page_median_ms": 47.469,
+      "live_page_median_ms": 16.782,
+      "page_speedup": 0.354
+    },
+    {
+      "scenario": "ascii_broad",
+      "query": "note",
+      "matches": 4000,
+      "auto_used_index": false,
+      "cold_runs": 3,
+      "warm_runs": 2,
+      "auto": {
+        "first_page_ms": [
+          36.868,
+          47.611,
+          45.859,
+          37.84,
+          32.75
+        ],
+        "done_ms": [
+          363.237,
+          348.398,
+          385.475,
+          37.845,
+          32.758
+        ]
+      },
+      "live": {
+        "first_page_ms": [
+          51.76,
+          18.862,
+          16.225,
+          30.068,
+          19.747
+        ],
+        "done_ms": [
+          399.641,
+          322.568,
+          367.544,
+          30.075,
+          19.754
+        ]
+      },
+      "auto_done_median_ms": 348.398,
+      "live_done_median_ms": 322.568,
+      "done_speedup": 0.926,
+      "auto_page_median_ms": 37.84,
+      "live_page_median_ms": 19.747,
+      "page_speedup": 0.522
+    }
+  ],
+  "scope": "Real owned files on one NTFS directory tree, production search worker and bounded first page; OS file cache warm after fixture creation; worker-level latency only, no UI/GPU/input-to-photon or cold-disk claim."
+}

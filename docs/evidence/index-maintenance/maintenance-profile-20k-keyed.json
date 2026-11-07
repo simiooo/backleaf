@@ -1,0 +1,62 @@
+{
+  "benchmark": "index-maintenance-profile",
+  "generated_at_utc": "2026-11-06T16:04:12.329386700+00:00",
+  "files": 20000,
+  "directories": 200,
+  "enumeration": {
+    "ms": 78.946,
+    "entries": 20200,
+    "per_entry_us": 3.908
+  },
+  "identity_capture": {
+    "sample_files": 200,
+    "ms": 50.532,
+    "per_file_ms": 0.253,
+    "estimated_full_ms": 5053.23
+  },
+  "build": {
+    "ms": 13167.065,
+    "per_file_ms": 0.658,
+    "entries": 20200,
+    "index_bytes": 29970432,
+    "wal_bytes": 5166512,
+    "profile": {
+      "enumerate_ms": 6.805,
+      "identity_ms": 0.0,
+      "upsert_ms": 10430.516,
+      "entries": 20200
+    },
+    "unprofiled_ms": 2729.745
+  },
+  "startup_rescan_unchanged": {
+    "ms": 1137.255,
+    "wal_bytes": 4099432,
+    "profile": {
+      "rescan_enumerate_ms": 1.915,
+      "rescan_identity_ms": 0.0,
+      "rescan_upsert_ms": 0.0,
+      "rescan_entries": 20200
+    },
+    "revision": 403
+  },
+  "explicit_rescan_unchanged": {
+    "ms": 1012.994,
+    "wal_bytes": 0,
+    "profile": {
+      "rescan_enumerate_ms": 1.956,
+      "rescan_identity_ms": 0.0,
+      "rescan_upsert_ms": 0.0,
+      "rescan_entries": 20200
+    },
+    "revision": 604
+  },
+  "incremental_per_change": {
+    "changes": 500,
+    "total_ms": 4434.974,
+    "per_change_ms": 8.87,
+    "capture_ms": 226.617,
+    "sql_ms": 4424.578,
+    "wal_bytes": 4210672
+  },
+  "scope": "Real owned files on one NTFS tree, release build, OS cache warm after fixture creation. Maintenance worker/DB latency only: no UI, GPU, cold-disk or power claim. Profile counters are #[cfg(test)] instrumentation inside reconcile/upsert/incremental."
+}

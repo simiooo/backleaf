@@ -38,6 +38,15 @@ pub enum Notice {
         serial: u64,
         rows: Vec<Row>,
     },
+    /// The scan used this persistent-index root; forward to the writer for LRU.
+    IndexUsed {
+        root: i64,
+    },
+    /// Default search found no covering index root; the app may ask the writer to
+    /// acquire this folder as an opportunistic root.
+    IndexCandidate {
+        path: PathBuf,
+    },
 }
 struct Request {
     token: u64,
@@ -50,6 +59,7 @@ struct Shared {
     changed: Condvar,
     stop: Arc<AtomicBool>,
     latest: Arc<AtomicU64>,
+    using_index: AtomicBool,
     state_dir: PathBuf,
 }
 pub struct Worker(Arc<Shared>);
@@ -81,6 +91,7 @@ impl Worker {
             changed: Condvar::new(),
             stop: Arc::new(AtomicBool::new(false)),
             latest: Arc::new(AtomicU64::new(0)),
+            using_index: AtomicBool::new(false),
             state_dir,
         });
         let state = shared.clone();
@@ -163,9 +174,42 @@ impl Worker {
         ));
         self.0.changed.notify_one();
     }
+    /// Whether the most recently started scan is answering from the persistent index.
+    pub fn used_index(&self) -> bool {
+        self.0.using_index.load(Ordering::Acquire)
+    }
 }
 fn current(s: &Shared, token: u64) -> bool {
     !s.stop.load(Ordering::Acquire) && s.latest.load(Ordering::Acquire) == token
+}
+/// Match-count budget above which a scoped search keeps the live filesystem scan.
+///
+/// First-order costs measured on real files: a live scan costs roughly 11 µs per
+/// indexed entry, while each indexed candidate costs roughly 0.36 ms for its
+/// identity check. A 20k-file sweep put the crossover near `scope/46`; the current
+/// `/24` divisor is the pre-sweep value and sits on the permissive side of that
+/// crossover (it still wins for narrow matches and avoids the clearly bad `/8`).
+/// The 96 lower bound keeps narrow searches on the index for small folders; the
+/// 4096 upper bound caps worst-case identity-check time for very large trees.
+/// See docs/evidence/search-auto-index for the sweep.
+///
+/// Tests may override the divisor to measure threshold sensitivity.
+#[cfg(test)]
+pub(crate) static MATCH_BUDGET_DIVISOR: std::sync::atomic::AtomicUsize =
+    std::sync::atomic::AtomicUsize::new(0);
+fn match_budget(scope_size: usize) -> usize {
+    #[cfg(test)]
+    let divisor = {
+        let override_value = MATCH_BUDGET_DIVISOR.load(Ordering::Relaxed);
+        if override_value == 0 {
+            24
+        } else {
+            override_value
+        }
+    };
+    #[cfg(not(test))]
+    let divisor = 24usize;
+    (scope_size / divisor).clamp(96, 4096)
 }
 pub(crate) struct Database(pub(crate) PathBuf);
 impl Drop for Database {
@@ -202,14 +246,22 @@ fn insert_candidate(
     now: std::time::SystemTime,
     id: Option<usize>,
     unavailable: &mut usize,
+    validated: Option<crate::operations::windows::identity::Metadata>,
 ) -> anyhow::Result<bool> {
-    let metadata = match crate::operations::windows::identity::capture(&candidate.path) {
-        Ok(m) if m.identity.encode().as_slice() == candidate.identity.as_slice() => m,
-        _ => {
-            *unavailable += 1;
-            return Ok(false);
-        }
+    let metadata = match validated {
+        Some(metadata) => metadata,
+        None => match crate::operations::windows::identity::capture(&candidate.path) {
+            Ok(metadata) => metadata,
+            Err(_) => {
+                *unavailable += 1;
+                return Ok(false);
+            }
+        },
     };
+    if metadata.identity.encode().as_slice() != candidate.identity.as_slice() {
+        *unavailable += 1;
+        return Ok(false);
+    }
     let file_metadata = definition
         .metadata_needed()
         .then(|| std::fs::metadata(&candidate.path).ok())
@@ -225,6 +277,89 @@ fn insert_candidate(
     }
     Ok(db.execute("INSERT OR IGNORE INTO results VALUES(coalesce(?1,(SELECT coalesce(max(id),-1)+1 FROM results)),?2,?3,?4,?5,?6,?7,?8,?9)",params![id.map(|n|n as i64),candidate.name,encode(&candidate.path),candidate.directory,definition.group_key(&candidate.path,candidate.directory,Some(metadata.modified)),metadata.modified as i64,metadata.bytes.map(|n|n as i64),candidate.id,candidate.identity])?!=0)
 }
+
+/// Minimum candidates under one parent before replacing per-file `CreateFile`
+/// identity checks with one bulk directory enumeration.
+const BULK_VALIDATE_MIN: usize = 8;
+
+#[cfg(test)]
+pub(crate) static BULK_VALIDATE_ENABLED: AtomicBool = AtomicBool::new(true);
+#[cfg(test)]
+pub(crate) fn set_bulk_validate(enabled: bool) {
+    BULK_VALIDATE_ENABLED.store(enabled, Ordering::Relaxed);
+}
+
+fn bulk_validate_enabled() -> bool {
+    #[cfg(test)]
+    {
+        BULK_VALIDATE_ENABLED.load(Ordering::Relaxed)
+    }
+    #[cfg(not(test))]
+    {
+        true
+    }
+}
+
+/// Validate a set of paths, grouping by parent: when a directory contributes
+/// enough candidates, open it once and enumerate its children instead of opening
+/// every candidate file. Missing/removed paths are simply absent from the result.
+fn bulk_validated_metadata(
+    paths: &[PathBuf],
+) -> std::collections::HashMap<PathBuf, crate::operations::windows::identity::Metadata> {
+    use std::collections::{BTreeMap, HashMap};
+    let mut found = HashMap::with_capacity(paths.len());
+    if !bulk_validate_enabled() {
+        for path in paths {
+            if let Ok(metadata) = crate::operations::windows::identity::capture(path) {
+                found.insert(path.clone(), metadata);
+            }
+        }
+        return found;
+    }
+    let mut groups: BTreeMap<PathBuf, Vec<&PathBuf>> = BTreeMap::new();
+    for path in paths {
+        if let Some(parent) = path.parent() {
+            groups.entry(parent.to_owned()).or_default().push(path);
+        }
+    }
+    for (parent, group) in groups {
+        if group.len() >= BULK_VALIDATE_MIN
+            && let Ok(mut reader) = crate::index_bulk::DirectoryReader::open(&parent)
+        {
+            let mut wanted: HashMap<String, PathBuf> = HashMap::with_capacity(group.len());
+            for path in &group {
+                if let Some(name) = path.file_name() {
+                    wanted.insert(name.to_string_lossy().to_lowercase(), (*path).clone());
+                }
+            }
+            loop {
+                match reader.next() {
+                    Ok(Some(entry)) => {
+                        let Some(name) = entry.path.file_name() else {
+                            continue;
+                        };
+                        if let Some(path) = wanted.remove(&name.to_string_lossy().to_lowercase()) {
+                            found.insert(path, entry.metadata);
+                            if wanted.is_empty() {
+                                break;
+                            }
+                        }
+                    }
+                    Ok(None) => break,
+                    Err(_) => break,
+                }
+            }
+        }
+        for path in group {
+            if !found.contains_key(path)
+                && let Ok(metadata) = crate::operations::windows::identity::capture(path)
+            {
+                found.insert(path.clone(), metadata);
+            }
+        }
+    }
+    found
+}
 fn scan(
     s: &Shared,
     r: &Request,
@@ -232,18 +367,82 @@ fn scan(
     cache: &mut crate::search_cache::Cache,
 ) -> anyhow::Result<()> {
     r.definition.validate().map_err(anyhow::Error::msg)?;
-    let root = if r.definition.indexed {
-        r.root.clone()
-    } else {
-        r.root.canonicalize()?
-    };
+    s.using_index.store(false, Ordering::Release);
+    // Explicit indexed search keeps the global-across-roots behavior. A default
+    // search opportunistically uses the index only when the searched folder is
+    // already an indexed directory inside a finished root; anything else stays on
+    // the live filesystem scan.
     let mut indexed = if r.definition.indexed {
         Some(crate::index::open(&s.state_dir)?)
     } else {
         None
     };
+    let mut scope = None;
+    let mut index_stamp = None;
+    if indexed.is_none()
+        && let Ok(reader) = crate::index::open_reader(&s.state_dir)
+        && let Ok(Some(plan)) = crate::index::plan_scope(&reader, &r.root, r.definition.recursive)
+    {
+        // A reusable completed result already passed the selectivity guard on the
+        // query that produced it; skip the preflight count when the index has not
+        // changed. Otherwise keep the index only when the checked match set is
+        // expected to stay smaller than the scan it replaces.
+        let cached_hit = crate::search_cache::key(&r.definition)
+            .ok()
+            .and_then(|key| {
+                crate::search_cache::Stamp::read(&reader, &s.state_dir)
+                    .ok()
+                    .filter(|stamp| cache.contains(&key, stamp))
+            });
+        if let Some(stamp) = cached_hit {
+            index_stamp = Some(stamp);
+            indexed = Some(reader);
+            scope = Some(plan);
+        } else {
+            let size = crate::index::scope_size(&reader, &plan).unwrap_or(0);
+            let cap = match_budget(size);
+            let estimate =
+                crate::index::estimate_matches(&reader, &r.definition.query, &plan, cap + 1)
+                    .unwrap_or(usize::MAX);
+            if estimate <= cap {
+                indexed = Some(reader);
+                scope = Some(plan);
+            }
+        }
+    }
+    s.using_index.store(indexed.is_some(), Ordering::Release);
+    let root = if indexed.is_some() {
+        r.root.clone()
+    } else {
+        r.root.canonicalize()?
+    };
+    if let Some(scope) = &scope {
+        let _ = tx.try_send(crate::model::Event::Search(Notice::IndexUsed {
+            root: scope.root,
+        }));
+    } else if !r.definition.indexed
+        && !r.definition.query.trim().is_empty()
+        && root.components().count() > 2
+        && !root.starts_with(
+            std::env::temp_dir()
+                .canonicalize()
+                .unwrap_or_else(|_| std::env::temp_dir()),
+        )
+        && !root.starts_with(
+            s.state_dir
+                .canonicalize()
+                .unwrap_or_else(|_| s.state_dir.clone()),
+        )
+    {
+        let _ = tx.try_send(crate::model::Event::Search(Notice::IndexCandidate {
+            path: root.clone(),
+        }));
+    }
     let stamp = Some(if let Some(index) = &indexed {
-        crate::search_cache::Stamp::read(index, &s.state_dir)?
+        match index_stamp {
+            Some(stamp) => stamp,
+            None => crate::search_cache::Stamp::read(index, &s.state_dir)?,
+        }
     } else {
         cache.filesystem_stamp(&root, &s.state_dir)?
     });
@@ -348,7 +547,7 @@ fn scan(
                 .optional()?;
             batch.execute("DELETE FROM results WHERE source_id=?1", [id])?;
             if let Some(candidate) =
-                crate::search_cache::candidate(index, *id, r.definition.recursive)?
+                crate::search_cache::candidate(index, *id, r.definition.recursive, scope.as_ref())?
             {
                 insert_candidate(
                     &batch,
@@ -357,6 +556,7 @@ fn scan(
                     now,
                     None,
                     &mut unavailable,
+                    None,
                 )?;
             }
             // Overlapping registered roots can expose the same path through a
@@ -368,8 +568,13 @@ fn scan(
                     |r| r.get(0),
                 )?;
                 if !present
-                    && let Some(candidate) =
-                        crate::search_cache::alternate(index, &path, *id, r.definition.recursive)?
+                    && let Some(candidate) = crate::search_cache::alternate(
+                        index,
+                        &path,
+                        *id,
+                        r.definition.recursive,
+                        scope.as_ref(),
+                    )?
                 {
                     insert_candidate(
                         &batch,
@@ -378,6 +583,7 @@ fn scan(
                         now,
                         None,
                         &mut unavailable,
+                        None,
                     )?;
                 }
             }
@@ -422,8 +628,14 @@ fn scan(
                     &r.definition.query,
                     index_cursor,
                     r.definition.recursive,
+                    scope.as_ref(),
                 )?;
                 done = candidates.is_empty();
+                let paths = candidates
+                    .iter()
+                    .map(|candidate| candidate.path.clone())
+                    .collect::<Vec<_>>();
+                let validated = bulk_validated_metadata(&paths);
                 for candidate in candidates {
                     if !current(s, r.token) {
                         return Ok(());
@@ -437,6 +649,7 @@ fn scan(
                         now,
                         Some(count),
                         &mut unavailable,
+                        validated.get(&candidate.path).cloned(),
                     )?);
                 }
             } else {
@@ -584,10 +797,8 @@ fn scan(
             let mut statement = db.prepare_cached(
                 "SELECT id,name,path,directory,CASE WHEN grp<>coalesce((SELECT grp FROM results prior WHERE prior.id=results.id-1),'') THEN grp END,identity,modified,bytes FROM results WHERE id>=?1 AND id<?2 ORDER BY id LIMIT 32",
             )?;
-            let mut rows = Vec::new();
-            let mut invalidated = false;
-            for row in
-                statement.query_map(params![range.start as i64, range.end as i64], |row| {
+            let fetched = statement
+                .query_map(params![range.start as i64, range.end as i64], |row| {
                     let path = decode(&row.get::<_, Vec<u8>>(2)?);
                     let parent = path
                         .parent()
@@ -609,15 +820,26 @@ fn scan(
                         row.get::<_, Option<i64>>(7)?,
                     ))
                 })?
-            {
-                let (row, expected, modified, bytes) = row?;
+                .collect::<Result<Vec<_>, _>>()?;
+            let paths = fetched
+                .iter()
+                .filter(|(_, expected, _, _)| expected.is_some())
+                .map(|(row, _, _, _)| row.path.clone())
+                .collect::<Vec<_>>();
+            let validated = bulk_validated_metadata(&paths);
+            let mut rows = Vec::new();
+            let mut invalidated = false;
+            for (row, expected, modified, bytes) in fetched {
                 if let Some(expected) = expected {
-                    let valid =
-                        crate::operations::windows::identity::capture(&row.path).is_ok_and(|m| {
-                            m.identity.encode().as_slice() == expected.as_slice()
-                                && Some(m.modified as i64) == modified
-                                && m.bytes.map(|n| n as i64) == bytes
-                        });
+                    // Directory-entry timestamps can lag a freshly written file by
+                    // up to a second, so allow that while identity and size remain
+                    // exact; watcher revisions still converge the index promptly.
+                    let valid = validated.get(&row.path).is_some_and(|m| {
+                        m.identity.encode().as_slice() == expected.as_slice()
+                            && modified
+                                .is_some_and(|modified| (m.modified as i64 - modified).abs() <= 1)
+                            && m.bytes.map(|n| n as i64) == bytes
+                    });
                     if !valid {
                         invalidated = true;
                         continue;
@@ -720,6 +942,42 @@ fn scan(
 mod tests {
     use super::{Notice, Worker, matches};
     use crate::model::Event;
+
+    #[test]
+    fn bulk_metadata_validation_matches_capture_and_falls_back() {
+        let fixture = crate::test_support::Fixture::new("bulk-validate");
+        let root = fixture.0.join("files");
+        std::fs::create_dir(&root).unwrap();
+        let root = root.canonicalize().unwrap();
+        let mut paths = Vec::new();
+        for i in 0..20 {
+            let path = root.join(format!("file-{i:02}.txt"));
+            std::fs::write(&path, b"bulk-validate").unwrap();
+            paths.push(path);
+        }
+        let missing = root.join("missing.txt");
+        paths.push(missing.clone());
+
+        super::set_bulk_validate(true);
+        let found = super::bulk_validated_metadata(&paths);
+        for path in &paths[..20] {
+            let captured = crate::operations::windows::identity::capture(path).unwrap();
+            let validated = found.get(path).expect("bulk-validated path missing");
+            assert_eq!(validated.identity, captured.identity);
+            assert_eq!(validated.bytes, captured.bytes);
+            assert_eq!(validated.directory, captured.directory);
+            assert_eq!(validated.modified, captured.modified);
+        }
+        assert!(!found.contains_key(&missing));
+
+        // The test-only switch exercises the per-file fallback used when bulk
+        // enumeration is unavailable.
+        super::set_bulk_validate(false);
+        let fallback = super::bulk_validated_metadata(&paths[..3]);
+        assert_eq!(fallback.len(), 3);
+        super::set_bulk_validate(true);
+    }
+
     struct IndexedFixture {
         root: PathBuf,
         state: PathBuf,
@@ -759,6 +1017,11 @@ mod tests {
             view.query = query.into();
             view
         }
+        fn auto_view(&self, query: &str) -> crate::file_view::FileView {
+            let mut view = crate::file_view::FileView::new(&self.root);
+            view.query = query.into();
+            view
+        }
         fn changed(&mut self, path: &std::path::Path) {
             let root = self
                 .index
@@ -766,12 +1029,16 @@ mod tests {
                 .unwrap();
             crate::index::incremental(&mut self.index, root, path, &self.state).unwrap();
         }
-        fn query(&mut self, view: crate::file_view::FileView) -> (usize, usize, Vec<super::Row>) {
+        fn query_source(
+            &mut self,
+            view: crate::file_view::FileView,
+        ) -> (usize, usize, bool, Vec<super::Row>) {
             self.token += 1;
             let mut token = self.token;
             self.worker.search_view(token, view.clone());
             let deadline = std::time::Instant::now() + std::time::Duration::from_secs(15);
             let mut result = None;
+            let mut indexed = false;
             while std::time::Instant::now() < deadline {
                 match self.rx.try_recv() {
                     Ok(Event::Search(Notice::Progress {
@@ -783,16 +1050,18 @@ mod tests {
                         ..
                     })) if t == token => {
                         assert!(error.is_none(), "{error:?}");
+                        indexed = self.worker.used_index();
                         result = Some((count, scanned));
                         self.worker.page(token, token, 0..32);
                     }
                     Ok(Event::Search(Notice::Page { token: t, rows, .. })) if t == token => {
                         let (count, scanned) = result.unwrap();
-                        return (count, scanned, rows);
+                        return (count, scanned, indexed, rows);
                     }
                     Ok(Event::Search(Notice::Invalidated { token: t })) if t == token => {
                         self.token += 1;
                         token = self.token;
+                        indexed = false;
                         result = None;
                         self.worker.search_view(token, view.clone());
                     }
@@ -801,6 +1070,28 @@ mod tests {
             }
             panic!("Search timed out");
         }
+        fn query(&mut self, view: crate::file_view::FileView) -> (usize, usize, Vec<super::Row>) {
+            let (count, scanned, _, rows) = self.query_source(view);
+            (count, scanned, rows)
+        }
+    }
+    #[test]
+    fn default_search_uses_covered_index_scope_and_falls_back_outside_it() {
+        let mut f = IndexedFixture::new();
+        let auto = f.auto_view("报");
+        let (count, scanned, indexed, _) = f.query_source(auto);
+        assert_eq!((count, scanned, indexed), (3, 3, true));
+        let mut flat = f.auto_view("报");
+        flat.recursive = false;
+        let (count, _, indexed, _) = f.query_source(flat);
+        assert_eq!((count, indexed), (3, true));
+        // A root that is not covered keeps the live scan and the same results.
+        let mut outside = crate::file_view::FileView::new(&f._fixture.0);
+        outside.query = "报".into();
+        let (count, _, indexed, _) = f.query_source(outside);
+        assert_eq!((count, indexed), (3, false));
+        drop(f.worker);
+        drop(f.rx);
     }
     #[test]
     fn indexed_cache_reuses_completed_queries_and_patches_created_renamed_deleted_and_filtered_files()
@@ -922,6 +1213,8 @@ mod tests {
         std::fs::write(sub.join("报告_deep.txt"), b"owned").unwrap();
         let mut view = f.view("报");
         view.indexed = false;
+        // Start above the indexed fixture root so this stays a live-scan-only case.
+        view.root = crate::file_view::WinPath::new(&f._fixture.0);
         assert_eq!(f.query(view.clone()).0, 4);
         let mut warm = f.query(view.clone());
         if warm.1 != 0 {

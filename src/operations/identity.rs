@@ -14,7 +14,7 @@ pub struct Identity {
     pub created: u64,
     pub wide_id: bool,
 }
-#[derive(serde::Serialize)]
+#[derive(Clone, serde::Serialize)]
 pub struct Metadata {
     pub identity: Identity,
     pub directory: bool,

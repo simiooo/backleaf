@@ -111,6 +111,20 @@ impl Backleaf {
         self.search.subscription = None;
         self.search.rows.clear();
     }
+    /// Pressing the title bar blurs the open search popover or path tree, the same
+    /// way a click below the bar or Escape already does. Controls that own their
+    /// press behavior (the search field and the path dropdown toggle) stop
+    /// propagation first, so pressing them keeps their existing behavior.
+    pub fn dismiss_titlebar_popups(&mut self, window: &mut Window, cx: &mut Context<Self>) {
+        if self.search.open {
+            self.close_search_checked(window, cx);
+        }
+        if self.navigation.open {
+            self.close_path_tree();
+            window.focus(&self.focus, cx);
+            cx.notify();
+        }
+    }
     pub fn open_search(&mut self, window: &mut Window, cx: &mut Context<Self>) {
         if self.files.close_guard || self.options.fixture.is_some() {
             return;
@@ -233,6 +247,18 @@ impl Backleaf {
     }
     pub fn accept_search(&mut self, notice: Notice, cx: &mut Context<Self>) {
         if !self.search.open {
+            return;
+        }
+        if let Notice::IndexUsed { root } = &notice {
+            if let Some(index) = &self.index {
+                let _ = index.send(crate::index::Action::Touch(*root));
+            }
+            return;
+        }
+        if let Notice::IndexCandidate { path } = &notice {
+            if let Some(index) = &self.index {
+                let _ = index.send(crate::index::Action::AddOpportunistic(path.clone()));
+            }
             return;
         }
         if let Notice::Invalidated { token } = &notice {
@@ -493,7 +519,8 @@ impl Backleaf {
                 .border_color(colors.color(ColorRole::Border))
                 .shadow(colors.control_shadows(active))
                 .on_mouse_down(MouseButton::Left, move |_, window, cx| {
-                    window.focus(&focus_input.focus_handle(cx), cx)
+                    window.focus(&focus_input.focus_handle(cx), cx);
+                    cx.stop_propagation();
                 })
                 .child(icon("search", colors).flex_none())
                 .child(div().flex_1().min_w_0().overflow_hidden().child(input))
