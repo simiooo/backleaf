@@ -1358,6 +1358,21 @@ fn search_debounce_executes_latest_query_after_250ms() {
 }
 
 #[test]
+fn advanced_filters_require_nonempty_query() {
+    let mut h = Harness::new(&["alpha.txt", "beta.txt"], None);
+    h.key("ctrl-f");
+    let view = h.view.clone();
+    h.cx.update_window(h.window.into(), |_, window, cx| {
+        view.update(cx, |this, cx| this.toggle_view_filters(window, cx));
+    })
+    .unwrap();
+    h.frame();
+    assert!(!h.read(|this, _| this.view_filters_open()));
+    assert!(!h.read(|this, _| this.search.started));
+    assert_eq!(h.read(|this, _| this.search.count), 0);
+}
+
+#[test]
 fn empty_search_query_does_not_keep_search_surface_open() {
     let mut h = Harness::new(&["alpha.txt", "beta.txt"], None);
     h.key("ctrl-f");

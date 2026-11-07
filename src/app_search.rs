@@ -124,6 +124,7 @@ impl Backleaf {
         self.search.input = None;
         self.search.subscription = None;
         self.search.rows.clear();
+        self.clear_view_filters();
     }
     /// Pressing the title bar blurs the open search popover or path tree, the same
     /// way a click below the bar or Escape already does. Controls that own their

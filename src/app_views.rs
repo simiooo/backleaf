@@ -294,7 +294,19 @@ impl Backleaf {
             self.navigation_error(error, cx);
         }
     }
+    #[cfg(test)]
+    pub fn view_filters_open(&self) -> bool {
+        self.views.filters.is_some()
+    }
+    pub(super) fn clear_view_filters(&mut self) {
+        self.views.filters = None;
+    }
     pub fn toggle_view_filters(&mut self, window: &mut Window, cx: &mut Context<Self>) {
+        if self.search.query.trim().is_empty() {
+            // Nothing meaningful to filter yet; an empty query must never start a
+            // scan just because the advanced-search editor was opened.
+            return;
+        }
         if self.views.filters.is_some() {
             if self.apply_view_filters(cx) {
                 self.views.filters = None;
@@ -410,7 +422,7 @@ impl Backleaf {
         }
         if definition != self.search.definition {
             self.search.definition = definition;
-            self.start_search(self.search.query.clone(), cx);
+            self.restart_search_if_active(cx);
         }
         true
     }
@@ -448,7 +460,12 @@ impl Backleaf {
             5 => self.search.definition.indexed = !self.search.definition.indexed,
             _ => {}
         }
-        self.start_search(self.search.query.clone(), cx);
+        self.restart_search_if_active(cx);
+    }
+    fn restart_search_if_active(&mut self, cx: &mut Context<Self>) {
+        if !self.search.query.trim().is_empty() {
+            self.start_search(self.search.query.clone(), cx);
+        }
     }
     pub fn sync_view_focus(&mut self, window: &mut Window, cx: &mut Context<Self>) {
         if let Some(input) = self.views.focus.take() {

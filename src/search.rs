@@ -367,6 +367,22 @@ fn scan(
     cache: &mut crate::search_cache::Cache,
 ) -> anyhow::Result<()> {
     r.definition.validate().map_err(anyhow::Error::msg)?;
+    // Advanced filters must not turn an empty text query into a full-tree scan.
+    // The foreground deliberately refuses to start such a search; this worker-side
+    // guard keeps restored/saved definitions from doing it indirectly.
+    if r.definition.query.trim().is_empty() {
+        s.using_index.store(false, Ordering::Release);
+        tx.send_blocking(crate::model::Event::Search(Notice::Progress {
+            token: r.token,
+            count: 0,
+            scanned: 0,
+            unavailable: 0,
+            skipped: 0,
+            done: true,
+            error: None,
+        }))?;
+        return Ok(());
+    }
     s.using_index.store(false, Ordering::Release);
     // Explicit indexed search keeps the global-across-roots behavior. A default
     // search opportunistically uses the index only when the searched folder is
@@ -942,6 +958,46 @@ fn scan(
 mod tests {
     use super::{Notice, Worker, matches};
     use crate::model::Event;
+
+    #[test]
+    fn empty_query_worker_completes_without_scanning() {
+        let fixture = crate::test_support::Fixture::new("search-empty-query");
+        let (tx, rx) = async_channel::unbounded();
+        let worker = Worker::with_state_dir(tx, fixture.0.join("state"));
+        let mut view = crate::file_view::FileView::new(&fixture.0);
+        view.query = String::new();
+        worker.search_view(7, view);
+        let deadline = std::time::Instant::now() + std::time::Duration::from_secs(5);
+        loop {
+            match rx.try_recv() {
+                Ok(Event::Search(Notice::Progress {
+                    token,
+                    count,
+                    scanned,
+                    done: true,
+                    error,
+                    ..
+                })) => {
+                    assert_eq!(token, 7);
+                    assert_eq!(count, 0);
+                    assert_eq!(scanned, 0);
+                    assert!(error.is_none(), "{error:?}");
+                    break;
+                }
+                Ok(_) => {}
+                Err(async_channel::TryRecvError::Empty) => {
+                    assert!(
+                        std::time::Instant::now() < deadline,
+                        "empty query scan hung"
+                    );
+                    std::thread::sleep(std::time::Duration::from_millis(2));
+                }
+                Err(async_channel::TryRecvError::Closed) => panic!("search worker closed"),
+            }
+        }
+        drop(worker);
+        drop(rx);
+    }
 
     #[test]
     fn bulk_metadata_validation_matches_capture_and_falls_back() {
