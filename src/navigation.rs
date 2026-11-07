@@ -184,40 +184,59 @@ pub fn display_path(path: &std::path::Path) -> String {
     }
 }
 /// Only a few bounded paths are copied; hidden ancestors remain reachable through the menu.
+/// Adaptively fit as many ancestors as possible into the actual path control
+/// width. The current folder is always kept (possibly truncated) and the root is
+/// preferred; only the hidden middle becomes an ellipsis. Widths mirror the
+/// rendered crumb metrics: label + 8 px horizontal padding capped at 120 px,
+/// 12 px separators, a 24 px ellipsis and 32 px for dropdown/padding chrome.
 pub fn breadcrumbs(
     path: &std::path::Path,
     available: f32,
     measure: impl Fn(&str) -> f32,
 ) -> Vec<Option<PathBuf>> {
-    let mut nearest = path
+    let mut chain = path
         .ancestors()
         .filter(|p| !p.as_os_str().is_empty())
-        .take(6)
         .map(PathBuf::from)
         .collect::<Vec<_>>();
-    nearest.reverse();
-    let total = nearest
-        .iter()
-        .map(|p| measure(&display_name(p)) + 8.)
-        .sum::<f32>()
-        + nearest.len().saturating_sub(1) as f32 * 16.
-        + 24.;
-    if nearest.len() <= 4 && total <= available {
-        return nearest.into_iter().map(Some).collect();
+    chain.reverse();
+    if chain.len() <= 1 {
+        return chain.into_iter().map(Some).collect();
     }
-    let root = path.ancestors().last().unwrap_or(path).to_path_buf();
-    let current = path.to_path_buf();
-    if root == current {
-        return vec![Some(current)];
+    if !available.is_finite() || available < 100. {
+        return vec![Some(path.to_path_buf())];
     }
-    let parent = path.parent().filter(|p| *p != root.as_path());
-    if available < 220. {
-        vec![None, Some(current)]
-    } else if available < 400. || parent.is_none() {
-        vec![Some(root), None, Some(current)]
-    } else {
-        vec![Some(root), None, parent.map(PathBuf::from), Some(current)]
+    let width = |crumb: &PathBuf| (measure(&display_name(crumb)) + 8.).min(120.);
+    let root = &chain[0];
+    let current = &chain[chain.len() - 1];
+    let middle = &chain[1..chain.len() - 1];
+    const SEPARATOR: f32 = 12.;
+    const ELLIPSIS: f32 = 24.;
+    const CHROME: f32 = 32.;
+    const MIN_CURRENT: f32 = 48.;
+    let total_width = |parts: &[Option<PathBuf>]| {
+        parts
+            .iter()
+            .take(parts.len().saturating_sub(1))
+            .map(|part| part.as_ref().map_or(ELLIPSIS, width))
+            .sum::<f32>()
+            + parts.len().saturating_sub(1) as f32 * SEPARATOR
+            + CHROME
+    };
+    for visible in (0..=middle.len()).rev() {
+        let start = middle.len() - visible;
+        let mut parts = Vec::with_capacity(visible + 4);
+        parts.push(Some(root.clone()));
+        if start > 0 {
+            parts.push(None);
+        }
+        parts.extend(middle[start..].iter().cloned().map(Some));
+        parts.push(Some(current.clone()));
+        if available - total_width(&parts) >= MIN_CURRENT {
+            return parts;
+        }
     }
+    vec![Some(root.clone()), None, Some(current.clone())]
 }
 pub fn common_locations() -> Vec<Location> {
     use windows::{
@@ -279,16 +298,18 @@ mod tests {
             r"\\server\share\中文\文件夹\当前",
         ] {
             let path = PathBuf::from(raw);
-            for width in [160., 320., 600.] {
+            let mut counts = Vec::new();
+            for width in [160., 320., 600., 900.] {
                 let crumbs = breadcrumbs(&path, width, |s| s.encode_utf16().count() as f32 * 13.);
-                assert!(crumbs.len() <= 4);
                 assert_eq!(crumbs.last().and_then(Option::as_ref), Some(&path));
                 assert_eq!(
                     crumbs.iter().filter(|p| p.as_ref() == Some(&path)).count(),
                     1
                 );
                 assert!(crumbs.iter().flatten().all(|p| path.starts_with(p)));
-                if width >= 220. {
+                assert!(crumbs.iter().flatten().count() <= path.components().count());
+                counts.push(crumbs.iter().flatten().count());
+                if width >= 320. {
                     assert_eq!(
                         crumbs
                             .first()
@@ -298,7 +319,19 @@ mod tests {
                     );
                 }
             }
+            assert!(counts.windows(2).all(|pair| pair[1] >= pair[0]));
         }
+
+        // A wide bar must not keep the old fixed four-part/ellipsis result.
+        let deep = PathBuf::from(r"C:\工作\项目\源码\模块\子目录\当前");
+        let crumbs = breadcrumbs(&deep, 900., |text| text.chars().count() as f32 * 13.);
+        assert_eq!(
+            crumbs.iter().flatten().count(),
+            deep.ancestors()
+                .filter(|p| !p.as_os_str().is_empty())
+                .count()
+        );
+        assert!(!crumbs.iter().any(Option::is_none));
     }
     #[test]
     fn directory_popup_is_bounded_and_later_request_wins() {

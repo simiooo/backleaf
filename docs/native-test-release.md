@@ -1,4 +1,8 @@
-Backleaf 0.1.0-preview.32 · Windows x64 测试版
+Backleaf 0.1.0-preview.33 · Windows x64 测试版
+
+路径面包屑响应式展开：面包屑不再固定在 600px 宽度或固定四段/过早省略。路径控件改为按标题栏实际剩余宽度动态计算，宽度足够时显示尽可能多的祖先目录，只有中间确实放不下才插入省略号；根目录优先保留，当前目录始终保留（必要时截断），窗口缩放后立即重排。参数与实现见 src/navigation.rs、src/app_navigation.rs；`path_available` 移除 600px 上限并按搜索/操作区实际占用扣减。新增/更新面包屑单元测试，覆盖窄/宽宽度、UNC/Unicode 根与深路径完整展开。
+
+以下保留 preview.32 及更早内容：
 
 框选边缘自动滚动加速：按资源管理器框选手感重新标定 marquee 自动滚动。720px 视口下满深度（贴边）起步约 1.8 屏/秒（约 1300px/s），浅深度（0.2）约 0.31 屏/秒以保留精细控制；持续贴边约 0.7 秒后加速到约 5.3 屏/秒，长列表穿越目标约 8 秒。返回内容区或反向会立即回到精细档，松手无惯性；端点仍刹车/夹紧。校准来源为产品对照目标仍待真实 Explorer 并排试用确认，不是对 Explorer 私有常量的实测；参数见 design/marquee-scroll-system.json 与 design/marquee-scroll-contract.md。其它内容沿用 preview.31/30。
 

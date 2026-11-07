@@ -690,9 +690,9 @@ impl Backleaf {
         let operations = if self.files.hub.views().is_empty() {
             0.
         } else {
-            64.
+            72.
         };
-        (f32::from(window.viewport_size().width) - 264. - search - operations).clamp(80., 600.)
+        (f32::from(window.viewport_size().width) - 264. - search - operations).max(80.)
     }
     pub fn path_control(
         &self,
@@ -745,7 +745,7 @@ impl Backleaf {
             .map(|p| {
                 p.as_ref()
                     .map(|p| (measure(&crate::navigation::display_name(p)) + 8.).min(120.))
-                    .unwrap_or(32.)
+                    .unwrap_or(24.)
             })
             .sum::<f32>()
             + (total.saturating_sub(1) * 12) as f32
