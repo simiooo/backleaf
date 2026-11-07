@@ -1,4 +1,8 @@
-Backleaf 0.1.0-preview.31 · Windows x64 测试版
+Backleaf 0.1.0-preview.32 · Windows x64 测试版
+
+框选边缘自动滚动加速：按资源管理器框选手感重新标定 marquee 自动滚动。720px 视口下满深度（贴边）起步约 1.8 屏/秒（约 1300px/s），浅深度（0.2）约 0.31 屏/秒以保留精细控制；持续贴边约 0.7 秒后加速到约 5.3 屏/秒，长列表穿越目标约 8 秒。返回内容区或反向会立即回到精细档，松手无惯性；端点仍刹车/夹紧。校准来源为产品对照目标仍待真实 Explorer 并排试用确认，不是对 Explorer 私有常量的实测；参数见 design/marquee-scroll-system.json 与 design/marquee-scroll-contract.md。其它内容沿用 preview.31/30。
+
+以下保留 preview.31 及更早内容：
 
 搜索空输入修复：Ctrl+F 打开搜索时，空查询只保留标题栏输入框，不再显示结果/工具栏弹层；输入过查询后清空会直接退出搜索并恢复文件区焦点；点击弹层外区域可关闭空搜索。新增对应 GPUI 无头回归，headless 现为 43 项。证据见 docs/evidence/preview-31。
 

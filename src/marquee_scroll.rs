@@ -210,7 +210,11 @@ mod tests {
         let (initial, _) = run(0.2, 120, 1.);
         let (fast, _) = run(8., 120, 1.);
         let (fine, _) = run(30., 120, 0.2);
-        assert!(initial.velocity(DOWN, 640., 160_000_000., 0.) <= 641.);
+        let initial_velocity = initial.velocity(DOWN, 640., 160_000_000., 0.);
+        assert!(
+            (960.0..=1_700.).contains(&initial_velocity),
+            "{initial_velocity}"
+        );
         assert!(fast.velocity(DOWN, 640., 160_000_000., 0.) > 5_000_000.);
         assert!(
             fine.velocity(
@@ -221,7 +225,7 @@ mod tests {
                 640.,
                 160_000_000.,
                 0.
-            ) < 200.
+            ) < 320.
         );
     }
     #[test]
@@ -236,9 +240,9 @@ mod tests {
             direction: -1,
             depth: 1.,
         };
-        assert_eq!(fast.velocity(up, 640., 160_000_000., offset), -640.);
+        assert!(fast.velocity(up, 640., 160_000_000., offset) < -640.);
         let end = fast.advance(up, 0.01, 640., 160_000_000., offset);
-        assert!(offset - end <= 6.5);
+        assert!(offset - end <= 20.);
     }
     #[test]
     fn mouse_wiggles_do_not_advance_the_clock() {
@@ -247,7 +251,7 @@ mod tests {
         for _ in 0..50_000 {
             b.observe(DOWN);
         }
-        assert_eq!(b.velocity(DOWN, 640., 160_000_000., 0.), 640.);
+        assert!(b.velocity(DOWN, 640., 160_000_000., 0.) > 960.);
         let before = a.velocity(DOWN, 640., 160_000_000., 0.);
         for _ in 0..50_000 {
             a.observe(DOWN);
@@ -264,7 +268,7 @@ mod tests {
     fn long_frame_gap_restarts_fine_without_catching_up() {
         let (mut state, offset) = run(8., 120, 1.);
         let next = state.advance(DOWN, 5., 640., 160_000_000., offset);
-        assert!(next - offset <= 33.);
+        assert!(next - offset <= 100.);
     }
     #[test]
     fn endpoints_are_symmetric_and_never_overshoot() {
