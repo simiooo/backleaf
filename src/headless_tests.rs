@@ -96,7 +96,10 @@ impl Harness {
         self.cx.run_until_parked();
     }
     fn wait(&mut self, what: &str, condition: impl Fn(&Backleaf, &App) -> bool) {
-        let deadline = Instant::now() + Duration::from_secs(10);
+        // Hosted Windows runners can briefly starve the executor while a
+        // rename/context-menu round trip waits on the filesystem; keep the
+        // virtual clock cadence but allow enough real time for the async work.
+        let deadline = Instant::now() + Duration::from_secs(20);
         loop {
             self.frame();
             if self.read(&condition) {
