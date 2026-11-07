@@ -27,6 +27,7 @@ pub struct SearchUi {
     pub(super) skipped: usize,
     pub(super) done: bool,
     pub(super) started: bool,
+    pub(super) ever_typed: bool,
     pub(super) query: String,
     pub(super) root: PathBuf,
     pub(super) error: Option<String>,
@@ -58,6 +59,7 @@ impl SearchUi {
             skipped: 0,
             done: false,
             started: false,
+            ever_typed: false,
             query: String::new(),
             root: PathBuf::new(),
             error: None,
@@ -76,6 +78,18 @@ impl SearchUi {
     }
 }
 impl Backleaf {
+    /// The search popover (results/toolbar/scope) only exists once the inline field
+    /// contains a query. Opening search with an empty field keeps just the focused
+    /// input and a click-catcher; clearing a previously typed query closes search.
+    pub fn search_popover_visible(&self, cx: &App) -> bool {
+        self.search.open
+            && (!self.search.query.trim().is_empty()
+                || self
+                    .search
+                    .input
+                    .as_ref()
+                    .is_some_and(|input| !input.read(cx).value().trim().is_empty()))
+    }
     pub fn refresh_search(&mut self) {
         if !self.search.open || self.search.query.trim().is_empty() {
             return;
@@ -156,6 +170,7 @@ impl Backleaf {
         self.search.saved = None;
         self.search.query.clear();
         self.search.started = false;
+        self.search.ever_typed = false;
         self.search.count = 0;
         self.search.error = None;
         self.search.selected = None;
@@ -189,25 +204,46 @@ impl Backleaf {
                         this.search.started = false;
                         this.search.error = None;
                         this.search.requested = 0..0;
-                        let token = this.search.token;
-                        cx.spawn(async move |this, cx| {
-                            cx.background_executor()
-                                .timer(Duration::from_millis(250))
-                                .await;
-                            let _ = this.update(cx, |this, cx| {
-                                if this.search.open
-                                    && this.search.token == token
-                                    && let Some(input) = &this.search.input
-                                    && !input.read(cx).is_composing()
-                                {
-                                    this.start_search(input.read(cx).value(), cx);
-                                }
-                            });
-                        })
-                        .detach();
+                        let value = input.read(cx).value();
+                        if value.trim().is_empty() {
+                            this.search.query.clear();
+                            this.search.definition.query.clear();
+                            if this.search.ever_typed {
+                                // Once a search has actually run, clearing the field
+                                // leaves search mode instead of keeping an empty
+                                // popover/results surface open.
+                                this.close_search();
+                                this.files.focus_grid = true;
+                            }
+                        } else {
+                            this.search.ever_typed = true;
+                            let token = this.search.token;
+                            cx.spawn(async move |this, cx| {
+                                cx.background_executor()
+                                    .timer(Duration::from_millis(250))
+                                    .await;
+                                let _ = this.update(cx, |this, cx| {
+                                    if this.search.open
+                                        && this.search.token == token
+                                        && let Some(input) = &this.search.input
+                                        && !input.read(cx).is_composing()
+                                    {
+                                        this.start_search(input.read(cx).value(), cx);
+                                    }
+                                });
+                            })
+                            .detach();
+                        }
                     }
                     InputEvent::Submit(value) => {
-                        if this.search.query == value.trim() && this.search.selected.is_some() {
+                        if value.trim().is_empty() {
+                            if this.search.ever_typed {
+                                this.close_search();
+                                this.files.focus_grid = true;
+                            }
+                        } else if this.search.query == value.trim()
+                            && this.search.selected.is_some()
+                        {
                             this.reveal_search_result(cx);
                         } else {
                             this.start_search(value.clone(), cx);
@@ -225,6 +261,13 @@ impl Backleaf {
         self.search.refresh = None;
         self.search.refresh_again = false;
         let query = value.trim().to_owned();
+        if query.is_empty() {
+            self.search.query.clear();
+            self.search.definition.query.clear();
+            self.search.started = false;
+            self.search.done = false;
+            return;
+        }
         self.search.token += 1;
         self.search.worker.cancel(self.search.token);
         self.search.rows.clear();
@@ -607,6 +650,7 @@ impl Backleaf {
         let colors = self.colors;
         let width = (f32::from(window.viewport_size().width) - 156.).clamp(240., 560.);
         let height = (f32::from(window.viewport_size().height) - 192.).clamp(48., 384.);
+        let popover = self.search_popover_visible(cx);
         let scope = if self.search.definition.indexed {
             "已索引位置".into()
         } else {
@@ -683,7 +727,7 @@ impl Backleaf {
                     cx.notify();
                 }),
             )
-            .when(true, |overlay| {
+            .when(popover, |overlay| {
                 overlay.child(
                     div()
                         .id("search-popover")

@@ -1358,6 +1358,32 @@ fn search_debounce_executes_latest_query_after_250ms() {
 }
 
 #[test]
+fn empty_search_query_does_not_keep_search_surface_open() {
+    let mut h = Harness::new(&["alpha.txt", "beta.txt"], None);
+    h.key("ctrl-f");
+    assert!(h.read(|this, _| this.search.open));
+    assert!(
+        h.read(|this, cx| !this.search_popover_visible(cx)),
+        "empty search opened the results popover"
+    );
+    h.click(800., 400., MouseButton::Left);
+    h.wait("empty search click-away", |this, _| !this.search.open);
+    assert!(h.grid_focused());
+    h.key("ctrl-f");
+    let input = h.read(|this, _| this.search.input.clone().expect("search input"));
+    h.text("alpha");
+    h.wait("alpha search", |this, _| {
+        this.search.done && this.search.count == 1 && this.search.query == "alpha"
+    });
+    assert!(h.read(|this, cx| this.search_popover_visible(cx)));
+    h.key("ctrl-a");
+    h.key("backspace");
+    h.wait("cleared search exits", |this, _| !this.search.open);
+    assert!(h.grid_focused());
+    assert!(h.read(|_, cx| input.read(cx).value().is_empty()));
+}
+
+#[test]
 fn automatic_search_uses_covered_index_and_falls_back_after_removal() {
     let mut h = Harness::new(&["自动索引报告.txt", "other.txt"], None);
     h.read(|this, _| {
