@@ -21,7 +21,7 @@ pub fn copy_path(path: PathBuf, tx: async_channel::Sender<Event>) -> Result<(), 
         .compare_exchange(false, true, Ordering::AcqRel, Ordering::Relaxed)
         .is_err()
     {
-        return Err("正在复制路径，请稍后重试".into());
+        return Err(crate::i18n::tr_owned("正在复制路径，请稍后重试"));
     }
     struct Guard;
     impl Drop for Guard {
@@ -41,14 +41,14 @@ pub fn copy_path(path: PathBuf, tx: async_channel::Sender<Event>) -> Result<(), 
                     if text.contains("剪贴板") {
                         text
                     } else {
-                        "无法复制文件路径，请重试".into()
+                        crate::i18n::tr_owned("无法复制文件路径，请重试")
                     }
                 });
             let _ = tx.send_blocking(Event::Navigation(Notice::Clipboard(result)));
         });
     if spawned.is_err() {
         COPY_ACTIVE.store(false, Ordering::Release);
-        return Err("无法复制文件路径，请重试".into());
+        return Err(crate::i18n::tr_owned("无法复制文件路径，请重试"));
     }
     Ok(())
 }
@@ -155,10 +155,10 @@ pub fn normalize_address(base: &Path, value: &str) -> Result<PathBuf, String> {
         value
     };
     if text.trim().is_empty() {
-        return Err("请输入位置".into());
+        return Err(crate::i18n::tr_owned("请输入位置"));
     }
     if text.contains(['\0', '"', '\r', '\n']) {
-        return Err("路径格式不正确".into());
+        return Err(crate::i18n::tr_owned("路径格式不正确"));
     }
     let bytes = text.as_bytes();
     if bytes.len() >= 2 && bytes[0].is_ascii_alphabetic() && bytes[1] == b':' {
@@ -178,14 +178,14 @@ pub fn normalize_address(base: &Path, value: &str) -> Result<PathBuf, String> {
 }
 fn location_error(error: std::io::Error) -> String {
     if matches!(error.raw_os_error(), Some(15 | 21 | 55 | 1167)) {
-        return "磁盘不可用，请检查连接".into();
+        return crate::i18n::tr_owned("磁盘不可用，请检查连接");
     }
     match error.kind() {
-        std::io::ErrorKind::NotFound => "找不到此位置",
-        std::io::ErrorKind::PermissionDenied => "无权访问此位置",
-        std::io::ErrorKind::NotADirectory => "此位置不是文件夹",
-        std::io::ErrorKind::InvalidInput => "路径格式不正确",
-        _ => "无法打开此位置",
+        std::io::ErrorKind::NotFound => crate::i18n::tr("找不到此位置"),
+        std::io::ErrorKind::PermissionDenied => crate::i18n::tr("无权访问此位置"),
+        std::io::ErrorKind::NotADirectory => crate::i18n::tr("此位置不是文件夹"),
+        std::io::ErrorKind::InvalidInput => crate::i18n::tr("路径格式不正确"),
+        _ => crate::i18n::tr("无法打开此位置"),
     }
     .into()
 }
@@ -204,19 +204,19 @@ pub(crate) fn read_volumes() -> Result<Vec<Location>, String> {
     };
     let mask = unsafe { GetLogicalDrives() };
     if mask == 0 {
-        return Err("无法读取磁盘列表".into());
+        return Err(crate::i18n::tr_owned("无法读取磁盘列表"));
     }
     Ok(roots(mask)
         .map(|path| {
             let raw: Vec<u16> = path.as_os_str().encode_wide().chain(Some(0)).collect();
             let kind = unsafe { GetDriveTypeW(PCWSTR(raw.as_ptr())) };
             let name = match kind {
-                2 => "可移动磁盘",
-                3 => "本地磁盘",
-                4 => "网络磁盘",
-                5 => "光驱",
-                6 => "内存磁盘",
-                _ => "磁盘",
+                2 => crate::i18n::tr("可移动磁盘"),
+                3 => crate::i18n::tr("本地磁盘"),
+                4 => crate::i18n::tr("网络磁盘"),
+                5 => crate::i18n::tr("光驱"),
+                6 => crate::i18n::tr("内存磁盘"),
+                _ => crate::i18n::tr("磁盘"),
             };
             Location {
                 title: format!("{name} ({}:)", raw[0] as u8 as char),

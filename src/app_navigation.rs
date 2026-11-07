@@ -129,6 +129,7 @@ impl Backleaf {
         cx.notify();
     }
     pub fn navigation_error(&mut self, message: String, cx: &mut Context<Self>) {
+        let message = crate::i18n::tr_owned(&message);
         self.navigation.toast = Some(message);
         self.navigation.toast_timer = Some(cx.spawn(async move |this, cx| {
             cx.background_executor().timer(Duration::from_secs(5)).await;
@@ -180,7 +181,10 @@ impl Backleaf {
                     this.defer_menu_action(window, cx, move |this, window, cx| match command {
                         Command::CopyPath => {
                             if this.files.hub.clipboard_preparing() {
-                                this.navigation_error("正在准备剪贴板，请稍后重试".into(), cx);
+                                this.navigation_error(
+                                    crate::i18n::tr_owned("正在准备剪贴板，请稍后重试"),
+                                    cx,
+                                );
                                 return;
                             }
                             if let Err(error) =
@@ -431,7 +435,7 @@ impl Backleaf {
             .py(px(layout::SCROLL.sidebar_padding_y))
             .bg(colors.color(ColorRole::Chrome))
             .role(Role::Navigation)
-            .aria_label("快捷访问")
+            .aria_label(crate::i18n::tr("快捷访问"))
             .child(
                 div()
                     .id("quick-access-scroll")
@@ -950,7 +954,7 @@ impl Backleaf {
                             .items_center()
                             .justify_center()
                             .role(Role::Button)
-                            .aria_label("显示折叠的上级路径")
+                            .aria_label(crate::i18n::tr("显示折叠的上级路径"))
                             .aria_expanded(self.navigation.open)
                             .focusable()
                             .tab_stop(true)
@@ -989,7 +993,7 @@ impl Backleaf {
                     .justify_center()
                     .rounded(px(8.))
                     .role(Role::Button)
-                    .aria_label("浏览当前目录层级")
+                    .aria_label(crate::i18n::tr("浏览当前目录层级"))
                     .aria_expanded(self.navigation.open)
                     .focusable()
                     .tab_stop(true)
@@ -1083,7 +1087,7 @@ impl Backleaf {
             .occlude()
             .track_focus(&self.navigation.focus)
             .role(Role::Tree)
-            .aria_label("当前位置导航")
+            .aria_label(crate::i18n::tr("当前位置导航"))
             .on_mouse_down(MouseButton::Left, |_, _, cx| cx.stop_propagation())
             .on_mouse_down_out(cx.listener(|this, event: &MouseDownEvent, _, cx| {
                 if event.button == MouseButton::Left
@@ -1138,7 +1142,7 @@ impl Backleaf {
                                     .px(px(8.))
                                     .py(px(16.))
                                     .text_color(colors.color(ColorRole::Secondary))
-                                    .child("正在读取…"),
+                                    .child(crate::i18n::tr("正在读取…")),
                             )
                         },
                     )
@@ -1159,7 +1163,7 @@ impl Backleaf {
                                 .py(px(8.))
                                 .text_size(px(12.))
                                 .text_color(colors.color(ColorRole::Secondary))
-                                .child("更多文件夹可在当前位置浏览"),
+                                .child(crate::i18n::tr("更多文件夹可在当前位置浏览")),
                         )
                     }),
             )

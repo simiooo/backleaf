@@ -1,14 +1,22 @@
-拾径 / Backleaf 0.1.0-preview.41
+拾径 / Backleaf 0.1.0-preview.42
 
 Windows x64 便携测试版：解压整个ZIP，运行Backleaf.exe。或在PowerShell执行：
 irm https://raw.githubusercontent.com/simiooo/backleaf/staging/install.ps1 | iex
 
-本批次（内容搜索 / grep 式文本搜索）：
+本批次（中文 / English 界面）：
+- 启动时按 Windows 界面语言选择中文或 English；也可按 `Ctrl+Shift+L` 切换，选择写入状态目录 `language.txt`，下次启动沿用；`BACKLEAF_LANG=en/zh` 可显式覆盖。
+- 已翻译主窗口、右键菜单、搜索与内容搜索、筛选/字段错误、文件操作与任务面板、详情窗口、侧栏位置、拖放/归档/恢复提示及常见错误；不支持的字符串回退中文而不是空白。
+- 翻译采用源字符串 + 紧凑词典，保留格式占位符（`{}`）与复数无关的简洁文案；语言切换即时生效，无需重启。
+- 新增 i18n 单元测试与 headless `language_shortcut_switches_chinese_and_english`；headless 现为 51 项、native 133 项。
+- 首次覆盖以高频界面为主，少数深层/第三方 Shell 错误可能仍是中文；Shell 扩展自身的菜单文字由 Windows/第三方软件提供，不受本应用语言控制。
+
+以下保留 preview.41 及更早内容：
+
+preview.41（内容搜索 / grep 式文本搜索）：
 - 搜索框工具栏新增“内容”模式：从当前搜索位置递归检查文件内容，不再只匹配文件名；普通文件名搜索仍默认保留。
 - 文本类型按内容嗅探而非后缀：接受 UTF-8、UTF-8 BOM、UTF-16 BOM，拒绝含 NUL、控制字符比例异常或非法 UTF-8 的文件；边界为单文件 8MB、20,000 文件、8,000 目录、累计 256MB、最多 200 个结果，超出显示“结果已截断”。
 - 结果为响应式卡片网格：占据内容区大部分空间，按宽度自动 1–N 列；卡片无边框/分割线，用文件图标、名称字重、路径/行号次级文字和间距组织。卡片主体是匹配上下文块（前后各一行），所有匹配文本用浅色块高亮；点击卡片或 Enter 定位到文件。
 - 匹配为 ASCII 大小写不敏感；不支持正则、全词匹配和 GBK/旧编码（非 UTF-8/BOM 文本会被判定为非文本）。
-- 新增 `content_search` 单元测试（文本嗅探/上下文高亮）与 headless `content_search_finds_text_with_context_and_highlights`；headless 现为 50 项、native 131 项。
 - 内容模式暂不支持筛选/保存视图，也不做逐次增量索引；每次查询重新扫描，受上述上限保护。
 
 以下保留 preview.40 及更早内容：

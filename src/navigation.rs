@@ -251,13 +251,13 @@ pub fn common_locations() -> Vec<Location> {
         core::GUID,
     };
     let entries: [(&str, GUID); 7] = [
-        ("个人文件夹", FOLDERID_Profile),
-        ("桌面", FOLDERID_Desktop),
-        ("下载", FOLDERID_Downloads),
-        ("文档", FOLDERID_Documents),
-        ("图片", FOLDERID_Pictures),
-        ("音乐", FOLDERID_Music),
-        ("视频", FOLDERID_Videos),
+        (crate::i18n::tr("个人文件夹"), FOLDERID_Profile),
+        (crate::i18n::tr("桌面"), FOLDERID_Desktop),
+        (crate::i18n::tr("下载"), FOLDERID_Downloads),
+        (crate::i18n::tr("文档"), FOLDERID_Documents),
+        (crate::i18n::tr("图片"), FOLDERID_Pictures),
+        (crate::i18n::tr("音乐"), FOLDERID_Music),
+        (crate::i18n::tr("视频"), FOLDERID_Videos),
     ];
     entries
         .into_iter()

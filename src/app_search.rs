@@ -223,9 +223,15 @@ impl Backleaf {
         self.search.content_scroll = UniformListScrollHandle::new();
         self.search.scroll = UniformListScrollHandle::new();
         let input = cx.new(|cx| {
-            let mut input =
-                TextInput::new(String::new(), 0..0, "搜索文件名", self.colors, 1024, cx);
-            input.set_placeholder("搜索文件名");
+            let mut input = TextInput::new(
+                String::new(),
+                0..0,
+                crate::i18n::tr("搜索文件名"),
+                self.colors,
+                1024,
+                cx,
+            );
+            input.set_placeholder(crate::i18n::tr("搜索文件名"));
             input.embedded = true;
             input
         });
@@ -794,8 +800,11 @@ impl Backleaf {
             .justify_center()
             .rounded(px(8.))
             .role(Role::Button)
-            .aria_label("搜索文件名，Ctrl+F")
-            .tooltip(tooltip("搜索文件名 · Ctrl+F".into(), colors))
+            .aria_label(crate::i18n::tr("搜索文件名，Ctrl+F"))
+            .tooltip(tooltip(
+                crate::i18n::tr_owned("搜索文件名 · Ctrl+F"),
+                colors,
+            ))
             .focusable()
             .tab_stop(true)
             .opacity(if available { 1. } else { 0.5 })
@@ -885,14 +894,14 @@ impl Backleaf {
                 number(self.search.content_scanned)
             )
         } else if count == 0 {
-            "没有匹配内容".into()
+            crate::i18n::tr_owned("没有匹配内容")
         } else {
             format!(
                 "{} 个文件包含“{}”{}",
                 number(count),
                 self.search.query,
                 if self.search.content_truncated {
-                    " · 结果已截断"
+                    crate::i18n::tr(" · 结果已截断")
                 } else {
                     ""
                 }
@@ -905,9 +914,9 @@ impl Backleaf {
         let empty = if let Some(error) = &self.search.content_error {
             error.clone()
         } else if !self.search.content_done {
-            "正在扫描文件内容…".into()
+            crate::i18n::tr_owned("正在扫描文件内容…")
         } else {
-            "没有匹配内容".into()
+            crate::i18n::tr_owned("没有匹配内容")
         };
         let list = if rows > 0 {
             uniform_list(
@@ -1018,7 +1027,11 @@ impl Backleaf {
                                                         .text_color(
                                                             colors.color(ColorRole::Secondary),
                                                         )
-                                                        .child(format!("第 {line} 行 · {path}")),
+                                                        .child(crate::trf!(
+                                                            "第 {} 行 · {}",
+                                                            line,
+                                                            path
+                                                        )),
                                                 )
                                                 .child(
                                                     div()
@@ -1059,7 +1072,9 @@ impl Backleaf {
                     div()
                         .text_size(px(12.))
                         .text_color(colors.color(ColorRole::Secondary))
-                        .child("递归检查文本文件内容；可尝试更短、更具体的关键词"),
+                        .child(crate::i18n::tr(
+                            "递归检查文本文件内容；可尝试更短、更具体的关键词",
+                        )),
                 )
                 .into_any_element()
         };
@@ -1138,7 +1153,7 @@ impl Backleaf {
         let height = (f32::from(window.viewport_size().height) - 192.).clamp(48., 384.);
         let popover = self.search_popover_visible(cx);
         let scope = if self.search.definition.indexed {
-            "已索引位置".into()
+            crate::i18n::tr_owned("已索引位置")
         } else {
             format!(
                 "{}{}",
@@ -1155,26 +1170,26 @@ impl Backleaf {
         } else if !self.search.started {
             String::new()
         } else if !self.search.done {
-            format!("搜索中 · 已检查 {} 项", number(self.search.scanned))
+            crate::trf!("搜索中 · 已检查 {} 项", number(self.search.scanned))
         } else if self.search.count == 0 {
-            "没有匹配项".into()
+            crate::i18n::tr_owned("没有匹配项")
         } else {
-            format!("{} 项", number(self.search.count))
+            crate::trf!("{} 项", number(self.search.count))
         };
         let index_status = if self.search.definition.indexed {
             if let Some(error) = &self.index_status.error {
-                format!(" · 索引不可用：{error}")
+                crate::trf!(" · 索引不可用：{}", error)
             } else {
                 format!(
                     " · 已索引 {} 项{}{}",
                     number(self.index_status.count),
                     if self.index_status.building {
-                        " · 正在建立索引"
+                        crate::i18n::tr(" · 正在建立索引")
                     } else {
                         ""
                     },
                     if self.index_status.unavailable > 0 {
-                        format!(" · {} 个位置不可访问", self.index_status.unavailable)
+                        crate::trf!(" · {} 个位置不可访问", self.index_status.unavailable)
                     } else {
                         String::new()
                     }
@@ -1187,12 +1202,12 @@ impl Backleaf {
         let status = format!(
             "{status}{}{}",
             if self.search.unavailable > 0 {
-                format!(" · {} 个位置无法访问", self.search.unavailable)
+                crate::trf!(" · {} 个位置无法访问", self.search.unavailable)
             } else {
                 String::new()
             },
             if self.search.skipped > 0 {
-                format!(" · 未展开 {} 个链接", self.search.skipped)
+                crate::trf!(" · 未展开 {} 个链接", self.search.skipped)
             } else {
                 String::new()
             }

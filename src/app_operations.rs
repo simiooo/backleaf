@@ -293,7 +293,7 @@ impl Backleaf {
         if self.files.editor.is_some() {
             let name = if let Some(id) = id {
                 let Some(item) = self.cache.get(&id) else {
-                    self.error = Some("文件尚未加载，请重试".into());
+                    self.error = Some(crate::i18n::tr_owned("文件尚未加载，请重试"));
                     cx.notify();
                     return;
                 };
@@ -365,7 +365,7 @@ impl Backleaf {
             let session = self
                 .source
                 .freeze_selection(self.selection.mask.clone())
-                .ok_or_else(|| "当前列表尚未就绪".to_string())
+                .ok_or_else(|| crate::i18n::tr_owned("当前列表尚未就绪"))
                 .and_then(|selection| {
                     crate::shell_menu::Session::new(
                         selection,
@@ -423,7 +423,7 @@ impl Backleaf {
             )
         {
             self.mark_directory_dirty(cx);
-            self.navigation_error("目录正在更新，请稍后重试".into(), cx);
+            self.navigation_error(crate::i18n::tr_owned("目录正在更新，请稍后重试"), cx);
             return;
         }
         if crate::locations::path_copy_pending()
@@ -432,7 +432,7 @@ impl Backleaf {
                 Command::Copy | Command::Cut | Command::Paste | Command::CopyPath
             )
         {
-            self.navigation_error("正在复制路径，请稍后重试".into(), cx);
+            self.navigation_error(crate::i18n::tr_owned("正在复制路径，请稍后重试"), cx);
             return;
         }
         self.files.menu = None;
@@ -479,7 +479,7 @@ impl Backleaf {
                 let selection = self
                     .source
                     .freeze_selection(self.selection.mask.clone())
-                    .ok_or("目录尚未准备好")?;
+                    .ok_or(crate::i18n::tr_owned("目录尚未准备好"))?;
                 let id = if command == Command::Recycle {
                     self.files.hub.selection(
                         selection,
@@ -563,7 +563,7 @@ impl Backleaf {
                     .direct(
                         PathBuf::new(),
                         self.source.parent().unwrap_or_else(|| self.path.clone()),
-                        "新建文件夹".into(),
+                        crate::i18n::tr_owned("新建文件夹").into(),
                         self.source.parent_identity(),
                         true,
                         owner,
@@ -678,7 +678,11 @@ impl Backleaf {
             TextInput::new(
                 value,
                 selected,
-                if is_path { "位置" } else { "文件名称" },
+                if is_path {
+                    crate::i18n::tr("位置")
+                } else {
+                    crate::i18n::tr("文件名称")
+                },
                 self.colors,
                 if is_path { 32767 } else { 1024 },
                 cx,
@@ -1514,8 +1518,8 @@ impl Backleaf {
             .items_center()
             .gap(px(4.))
             .role(Role::Button)
-            .aria_label(format!("文件操作，{count} 项任务"))
-            .tooltip(tooltip(format!("文件操作 · {count} 项任务"), colors))
+            .aria_label(crate::trf!("文件操作，{} 项任务", count))
+            .tooltip(tooltip(crate::trf!("文件操作 · {} 项任务", count), colors))
             .focusable()
             .tab_stop(true)
             .hover(move |d| {
@@ -1650,7 +1654,7 @@ impl Backleaf {
                             .border_1()
                             .border_color(colors.color(ColorRole::Border))
                             .shadow(vec![colors.shadow()])
-                            .child(format!("还有 {count} 项任务"))
+                            .child(crate::trf!("还有 {} 项任务", count))
                             .child(
                                 div()
                                     .mt(px(24.))
@@ -1659,7 +1663,7 @@ impl Backleaf {
                                     .gap(px(8.))
                                     .child(self.text_action(
                                         "continue-operations",
-                                        "继续处理",
+                                        crate::i18n::tr("继续处理"),
                                         cx.listener(|this, _, window, cx| {
                                             this.files.close_guard = false;
                                             window.focus(&this.focus, cx);
@@ -1795,11 +1799,11 @@ impl Backleaf {
         let destination = navigation::display_name(&v.target);
         let failures = v.failed.saturating_add(v.unknown);
         let title = if v.phase == Phase::Canceled {
-            "已取消".into()
+            crate::i18n::tr_owned("已取消")
         } else if terminal && failures > 0 {
-            format!("{} 项未完成", number(failures as usize))
+            crate::trf!("{} 项未完成", number(failures as usize))
         } else if terminal {
-            format!("{}未完成", v.operation.label())
+            crate::trf!("{}未完成", v.operation.label())
         } else if v.operation == Operation::Recycle {
             v.operation.label().into()
         } else {
@@ -1808,7 +1812,7 @@ impl Backleaf {
         let retry = retry_available(&v).then(|| {
             self.text_action(
                 "retry",
-                "重试",
+                crate::i18n::tr("重试"),
                 cx.listener(move |this, _, window, cx| {
                     match this.files.hub.retry(id, Self::native_owner(window)) {
                         Ok(retry_id) => this.show_operation(retry_id, cx),
@@ -1821,7 +1825,7 @@ impl Backleaf {
         let action = self.button(
             "close",
             if terminal {
-                "关闭任务结果"
+                crate::i18n::tr("关闭任务结果")
             } else if v.phase == Phase::Canceling {
                 "正在取消"
             } else {
@@ -1871,7 +1875,7 @@ impl Backleaf {
                     .h(px(2.))
                     .bg(colors.color(ColorRole::Border))
                     .role(Role::ProgressIndicator)
-                    .aria_label("当前进度")
+                    .aria_label(crate::i18n::tr("当前进度"))
                     .aria_numeric_value(fraction(&v) as f64 * 100.)
                     .aria_min_numeric_value(0.)
                     .aria_max_numeric_value(100.)
@@ -1994,7 +1998,7 @@ impl Backleaf {
                         .when(!self.files.page_history.is_empty(), |d| {
                             d.child(self.button(
                                 "back",
-                                "上一页未完成项目",
+                                crate::i18n::tr("上一页未完成项目"),
                                 cx.listener(|this, _, _, cx| {
                                     if let Some(after) = this.files.page_history.pop() {
                                         this.files.page_after = after;
@@ -2008,7 +2012,7 @@ impl Backleaf {
                         .when_some(next, |d, next| {
                             d.child(self.button(
                                 "more",
-                                "下一页未完成项目",
+                                crate::i18n::tr("下一页未完成项目"),
                                 cx.listener(move |this, _, _, cx| {
                                     if this.files.page_history.len() >= 128 {
                                         this.files.page_history.remove(0);
@@ -2042,30 +2046,30 @@ fn same_location(a: &std::path::Path, b: &std::path::Path) -> bool {
 }
 fn phase_label(phase: Phase) -> &'static str {
     match phase {
-        Phase::Queued => "已排队",
-        Phase::Preparing => "正在准备",
-        Phase::Running => "进行中",
-        Phase::Finishing => "正在确认结果",
-        Phase::Canceling => "正在取消",
-        Phase::Complete => "已完成",
-        Phase::Partial => "部分完成",
-        Phase::Canceled => "已取消",
-        Phase::Failed => "未完成",
-        Phase::Unknown => "结果尚未确认",
+        Phase::Queued => crate::i18n::tr("已排队"),
+        Phase::Preparing => crate::i18n::tr("正在准备"),
+        Phase::Running => crate::i18n::tr("进行中"),
+        Phase::Finishing => crate::i18n::tr("正在确认结果"),
+        Phase::Canceling => crate::i18n::tr("正在取消"),
+        Phase::Complete => crate::i18n::tr("已完成"),
+        Phase::Partial => crate::i18n::tr("部分完成"),
+        Phase::Canceled => crate::i18n::tr("已取消"),
+        Phase::Failed => crate::i18n::tr("未完成"),
+        Phase::Unknown => crate::i18n::tr("结果尚未确认"),
     }
 }
 fn state_label(state: State) -> &'static str {
     match state {
-        State::Pending | State::Dispatched => "未处理",
-        State::Active => "处理中",
-        State::Provisional => "确认中",
-        State::Success => "已完成",
-        State::Failed => "失败",
-        State::Skipped => "已跳过",
-        State::Canceled => "已取消",
-        State::Partial => "部分完成",
-        State::Unknown => "结果尚未确认",
-        State::NotProcessed => "未处理",
+        State::Pending | State::Dispatched => crate::i18n::tr("未处理"),
+        State::Active => crate::i18n::tr("处理中"),
+        State::Provisional => crate::i18n::tr("确认中"),
+        State::Success => crate::i18n::tr("已完成"),
+        State::Failed => crate::i18n::tr("失败"),
+        State::Skipped => crate::i18n::tr("已跳过"),
+        State::Canceled => crate::i18n::tr("已取消"),
+        State::Partial => crate::i18n::tr("部分完成"),
+        State::Unknown => crate::i18n::tr("结果尚未确认"),
+        State::NotProcessed => crate::i18n::tr("未处理"),
     }
 }
 fn count_label(v: &View) -> String {

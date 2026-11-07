@@ -56,16 +56,16 @@ pub enum Operation {
 impl Operation {
     pub fn label(self) -> &'static str {
         match self {
-            Self::Copy => "复制",
-            Self::Move => "移动",
-            Self::Recycle => "移至回收站",
-            Self::Rename => "重命名",
-            Self::NewFolder => "新建文件夹",
-            Self::ClipboardCopy => "复制到剪贴板",
-            Self::ClipboardCut => "剪切",
-            Self::CopyPaths => "复制路径",
-            Self::Compress => "压缩",
-            Self::Extract => "解压",
+            Self::Copy => crate::i18n::tr("复制"),
+            Self::Move => crate::i18n::tr("移动"),
+            Self::Recycle => crate::i18n::tr("移至回收站"),
+            Self::Rename => crate::i18n::tr("重命名"),
+            Self::NewFolder => crate::i18n::tr("新建文件夹"),
+            Self::ClipboardCopy => crate::i18n::tr("复制到剪贴板"),
+            Self::ClipboardCut => crate::i18n::tr("剪切"),
+            Self::CopyPaths => crate::i18n::tr("复制路径"),
+            Self::Compress => crate::i18n::tr("压缩"),
+            Self::Extract => crate::i18n::tr("解压"),
         }
     }
 }

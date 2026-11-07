@@ -130,7 +130,7 @@ impl Backleaf {
         }
         self.suppress_click = true;
         if self.watch_stale() {
-            self.navigation_error("目录已改变，请重新拖放".into(), cx);
+            self.navigation_error(crate::i18n::tr_owned("目录已改变，请重新拖放"), cx);
             return;
         }
         if self.pin_dragged_folder(&g, event.position, cx) {
@@ -147,7 +147,7 @@ impl Backleaf {
                 return;
             }
             None => {
-                self.navigation_error("正在检查目标，请重试".into(), cx);
+                self.navigation_error(crate::i18n::tr_owned("正在检查目标，请重试"), cx);
                 return;
             }
         };
@@ -162,7 +162,7 @@ impl Backleaf {
                 u32::from(event.modifiers.control) * 8 + u32::from(event.modifiers.shift) * 4;
             let effect = crate::ole::effect(keys, 3, source_volume, Some(target.resolved.volume));
             if effect == 0 {
-                self.navigation_error("暂不支持创建链接".into(), cx);
+                self.navigation_error(crate::i18n::tr_owned("暂不支持创建链接"), cx);
                 return;
             }
             match self.files.hub.selection_guarded(
@@ -192,10 +192,12 @@ impl Backleaf {
                 number(self.selection.count()),
                 crate::navigation::display_name(&t.path)
             ),
-            Some(Err(_)) => "无法移到此位置".into(),
-            None if g.target_id.is_some() => "正在检查目标…".into(),
-            None if f32::from(g.pointer.x) < self.sidebar_width() => "固定到侧栏".into(),
-            None => format!("移动 {} 项", number(self.selection.count())),
+            Some(Err(_)) => crate::i18n::tr_owned("无法移到此位置"),
+            None if g.target_id.is_some() => crate::i18n::tr_owned("正在检查目标…"),
+            None if f32::from(g.pointer.x) < self.sidebar_width() => {
+                crate::i18n::tr_owned("固定到侧栏")
+            }
+            None => crate::trf!("移动 {} 项", number(self.selection.count())),
         };
         div()
             .absolute()

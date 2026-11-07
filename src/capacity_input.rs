@@ -5,7 +5,7 @@
 pub fn parse_capacity(text: &str) -> Result<u64, String> {
     let trimmed = text.trim();
     if trimmed.is_empty() {
-        return Err("请输入容量，如 10MB、500KB 或 1024".into());
+        return Err(crate::i18n::tr_owned("请输入容量，如 10MB、500KB 或 1024"));
     }
     let normalized = trimmed.to_lowercase().replace('．', ".");
     let number_end = normalized
@@ -14,13 +14,13 @@ pub fn parse_capacity(text: &str) -> Result<u64, String> {
     let (number, unit) = normalized.split_at(number_end);
     let number = number.trim_end_matches('.');
     if number.is_empty() {
-        return Err("请输入数字容量，如 10MB".into());
+        return Err(crate::i18n::tr_owned("请输入数字容量，如 10MB"));
     }
     let value = number
         .parse::<f64>()
-        .map_err(|_| "请输入数字容量，如 10MB".to_string())?;
+        .map_err(|_| crate::i18n::tr_owned("请输入数字容量，如 10MB"))?;
     if !value.is_finite() || value < 0. {
-        return Err("容量必须是大于等于 0 的数字".into());
+        return Err(crate::i18n::tr_owned("容量必须是大于等于 0 的数字"));
     }
     let unit = unit.trim();
     let multiplier = match unit {
@@ -37,7 +37,7 @@ pub fn parse_capacity(text: &str) -> Result<u64, String> {
     };
     let bytes = value * multiplier;
     if !bytes.is_finite() || bytes > u64::MAX as f64 {
-        return Err("容量过大".into());
+        return Err(crate::i18n::tr_owned("容量过大"));
     }
     Ok(bytes.round() as u64)
 }

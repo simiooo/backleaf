@@ -1174,6 +1174,23 @@ fn dynamic_child_waits_for_rows_and_keeps_both_ancestors_stable() {
 }
 
 #[test]
+fn language_shortcut_switches_chinese_and_english() {
+    let mut h = Harness::new(&["note.txt"], None);
+    h.key("ctrl-shift-l");
+    assert_eq!(
+        h.read(|_, _| crate::i18n::current()),
+        crate::i18n::Language::En
+    );
+    assert_eq!(crate::i18n::tr("打开"), "Open");
+    h.key("ctrl-shift-l");
+    assert_eq!(
+        h.read(|_, _| crate::i18n::current()),
+        crate::i18n::Language::Zh
+    );
+    assert_eq!(crate::i18n::tr("打开"), "打开");
+}
+
+#[test]
 fn content_search_finds_text_with_context_and_highlights() {
     let mut h = Harness::new(&["note.txt"], None);
     h.key("ctrl-f");

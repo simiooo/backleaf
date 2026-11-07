@@ -30,31 +30,31 @@ pub enum Command {
 impl Command {
     fn label(self, folder: bool) -> &'static str {
         match self {
-            Self::Open => "打开",
-            Self::Copy => "复制",
-            Self::Cut => "剪切",
+            Self::Open => crate::i18n::tr("打开"),
+            Self::Copy => crate::i18n::tr("复制"),
+            Self::Cut => crate::i18n::tr("剪切"),
             Self::Paste => {
                 if folder {
-                    "粘贴到文件夹"
+                    crate::i18n::tr("粘贴到文件夹")
                 } else {
-                    "粘贴"
+                    crate::i18n::tr("粘贴")
                 }
             }
-            Self::CopyPath => "复制路径",
-            Self::Rename => "重命名",
-            Self::Recycle => "移至回收站",
-            Self::Details => "详情",
-            Self::NewFolder => "新建文件夹",
-            Self::Refresh => "刷新",
-            Self::EditPath => "编辑路径",
-            Self::Compress => "压缩为 ZIP…",
-            Self::Extract => "解压到…",
+            Self::CopyPath => crate::i18n::tr("复制路径"),
+            Self::Rename => crate::i18n::tr("重命名"),
+            Self::Recycle => crate::i18n::tr("移至回收站"),
+            Self::Details => crate::i18n::tr("详情"),
+            Self::NewFolder => crate::i18n::tr("新建文件夹"),
+            Self::Refresh => crate::i18n::tr("刷新"),
+            Self::EditPath => crate::i18n::tr("编辑路径"),
+            Self::Compress => crate::i18n::tr("压缩为 ZIP…"),
+            Self::Extract => crate::i18n::tr("解压到…"),
             Self::Extension(_, _) => "",
-            Self::PinQuickAccess => "固定到侧栏",
-            Self::RemoveQuickAccess => "移除入口",
-            Self::RenameQuickView => "重命名视图",
-            Self::MoveQuickUp => "上移",
-            Self::MoveQuickDown => "下移",
+            Self::PinQuickAccess => crate::i18n::tr("固定到侧栏"),
+            Self::RemoveQuickAccess => crate::i18n::tr("移除入口"),
+            Self::RenameQuickView => crate::i18n::tr("重命名视图"),
+            Self::MoveQuickUp => crate::i18n::tr("上移"),
+            Self::MoveQuickDown => crate::i18n::tr("下移"),
         }
     }
     fn shortcut(self) -> &'static str {
@@ -219,11 +219,11 @@ impl FileMenu {
                         command,
                         folder,
                         if !real && command != Details {
-                            Some("渲染基准不执行文件命令".into())
+                            Some(crate::i18n::tr_owned("渲染基准不执行文件命令"))
                         } else if command == Rename && selected > 1 {
-                            Some("一次重命名一个项目".into())
+                            Some(crate::i18n::tr_owned("一次重命名一个项目"))
                         } else if command == Paste && !paste {
-                            Some("剪贴板中没有文件".into())
+                            Some(crate::i18n::tr_owned("剪贴板中没有文件"))
                         } else {
                             None
                         },
@@ -233,7 +233,7 @@ impl FileMenu {
             .collect::<Vec<_>>();
         let mut menu = Self::with_rows(colors, anchor, folder, rows, keyboard, false, cx);
         if real {
-            menu.status(0, "读取扩展…".into());
+            menu.status(0, crate::i18n::tr_owned("读取扩展…"));
         }
         menu
     }
@@ -402,7 +402,7 @@ impl FileMenu {
             None,
             Some(Entry {
                 command: Command::Extension(0, true),
-                label: "应用操作".into(),
+                label: crate::i18n::tr_owned("应用操作"),
                 hint: if disabled.as_deref() == Some("读取扩展…") {
                     "…".into()
                 } else {
@@ -432,7 +432,7 @@ impl FileMenu {
             return;
         };
         match notice.result {
-            Err(_) => self.status(level, "扩展暂不可用".into()),
+            Err(_) => self.status(level, crate::i18n::tr_owned("扩展暂不可用")),
             Ok(items) => {
                 let mut rows = Vec::new();
                 for item in items {
@@ -461,7 +461,10 @@ impl FileMenu {
                     rows.pop();
                 }
                 if level == 0 {
-                    self.application_entry(rows.is_empty().then(|| "没有可用的应用操作".into()));
+                    self.application_entry(
+                        rows.is_empty()
+                            .then(|| crate::i18n::tr_owned("没有可用的应用操作")),
+                    );
                     self.applications = Some(rows.clone());
                     if let Some(column) = self.columns.iter_mut().skip(1).find(|c| c.parent == 0) {
                         column.rows = rows;
@@ -470,7 +473,7 @@ impl FileMenu {
                 } else if rows.is_empty() {
                     // Keep the flyout at a normal row height with an explanatory
                     // disabled row instead of opening an empty bordered sliver.
-                    self.status(level, "没有可用的菜单项".into());
+                    self.status(level, crate::i18n::tr_owned("没有可用的菜单项"));
                 } else {
                     self.columns[level].rows = rows;
                     self.columns[level].ready = true;
@@ -508,7 +511,7 @@ impl FileMenu {
             ready: id == 0,
         });
         if id != 0 {
-            self.status(level + 1, "读取扩展…".into());
+            self.status(level + 1, crate::i18n::tr_owned("读取扩展…"));
             self.columns[level + 1].ready = false;
         }
         if id != 0

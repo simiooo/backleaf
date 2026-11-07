@@ -34,7 +34,7 @@ pub fn open(
         handle.update(cx, |_, window, _| window.activate_window())?;
         return Ok(handle);
     }
-    let title = format!("{} · 详情", detail.name);
+    let title = crate::trf!("{} · 详情", detail.name);
     let handle = cx.open_window(
         WindowOptions {
             window_bounds: Some(WindowBounds::Windowed(Bounds::centered(
@@ -180,7 +180,7 @@ impl Properties {
                 .w(px(s.rail_width))
                 .occlude()
                 .role(Role::ScrollBar)
-                .aria_label("详情滚动条")
+                .aria_label(crate::i18n::tr("详情滚动条"))
                 .aria_orientation(accesskit::Orientation::Vertical)
                 .aria_min_numeric_value(0.)
                 .aria_max_numeric_value(100.)
@@ -402,16 +402,16 @@ impl Render for Properties {
                 grouped(self.snapshot.folders as u128)
             )
         } else {
-            format!("{} 字节", grouped(self.snapshot.bytes))
+            crate::trf!("{} 字节", grouped(self.snapshot.bytes))
         };
         let summary = if let Some(error) = &self.snapshot.error {
             error.clone()
         } else if !self.snapshot.running && !self.snapshot.done {
-            "等待统计".into()
+            crate::i18n::tr_owned("等待统计")
         } else if !self.snapshot.initialized {
-            "正在统计".into()
+            crate::i18n::tr_owned("正在统计")
         } else if !self.snapshot.done {
-            format!("正在统计 · {counts}")
+            crate::trf!("正在统计 · {}", counts)
         } else {
             counts
         };
@@ -422,22 +422,22 @@ impl Render for Properties {
                 grouped(self.snapshot.bytes)
             )
         } else {
-            "尚未获得大小".into()
+            crate::i18n::tr_owned("尚未获得大小")
         };
-        let warning = format!(
+        let warning = crate::trf!(
             "{} 项无法读取 · {} 项未展开",
             grouped(self.snapshot.unavailable as u128),
             grouped(self.snapshot.skipped as u128)
         );
         let kind = if self.detail.directory {
-            "文件夹".into()
+            crate::i18n::tr_owned("文件夹")
         } else {
             self.detail
                 .path
                 .extension()
                 .filter(|ext| !ext.is_empty())
                 .map(|ext| format!("{} 文件", ext.to_string_lossy().to_uppercase()))
-                .unwrap_or_else(|| "文件".into())
+                .unwrap_or_else(|| crate::i18n::tr_owned("文件"))
         };
         let art = FileIcon::for_name(
             self.detail.path.file_name().unwrap_or_default(),
@@ -521,7 +521,7 @@ impl Render for Properties {
                             .items_center()
                             .px(px(4.))
                             .window_control_area(WindowControlArea::Drag)
-                            .child("详情"),
+                            .child(crate::i18n::tr("详情")),
                     )
                     .child(self.button("close", "关闭详情", |_, window, _| {
                         window.remove_window()
@@ -585,7 +585,7 @@ impl Render for Properties {
                                     .text_size(px(12.))
                                     .line_height(px(18.))
                                     .text_color(colors.color(ColorRole::Secondary))
-                                    .child("大小"),
+                                    .child(crate::i18n::tr("大小")),
                             )
                             .child(
                                 div()
@@ -594,7 +594,7 @@ impl Render for Properties {
                                     .text_size(px(24.))
                                     .line_height(px(32.))
                                     .role(Role::Label)
-                                    .aria_label("逻辑大小")
+                                    .aria_label(crate::i18n::tr("逻辑大小"))
                                     .aria_value(bytes.clone())
                                     .tooltip(paint::tooltip(size_tip, colors))
                                     .child(bytes),
@@ -622,7 +622,7 @@ impl Render for Properties {
                                         .line_height(px(18.))
                                         .text_color(colors.color(ColorRole::Negative))
                                         .tooltip(paint::tooltip(warning, colors))
-                                        .child("部分项目未统计"),
+                                        .child(crate::i18n::tr("部分项目未统计")),
                                 )
                             }),
                     )
@@ -643,7 +643,7 @@ impl Render for Properties {
                                             .text_size(px(12.))
                                             .line_height(px(18.))
                                             .text_color(colors.color(ColorRole::Secondary))
-                                            .child("位置"),
+                                            .child(crate::i18n::tr("位置")),
                                     )
                                     .child(self.button(
                                         "copy",
@@ -657,8 +657,8 @@ impl Render for Properties {
                             )
                             .child(self.path.clone()),
                     )
-                    .child(self.date("创建时间", self.snapshot.created))
-                    .child(self.date("修改时间", self.snapshot.modified)),
+                    .child(self.date(crate::i18n::tr("创建时间"), self.snapshot.created))
+                    .child(self.date(crate::i18n::tr("修改时间"), self.snapshot.modified)),
             )
             .children(self.scrollbar(cx))
     }

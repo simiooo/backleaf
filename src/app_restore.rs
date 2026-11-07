@@ -124,7 +124,7 @@ impl Backleaf {
             Err(_) => {
                 self.restore.closing = None;
                 self.restore.close_requested = false;
-                self.navigation_error("无法保存窗口状态，请重试".into(), cx);
+                self.navigation_error(crate::i18n::tr_owned("无法保存窗口状态，请重试"), cx);
             }
         }
         cx.notify();
@@ -147,7 +147,7 @@ impl Backleaf {
             .flex()
             .flex_col()
             .gap(px(8.))
-            .child("此位置暂时不可用")
+            .child(crate::i18n::tr("此位置暂时不可用"))
             .child(
                 div()
                     .id("restore-path")
@@ -162,7 +162,7 @@ impl Backleaf {
                     .gap(px(8.))
                     .child(self.button(
                         "refresh",
-                        "重试",
+                        crate::i18n::tr("重试"),
                         cx.listener(|this, _, _, cx| {
                             this.restore.failed = false;
                             this.navigate(this.path.clone(), false, cx);
@@ -170,7 +170,7 @@ impl Backleaf {
                     ))
                     .child(self.button(
                         "home",
-                        "主文件夹",
+                        crate::i18n::tr("主文件夹"),
                         cx.listener(|this, _, _, cx| {
                             if let Some(home) = this.navigation.common.first() {
                                 this.restore.failed = false;

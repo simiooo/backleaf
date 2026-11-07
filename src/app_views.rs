@@ -14,17 +14,17 @@ enum Field {
 impl Field {
     fn label(self) -> &'static str {
         match self {
-            Self::Extensions => "类型",
-            Self::Days => "最近天数",
-            Self::Min => "最小容量",
-            Self::Max => "最大容量",
+            Self::Extensions => crate::i18n::tr("类型"),
+            Self::Days => crate::i18n::tr("最近天数"),
+            Self::Min => crate::i18n::tr("最小容量"),
+            Self::Max => crate::i18n::tr("最大容量"),
         }
     }
     fn placeholder(self) -> &'static str {
         match self {
-            Self::Extensions => "如 jpg, png, pdf",
-            Self::Days => "如 7",
-            Self::Min | Self::Max => "如 10MB、500KB、1024",
+            Self::Extensions => crate::i18n::tr("如 jpg, png, pdf"),
+            Self::Days => crate::i18n::tr("如 7"),
+            Self::Min | Self::Max => crate::i18n::tr("如 10MB、500KB、1024"),
         }
     }
 }
@@ -67,7 +67,7 @@ impl Backleaf {
             if e.input.read(cx).is_composing() {
                 self.views.focus = Some(e.input.clone());
                 self.restore.close_requested = false;
-                self.navigation_error("请先完成输入法候选".into(), cx);
+                self.navigation_error(crate::i18n::tr_owned("请先完成输入法候选"), cx);
                 return false;
             }
             self.restore.close_requested = true;
@@ -110,7 +110,7 @@ impl Backleaf {
         if let Some(e) = &self.views.editor {
             if e.input.read(cx).is_composing() || e.input.read(cx).is_pasting() {
                 self.views.focus = Some(e.input.clone());
-                self.navigation_error("请先完成输入".into(), cx);
+                self.navigation_error(crate::i18n::tr_owned("请先完成输入"), cx);
                 return;
             }
             let value = e.input.read(cx).value();
@@ -223,7 +223,7 @@ impl Backleaf {
             .map(|e| e.title.clone())
             .unwrap_or_else(|| {
                 if self.search.query.is_empty() {
-                    "搜索".into()
+                    crate::i18n::tr_owned("搜索")
                 } else {
                     self.search.query.chars().take(80).collect()
                 }
@@ -232,7 +232,7 @@ impl Backleaf {
             TextInput::new(
                 title.clone(),
                 0..title.len(),
-                "视图名称",
+                crate::i18n::tr("视图名称"),
                 self.colors,
                 80,
                 cx,
@@ -449,13 +449,15 @@ impl Backleaf {
                             .map(|part| part.trim_start_matches('.').to_lowercase())
                             .collect::<Vec<_>>();
                         if extensions.len() > 64 {
-                            return Err("最多输入 64 个类型".into());
+                            return Err(crate::i18n::tr_owned("最多输入 64 个类型"));
                         }
                         if extensions
                             .iter()
                             .any(|ext| ext.len() > 64 || ext.chars().any(|c| !c.is_alphanumeric()))
                         {
-                            return Err("类型只能包含字母和数字，多个用逗号分隔".into());
+                            return Err(crate::i18n::tr_owned(
+                                "类型只能包含字母和数字，多个用逗号分隔",
+                            ));
                         }
                         definition.extensions = extensions;
                     }
@@ -470,9 +472,9 @@ impl Backleaf {
                         } else {
                             let days = value
                                 .parse::<u32>()
-                                .map_err(|_| "请输入 1–365000 的整数天数".to_string())?;
+                                .map_err(|_| crate::i18n::tr_owned("请输入 1–365000 的整数天数"))?;
                             if days == 0 || days > 365_000 {
-                                return Err("天数需要在 1–365000 之间".into());
+                                return Err(crate::i18n::tr_owned("天数需要在 1–365000 之间"));
                             }
                             Some(days)
                         };
@@ -506,7 +508,7 @@ impl Backleaf {
                 .iter()
                 .position(|(field, _)| matches!(field, Field::Max))
                 .unwrap_or(0);
-            errors[index] = Some("最大容量不能小于最小容量".into());
+            errors[index] = Some(crate::i18n::tr_owned("最大容量不能小于最小容量"));
         }
         if errors.iter().any(Option::is_some) {
             self.show_filter_errors(errors, cx);
@@ -846,7 +848,7 @@ impl Backleaf {
                     .min_w_0()
                     .truncate()
                     .child(if content_mode {
-                        "内容搜索".to_string()
+                        crate::i18n::tr_owned("内容搜索")
                     } else {
                         self.search
                             .saved
@@ -856,7 +858,7 @@ impl Backleaf {
                                     "{}{}",
                                     e.title,
                                     if matches!(&e.destination, Destination::View(v) if *v != self.search.definition) {
-                                        " · 已修改"
+                                        crate::i18n::tr(" · 已修改")
                                     } else {
                                         ""
                                     }
@@ -874,8 +876,8 @@ impl Backleaf {
                     .items_center()
                     .rounded(px(8.))
                     .role(Role::Button)
-                    .aria_label("在文件内容中搜索")
-                    .tooltip(tooltip("在文件内容中搜索（递归检查文本文件）".into(), colors))
+                    .aria_label(crate::i18n::tr("在文件内容中搜索"))
+                    .tooltip(tooltip(crate::i18n::tr_owned("在文件内容中搜索（递归检查文本文件）"), colors))
                     .focusable()
                     .tab_stop(true)
                     .when(content_mode, |d| {
@@ -892,7 +894,7 @@ impl Backleaf {
                     .on_click(cx.listener(|this, _, window, cx| {
                         this.toggle_content_mode(window, cx);
                     }))
-                    .child("内容"),
+                    .child(crate::i18n::tr("内容")),
             )
             .when(!content_mode, |d| {
                 d.child(self.button(
@@ -923,7 +925,9 @@ impl Backleaf {
         let colors = self.colors;
         let mut body = div().flex().flex_col().gap(px(8.));
         if let Some(editor) = &self.views.editor {
-            body = body.child("名称").child(editor.input.clone());
+            body = body
+                .child(crate::i18n::tr("名称"))
+                .child(editor.input.clone());
         } else if let Some(fields) = &self.views.filters {
             for item in fields {
                 body = body.child(
@@ -963,18 +967,18 @@ impl Backleaf {
                     0,
                     "排序",
                     match d.sort {
-                        Sort::Name => "名称",
-                        Sort::Modified => "修改日期",
-                        Sort::Size => "大小",
+                        Sort::Name => crate::i18n::tr("名称"),
+                        Sort::Modified => crate::i18n::tr("修改日期"),
+                        Sort::Size => crate::i18n::tr("大小"),
                     },
                 ),
                 (
                     1,
                     "分组",
                     match d.group {
-                        Group::None => "无",
-                        Group::Type => "类型",
-                        Group::Date => "日期",
+                        Group::None => crate::i18n::tr("无"),
+                        Group::Type => crate::i18n::tr("类型"),
+                        Group::Date => crate::i18n::tr("日期"),
                     },
                 ),
                 (
@@ -995,7 +999,15 @@ impl Backleaf {
                         "网格"
                     },
                 ),
-                (4, "顺序", if d.descending { "降序" } else { "升序" }),
+                (
+                    4,
+                    crate::i18n::tr("顺序"),
+                    if d.descending {
+                        crate::i18n::tr("降序")
+                    } else {
+                        crate::i18n::tr("升序")
+                    },
+                ),
                 (
                     5,
                     "位置",
@@ -1083,7 +1095,7 @@ impl Backleaf {
                                         )
                                         .child(self.button(
                                             "close",
-                                            "移出索引范围",
+                                            crate::i18n::tr("移出索引范围"),
                                             cx.listener(move |this, _, _, cx| {
                                                 if let Some(index) = &this.index
                                                     && let Err(error) =
@@ -1103,7 +1115,7 @@ impl Backleaf {
                 );
                 body = body.child(self.button(
                     "plus",
-                    "索引当前文件夹",
+                    crate::i18n::tr("索引当前文件夹"),
                     cx.listener(|this, _, _, cx| {
                         if let Some(index) = &this.index
                             && let Err(error) =

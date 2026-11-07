@@ -41,7 +41,7 @@ impl Backleaf {
             let input = d.input.clone();
             self.archive.draft.as_mut().unwrap().focus = true;
             self.restore.close_requested = false;
-            self.navigation_error("请先完成输入法候选".into(), cx);
+            self.navigation_error(crate::i18n::tr_owned("请先完成输入法候选"), cx);
             drop(input);
             return false;
         }
@@ -84,12 +84,12 @@ impl Backleaf {
                             .into_owned()
                     }
                 })
-                .unwrap_or_else(|| "归档".into())
+                .unwrap_or_else(|| crate::i18n::tr_owned(crate::i18n::tr("归档")))
         } else {
             if kind == Kind::Extract {
-                "解压文件"
+                crate::i18n::tr("解压文件")
             } else {
-                "归档"
+                crate::i18n::tr("归档")
             }
             .into()
         };
@@ -103,9 +103,9 @@ impl Backleaf {
                 value.clone(),
                 0..value.len(),
                 if kind == Kind::CreateZip {
-                    "压缩包名称"
+                    crate::i18n::tr("压缩包名称")
                 } else {
-                    "解压文件夹名称"
+                    crate::i18n::tr("解压文件夹名称")
                 },
                 self.colors,
                 255,
@@ -118,7 +118,7 @@ impl Backleaf {
                     if input.read(cx).is_composing() {
                         if let Some(d) = &mut this.archive.draft {
                             d.focus = true;
-                            d.error = Some("请先完成输入法候选".into());
+                            d.error = Some(crate::i18n::tr_owned("请先完成输入法候选"));
                         }
                     } else {
                         this.submit_archive(value.clone(), cx);
@@ -197,7 +197,7 @@ impl Backleaf {
                             .query_row([id as i64], |r| r.get::<_, bool>(0))
                             .map_err(|e| e.to_string())?;
                         if directory {
-                            return Err("请选择压缩包文件".into());
+                            return Err(crate::i18n::tr_owned("请选择压缩包文件"));
                         }
                     }
                 }
@@ -293,9 +293,9 @@ impl Backleaf {
                     .child(navigation::display_path(&d.parent)),
             )
             .child(if d.kind == Kind::CreateZip {
-                "压缩包名称"
+                crate::i18n::tr("压缩包名称")
             } else {
-                "解压文件夹名称"
+                crate::i18n::tr("解压文件夹名称")
             })
             .child(d.input.clone())
             .children(d.error.as_ref().map(|error| {

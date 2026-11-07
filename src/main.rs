@@ -19,6 +19,7 @@ mod file_icons;
 mod file_view;
 #[cfg(test)]
 mod headless_tests;
+mod i18n;
 mod idle;
 mod image_preview;
 mod index;
@@ -667,7 +668,7 @@ impl Backleaf {
             }
             Event::OleSourceEnded(result) => {
                 if result < 0 {
-                    self.navigation_error("拖放未完成".into(), cx);
+                    self.navigation_error(crate::i18n::tr_owned("拖放未完成"), cx);
                 }
                 if result == 0x00040100 {
                     self.mark_directory_dirty(cx);
@@ -850,7 +851,7 @@ impl Backleaf {
             if let Err(error) =
                 properties::open(detail, self.colors, self.options.reduced_motion, cx)
             {
-                self.error = Some(format!("无法打开详情：{error}"));
+                self.error = Some(crate::trf!("无法打开详情：{}", error));
             }
             cx.notify();
         }
@@ -1255,6 +1256,15 @@ impl Backleaf {
         self.update_marquee_band(window, cx);
     }
     fn key(&mut self, event: &KeyDownEvent, window: &mut Window, cx: &mut Context<Self>) {
+        if event.keystroke.modifiers.control
+            && event.keystroke.modifiers.shift
+            && event.keystroke.key == "l"
+        {
+            crate::i18n::toggle();
+            crate::i18n::save(&self.options.state_dir);
+            cx.notify();
+            return;
+        }
         if self.ole.as_ref().is_some_and(|site| site.busy()) {
             cx.stop_propagation();
             return;
@@ -1735,6 +1745,7 @@ impl Backleaf {
         click: impl Fn(&ClickEvent, &mut Window, &mut App) + 'static,
     ) -> Stateful<Div> {
         let colors = self.colors;
+        let label = crate::i18n::tr(label);
         let action = Rc::new(click);
         let keyboard = action.clone();
         div()
@@ -2072,7 +2083,7 @@ impl Backleaf {
             .id("file-viewport")
             .relative()
             .role(Role::ListBox)
-            .aria_label("文件")
+            .aria_label(crate::i18n::tr("文件"))
             .size_full()
             .pl(px(layout::SURFACE.padding_x))
             .pr(px(layout::SURFACE.padding_x + layout::SCROLL.gutter))
@@ -2168,7 +2179,7 @@ impl Render for Backleaf {
             && (m.accepted != m.token || m.held)
         {
             if m.additive && m.accepted != m.token {
-                "正在选择…".into()
+                crate::i18n::tr_owned("正在选择…")
             } else {
                 format!(
                     "已选 {} 项",
@@ -2190,7 +2201,7 @@ impl Render for Backleaf {
                     .map_or(String::new(), |s| format!(" · {s}"))
             )
         } else {
-            format!("{} 项", number(count))
+            crate::trf!("{} 项", number(count))
         };
         let marker = self.metrics.clone();
         let owner = cx.entity().downgrade();
@@ -2589,6 +2600,7 @@ fn main() {
         return;
     }
     let options = Options::parse();
+    i18n::init_with_dir(&options.state_dir);
     let mut startup = Vec::new();
     if options.fixture.is_none() && options.path.is_none() && options.output.is_none() {
         match window_state::load(&options.state_dir) {
@@ -2604,7 +2616,7 @@ fn main() {
             }
             Err(_) => {
                 let mut current = options.clone();
-                current.restore_error = Some("无法读取上次窗口状态".into());
+                current.restore_error = Some(crate::i18n::tr_owned("无法读取上次窗口状态"));
                 startup.push(current);
             }
         }

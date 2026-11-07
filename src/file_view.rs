@@ -69,7 +69,7 @@ impl FileView {
     }
     pub fn validate(&self) -> Result<(), String> {
         if self.root.0.is_empty() || self.root.0.contains(&0) {
-            return Err("位置无效".into());
+            return Err(crate::i18n::tr_owned("位置无效"));
         }
         if self.query.chars().count() > 1024
             || self.extensions.len() > 64
@@ -78,20 +78,20 @@ impl FileView {
                 .iter()
                 .any(|s| s.is_empty() || s.len() > 64 || s.chars().any(|c| !c.is_alphanumeric()))
         {
-            return Err("类型或搜索条件无效".into());
+            return Err(crate::i18n::tr_owned("类型或搜索条件无效"));
         }
         if self.group != Group::None && self.layout != Layout::List {
-            return Err("分组视图使用列表布局".into());
+            return Err(crate::i18n::tr_owned("分组视图使用列表布局"));
         }
         if self.modified_days.is_some_and(|d| d == 0 || d > 365000) {
-            return Err("天数需要1–365000".into());
+            return Err(crate::i18n::tr_owned("天数需要1–365000"));
         }
         if self
             .min_bytes
             .zip(self.max_bytes)
             .is_some_and(|(a, b)| a > b)
         {
-            return Err("最小大小不能大于最大大小".into());
+            return Err(crate::i18n::tr_owned("最小大小不能大于最大大小"));
         }
         Ok(())
     }
