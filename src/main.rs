@@ -18,6 +18,7 @@ mod file_view;
 #[cfg(test)]
 mod headless_tests;
 mod idle;
+mod image_preview;
 mod index;
 mod index_bulk;
 mod index_watch;
@@ -82,6 +83,7 @@ use theme::{Palette, Role as ColorRole};
 
 struct Backleaf {
     application_icons: native_icons::Cache,
+    image_previews: image_preview::Cache,
     search: app_search::SearchUi,
     navigation: app_navigation::NavigationUi,
     files: app_operations::FileOperations,
@@ -200,6 +202,7 @@ impl Backleaf {
             options.state_dir.clone(),
         ));
         let application_icons = native_icons::Cache::new(tx.clone());
+        let image_previews = image_preview::Cache::new(tx.clone());
         let (operation_tx, operation_rx) = async_channel::bounded(1);
         let hub = operations::service::Hub::new(options.state_dir.clone(), operation_tx);
         cx.spawn(async move |this, cx| {
@@ -509,6 +512,7 @@ impl Backleaf {
         };
         Self {
             application_icons,
+            image_previews,
             ole,
             ole_target: None,
             drag,
@@ -735,6 +739,7 @@ impl Backleaf {
             Event::Search(notice) => self.accept_search(notice, cx),
             Event::Navigation(notice) => self.accept_navigation(notice, cx),
             Event::ApplicationIconsChanged => cx.notify(),
+            Event::ImagePreviewsChanged => cx.notify(),
             Event::Session { locked } => {
                 if let Some(worker) = &self.navigation.volume_worker {
                     worker.set_active(!locked && self.navigation.window_active);
@@ -1475,7 +1480,17 @@ impl Backleaf {
             } else {
                 None
             };
-        let outlined = native_image.is_none() && icon_kind != file_icons::FileIcon::Folder;
+        let image_file = item
+            .as_ref()
+            .is_some_and(|i| !i.directory && crate::image_preview::supported_name(&i.os_name));
+        let image_preview = if image_file && self.options.fixture.is_none() {
+            item.as_ref()
+                .and_then(|i| self.image_previews.image(self.path.join(&i.os_name)))
+        } else {
+            None
+        };
+        let outlined =
+            native_image.is_none() && icon_kind != file_icons::FileIcon::Folder && !image_file;
         let artwork = native_image.unwrap_or_else(|| icon_kind.asset(self.colors.dark).into());
         let name = item.as_ref().map(|x| x.name.clone()).unwrap_or_default();
         let label = item.as_ref().map(|x| x.label.clone()).unwrap_or_default();
@@ -1497,6 +1512,15 @@ impl Backleaf {
         };
         let colors = self.colors;
         let l = &layout::LAYOUT;
+        // The row keeps a 36 px two-line name slot; an image may use the full
+        // remaining height and the cell's inner width without overflowing.
+        let preview_width = (width - 2. * l.file.visual_padding_x).max(l.grid.icon_size);
+        let preview_height = (l.grid.cell_height
+            - l.file.visual_padding_top
+            - l.file.visual_padding_bottom
+            - l.file.icon_name_gap
+            - 36.)
+            .max(l.grid.icon_size);
         let editor = self
             .files
             .editor
@@ -1613,11 +1637,32 @@ impl Backleaf {
                     colors,
                 ))
             })
-            .child(
-                paint::file_artwork(artwork, l.grid.icon_size, outlined, colors)
-                    .when(item.as_ref().is_some_and(|i| i.cut), |s| s.opacity(0.42))
-                    .when(item.is_none(), |s| s.opacity(0.2)),
-            )
+            .child({
+                let cut = item.as_ref().is_some_and(|i| i.cut);
+                if image_file {
+                    let graphic = match image_preview {
+                        Some(source) => paint::thumbnail(source, preview_width, preview_height),
+                        None => div()
+                            .w(px(preview_width))
+                            .h(px(preview_height))
+                            .flex_none()
+                            .flex()
+                            .items_center()
+                            .justify_center()
+                            .child(paint::file_artwork(
+                                artwork,
+                                l.grid.icon_size,
+                                outlined,
+                                colors,
+                            )),
+                    };
+                    graphic.when(cut, |s| s.opacity(0.42))
+                } else {
+                    paint::file_artwork(artwork, l.grid.icon_size, outlined, colors)
+                        .when(cut, |s| s.opacity(0.42))
+                        .when(item.is_none(), |s| s.opacity(0.2))
+                }
+            })
             .child(
                 div()
                     .id(("filename-tooltip", id))
@@ -2068,6 +2113,11 @@ impl Render for Backleaf {
         self.sync_archive_focus(window, cx);
         self.sync_restore(window, cx);
         self.application_icons.sync(
+            self.generation,
+            !self.session_locked && window.is_visible(),
+            window,
+        );
+        self.image_previews.sync(
             self.generation,
             !self.session_locked && window.is_visible(),
             window,

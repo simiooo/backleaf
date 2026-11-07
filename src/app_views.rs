@@ -562,8 +562,22 @@ impl Backleaf {
                                         } else {
                                             None
                                         };
-                                        let outlined =
-                                            native.is_none() && art != file_icons::FileIcon::Folder;
+                                        let preview_supported = row.is_some_and(|r| {
+                                            !r.directory
+                                                && crate::image_preview::supported_name(
+                                                    r.path.file_name().unwrap_or_default(),
+                                                )
+                                        });
+                                        let preview = if preview_supported {
+                                            row.and_then(|r| {
+                                                this.image_previews.image(r.path.clone())
+                                            })
+                                        } else {
+                                            None
+                                        };
+                                        let outlined = native.is_none()
+                                            && art != file_icons::FileIcon::Folder
+                                            && !preview_supported;
                                         let image =
                                             native.unwrap_or_else(|| art.asset(colors.dark).into());
                                         let title = div()
@@ -579,9 +593,14 @@ impl Backleaf {
                                                 .items_center()
                                                 .justify_center()
                                                 .gap(px(8.))
-                                                .child(paint::file_artwork(
-                                                    image, 44., outlined, colors,
-                                                ))
+                                                .child(match preview {
+                                                    Some(source) => {
+                                                        paint::thumbnail(source, 44., 44.)
+                                                    }
+                                                    None => paint::file_artwork(
+                                                        image, 44., outlined, colors,
+                                                    ),
+                                                })
                                                 .child(title)
                                                 .into_any_element()
                                         } else {
@@ -612,9 +631,14 @@ impl Backleaf {
                                                         .flex()
                                                         .items_center()
                                                         .gap(px(8.))
-                                                        .child(paint::file_artwork(
-                                                            image, 24., outlined, colors,
-                                                        ))
+                                                        .child(match preview {
+                                                            Some(source) => {
+                                                                paint::thumbnail(source, 24., 24.)
+                                                            }
+                                                            None => paint::file_artwork(
+                                                                image, 24., outlined, colors,
+                                                            ),
+                                                        })
                                                         .child(
                                                             div()
                                                                 .flex_1()

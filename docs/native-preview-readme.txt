@@ -1,15 +1,18 @@
-拾径 / Backleaf 0.1.0-preview.35
+拾径 / Backleaf 0.1.0-preview.36
 
 Windows x64 便携测试版：解压整个ZIP，运行Backleaf.exe。或在PowerShell执行：
 irm https://raw.githubusercontent.com/simiooo/backleaf/staging/install.ps1 | iex
 
-本批次（无任务时不显示任务入口/结果面板）：
-- 文件操作完成且没有可安全重试的失败项时，不再常驻标题栏“任务”入口（数字+下拉）和右下角结果面板；两者只在有进行中任务，或存在“重试”可操作的失败结果时显示。
-- 可重试失败仍保留面板与“重试”按钮；关闭或重试后入口与面板同步消失。
-- 新增无头回归 `finished_non_retryable_operations_hide_badge_and_panel`；headless 现为 45 项。
-- 高级搜索、面包屑、框选滚动等沿用 preview.34/33/32。
+本批次（可视区内图片缩略图）：
+- 网格只对当前可见行（uniform_list 虚拟化 + 前后 2 行预取）请求缩略图；后台单线程解码/缩放，256 项 LRU 缓存，切换目录或窗口隐藏时暂停并释放 GPU 图片。
+- 图片文件（png/jpg/jpeg/gif/webp/bmp/tif/tiff/ico）用实际内容替换类型图标；容器为单元格内宽 × 48px，按比例 contain 居中，最大化占用且不溢出；缩略图未就绪时先显示原类型图标。
+- HEIC/AVIF/视频暂不解码；大于 64MB 或解码失败的文件回退图标；GIF/WebP 只显示首帧；JPEG 应用 EXIF 方向。
+- 搜索结果中的图片也使用缩略图；新增无头回归 `visible_image_cells_decode_thumbnails_lazily`，headless 现为 46 项、native 127 项。
 
-以下保留 preview.34 及更早内容：
+以下保留 preview.35 及更早内容：
+
+preview.35（无任务时不显示任务入口/结果面板）：
+- 文件操作完成且没有可安全重试的失败项时，不再常驻标题栏“任务”入口和右下角结果面板；可重试失败仍保留面板与重试按钮。
 
 preview.34（高级搜索不再触发空查询扫描）：
 - 打开/编辑高级搜索时要求文本查询非空；空查询不再启动整树扫描，Worker 也只返回 0 项完成事件；关闭搜索清理筛选状态。

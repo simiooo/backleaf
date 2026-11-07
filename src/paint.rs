@@ -387,6 +387,19 @@ pub fn file_artwork(
             )
         })
 }
+/// A decoded image preview confined to `width` × `height`. `ObjectFit::Contain`
+/// centers the original aspect ratio and never paints outside the box.
+pub fn thumbnail(source: ImageSource, width: f32, height: f32) -> Div {
+    div()
+        .relative()
+        .w(px(width))
+        .h(px(height))
+        .flex_none()
+        .flex()
+        .items_center()
+        .justify_center()
+        .child(img(source).size_full().object_fit(ObjectFit::Contain))
+}
 pub fn icon(name: &'static str, colors: &'static Palette) -> Svg {
     svg()
         .path(name)

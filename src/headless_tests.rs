@@ -613,6 +613,28 @@ fn short_successful_operations_do_not_open_or_leave_a_task_panel() {
 }
 
 #[test]
+fn visible_image_cells_decode_thumbnails_lazily() {
+    let mut h = Harness::new(&["keep.txt"], None);
+    let directory = h.fixture.0.join("files");
+    let photo = directory.join("photo.png");
+    image::RgbaImage::from_fn(64, 32, |x, y| {
+        image::Rgba([(x * 4) as u8, (y * 8) as u8, 200, 255])
+    })
+    .save(&photo)
+    .unwrap();
+    let text = directory.join("notes.txt");
+    std::fs::write(&text, b"notes").unwrap();
+    h.key("f5");
+    h.wait("image and text entries listed", |this, _| {
+        this.source.count() == 3 && !this.watch_stale()
+    });
+    h.wait("visible image preview decoded", |this, _| {
+        this.image_previews.loaded(&photo)
+    });
+    assert!(!h.read(|this, _| this.image_previews.loaded(&text)));
+}
+
+#[test]
 fn finished_non_retryable_operations_hide_badge_and_panel() {
     use crate::operations::service::{Operation, Phase};
     let mut h = Harness::new(&["original.txt"], None);

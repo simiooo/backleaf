@@ -51,6 +51,7 @@ pub enum Event {
     },
     OleSourceEnded(i32),
     ApplicationIconsChanged,
+    ImagePreviewsChanged,
     WindowStateSaved {
         revision: u64,
         closed: bool,
