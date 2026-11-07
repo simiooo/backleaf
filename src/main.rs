@@ -56,6 +56,7 @@ mod selection_bytes;
 mod selection_smoke;
 mod session;
 mod shell_menu;
+mod startup;
 mod task_panel;
 #[cfg(test)]
 mod test_support;
@@ -177,6 +178,7 @@ impl Render for FileGrid {
 }
 impl Backleaf {
     fn new(mut options: Options, window: &mut Window, cx: &mut Context<Self>) -> Self {
+        crate::startup::mark("new_enter");
         let native_owner = Self::native_owner(window);
         let colors = options
             .theme
@@ -206,6 +208,7 @@ impl Backleaf {
         ));
         let application_icons = native_icons::Cache::new(tx.clone());
         let image_previews = image_preview::Cache::new(tx.clone());
+        crate::startup::mark("new_workers");
         let (operation_tx, operation_rx) = async_channel::bounded(1);
         let hub = operations::service::Hub::new(options.state_dir.clone(), operation_tx);
         cx.spawn(async move |this, cx| {
@@ -337,6 +340,7 @@ impl Backleaf {
                 tx.clone(),
             )
         });
+        crate::startup::mark("new_index");
         let drag = app_drag::DragUi::new(drag::Worker::new(tx.clone()));
         let watch = app_watch::WatchUi {
             generation: 1,
@@ -519,6 +523,8 @@ impl Backleaf {
         } else {
             None
         };
+        crate::startup::mark("new_ole");
+        crate::startup::mark("new_done");
         Self {
             application_icons,
             image_previews,
@@ -2169,6 +2175,9 @@ impl Render for Backleaf {
             .borrow_mut()
             .begin([width, height], window.scale_factor());
         let count = self.source.count();
+        if self.source.finished() && !self.cache.is_empty() {
+            crate::startup::ready("first_ready_render");
+        }
         self.arm_clock(window, cx);
         if !self.selection_busy() {
             self.stats
@@ -2552,6 +2561,7 @@ fn configure_native_corners(window: &Window, dark: bool) {
     }
 }
 fn open_backleaf_window(options: Options, cx: &mut App) {
+    crate::startup::mark("window_open");
     let mut bounds = Bounds::centered(None, size(px(options.width), px(options.height)), cx);
     if let Some(saved) = &options.restored {
         let r = saved.state.bounds;
@@ -2591,6 +2601,7 @@ fn open_backleaf_window(options: Options, cx: &mut App) {
     .expect("Backleaf window");
 }
 fn main() {
+    crate::startup::arm();
     let arguments: Vec<_> = std::env::args_os().collect();
     if arguments.len() == 3 && arguments[1] == "--session-status-file" {
         let result = session::locked();
@@ -2600,6 +2611,7 @@ fn main() {
         return;
     }
     let options = Options::parse();
+    crate::startup::mark("options");
     i18n::init_with_dir(&options.state_dir);
     let mut startup = Vec::new();
     if options.fixture.is_none() && options.path.is_none() && options.output.is_none() {
@@ -2624,11 +2636,13 @@ fn main() {
     if startup.is_empty() {
         startup.push(options);
     }
+    crate::startup::mark("window_state");
     Application::with_platform(Rc::new(
         gpui_windows::WindowsPlatform::new(false).expect("Windows graphics initialization"),
     ))
     .with_assets(paint::Assets)
     .run(move |cx| {
+        crate::startup::mark("platform_run");
         input::bind_keys(cx);
         cx.on_window_closed(|cx, _| {
             if cx.windows().is_empty() {
