@@ -613,6 +613,25 @@ impl Hub {
         self.view(id).is_some_and(|v| !v.phase.terminal())
     }
     #[cfg(test)]
+    pub(crate) fn finish_for_test(
+        &self,
+        id: u64,
+        phase: Phase,
+        failed: u64,
+        retryable: u64,
+        retried: bool,
+    ) {
+        let tasks = self.shared.tasks.lock().unwrap();
+        if let Some(task) = tasks.iter().find(|task| task.view.lock().unwrap().id == id) {
+            let mut view = task.view.lock().unwrap();
+            view.phase = phase;
+            view.failed = failed;
+            view.retryable = retryable;
+            view.retried = retried;
+        }
+        self.shared.wake.send(true);
+    }
+    #[cfg(test)]
     pub(crate) fn queued_for_test(&self, operation: Operation) -> u64 {
         self.register(operation, PathBuf::from("D:\\"), None)
             .unwrap()

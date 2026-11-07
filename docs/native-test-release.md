@@ -1,4 +1,8 @@
-Backleaf 0.1.0-preview.34 · Windows x64 测试版
+Backleaf 0.1.0-preview.35 · Windows x64 测试版
+
+无任务时不显示任务入口/结果面板：文件操作完成且没有可安全重试的失败项时，不再常驻标题栏“任务”入口（数字+下拉）和右下角结果面板；两者只在有进行中任务，或存在“重试”可操作的失败结果时显示，关闭/重试后同步消失。可重试失败仍保留面板与重试按钮。新增无头回归 `finished_non_retryable_operations_hide_badge_and_panel`，headless 现为 45 项；native 逻辑/文件检查 125 项。其它内容沿用 preview.34/33/32/31/30。
+
+以下保留 preview.34 及更早内容：
 
 高级搜索不再触发空查询扫描：打开或编辑高级搜索（类型、最近天数、最小/最大字节）时，如果文本查询为空，不再启动整树扫描；筛选面板要求先有非空查询，输入法/250ms 防抖尚未提交的输入按非空处理。搜索 Worker 增加空查询保护：即使收到空查询请求也只返回 0 项完成事件、不遍历磁盘；关闭搜索同时清理筛选编辑状态。新增无头回归 `advanced_filters_require_nonempty_query` 与 Worker 空查询测试，headless 现为 44 项；native 逻辑/文件检查 125 项。其它内容沿用 preview.33/32/31/30。
 

@@ -621,13 +621,7 @@ impl Backleaf {
             .hub
             .views()
             .into_iter()
-            .filter(|v| {
-                v.phase != Phase::Complete
-                    && !(v.phase == Phase::Canceled
-                        && v.successful == 0
-                        && v.failed == 0
-                        && v.unknown == 0)
-            })
+            .filter(operation_visible)
             .collect()
     }
     fn operation_target_is_current(&self, target: &std::path::Path) -> bool {
@@ -1811,15 +1805,7 @@ impl Backleaf {
         } else {
             format!("{} → {destination}", v.operation.label())
         };
-        let retry = (matches!(v.phase, Phase::Failed | Phase::Partial)
-            && v.failed > 0
-            && v.retryable > 0
-            && !v.retried
-            && matches!(
-                v.operation,
-                Operation::Copy | Operation::Move | Operation::Recycle
-            ))
-        .then(|| {
+        let retry = retry_available(&v).then(|| {
             self.text_action(
                 "retry",
                 "重试",
@@ -2104,6 +2090,24 @@ fn operation_summary(v: &View) -> String {
     } else {
         format!("{count} · {bytes}")
     }
+}
+
+/// A finished task without a safe retry has no remaining work, so it must not
+/// keep the operations badge or result panel visible. Retryable failures stay
+/// visible until the user retries or dismisses them.
+fn retry_available(v: &View) -> bool {
+    matches!(v.phase, Phase::Failed | Phase::Partial)
+        && v.failed > 0
+        && v.retryable > 0
+        && !v.retried
+        && matches!(
+            v.operation,
+            Operation::Copy | Operation::Move | Operation::Recycle
+        )
+}
+
+fn operation_visible(v: &View) -> bool {
+    !v.phase.terminal() || retry_available(v)
 }
 
 fn size(n: u64) -> String {

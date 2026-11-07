@@ -613,6 +613,29 @@ fn short_successful_operations_do_not_open_or_leave_a_task_panel() {
 }
 
 #[test]
+fn finished_non_retryable_operations_hide_badge_and_panel() {
+    use crate::operations::service::{Operation, Phase};
+    let mut h = Harness::new(&["original.txt"], None);
+    h.view.update(&mut h.cx, |this, cx| {
+        let id = this.files.hub.queued_for_test(Operation::Copy);
+        this.files.open = true;
+        assert_eq!(this.visible_operations().len(), 1);
+        this.files
+            .hub
+            .finish_for_test(id, Phase::Failed, 1, 0, false);
+        this.operations_changed(cx);
+        assert!(this.visible_operations().is_empty());
+        assert!(!this.files.open);
+
+        let retry = this.files.hub.queued_for_test(Operation::Move);
+        this.files
+            .hub
+            .finish_for_test(retry, Phase::Failed, 1, 1, false);
+        assert_eq!(this.visible_operations().len(), 1);
+    });
+}
+
+#[test]
 fn new_folder_in_equivalent_display_path_uses_snapshot_destination_identity() {
     let mut h = Harness::new(&["original.txt"], None);
     h.view.update(&mut h.cx, |this, cx| {
