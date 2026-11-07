@@ -635,6 +635,29 @@ fn visible_image_cells_decode_thumbnails_lazily() {
 }
 
 #[test]
+fn image_preview_cache_survives_unchanged_directory_refresh() {
+    let mut h = Harness::new(&["keep.txt"], None);
+    let directory = h.fixture.0.join("files");
+    let photo = directory.join("photo.png");
+    image::RgbaImage::from_pixel(32, 32, image::Rgba([10, 20, 30, 255]))
+        .save(&photo)
+        .unwrap();
+    h.key("f5");
+    h.wait("image entry and preview", |this, _| {
+        this.source.count() == 2 && this.image_previews.loaded(&photo)
+    });
+    let generation = h.read(|this, _| this.generation);
+    h.view.update(&mut h.cx, |this, cx| {
+        this.refresh_directory(None, false, cx);
+    });
+    h.wait("unchanged directory refresh", |this, _| {
+        this.generation > generation && !this.watch_stale()
+    });
+    h.frame();
+    assert!(h.read(|this, _| this.image_previews.loaded(&photo)));
+}
+
+#[test]
 fn finished_non_retryable_operations_hide_badge_and_panel() {
     use crate::operations::service::{Operation, Phase};
     let mut h = Harness::new(&["original.txt"], None);

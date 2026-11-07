@@ -467,7 +467,13 @@ impl Backleaf {
             if window.is_window_active()
                 && !std::mem::take(&mut this.navigation.menu_focus_transfer)
             {
-                this.mark_directory_dirty(cx);
+                // Bookkeeping generations change on every committed refresh; only
+                // touch the directory when the watcher actually reports a change.
+                // Otherwise focus/minimize transitions redraw everything for no
+                // filesystem reason.
+                if this.watch_stale() {
+                    this.mark_directory_dirty(cx);
+                }
                 this.refresh_search();
             }
             cx.notify();
@@ -2136,7 +2142,7 @@ impl Render for Backleaf {
             window,
         );
         self.image_previews.sync(
-            self.generation,
+            self.watch.applied,
             !self.session_locked && window.is_visible(),
             window,
         );

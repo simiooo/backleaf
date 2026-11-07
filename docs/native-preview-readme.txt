@@ -1,17 +1,18 @@
-拾径 / Backleaf 0.1.0-preview.37
+拾径 / Backleaf 0.1.0-preview.38
 
 Windows x64 便携测试版：解压整个ZIP，运行Backleaf.exe。或在PowerShell执行：
 irm https://raw.githubusercontent.com/simiooo/backleaf/staging/install.ps1 | iex
 
-本批次（图片预览选中溢出与重绘修复）：
+本批次（焦点切换不重解码图片）：
+- 最小化/失焦/重新聚焦不再无条件标记目录刷新；只有 watcher 确实报告内容变化（watch_stale）时才刷新，避免焦点切换引发整目录刷新。
+- 缩略图缓存失效改用“已应用的监听内容 epoch”（watch.applied），不再用每次记账刷新都会递增的 generation；内容未变的目录刷新保留已解码预览，不重新解码、不重新请求。
+- 仍只为当前可见行请求缩略图；新增 headless 回归 `image_preview_cache_survives_unchanged_directory_refresh`，headless 现为 47 项、native 127 项。
+
+以下保留 preview.37 及更早内容：
+
+preview.37（图片预览选中溢出与重绘修复）：
 - 选中/悬停底板现在按缩略图尺寸计算（新增 `surface_with_art`），图片不再超出蓝色选中容器；名称/提示命中区域同步使用预览高度。
 - 缩略图解码结果每 20ms 合并为一次窗口通知，避免每个缩略图触发一次整窗重渲染；已解码图片在滚动/选中时复用缓存。
-- 网格仍只请求当前可见行（含前后 2 行预取）的图片；切换目录/隐藏窗口清理缓存。
-
-以下保留 preview.36 及更早内容：
-
-preview.36（可视区内图片缩略图）：
-- 网格只对当前可见行（uniform_list 虚拟化 + 前后 2 行预取）请求缩略图；后台单线程解码/缩放，256 项 LRU 缓存，切换目录或窗口隐藏时暂停并释放 GPU 图片。
 - 图片文件（png/jpg/jpeg/gif/webp/bmp/tif/tiff/ico）用实际内容替换类型图标；容器为单元格内宽 × 48px，按比例 contain 居中，最大化占用且不溢出；缩略图未就绪时先显示原类型图标。
 - HEIC/AVIF/视频暂不解码；大于 64MB 或解码失败的文件回退图标；GIF/WebP 只显示首帧；JPEG 应用 EXIF 方向。
 - 搜索结果中的图片也使用缩略图；新增无头回归 `visible_image_cells_decode_thumbnails_lazily`，headless 现为 46 项、native 127 项。

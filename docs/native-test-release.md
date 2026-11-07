@@ -1,4 +1,8 @@
-Backleaf 0.1.0-preview.37 · Windows x64 测试版
+Backleaf 0.1.0-preview.38 · Windows x64 测试版
+
+焦点切换不重解码图片：最小化、失焦和重新聚焦不再无条件标记目录刷新；只有 watcher 真正报告内容变化（`watch_stale`）时才刷新。缩略图缓存失效改用“已应用的监听内容 epoch”（`watch.applied`），不再使用每次记账刷新都会递增的 generation；内容未变的目录刷新会保留已解码预览，不重新解码或请求。网格仍只为当前可见行请求缩略图。新增 headless 回归 `image_preview_cache_survives_unchanged_directory_refresh`；headless 现为 47 项、native 逻辑/文件检查 127 项。焦点切换本身仍会重绘一次窗口（活动/非活动选中色与窗口状态变化），但不再清空/重解码图片。
+
+以下保留 preview.37 及更早内容：
 
 图片预览选中溢出与重绘修复：文件底板现在用 `surface_with_art` 把缩略图纳入尺寸计算，选中/悬停背景完整包住图片而不再溢出；名称与提示命中区域同步使用预览高度。缩略图解码结果由独立通知线程按 20ms 批量合并为一次窗口通知，避免每个缩略图触发一次整窗重渲染；已解码图片继续复用缓存，网格仍只为可见行（前后各 2 行预取）请求解码。原有 46 项 headless 与 127 项 native 检查全部通过。
 
