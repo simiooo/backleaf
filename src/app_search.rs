@@ -46,6 +46,7 @@ pub struct SearchUi {
     pub content_error: Option<String>,
     pub content_token: u64,
     pub content_latest: Arc<AtomicU64>,
+    pub content_cache: Arc<crate::content_search::TextCache>,
     pub content_selected: Option<usize>,
     pub content_scroll: UniformListScrollHandle,
 }
@@ -88,6 +89,7 @@ impl SearchUi {
             content_error: None,
             content_token: 0,
             content_latest: Arc::new(AtomicU64::new(0)),
+            content_cache: Arc::new(crate::content_search::TextCache::new()),
             content_selected: None,
             content_scroll: UniformListScrollHandle::new(),
         }
@@ -400,6 +402,7 @@ impl Backleaf {
             crate::content_search::DEFAULT_LIMIT,
             self.tx.clone(),
             self.search.content_latest.clone(),
+            self.search.content_cache.clone(),
         );
         cx.notify();
     }
@@ -871,11 +874,17 @@ impl Backleaf {
     ) -> AnyElement {
         let colors = self.colors;
         let viewport = window.viewport_size();
-        let left = layout::content_left(self.sidebar_width())
-            .min((f32::from(viewport.width) - 336.).max(0.));
-        let top = layout::CHROME.bar_height + 8.;
-        let width = (f32::from(viewport.width) - left - 16.).max(320.);
-        let height = (f32::from(viewport.height) - top - 16.).max(240.);
+        // Cover exactly the same rounded file surface as the grid, without
+        // replacing the live grid state underneath.
+        let left = self.sidebar_width() + layout::SURFACE.margin_x;
+        let top = layout::SURFACE.margin_y;
+        let width =
+            (f32::from(viewport.width) - self.sidebar_width() - 2. * layout::SURFACE.margin_x)
+                .max(1.);
+        let height = (f32::from(viewport.height)
+            - layout::CHROME.bar_height
+            - 2. * layout::SURFACE.margin_y)
+            .max(1.);
         let inner_width = (width - 32.).max(1.);
         let gap = 12.;
         let minimum_card = 260.;
@@ -948,9 +957,9 @@ impl Backleaf {
                                             style.color = colors.color(ColorRole::Primary);
                                             let highlight = HighlightStyle {
                                                 background_color: Some(
-                                                    colors.color(ColorRole::InputActive),
+                                                    colors.color(ColorRole::MatchSurface),
                                                 ),
-                                                color: Some(colors.color(ColorRole::Primary)),
+                                                color: Some(colors.color(ColorRole::MatchContent)),
                                                 ..Default::default()
                                             };
                                             let styled = StyledText::new(SharedString::from(
@@ -1097,7 +1106,7 @@ impl Backleaf {
                 div()
                     .id("content-search-panel")
                     .absolute()
-                    .top(px(8.))
+                    .top(px(top))
                     .left(px(left))
                     .w(px(width))
                     .h(px(height))
@@ -1106,9 +1115,9 @@ impl Backleaf {
                     .gap(px(10.))
                     .px(px(16.))
                     .py(px(12.))
-                    .rounded(px(14.))
-                    .bg(colors.color(ColorRole::Floating))
-                    .shadow(vec![colors.shadow()])
+                    .rounded(px(layout::SURFACE.radius))
+                    .bg(colors.color(ColorRole::Files))
+                    .shadow(colors.file_surface_shadows())
                     .occlude()
                     .on_mouse_down(MouseButton::Left, |_, _, cx| cx.stop_propagation())
                     .child(self.view_toolbar(cx))

@@ -32,8 +32,10 @@ pub enum Role {
     PaperContour,
     Negative,
     Positive,
+    MatchSurface,
+    MatchContent,
 }
-const ROLES: [(Role, &str); 27] = [
+const ROLES: [(Role, &str); 29] = [
     (Role::Canvas, "surface/canvas"),
     (Role::Files, "surface/files"),
     (Role::Chrome, "surface/chrome"),
@@ -61,10 +63,12 @@ const ROLES: [(Role, &str); 27] = [
     (Role::PaperContour, "icon/paper-contour"),
     (Role::Negative, "status/negative"),
     (Role::Positive, "status/positive"),
+    (Role::MatchSurface, "highlight/match-surface"),
+    (Role::MatchContent, "highlight/match-content"),
 ];
 pub struct Palette {
     pub dark: bool,
-    values: [u32; 27],
+    values: [u32; 29],
 }
 impl Palette {
     fn load(dark: bool) -> Self {
@@ -72,7 +76,7 @@ impl Palette {
             serde_json::from_str(include_str!("../design/color-system.json"))
                 .expect("design color system");
         let mode = &source["modes"][if dark { "Dark" } else { "Light" }];
-        let mut values = [0; 27];
+        let mut values = [0; 29];
         for (role, key) in ROLES {
             let value = mode[key]
                 .as_str()

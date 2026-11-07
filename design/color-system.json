@@ -25,6 +25,8 @@
       "icon/paper-fill": "#FFFFFF",
       "status/negative": "#B32624",
       "status/positive": "#246B45",
+      "highlight/match-surface": "#FFE08A",
+      "highlight/match-content": "#4A3200",
       "surface/input-rest": "#F2F2F7",
       "surface/input-active": "#FFFFFF",
       "icon/paper-contour": "#C7C7CC",
@@ -54,6 +56,8 @@
       "icon/paper-fill": "#2C2C2E",
       "status/negative": "#FFB4AB",
       "status/positive": "#8AD5AC",
+      "highlight/match-surface": "#6B5418",
+      "highlight/match-content": "#FFE7A3",
       "surface/input-rest": "#1C1C1E",
       "surface/input-active": "#3A3A3C",
       "icon/paper-contour": "#8E8E93",
@@ -71,6 +75,7 @@
     "inactive-selected": "Keep the raised geometry; reduce shadow strength; filename returns to primary content color.",
     "disabled": "Lower opacity only; no new outline or color block.",
     "floating": "Menus, task panels and dialogs use floating surfaces plus layered soft shadows; content remains white/black rather than gray.",
-    "file-types": "Word/PDF/Excel/code/archive etc. keep their existing category colors; a theme change must never recolor file-type art."
+    "file-types": "Word/PDF/Excel/code/archive etc. keep their existing category colors; a theme change must never recolor file-type art.",
+    "match-highlight": "Search matches use a dedicated warm amber highlight distinct from blue selection; the highlight carries its own readable content color."
   }
 }
