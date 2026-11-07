@@ -1,14 +1,21 @@
-拾径 / Backleaf 0.1.0-preview.40
+拾径 / Backleaf 0.1.0-preview.41
 
 Windows x64 便携测试版：解压整个ZIP，运行Backleaf.exe。或在PowerShell执行：
 irm https://raw.githubusercontent.com/simiooo/backleaf/staging/install.ps1 | iex
 
-本批次（Shell 异步次级菜单空状态）：
+本批次（内容搜索 / grep 式文本搜索）：
+- 搜索框工具栏新增“内容”模式：从当前搜索位置递归检查文件内容，不再只匹配文件名；普通文件名搜索仍默认保留。
+- 文本类型按内容嗅探而非后缀：接受 UTF-8、UTF-8 BOM、UTF-16 BOM，拒绝含 NUL、控制字符比例异常或非法 UTF-8 的文件；边界为单文件 8MB、20,000 文件、8,000 目录、累计 256MB、最多 200 个结果，超出显示“结果已截断”。
+- 结果为响应式卡片网格：占据内容区大部分空间，按宽度自动 1–N 列；卡片无边框/分割线，用文件图标、名称字重、路径/行号次级文字和间距组织。卡片主体是匹配上下文块（前后各一行），所有匹配文本用浅色块高亮；点击卡片或 Enter 定位到文件。
+- 匹配为 ASCII 大小写不敏感；不支持正则、全词匹配和 GBK/旧编码（非 UTF-8/BOM 文本会被判定为非文本）。
+- 新增 `content_search` 单元测试（文本嗅探/上下文高亮）与 headless `content_search_finds_text_with_context_and_highlights`；headless 现为 50 项、native 131 项。
+- 内容模式暂不支持筛选/保存视图，也不做逐次增量索引；每次查询重新扫描，受上述上限保护。
+
+以下保留 preview.40 及更早内容：
+
+preview.40（Shell 异步次级菜单空状态）：
 - 修复 Shell 扩展次级菜单异步返回空列表时弹出空白面板的问题：现在显示一行禁用的“没有可用的菜单项”，保持正常菜单行高，不再出现空白半截面板。
 - 次级菜单仍等待异步行返回后才创建弹窗，避免加载占位窗口反复调整大小；查询失败显示“扩展暂不可用”。
-- 新增 headless 回归 `empty_async_shell_submenu_keeps_a_readable_empty_row`，headless 现为 49 项、native 129 项。
-
-以下保留 preview.39 及更早内容：
 
 preview.39（高级搜索容量单位与字段级错误）：
 - 最小/最大容量支持宽容输入：`10MB`、`500 KB`、`1.5GB`、`2g`、`1024`、`3 字节` 等，按 B/KB/MB/GB/TB 二进制换算；未识别单位、负数、溢出会拒绝。

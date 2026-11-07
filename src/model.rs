@@ -81,6 +81,7 @@ pub enum Event {
         id: Option<usize>,
     },
     Search(crate::search::Notice),
+    ContentSearch(crate::content_search::Notice),
     Navigation(crate::navigation::Notice),
     Located {
         generation: u64,

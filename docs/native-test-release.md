@@ -1,4 +1,8 @@
-Backleaf 0.1.0-preview.40 · Windows x64 测试版
+Backleaf 0.1.0-preview.41 · Windows x64 测试版
+
+内容搜索（grep 式文本搜索）：搜索工具栏新增“内容”模式，从当前搜索位置递归检查文件内容，不再只匹配文件名；普通文件名搜索仍为默认。文本类型按内容嗅探：接受 UTF-8、UTF-8 BOM、UTF-16 BOM，拒绝 NUL、控制字符比例异常或非法 UTF-8；边界为单文件 8MB、20,000 文件、8,000 目录、累计 256MB、最多 200 结果，超出标记“结果已截断”。结果为响应式卡片网格，占据内容区大部分空间并按宽度自动 1–N 列；卡片无边框/分割线，用图标、名称字重、路径/行号次级文字和间距组织；主体是匹配上下文块（前后各一行），所有匹配文本浅色高亮；点击卡片或 Enter 定位。匹配为 ASCII 大小写不敏感；暂不支持正则、全词、GBK/旧编码与内容索引，内容模式也不支持筛选/保存视图。新增 content_search 单元测试与 headless `content_search_finds_text_with_context_and_highlights`；headless 现为 50 项、native 逻辑/文件检查 131 项。
+
+以下保留 preview.40 及更早内容：
 
 Shell 异步次级菜单空状态：Windows Shell 扩展次级菜单异步返回空列表时，现在显示一行禁用的“没有可用的菜单项”，保持正常菜单行高，不再出现空白半截面板；查询失败显示“扩展暂不可用”。次级菜单仍等待异步行返回后才创建弹窗，避免加载占位窗口反复调整大小。新增 headless 回归 `empty_async_shell_submenu_keeps_a_readable_empty_row`；headless 现为 49 项、native 逻辑/文件检查 129 项。
 

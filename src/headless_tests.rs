@@ -1174,6 +1174,29 @@ fn dynamic_child_waits_for_rows_and_keeps_both_ancestors_stable() {
 }
 
 #[test]
+fn content_search_finds_text_with_context_and_highlights() {
+    let mut h = Harness::new(&["note.txt"], None);
+    h.key("ctrl-f");
+    h.text("contents");
+    h.wait("name search debounce", |this, _| this.search.started);
+    let view = h.view.clone();
+    h.cx.update_window(h.window.into(), |_, window, cx| {
+        view.update(cx, |this, cx| this.toggle_content_mode(window, cx));
+    })
+    .unwrap();
+    h.wait("content search result", |this, _| {
+        this.search.content_done && !this.search.content_results.is_empty()
+    });
+    h.read(|this, _| {
+        let found = &this.search.content_results[0];
+        assert_eq!(found.name, "note.txt");
+        assert!(found.snippet.contains("contents"));
+        let range = found.highlights.first().expect("highlight").clone();
+        assert_eq!(&found.snippet[range], "contents");
+    });
+}
+
+#[test]
 fn empty_async_shell_submenu_keeps_a_readable_empty_row() {
     let mut h = Harness::new(&["note.txt"], None);
     let (x, y) = h.first_icon();

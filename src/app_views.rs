@@ -834,10 +834,89 @@ impl Backleaf {
         .into_any_element()
     }
     pub fn view_toolbar(&self, cx: &mut Context<Self>) -> AnyElement {
-        div().flex().items_center().gap(px(8.)).child(div().flex_1().min_w_0().truncate().child(self.search.saved.as_ref().map(|e|format!("{}{}",e.title,if matches!(&e.destination,Destination::View(v)if *v!=self.search.definition){" · 已修改"}else{""})).unwrap_or_default()))
-            .child(self.button("filter","筛选",cx.listener(|this,_,window,cx|this.toggle_view_filters(window,cx))))
-            .child(self.button("save",if self.search.saved.is_some(){"更新视图"}else{"保存视图"},cx.listener(|this,_,window,cx|this.begin_save_view(false,window,cx))))
-            .when(self.search.saved.is_some(),|d|d.child(self.button("copy","另存为",cx.listener(|this,_,window,cx|this.begin_save_view(true,window,cx)))))
+        let colors = self.colors;
+        let content_mode = self.search.content_mode;
+        div()
+            .flex()
+            .items_center()
+            .gap(px(8.))
+            .child(
+                div()
+                    .flex_1()
+                    .min_w_0()
+                    .truncate()
+                    .child(if content_mode {
+                        "内容搜索".to_string()
+                    } else {
+                        self.search
+                            .saved
+                            .as_ref()
+                            .map(|e| {
+                                format!(
+                                    "{}{}",
+                                    e.title,
+                                    if matches!(&e.destination, Destination::View(v) if *v != self.search.definition) {
+                                        " · 已修改"
+                                    } else {
+                                        ""
+                                    }
+                                )
+                            })
+                            .unwrap_or_default()
+                    }),
+            )
+            .child(
+                div()
+                    .id("content-search-toggle")
+                    .h(px(28.))
+                    .px(px(10.))
+                    .flex()
+                    .items_center()
+                    .rounded(px(8.))
+                    .role(Role::Button)
+                    .aria_label("在文件内容中搜索")
+                    .tooltip(tooltip("在文件内容中搜索（递归检查文本文件）".into(), colors))
+                    .focusable()
+                    .tab_stop(true)
+                    .when(content_mode, |d| {
+                        d.bg(colors.color(ColorRole::InputActive))
+                            .text_color(colors.color(ColorRole::Primary))
+                    })
+                    .when(!content_mode, |d| {
+                        d.text_color(colors.color(ColorRole::Secondary))
+                            .hover(move |d| {
+                                d.text_color(colors.color(ColorRole::Primary))
+                                    .bg(colors.color(ColorRole::Hover))
+                            })
+                    })
+                    .on_click(cx.listener(|this, _, window, cx| {
+                        this.toggle_content_mode(window, cx);
+                    }))
+                    .child("内容"),
+            )
+            .when(!content_mode, |d| {
+                d.child(self.button(
+                    "filter",
+                    "筛选",
+                    cx.listener(|this, _, window, cx| this.toggle_view_filters(window, cx)),
+                ))
+                .child(self.button(
+                    "save",
+                    if self.search.saved.is_some() {
+                        "更新视图"
+                    } else {
+                        "保存视图"
+                    },
+                    cx.listener(|this, _, window, cx| this.begin_save_view(false, window, cx)),
+                ))
+                .when(self.search.saved.is_some(), |d| {
+                    d.child(self.button(
+                        "copy",
+                        "另存为",
+                        cx.listener(|this, _, window, cx| this.begin_save_view(true, window, cx)),
+                    ))
+                })
+            })
             .into_any_element()
     }
     pub fn view_popovers(&self, cx: &mut Context<Self>) -> AnyElement {

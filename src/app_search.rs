@@ -4,6 +4,10 @@ use crate::{
     search::{Notice, Row, Worker},
 };
 use std::collections::BTreeMap;
+use std::sync::{
+    Arc,
+    atomic::{AtomicU64, Ordering},
+};
 
 pub struct SearchUi {
     pub(super) refresh: Option<Notice>,
@@ -34,6 +38,16 @@ pub struct SearchUi {
     pub(super) selected: Option<usize>,
     pub(super) scroll: UniformListScrollHandle,
     pub columns: usize,
+    pub content_mode: bool,
+    pub content_results: Vec<crate::content_search::Found>,
+    pub content_scanned: usize,
+    pub content_done: bool,
+    pub content_truncated: bool,
+    pub content_error: Option<String>,
+    pub content_token: u64,
+    pub content_latest: Arc<AtomicU64>,
+    pub content_selected: Option<usize>,
+    pub content_scroll: UniformListScrollHandle,
 }
 impl SearchUi {
     pub fn new(worker: Worker) -> Self {
@@ -66,6 +80,16 @@ impl SearchUi {
             selected: None,
             scroll: UniformListScrollHandle::new(),
             columns: 1,
+            content_mode: false,
+            content_results: Vec::new(),
+            content_scanned: 0,
+            content_done: false,
+            content_truncated: false,
+            content_error: None,
+            content_token: 0,
+            content_latest: Arc::new(AtomicU64::new(0)),
+            content_selected: None,
+            content_scroll: UniformListScrollHandle::new(),
         }
     }
 }
@@ -92,6 +116,9 @@ impl Backleaf {
     }
     pub fn refresh_search(&mut self) {
         if !self.search.open || self.search.query.trim().is_empty() {
+            return;
+        }
+        if self.search.content_mode {
             return;
         }
         if !self.search.started {
@@ -121,6 +148,17 @@ impl Backleaf {
         );
         self.search.token += 1;
         self.search.worker.cancel(self.search.token);
+        self.search.content_token += 1;
+        self.search
+            .content_latest
+            .store(self.search.content_token, Ordering::Release);
+        self.search.content_mode = false;
+        self.search.content_results.clear();
+        self.search.content_done = false;
+        self.search.content_selected = None;
+        self.search.content_error = None;
+        self.search.content_scanned = 0;
+        self.search.content_truncated = false;
         self.search.input = None;
         self.search.subscription = None;
         self.search.rows.clear();
@@ -175,6 +213,14 @@ impl Backleaf {
         self.search.count = 0;
         self.search.error = None;
         self.search.selected = None;
+        self.search.content_mode = false;
+        self.search.content_results.clear();
+        self.search.content_done = false;
+        self.search.content_selected = None;
+        self.search.content_error = None;
+        self.search.content_scanned = 0;
+        self.search.content_truncated = false;
+        self.search.content_scroll = UniformListScrollHandle::new();
         self.search.scroll = UniformListScrollHandle::new();
         let input = cx.new(|cx| {
             let mut input =
@@ -205,6 +251,16 @@ impl Backleaf {
                         this.search.started = false;
                         this.search.error = None;
                         this.search.requested = 0..0;
+                        this.search.content_token += 1;
+                        this.search
+                            .content_latest
+                            .store(this.search.content_token, Ordering::Release);
+                        this.search.content_results.clear();
+                        this.search.content_done = false;
+                        this.search.content_selected = None;
+                        this.search.content_error = None;
+                        this.search.content_scanned = 0;
+                        this.search.content_truncated = false;
                         let value = input.read(cx).value();
                         if value.trim().is_empty() {
                             this.search.query.clear();
@@ -242,6 +298,14 @@ impl Backleaf {
                                 this.close_search();
                                 this.files.focus_grid = true;
                             }
+                        } else if this.search.content_mode {
+                            if let Some(index) = this
+                                .search
+                                .content_selected
+                                .or_else(|| (!this.search.content_results.is_empty()).then_some(0))
+                            {
+                                this.reveal_content_result(index, cx);
+                            }
                         } else if this.search.query == value.trim()
                             && this.search.selected.is_some()
                         {
@@ -269,6 +333,10 @@ impl Backleaf {
             self.search.done = false;
             return;
         }
+        if self.search.content_mode {
+            self.start_content_search(query, cx);
+            return;
+        }
         self.search.token += 1;
         self.search.worker.cancel(self.search.token);
         self.search.rows.clear();
@@ -288,6 +356,146 @@ impl Backleaf {
             .worker
             .search_view(self.search.token, self.search.definition.clone());
         cx.notify();
+    }
+    pub fn start_content_search(&mut self, value: String, cx: &mut Context<Self>) {
+        let query = value.trim().to_owned();
+        if query.is_empty() {
+            self.search.content_results.clear();
+            self.search.content_done = false;
+            self.search.content_error = None;
+            self.search.content_selected = None;
+            self.search.started = false;
+            self.search.done = false;
+            return;
+        }
+        self.search.content_token += 1;
+        let token = self.search.content_token;
+        self.search.content_latest.store(token, Ordering::Release);
+        self.search.token += 1;
+        self.search.worker.cancel(self.search.token);
+        self.search.content_results.clear();
+        self.search.content_scanned = 0;
+        self.search.content_done = false;
+        self.search.content_truncated = false;
+        self.search.content_error = None;
+        self.search.content_selected = None;
+        self.search.content_scroll = UniformListScrollHandle::new();
+        self.search.query = query.clone();
+        self.search.definition.query = query.clone();
+        self.search.started = true;
+        self.search.done = false;
+        self.search.scanned = 0;
+        self.search.count = 0;
+        self.search.selected = None;
+        crate::content_search::spawn(
+            token,
+            self.search.root.clone(),
+            query,
+            crate::content_search::DEFAULT_LIMIT,
+            self.tx.clone(),
+            self.search.content_latest.clone(),
+        );
+        cx.notify();
+    }
+    pub fn accept_content_search(
+        &mut self,
+        notice: crate::content_search::Notice,
+        cx: &mut Context<Self>,
+    ) {
+        let crate::content_search::Notice::Batch {
+            token,
+            matches,
+            scanned,
+            done,
+            truncated,
+            error,
+        } = notice;
+        if !self.search.open || !self.search.content_mode || token != self.search.content_token {
+            return;
+        }
+        self.search.content_results.extend(matches);
+        self.search.content_scanned = scanned;
+        self.search.content_done = done;
+        self.search.content_truncated |= truncated;
+        if let Some(error) = error {
+            self.search.content_error = Some(error);
+        }
+        if self.search.content_selected.is_none() && !self.search.content_results.is_empty() {
+            self.search.content_selected = Some(0);
+        }
+        if done {
+            self.search.done = true;
+            self.search.count = self.search.content_results.len();
+        }
+        cx.notify();
+    }
+    pub fn toggle_content_mode(&mut self, window: &mut Window, cx: &mut Context<Self>) {
+        if self
+            .search
+            .input
+            .as_ref()
+            .is_none_or(|input| input.read(cx).value().trim().is_empty())
+        {
+            return;
+        }
+        self.search.content_mode = !self.search.content_mode;
+        self.search.content_results.clear();
+        self.search.content_done = false;
+        self.search.content_selected = None;
+        self.search.content_error = None;
+        self.search.content_scanned = 0;
+        self.search.content_truncated = false;
+        if self.search.content_mode {
+            let value = self
+                .search
+                .input
+                .as_ref()
+                .map(|input| input.read(cx).value())
+                .unwrap_or_default();
+            self.start_content_search(value, cx);
+        } else {
+            self.search.content_token += 1;
+            self.search
+                .content_latest
+                .store(self.search.content_token, Ordering::Release);
+            let value = self
+                .search
+                .input
+                .as_ref()
+                .map(|input| input.read(cx).value())
+                .unwrap_or_default();
+            self.start_search(value, cx);
+        }
+        window.focus(
+            &self
+                .search
+                .input
+                .as_ref()
+                .expect("search input")
+                .focus_handle(cx),
+            cx,
+        );
+        cx.notify();
+    }
+    pub fn reveal_content_result(&mut self, index: usize, cx: &mut Context<Self>) {
+        let Some(found) = self.search.content_results.get(index).cloned() else {
+            return;
+        };
+        let Some(parent) = found.path.parent() else {
+            return;
+        };
+        let parent = parent.to_owned();
+        let name = found
+            .path
+            .file_name()
+            .map(std::ffi::OsString::from)
+            .unwrap_or_default();
+        self.close_search();
+        self.navigate(parent, true, cx);
+        self.files.locate_token += 1;
+        self.files.locate_rename = false;
+        self.source.locate(self.files.locate_token, name);
+        self.files.focus_grid = true;
     }
     pub fn accept_search(&mut self, notice: Notice, cx: &mut Context<Self>) {
         if !self.search.open {
@@ -647,7 +855,284 @@ impl Backleaf {
             })
             .into_any_element()
     }
+    pub fn content_search_overlay(
+        &mut self,
+        window: &Window,
+        cx: &mut Context<Self>,
+    ) -> AnyElement {
+        let colors = self.colors;
+        let viewport = window.viewport_size();
+        let left = layout::content_left(self.sidebar_width())
+            .min((f32::from(viewport.width) - 336.).max(0.));
+        let top = layout::CHROME.bar_height + 8.;
+        let width = (f32::from(viewport.width) - left - 16.).max(320.);
+        let height = (f32::from(viewport.height) - top - 16.).max(240.);
+        let inner_width = (width - 32.).max(1.);
+        let gap = 12.;
+        let minimum_card = 260.;
+        let columns = (((inner_width + gap) / (minimum_card + gap)).floor() as usize).max(1);
+        let card_width = ((inner_width - gap * (columns - 1) as f32) / columns as f32).max(1.);
+        let card_height = 160.;
+        let count = self.search.content_results.len();
+        let rows = count.div_ceil(columns);
+        let status = if let Some(error) = &self.search.content_error {
+            error.clone()
+        } else if !self.search.started {
+            String::new()
+        } else if !self.search.content_done {
+            format!(
+                "内容搜索中 · 已检查 {} 个文件",
+                number(self.search.content_scanned)
+            )
+        } else if count == 0 {
+            "没有匹配内容".into()
+        } else {
+            format!(
+                "{} 个文件包含“{}”{}",
+                number(count),
+                self.search.query,
+                if self.search.content_truncated {
+                    " · 结果已截断"
+                } else {
+                    ""
+                }
+            )
+        };
+        let scope = format!(
+            "内容 · {} · 含子文件夹",
+            navigation::display_name(&self.search.root)
+        );
+        let empty = if let Some(error) = &self.search.content_error {
+            error.clone()
+        } else if !self.search.content_done {
+            "正在扫描文件内容…".into()
+        } else {
+            "没有匹配内容".into()
+        };
+        let list = if rows > 0 {
+            uniform_list(
+                "content-results",
+                rows,
+                cx.processor(move |this, range: Range<usize>, window, cx| {
+                    range
+                        .map(|row| {
+                            div()
+                                .h(px(card_height))
+                                .w_full()
+                                .flex()
+                                .gap(px(gap))
+                                .children(
+                                    (row * columns
+                                        ..((row + 1) * columns)
+                                            .min(this.search.content_results.len()))
+                                        .map(|index| {
+                                            let found = &this.search.content_results[index];
+                                            let selected =
+                                                this.search.content_selected == Some(index);
+                                            let name = found.name.clone();
+                                            let path = found.path.to_string_lossy().into_owned();
+                                            let line = found.line;
+                                            let matches = found.matches;
+                                            let mut style = window.text_style();
+                                            style.font_size = px(12.).into();
+                                            style.line_height = px(18.).into();
+                                            style.color = colors.color(ColorRole::Primary);
+                                            let highlight = HighlightStyle {
+                                                background_color: Some(
+                                                    colors.color(ColorRole::InputActive),
+                                                ),
+                                                color: Some(colors.color(ColorRole::Primary)),
+                                                ..Default::default()
+                                            };
+                                            let styled = StyledText::new(SharedString::from(
+                                                found.snippet.clone(),
+                                            ))
+                                            .with_default_highlights(
+                                                &style,
+                                                found
+                                                    .highlights
+                                                    .iter()
+                                                    .cloned()
+                                                    .map(|range| (range, highlight)),
+                                            );
+                                            let icon = file_icons::FileIcon::for_name(
+                                                std::ffi::OsStr::new(&name),
+                                                false,
+                                            )
+                                            .asset(colors.dark)
+                                            .into();
+                                            div()
+                                                .id(("content-card", index))
+                                                .w(px(card_width))
+                                                .h(px(card_height))
+                                                .flex_none()
+                                                .flex()
+                                                .flex_col()
+                                                .gap(px(5.))
+                                                .px(px(10.))
+                                                .py(px(8.))
+                                                .rounded(px(10.))
+                                                .when(selected, |d| {
+                                                    d.bg(colors.color(ColorRole::InputActive))
+                                                })
+                                                .hover(move |d| {
+                                                    d.bg(colors.color(ColorRole::Hover))
+                                                })
+                                                .on_click(cx.listener(move |this, _, _, cx| {
+                                                    this.reveal_content_result(index, cx);
+                                                    cx.stop_propagation();
+                                                }))
+                                                .child(
+                                                    div()
+                                                        .flex()
+                                                        .items_center()
+                                                        .gap(px(7.))
+                                                        .child(paint::file_artwork(
+                                                            icon, 18., false, colors,
+                                                        ))
+                                                        .child(
+                                                            div()
+                                                                .flex_1()
+                                                                .min_w_0()
+                                                                .truncate()
+                                                                .text_size(px(13.))
+                                                                .font_weight(FontWeight::SEMIBOLD)
+                                                                .child(name),
+                                                        )
+                                                        .when(matches > 1, |d| {
+                                                            d.child(
+                                                                div()
+                                                                    .text_size(px(11.))
+                                                                    .text_color(colors.color(
+                                                                        ColorRole::Secondary,
+                                                                    ))
+                                                                    .child(format!("×{matches}")),
+                                                            )
+                                                        }),
+                                                )
+                                                .child(
+                                                    div()
+                                                        .h(px(14.))
+                                                        .truncate()
+                                                        .text_size(px(10.5))
+                                                        .text_color(
+                                                            colors.color(ColorRole::Secondary),
+                                                        )
+                                                        .child(format!("第 {line} 行 · {path}")),
+                                                )
+                                                .child(
+                                                    div()
+                                                        .flex_1()
+                                                        .min_h_0()
+                                                        .overflow_hidden()
+                                                        .child(styled),
+                                                )
+                                                .into_any_element()
+                                        })
+                                        .collect::<Vec<_>>(),
+                                )
+                                .into_any_element()
+                        })
+                        .collect::<Vec<_>>()
+                }),
+            )
+            .h_full()
+            .track_scroll(&self.search.content_scroll)
+            .into_any_element()
+        } else {
+            div()
+                .flex_1()
+                .min_h_0()
+                .flex()
+                .flex_col()
+                .items_center()
+                .justify_center()
+                .gap(px(6.))
+                .child(
+                    div()
+                        .text_size(px(15.))
+                        .font_weight(FontWeight::MEDIUM)
+                        .text_color(colors.color(ColorRole::Primary))
+                        .child(empty),
+                )
+                .child(
+                    div()
+                        .text_size(px(12.))
+                        .text_color(colors.color(ColorRole::Secondary))
+                        .child("递归检查文本文件内容；可尝试更短、更具体的关键词"),
+                )
+                .into_any_element()
+        };
+        div()
+            .absolute()
+            .top(px(layout::CHROME.bar_height))
+            .bottom_0()
+            .left_0()
+            .right_0()
+            .occlude()
+            .on_mouse_down(
+                MouseButton::Left,
+                cx.listener(|this, _, window, cx| {
+                    this.close_search_checked(window, cx);
+                    cx.stop_propagation();
+                    cx.notify();
+                }),
+            )
+            .child(
+                div()
+                    .id("content-search-panel")
+                    .absolute()
+                    .top(px(8.))
+                    .left(px(left))
+                    .w(px(width))
+                    .h(px(height))
+                    .flex()
+                    .flex_col()
+                    .gap(px(10.))
+                    .px(px(16.))
+                    .py(px(12.))
+                    .rounded(px(14.))
+                    .bg(colors.color(ColorRole::Floating))
+                    .shadow(vec![colors.shadow()])
+                    .occlude()
+                    .on_mouse_down(MouseButton::Left, |_, _, cx| cx.stop_propagation())
+                    .child(self.view_toolbar(cx))
+                    .child(
+                        div()
+                            .flex()
+                            .items_center()
+                            .gap(px(8.))
+                            .child(
+                                div()
+                                    .truncate()
+                                    .text_size(px(12.))
+                                    .text_color(colors.color(ColorRole::Secondary))
+                                    .child(scope),
+                            )
+                            .when(!status.is_empty(), |d| {
+                                d.child(
+                                    div()
+                                        .truncate()
+                                        .text_size(px(12.))
+                                        .text_color(colors.color(
+                                            if self.search.content_error.is_some() {
+                                                ColorRole::Negative
+                                            } else {
+                                                ColorRole::Secondary
+                                            },
+                                        ))
+                                        .child(status),
+                                )
+                            }),
+                    )
+                    .child(div().flex_1().min_h_0().child(list)),
+            )
+            .into_any_element()
+    }
     pub fn search_overlay(&mut self, window: &Window, cx: &mut Context<Self>) -> AnyElement {
+        if self.search.content_mode {
+            return self.content_search_overlay(window, cx);
+        }
         let colors = self.colors;
         let width = (f32::from(window.viewport_size().width) - 156.).clamp(240., 560.);
         let height = (f32::from(window.viewport_size().height) - 192.).clamp(48., 384.);

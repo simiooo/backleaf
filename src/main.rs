@@ -11,6 +11,7 @@ mod app_search;
 mod app_views;
 mod app_watch;
 mod capacity_input;
+mod content_search;
 mod directory_snapshot;
 mod drag;
 mod file_geometry;
@@ -744,6 +745,7 @@ impl Backleaf {
                 cx.notify();
             }
             Event::Search(notice) => self.accept_search(notice, cx),
+            Event::ContentSearch(notice) => self.accept_content_search(notice, cx),
             Event::Navigation(notice) => self.accept_navigation(notice, cx),
             Event::ApplicationIconsChanged => cx.notify(),
             Event::ImagePreviewsChanged => cx.notify(),
