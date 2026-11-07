@@ -1,6 +1,10 @@
-Backleaf 0.1.0-preview.44 · Windows x64 测试版
+Backleaf 0.1.0-preview.45 · Windows x64 测试版
 
-冷启动优化：移除 DirectWrite 系统字体集合启动时的同步“检查字体更新”调用，只读取现有集合；平台初始化从本机约 300ms 降到约 130ms。新增可选启动阶段追踪 `BACKLEAF_STARTUP_REPORT=<文件>`（未设置时零开销），记录 main/options/window_state/platform_run/new_* / first_ready_render。本机 release 基准（400 文件目录、独立状态目录、各 5 次）：首次可交互渲染中位数约 403ms → 231ms（-43%）；进程启动到可交互报告中位数约 496ms → 315ms（-37%）；`--no-index` 下约 401ms → 246ms。代价：启动后新安装的系统字体需要重启应用才出现；自定义字体加载不变。GPUI/DirectX 初始化与首帧布局仍是主要成本，视觉与交互语义未变。fmt、Clippy、134 项 native、51 项 headless 全部通过。
+侧栏用户目录名称：左侧原“个人文件夹”入口现在显示当前登录用户家目录的实际文件夹名（例如 `qq651`），路径、图标、点击行为和索引根不变；中英文界面都使用系统名称，没有可用名称时回退 Home/个人文件夹。新增 `profile_title_uses_the_home_folder_name` 单元测试；native 现为 135 项、headless 51 项。fmt、Clippy、release 构建全部通过。
+
+以下保留 preview.44 及更早内容：
+
+冷启动优化：移除 DirectWrite 系统字体集合启动时的同步“检查字体更新”调用，只读取现有集合；平台初始化从本机约 300ms 降到约 130ms。新增可选启动阶段追踪 `BACKLEAF_STARTUP_REPORT=<文件>`（未设置时零开销），记录 main/options/window_state/platform_run/new_* / first_ready_render。本机 release 基准（400 文件目录、独立状态目录、各 5 次）：首次可交互渲染中位数约 403ms → 237ms（-41%）；进程启动到可交互报告中位数约 496ms → 305ms（-39%）。发布构建通过 `scripts/native/apply-vendor-patches.ps1` 应用补丁并在 build.json 记录 vendor_patch；源码构建打包前需手动执行。代价：启动后新安装的系统字体需要重启应用才出现；自定义字体加载不变。GPUI/DirectX 初始化与首帧布局仍是主要成本，视觉与交互语义未变。fmt、Clippy、134 项 native、51 项 headless 全部通过。
 
 以下保留 preview.43 及更早内容：
 

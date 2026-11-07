@@ -1,14 +1,20 @@
-拾径 / Backleaf 0.1.0-preview.44
+拾径 / Backleaf 0.1.0-preview.45
 
 Windows x64 便携测试版：解压整个ZIP，运行Backleaf.exe。或在PowerShell执行：
 irm https://raw.githubusercontent.com/simiooo/backleaf/staging/install.ps1 | iex
 
-本批次（冷启动优化）：
+本批次（侧栏用户目录名称）：
+- 左侧“个人文件夹”入口现在显示当前登录用户家目录的实际文件夹名（例如 `qq651`），不再使用泛化名称；路径、图标、点击行为和索引根不变。
+- 英文/中文界面下都使用系统家目录名称，不做翻译；没有可用文件夹名时仍回退“Home/个人文件夹”。
+- 新增 `profile_title_uses_the_home_folder_name` 单元测试；native 现为 135 项、headless 51 项。
+
+以下保留 preview.44 及更早内容：
+
+preview.44（冷启动优化）：
 - 移除 DirectWrite 系统字体集合的同步“检查字体更新”调用。该检查会在每次启动重建/校验系统字体缓存；启动阶段只需读取现有集合即可，后续仍可显式刷新。冷启动时平台初始化从约 300ms 降到约 130ms。
 - 新增可选启动阶段追踪：`BACKLEAF_STARTUP_REPORT=<文件>` 时记录 main/options/window_state/platform_run/new_* / first_ready_render 时间，未设置时零开销（仅一次环境变量查询）。
-- 本机 release 基准（400 个文件目录、独立状态目录、每项 5 次）：首次可交互渲染中位数 **约 403ms → 231ms（-43%）**；进程启动到可交互报告中位数 **约 496ms → 315ms（-37%）**。禁用索引模式同样约 401ms → 246ms。
-- 字体更新检查改为延迟语义：启动后新安装的系统字体需要重启应用（或后续显式刷新）才会出现；自定义字体加载路径不变。
-- 仍保留 GPUI/DirectX 初始化与首帧布局为主要成本；本次没有改动视觉或交互语义。测试：fmt、Clippy、134 项 native、51 项 headless 全部通过。
+- 本机 release 基准（400 个文件目录、独立状态目录、每项 5 次）：首次可交互渲染中位数 **约 403ms → 237ms（-41%）**；进程启动到可交互报告中位数 **约 496ms → 305ms（-39%）**。
+- 字体更新检查改为延迟语义：启动后新安装的系统字体需要重启应用才会出现；自定义字体加载路径不变。
 
 以下保留 preview.43 及更早内容：
 

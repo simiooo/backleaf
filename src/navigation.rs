@@ -265,15 +265,30 @@ pub fn common_locations() -> Vec<Location> {
             let raw = SHGetKnownFolderPath(&id, KF_FLAG_DEFAULT, None).ok()?;
             let result = raw.to_string().ok();
             CoTaskMemFree(Some(raw.0.cast()));
-            result.map(|p| Location {
-                title: title.into(),
-                path: p.into(),
-                volume: false,
-                capacity: None,
-                entry: None,
+            result.map(|p| {
+                let title = if id == FOLDERID_Profile {
+                    profile_folder_name(std::path::Path::new(&p))
+                        .unwrap_or_else(|| title.to_owned())
+                } else {
+                    title.to_owned()
+                };
+                Location {
+                    title,
+                    path: p.into(),
+                    volume: false,
+                    capacity: None,
+                    entry: None,
+                }
             })
         })
         .collect()
+}
+/// The sidebar shows the home directory's own folder name (the signed-in
+/// user's profile name) rather than a generic "Home" label.
+fn profile_folder_name(path: &std::path::Path) -> Option<String> {
+    path.file_name()
+        .filter(|name| !name.is_empty())
+        .map(|name| name.to_string_lossy().into_owned())
 }
 
 #[cfg(test)]
@@ -289,6 +304,18 @@ mod tests {
             r"\\server\share\中文"
         );
         assert_eq!(drive, PathBuf::from(r"\\?\C:\资料\当前"));
+    }
+    #[test]
+    fn profile_title_uses_the_home_folder_name() {
+        assert_eq!(
+            profile_folder_name(std::path::Path::new(r"C:\Users\qq651")),
+            Some("qq651".into())
+        );
+        assert_eq!(
+            profile_folder_name(std::path::Path::new(r"C:\Users\例子\")),
+            Some("例子".into())
+        );
+        assert_eq!(profile_folder_name(std::path::Path::new(r"C:\")), None);
     }
     #[test]
     fn crumbs_preserve_unc_roots_unicode_and_exact_navigation_targets() {

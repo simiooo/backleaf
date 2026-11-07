@@ -1,0 +1,102 @@
+[
+    {
+        "mode":  "no-index",
+        "run":  1,
+        "external_ms":  508.05,
+        "platform_ms":  165.56,
+        "new_enter":  248.40,
+        "ready":  277.35,
+        "ws_mb":  64.9,
+        "private_mb":  120.4
+    },
+    {
+        "mode":  "no-index",
+        "run":  2,
+        "external_ms":  328.61,
+        "platform_ms":  150.96,
+        "new_enter":  216.72,
+        "ready":  248.84,
+        "ws_mb":  65.1,
+        "private_mb":  120.5
+    },
+    {
+        "mode":  "no-index",
+        "run":  3,
+        "external_ms":  275.94,
+        "platform_ms":  127.90,
+        "new_enter":  181.21,
+        "ready":  213.95,
+        "ws_mb":  64.9,
+        "private_mb":  120.5
+    },
+    {
+        "mode":  "no-index",
+        "run":  4,
+        "external_ms":  327.97,
+        "platform_ms":  149.76,
+        "new_enter":  213.05,
+        "ready":  260.04,
+        "ws_mb":  64.8,
+        "private_mb":  120.5
+    },
+    {
+        "mode":  "no-index",
+        "run":  5,
+        "external_ms":  341.57,
+        "platform_ms":  177.95,
+        "new_enter":  237.47,
+        "ready":  273.49,
+        "ws_mb":  64.5,
+        "private_mb":  120.2
+    },
+    {
+        "mode":  "default",
+        "run":  1,
+        "external_ms":  310.19,
+        "platform_ms":  157.52,
+        "new_enter":  217.83,
+        "ready":  255.15,
+        "ws_mb":  64.7,
+        "private_mb":  120.3
+    },
+    {
+        "mode":  "default",
+        "run":  2,
+        "external_ms":  309.02,
+        "platform_ms":  134.69,
+        "new_enter":  213.58,
+        "ready":  245.68,
+        "ws_mb":  64.4,
+        "private_mb":  120.1
+    },
+    {
+        "mode":  "default",
+        "run":  3,
+        "external_ms":  326.4,
+        "platform_ms":  139.56,
+        "new_enter":  202.32,
+        "ready":  226.08,
+        "ws_mb":  64.5,
+        "private_mb":  120.1
+    },
+    {
+        "mode":  "default",
+        "run":  4,
+        "external_ms":  282.63,
+        "platform_ms":  136.26,
+        "new_enter":  198.59,
+        "ready":  225.50,
+        "ws_mb":  64.8,
+        "private_mb":  120.4
+    },
+    {
+        "mode":  "default",
+        "run":  5,
+        "external_ms":  295.3,
+        "platform_ms":  129.69,
+        "new_enter":  197.96,
+        "ready":  232.89,
+        "ws_mb":  64.5,
+        "private_mb":  120.2
+    }
+]
