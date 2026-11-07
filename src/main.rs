@@ -10,6 +10,7 @@ mod app_scroll;
 mod app_search;
 mod app_views;
 mod app_watch;
+mod capacity_input;
 mod directory_snapshot;
 mod drag;
 mod file_geometry;

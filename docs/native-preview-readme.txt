@@ -1,21 +1,29 @@
-拾径 / Backleaf 0.1.0-preview.38
+拾径 / Backleaf 0.1.0-preview.39
 
 Windows x64 便携测试版：解压整个ZIP，运行Backleaf.exe。或在PowerShell执行：
 irm https://raw.githubusercontent.com/simiooo/backleaf/staging/install.ps1 | iex
 
-本批次（焦点切换不重解码图片）：
+本批次（高级搜索容量单位与字段级错误）：
+- 最小/最大容量支持宽容输入：`10MB`、`500 KB`、`1.5GB`、`2g`、`1024`、`3 字节` 等，按 B/KB/MB/GB/TB 二进制换算；未识别单位、负数、溢出会拒绝。
+- 非法输入在对应输入框显示红色边框，并在框下显示红字错误；自动聚焦第一个错误字段，编辑时清除红框，下一次提交重新校验。
+- 类型字段支持逗号/中文逗号/分号/空格分隔与开头的点；最近天数支持 `7`、`7天`、`7日`，范围 1–365000；最小容量不能大于最大容量。空字段清除对应筛选。
+- 表单预填容量显示为友好单位（如 `10 MB`）；新增字段占位提示。新增 headless 回归 `advanced_filter_capacity_errors_are_field_scoped_and_units_parse` 与容量解析单元测试；headless 现为 48 项、native 129 项。
+
+以下保留 preview.38 及更早内容：
+
+preview.38（焦点切换不重解码图片）：
 - 最小化/失焦/重新聚焦不再无条件标记目录刷新；只有 watcher 确实报告内容变化（watch_stale）时才刷新，避免焦点切换引发整目录刷新。
 - 缩略图缓存失效改用“已应用的监听内容 epoch”（watch.applied），不再用每次记账刷新都会递增的 generation；内容未变的目录刷新保留已解码预览，不重新解码、不重新请求。
-- 仍只为当前可见行请求缩略图；新增 headless 回归 `image_preview_cache_survives_unchanged_directory_refresh`，headless 现为 47 项、native 127 项。
-
-以下保留 preview.37 及更早内容：
+- 仍只为当前可见行请求缩略图；新增 headless 回归 `image_preview_cache_survives_unchanged_directory_refresh`。
 
 preview.37（图片预览选中溢出与重绘修复）：
 - 选中/悬停底板现在按缩略图尺寸计算（新增 `surface_with_art`），图片不再超出蓝色选中容器；名称/提示命中区域同步使用预览高度。
 - 缩略图解码结果每 20ms 合并为一次窗口通知，避免每个缩略图触发一次整窗重渲染；已解码图片在滚动/选中时复用缓存。
+
+preview.36（可视区内图片缩略图）：
 - 图片文件（png/jpg/jpeg/gif/webp/bmp/tif/tiff/ico）用实际内容替换类型图标；容器为单元格内宽 × 48px，按比例 contain 居中，最大化占用且不溢出；缩略图未就绪时先显示原类型图标。
 - HEIC/AVIF/视频暂不解码；大于 64MB 或解码失败的文件回退图标；GIF/WebP 只显示首帧；JPEG 应用 EXIF 方向。
-- 搜索结果中的图片也使用缩略图；新增无头回归 `visible_image_cells_decode_thumbnails_lazily`，headless 现为 46 项、native 127 项。
+- 搜索结果中的图片也使用缩略图；新增无头回归 `visible_image_cells_decode_thumbnails_lazily`。
 
 preview.35（无任务时不显示任务入口/结果面板）：
 - 文件操作完成且没有可安全重试的失败项时，不再常驻标题栏“任务”入口和右下角结果面板；可重试失败仍保留面板与重试按钮。

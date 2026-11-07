@@ -16,8 +16,15 @@ impl Field {
         match self {
             Self::Extensions => "类型",
             Self::Days => "最近天数",
-            Self::Min => "最小字节",
-            Self::Max => "最大字节",
+            Self::Min => "最小容量",
+            Self::Max => "最大容量",
+        }
+    }
+    fn placeholder(self) -> &'static str {
+        match self {
+            Self::Extensions => "如 jpg, png, pdf",
+            Self::Days => "如 7",
+            Self::Min | Self::Max => "如 10MB、500KB、1024",
         }
     }
 }
@@ -32,6 +39,7 @@ pub struct SaveEditor {
 struct FilterInput {
     field: Field,
     input: Entity<TextInput>,
+    error: Option<SharedString>,
     _subscription: Subscription,
 }
 #[derive(Default)]
@@ -301,6 +309,36 @@ impl Backleaf {
     pub(super) fn clear_view_filters(&mut self) {
         self.views.filters = None;
     }
+    #[cfg(test)]
+    pub fn filter_count_for_test(&self) -> usize {
+        self.views.filters.as_ref().map_or(0, Vec::len)
+    }
+    #[cfg(test)]
+    pub fn set_filter_value_for_test(&mut self, index: usize, value: &str, cx: &mut Context<Self>) {
+        if let Some(field) = self
+            .views
+            .filters
+            .as_mut()
+            .and_then(|fields| fields.get_mut(index))
+        {
+            field
+                .input
+                .update(cx, |input, cx| input.set_test_value(value.to_owned(), cx));
+        }
+    }
+    #[cfg(test)]
+    pub fn filter_error_for_test(&self, index: usize) -> Option<String> {
+        self.views
+            .filters
+            .as_ref()
+            .and_then(|fields| fields.get(index))
+            .and_then(|field| field.error.as_ref())
+            .map(ToString::to_string)
+    }
+    #[cfg(test)]
+    pub fn apply_filters_for_test(&mut self, cx: &mut Context<Self>) -> bool {
+        self.apply_view_filters(cx)
+    }
     pub fn toggle_view_filters(&mut self, window: &mut Window, cx: &mut Context<Self>) {
         if self.search.query.trim().is_empty() {
             // Nothing meaningful to filter yet; an empty query must never start a
@@ -322,24 +360,31 @@ impl Backleaf {
             ),
             (
                 Field::Min,
-                d.min_bytes.map(|v| v.to_string()).unwrap_or_default(),
+                d.min_bytes
+                    .map(|v| crate::volume_capacity::bytes(u128::from(v)))
+                    .unwrap_or_default(),
             ),
             (
                 Field::Max,
-                d.max_bytes.map(|v| v.to_string()).unwrap_or_default(),
+                d.max_bytes
+                    .map(|v| crate::volume_capacity::bytes(u128::from(v)))
+                    .unwrap_or_default(),
             ),
         ];
         let mut fields = Vec::new();
         for (field, value) in values {
+            let placeholder = field.placeholder();
             let input = cx.new(|cx| {
-                TextInput::new(
+                let mut input = TextInput::new(
                     value.clone(),
                     0..value.len(),
                     field.label(),
                     self.colors,
                     256,
                     cx,
-                )
+                );
+                input.set_placeholder(placeholder);
+                input
             });
             let subscription = cx.subscribe(&input, |this, input, event: &InputEvent, cx| {
                 match event {
@@ -351,6 +396,16 @@ impl Backleaf {
                             this.apply_view_filters(cx);
                         }
                     }
+                    InputEvent::Changed => {
+                        if let Some(fields) = &mut this.views.filters {
+                            for field in fields {
+                                field.error = None;
+                                field
+                                    .input
+                                    .update(cx, |input, cx| input.set_invalid(false, cx));
+                            }
+                        }
+                    }
                     InputEvent::Cancel => {
                         this.views.filters = None;
                     }
@@ -358,13 +413,13 @@ impl Backleaf {
                         this.views.focus = Some(input.clone());
                         this.navigation_error(error.clone(), cx);
                     }
-                    _ => {}
                 }
                 cx.notify();
             });
             fields.push(FilterInput {
                 field,
                 input,
+                error: None,
                 _subscription: subscription,
             });
         }
@@ -376,55 +431,121 @@ impl Backleaf {
         let Some(fields) = &self.views.filters else {
             return true;
         };
+        let items = fields
+            .iter()
+            .map(|item| (item.field, item.input.clone()))
+            .collect::<Vec<_>>();
         let mut definition = self.search.definition.clone();
-        for item in fields {
-            let text = item.input.read(cx).value();
+        let mut errors = vec![None::<String>; items.len()];
+        for (index, (field, input)) in items.iter().enumerate() {
+            let text = input.read(cx).value();
             let text = text.trim();
             let result = (|| -> Result<(), String> {
-                match item.field {
+                match field {
                     Field::Extensions => {
-                        definition.extensions = text
-                            .split([',', '，', ' '])
-                            .filter(|s| !s.is_empty())
-                            .map(|s| s.trim_start_matches('.').to_lowercase())
-                            .collect()
+                        let extensions = text
+                            .split([',', '，', ';', '；', ' '])
+                            .filter(|part| !part.is_empty())
+                            .map(|part| part.trim_start_matches('.').to_lowercase())
+                            .collect::<Vec<_>>();
+                        if extensions.len() > 64 {
+                            return Err("最多输入 64 个类型".into());
+                        }
+                        if extensions
+                            .iter()
+                            .any(|ext| ext.len() > 64 || ext.chars().any(|c| !c.is_alphanumeric()))
+                        {
+                            return Err("类型只能包含字母和数字，多个用逗号分隔".into());
+                        }
+                        definition.extensions = extensions;
                     }
                     Field::Days => {
-                        definition.modified_days = if text.is_empty() {
+                        let value = text
+                            .strip_suffix('天')
+                            .or_else(|| text.strip_suffix('日'))
+                            .unwrap_or(text)
+                            .trim();
+                        definition.modified_days = if value.is_empty() {
                             None
                         } else {
-                            Some(text.parse().map_err(|_| "天数无效")?)
-                        }
+                            let days = value
+                                .parse::<u32>()
+                                .map_err(|_| "请输入 1–365000 的整数天数".to_string())?;
+                            if days == 0 || days > 365_000 {
+                                return Err("天数需要在 1–365000 之间".into());
+                            }
+                            Some(days)
+                        };
                     }
                     Field::Min => {
                         definition.min_bytes = if text.is_empty() {
                             None
                         } else {
-                            Some(text.parse().map_err(|_| "大小无效")?)
-                        }
+                            Some(crate::capacity_input::parse_capacity(text)?)
+                        };
                     }
                     Field::Max => {
                         definition.max_bytes = if text.is_empty() {
                             None
                         } else {
-                            Some(text.parse().map_err(|_| "大小无效")?)
-                        }
+                            Some(crate::capacity_input::parse_capacity(text)?)
+                        };
                     }
                 }
-                definition.validate()
+                Ok(())
             })();
             if let Err(error) = result {
-                let input = item.input.clone();
-                self.views.focus = Some(input);
-                self.navigation_error(error, cx);
-                return false;
+                errors[index] = Some(error);
             }
+        }
+        if errors.iter().all(Option::is_none)
+            && let (Some(min), Some(max)) = (definition.min_bytes, definition.max_bytes)
+            && min > max
+        {
+            let index = items
+                .iter()
+                .position(|(field, _)| matches!(field, Field::Max))
+                .unwrap_or(0);
+            errors[index] = Some("最大容量不能小于最小容量".into());
+        }
+        if errors.iter().any(Option::is_some) {
+            self.show_filter_errors(errors, cx);
+            return false;
+        }
+        if let Err(error) = definition.validate() {
+            let index = items
+                .iter()
+                .position(|(field, _)| matches!(field, Field::Max))
+                .unwrap_or(0);
+            let mut errors = vec![None::<String>; items.len()];
+            errors[index] = Some(error);
+            self.show_filter_errors(errors, cx);
+            return false;
         }
         if definition != self.search.definition {
             self.search.definition = definition;
             self.restart_search_if_active(cx);
         }
         true
+    }
+    fn show_filter_errors(&mut self, errors: Vec<Option<String>>, cx: &mut Context<Self>) {
+        let Some(fields) = &mut self.views.filters else {
+            return;
+        };
+        let mut focus = None;
+        for (item, error) in fields.iter_mut().zip(errors) {
+            item.error = error.map(SharedString::from);
+            let invalid = item.error.is_some();
+            item.input
+                .update(cx, |input, cx| input.set_invalid(invalid, cx));
+            if invalid && focus.is_none() {
+                focus = Some(item.input.clone());
+            }
+        }
+        if let Some(input) = focus {
+            self.views.focus = Some(input);
+        }
+        cx.notify();
     }
     fn cycle_view_option(&mut self, key: usize, cx: &mut Context<Self>) {
         match key {
@@ -729,15 +850,32 @@ impl Backleaf {
                 body = body.child(
                     div()
                         .flex()
-                        .items_center()
-                        .gap(px(8.))
+                        .flex_col()
+                        .gap(px(2.))
                         .child(
                             div()
-                                .w(px(72.))
-                                .text_color(colors.color(ColorRole::Secondary))
-                                .child(item.field.label()),
+                                .flex()
+                                .items_center()
+                                .gap(px(8.))
+                                .child(
+                                    div()
+                                        .w(px(72.))
+                                        .flex_none()
+                                        .text_color(colors.color(ColorRole::Secondary))
+                                        .child(item.field.label()),
+                                )
+                                .child(div().flex_1().min_w_0().child(item.input.clone())),
                         )
-                        .child(div().flex_1().min_w_0().child(item.input.clone())),
+                        .when_some(item.error.clone(), |d, error| {
+                            d.child(
+                                div()
+                                    .ml(px(80.))
+                                    .text_size(px(11.))
+                                    .line_height(px(14.))
+                                    .text_color(colors.color(ColorRole::Negative))
+                                    .child(error),
+                            )
+                        }),
                 );
             }
             let d = &self.search.definition;

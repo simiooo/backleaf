@@ -658,6 +658,35 @@ fn image_preview_cache_survives_unchanged_directory_refresh() {
 }
 
 #[test]
+fn advanced_filter_capacity_errors_are_field_scoped_and_units_parse() {
+    let mut h = Harness::new(&["keep.txt"], None);
+    h.key("ctrl-f");
+    h.text("k");
+    h.wait("active search", |this, _| this.search.started);
+    let view = h.view.clone();
+    h.cx.update_window(h.window.into(), |_, window, cx| {
+        view.update(cx, |this, cx| this.toggle_view_filters(window, cx));
+    })
+    .unwrap();
+    h.wait("filter form open", |this, _| {
+        this.filter_count_for_test() == 4
+    });
+    h.view.update(&mut h.cx, |this, cx| {
+        this.set_filter_value_for_test(2, "10XB", cx);
+        assert!(!this.apply_filters_for_test(cx));
+        assert!(this.filter_error_for_test(2).unwrap().contains("KB"));
+        this.set_filter_value_for_test(2, "10MB", cx);
+        this.set_filter_value_for_test(3, "1MB", cx);
+        assert!(!this.apply_filters_for_test(cx));
+        assert!(this.filter_error_for_test(3).unwrap().contains("最小"));
+        this.set_filter_value_for_test(3, "20MB", cx);
+        assert!(this.apply_filters_for_test(cx));
+        assert_eq!(this.search.definition.min_bytes, Some(10 * 1024 * 1024));
+        assert_eq!(this.search.definition.max_bytes, Some(20 * 1024 * 1024));
+    });
+}
+
+#[test]
 fn finished_non_retryable_operations_hide_badge_and_panel() {
     use crate::operations::service::{Operation, Phase};
     let mut h = Harness::new(&["original.txt"], None);

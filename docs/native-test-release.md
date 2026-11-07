@@ -1,4 +1,8 @@
-Backleaf 0.1.0-preview.38 · Windows x64 测试版
+Backleaf 0.1.0-preview.39 · Windows x64 测试版
+
+高级搜索容量单位与字段级错误：最小/最大容量支持宽容输入，如 `10MB`、`500 KB`、`1.5GB`、`2g`、`1024`、`3 字节`，按 B/KB/MB/GB/TB 二进制换算；未识别单位、负数或溢出会拒绝。非法输入在对应输入框显示红色边框，并在框下显示红字错误，自动聚焦第一个错误字段，编辑时清除红框，下一次提交重新校验。表单规则同时收紧/放宽为：类型支持逗号/中文逗号/分号/空格分隔与开头的点，拒绝非字母数字和超过 64 项；最近天数支持 `7`/`7天`/`7日`，范围 1–365000；最小容量不能大于最大容量；空字段清除对应筛选。预填容量显示友好单位，新增字段占位提示。新增 headless 回归 `advanced_filter_capacity_errors_are_field_scoped_and_units_parse` 与容量解析单元测试；headless 现为 48 项、native 逻辑/文件检查 129 项。
+
+以下保留 preview.38 及更早内容：
 
 焦点切换不重解码图片：最小化、失焦和重新聚焦不再无条件标记目录刷新；只有 watcher 真正报告内容变化（`watch_stale`）时才刷新。缩略图缓存失效改用“已应用的监听内容 epoch”（`watch.applied`），不再使用每次记账刷新都会递增的 generation；内容未变的目录刷新会保留已解码预览，不重新解码或请求。网格仍只为当前可见行请求缩略图。新增 headless 回归 `image_preview_cache_survives_unchanged_directory_refresh`；headless 现为 47 项、native 逻辑/文件检查 127 项。焦点切换本身仍会重绘一次窗口（活动/非活动选中色与窗口状态变化），但不再清空/重解码图片。
 

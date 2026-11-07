@@ -31,6 +31,7 @@ pub struct TextInput {
     pub colors: &'static Palette,
     pub enabled: bool,
     pub embedded: bool,
+    pub invalid: bool,
     max_utf16: usize,
     label: SharedString,
     scroll: Pixels,
@@ -78,6 +79,22 @@ impl TextInput {
     }
     pub fn set_placeholder(&mut self, value: &'static str) {
         self.placeholder = value.into();
+    }
+    pub fn set_invalid(&mut self, invalid: bool, cx: &mut Context<Self>) {
+        if self.invalid != invalid {
+            self.invalid = invalid;
+            cx.notify();
+        }
+    }
+    #[cfg(test)]
+    pub fn set_test_value(&mut self, value: String, cx: &mut Context<Self>) {
+        self.content = value.into();
+        self.selected_range = 0..self.content.len();
+        self.selection_reversed = false;
+        self.marked_range = None;
+        self.epoch += 1;
+        cx.emit(InputEvent::Changed);
+        cx.notify();
     }
     fn left(&mut self, _: &Left, window: &mut Window, cx: &mut Context<Self>) {
         if self.selected_range.is_empty() {
@@ -826,8 +843,14 @@ impl Render for TextInput {
                     ColorRole::InputRest
                 }))
                 .border_1()
-                .border_color(colors.color(ColorRole::Border))
-                .when(active, |d| d.shadow(colors.input_shadows()))
+                .border_color(colors.color(if self.invalid {
+                    ColorRole::Negative
+                } else {
+                    ColorRole::Border
+                }))
+                .when(active && !self.invalid, |d| {
+                    d.shadow(colors.input_shadows())
+                })
             })
             .rounded(px(8.))
             .text_size(px(13.))
@@ -923,6 +946,7 @@ impl TextInput {
             colors,
             enabled: true,
             embedded: false,
+            invalid: false,
             max_utf16,
             label: label.into(),
             scroll: px(0.),
