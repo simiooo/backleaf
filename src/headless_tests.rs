@@ -1174,6 +1174,40 @@ fn dynamic_child_waits_for_rows_and_keeps_both_ancestors_stable() {
 }
 
 #[test]
+fn empty_async_shell_submenu_keeps_a_readable_empty_row() {
+    let mut h = Harness::new(&["note.txt"], None);
+    let (x, y) = h.first_icon();
+    h.click(x, y, MouseButton::Right);
+    let root = h.popup();
+    let menu = h.shell_menu();
+    h.shell_rows(&menu, 0, vec![extension_item(11, true)]);
+    h.key_in(root, "end");
+    h.key_in(root, "right");
+    h.wait("applications column", |_, cx| cx.windows().len() == 3);
+    h.key_in(root, "home");
+    h.key_in(root, "right");
+    h.cx.advance_clock(Duration::from_millis(300));
+    h.frame();
+    assert_eq!(
+        h.cx.update(|cx| cx.windows().len()),
+        3,
+        "an unready async submenu must not open a blank surface"
+    );
+    h.shell_rows(&menu, 11, vec![]);
+    h.wait("empty shell submenu", |_, cx| cx.windows().len() == 4);
+    let height =
+        h.cx.update(|cx| menu.read(cx).column_geometry(2).unwrap().height);
+    assert!(
+        height > 40.,
+        "empty submenu must reserve a normal row instead of a 32px sliver: {height}"
+    );
+    h.key_in(root, "escape");
+    h.wait("empty submenu dismissed", |this, cx| {
+        this.files.menu.is_none() && cx.windows().len() == 1
+    });
+}
+
+#[test]
 fn late_dynamic_rows_do_not_revive_closed_columns_or_the_menu_family() {
     let mut h = Harness::new(&["note.txt"], None);
     let (x, y) = h.first_icon();

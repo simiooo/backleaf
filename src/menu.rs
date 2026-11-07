@@ -467,6 +467,10 @@ impl FileMenu {
                         column.rows = rows;
                         column.ready = true;
                     }
+                } else if rows.is_empty() {
+                    // Keep the flyout at a normal row height with an explanatory
+                    // disabled row instead of opening an empty bordered sliver.
+                    self.status(level, "没有可用的菜单项".into());
                 } else {
                     self.columns[level].rows = rows;
                     self.columns[level].ready = true;

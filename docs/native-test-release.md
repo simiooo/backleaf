@@ -1,4 +1,8 @@
-Backleaf 0.1.0-preview.39 · Windows x64 测试版
+Backleaf 0.1.0-preview.40 · Windows x64 测试版
+
+Shell 异步次级菜单空状态：Windows Shell 扩展次级菜单异步返回空列表时，现在显示一行禁用的“没有可用的菜单项”，保持正常菜单行高，不再出现空白半截面板；查询失败显示“扩展暂不可用”。次级菜单仍等待异步行返回后才创建弹窗，避免加载占位窗口反复调整大小。新增 headless 回归 `empty_async_shell_submenu_keeps_a_readable_empty_row`；headless 现为 49 项、native 逻辑/文件检查 129 项。
+
+以下保留 preview.39 及更早内容：
 
 高级搜索容量单位与字段级错误：最小/最大容量支持宽容输入，如 `10MB`、`500 KB`、`1.5GB`、`2g`、`1024`、`3 字节`，按 B/KB/MB/GB/TB 二进制换算；未识别单位、负数或溢出会拒绝。非法输入在对应输入框显示红色边框，并在框下显示红字错误，自动聚焦第一个错误字段，编辑时清除红框，下一次提交重新校验。表单规则同时收紧/放宽为：类型支持逗号/中文逗号/分号/空格分隔与开头的点，拒绝非字母数字和超过 64 项；最近天数支持 `7`/`7天`/`7日`，范围 1–365000；最小容量不能大于最大容量；空字段清除对应筛选。预填容量显示友好单位，新增字段占位提示。新增 headless 回归 `advanced_filter_capacity_errors_are_field_scoped_and_units_parse` 与容量解析单元测试；headless 现为 48 项、native 逻辑/文件检查 129 项。
 
