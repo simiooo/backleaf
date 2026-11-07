@@ -24,7 +24,7 @@ Windows/MSVC/Rust 1.99.1：
 
 `--path <directory>`打开真实目录；`--fixture 1000000 --flow 8`使用明确标记的生成元数据渲染场景。测试包需完整解压ZIP，保留lib和许可证目录。
 
-完整检查已包含无头门禁；只运行交互回归可用`./scripts/native/test-headless.ps1`。它覆盖51项GPUI事件、焦点、错误提示、菜单家族稳定性、真实文件/搜索结果、原位刷新与框选滚动，输出日志和JSON；PR及staging/main相关推送自动执行，测试包发布也必须通过。另有真实隐藏Win32菜单样式/父窗边界测试；系统原生集成与GPU验证范围见[回归分层](docs/native-resume-checklist.md)。
+完整检查已包含无头门禁；只运行交互回归可用`./scripts/native/test-headless.ps1`。它覆盖51项GPUI事件、焦点、错误提示、菜单家族稳定性、真实文件/搜索结果、原位刷新与框选滚动，输出日志和JSON；PR及staging/main相关推送自动执行，测试包发布也必须通过。另有真实隐藏Win32菜单样式/父窗边界测试；系统原生集成与GPU验证范围见[回归分层](docs/native-resume-checklist.md)。源码构建发布包前请先运行`./scripts/native/apply-vendor-patches.ps1`（发布 workflow 自动执行）；它只应用 DirectWrite 启动字体缓存补丁，并在包内记录 patch 标识。
 
 [preview.43 证据](docs/evidence/preview-43)、[preview.42 证据](docs/evidence/preview-42)、[preview.41 证据](docs/evidence/preview-41)、[preview.40 证据](docs/evidence/preview-40)、[preview.39 证据](docs/evidence/preview-39)、[preview.38 证据](docs/evidence/preview-38)、[preview.37 证据](docs/evidence/preview-37)、[preview.36 证据](docs/evidence/preview-36)、[preview.35 证据](docs/evidence/preview-35)、[preview.34 证据](docs/evidence/preview-34)、[preview.33 证据](docs/evidence/preview-33)、[preview.32 证据](docs/evidence/preview-32)、[preview.31 证据](docs/evidence/preview-31)、[preview.30 证据](docs/evidence/preview-30)、[preview.29 证据](docs/evidence/preview-29)、[preview.28 证据](docs/evidence/preview-28)、[preview.27 证据](docs/evidence/preview-27)、[本版证据](docs/evidence/root-case)、[搜索缓存证据](docs/evidence/search-cache-v43)、[第三方命令证据](docs/evidence/shell-commands)、[设计约束](docs/design-contract.md)、[研究](docs/research.md)、[交付记录](docs/delivery.md)。
 

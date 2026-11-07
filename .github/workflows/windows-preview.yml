@@ -40,6 +40,14 @@ jobs:
       - name: GPUI headless interaction gate
         shell: pwsh
         run: ./scripts/native/test-headless.ps1 -Output .local/ci/headless.log
+      - name: Apply vendored startup patches
+        shell: pwsh
+        run: ./scripts/native/apply-vendor-patches.ps1
+      - name: Rebuild release with vendored patch
+        shell: pwsh
+        run: |
+          cargo build --release --locked *> .local/ci/build-optimized.log
+          if ($LASTEXITCODE) { Get-Content .local/ci/build-optimized.log; throw 'Optimized build failed' }
       - name: Installer regression gate (Windows PowerShell 5.1)
         shell: powershell
         run: ./scripts/native/test-installer.ps1 -Output .local/ci/installer-tests-5.json
@@ -48,6 +56,8 @@ jobs:
         run: ./scripts/native/test-installer.ps1 -Output .local/ci/installer-tests-7.json
       - name: Package and smoke
         shell: pwsh
+        env:
+          BACKLEAF_VENDOR_PATCH: 'directwrite-font-update-no-check'
         run: ./scripts/native/ci-package.ps1
       - uses: actions/upload-artifact@v4
         if: always()

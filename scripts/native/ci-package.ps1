@@ -28,6 +28,7 @@ $exeHash = (Get-FileHash "$bundle/Backleaf.exe" -Algorithm SHA256).Hash.ToLowerI
 $metadata = [ordered]@{version=$version;source_commit=$commit;gpui_revision=(git -C vendor/zed rev-parse HEAD).Trim();built_at_utc=[DateTime]::UtcNow.ToString('o');exe_sha256=$exeHash;archive_library_sha256=(Get-FileHash "$bundle/lib/7z.dll").Hash.ToLowerInvariant();design_sha256=(Get-FileHash design/Backleaf-v46.fig).Hash.ToLowerInvariant();ci_run_url="https://github.com/$env:GITHUB_REPOSITORY/actions/runs/$env:GITHUB_RUN_ID";runtime=$runtime;scope='Native Windows preview with bounded persistent-index maintenance, default-search index acceleration, idle scheduling, on-demand roots and app-local runtime; see README for complete scope and limits';interactive_smoke='not run on hosted CI; local scope is recorded separately'}
 $metadata.headless_test_count=$headless.test_count
 $metadata.msvc_tools_version=$env:VCToolsVersion
+if ($env:BACKLEAF_VENDOR_PATCH) { $metadata.vendor_patch = $env:BACKLEAF_VENDOR_PATCH }
 $metadata.headless_log_sha256=$headless.log_sha256
 $metadata.headless_report_sha256=(Get-FileHash "$bundle/headless.json").Hash.ToLowerInvariant()
 $metadata | ConvertTo-Json -Depth 8 | Set-Content "$bundle/build.json" -Encoding utf8
