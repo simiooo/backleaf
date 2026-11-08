@@ -138,9 +138,9 @@ function Register-BackleafContextMenu {
     param([string]$Executable)
     # HKCU shell verbs need no elevation and are easy to overwrite on upgrade.
     $items = @(
-        @{ Key = 'Software\Classes\Directory\shell\Backleaf'; Command = ('"' + $Executable + '" "%1"') },
-        @{ Key = 'Software\Classes\Drive\shell\Backleaf'; Command = ('"' + $Executable + '" "%1"') },
-        @{ Key = 'Software\Classes\Directory\Background\shell\Backleaf'; Command = ('"' + $Executable + '" "%V"') }
+        @{ Key = 'Software\Classes\Directory\shell\Backleaf'; Command = ('"' + $Executable + '" --path "%1"') },
+        @{ Key = 'Software\Classes\Drive\shell\Backleaf'; Command = ('"' + $Executable + '" --path "%1"') },
+        @{ Key = 'Software\Classes\Directory\Background\shell\Backleaf'; Command = ('"' + $Executable + '" --path "%V"') }
     )
     foreach ($item in $items) {
         $key = 'HKCU:\' + $item.Key

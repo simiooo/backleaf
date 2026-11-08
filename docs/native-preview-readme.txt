@@ -1,4 +1,4 @@
-拾径 / Backleaf 0.1.0-preview.49
+拾径 / Backleaf 0.1.0-preview.50
 
 Windows x64 便携测试版：解压整个ZIP，运行Backleaf.exe。或在PowerShell执行：
 irm https://raw.githubusercontent.com/simiooo/backleaf/staging/install.ps1 | iex

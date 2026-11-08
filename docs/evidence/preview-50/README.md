@@ -1,22 +1,25 @@
-# preview.49 · Explorer 右键集成、隐藏菜单、内容搜索高亮与滚动条
+# preview.50 · Explorer 右键集成、隐藏菜单、内容搜索高亮与滚动条
 
 源码：`COMMIT`
-候选版本：`0.1.0-preview.49`
+候选版本：`0.1.0-preview.50`
 
 - Release：`PENDING`
 - Package CI：`PENDING`
 - 测试：native 141、headless 52、installer 22；fmt、严格 Clippy、release 构建通过。
 - 安装：`irm https://raw.githubusercontent.com/simiooo/backleaf/staging/install.ps1 | iex`
+- ZIP SHA-256：`PENDING`
+- EXE SHA-256：`PENDING`
+- 资产：`build.json`、`SHA256SUMS.txt` 待回填
 
 ## 变更
 
 1. **资源管理器右键集成（建议 1）**
-   - 安装包在 HKCU Classes 注册三项：
+   - 安装包在 HKCU Classes 注册三项（命令带 `--path`，避免把文件夹路径当成非法位置参数）：
      - `Directory\shell\Backleaf`：文件夹右键“在 Backleaf 中打开”，`"%1"`；
      - `Directory\Background\shell\Backleaf`：文件夹空白处右键，`"%V"`；
      - `Drive\shell\Backleaf`：驱动器右键，`"%1"`。
    - 命令指向安装后的 `current\Backleaf.exe`，升级时覆盖；不需要管理员权限；便携版不注册。
-   - 验证：用 `Shell.Application` 枚举文件夹右键动词，返回“在 Backleaf 中打开”；注册表项测试后清理。截图见 [content-search-scrollbar.png](content-search-scrollbar.png) 仅展示应用内变化，Explorer 菜单由 Shell verb 验证。
+   - 验证：用 `Shell.Application` 枚举文件夹右键动词，返回“在 Backleaf 中打开”；修复 `--path` 后调用该动词成功启动 Backleaf 新窗口。注册表项测试后清理。截图见 [content-search-scrollbar.png](content-search-scrollbar.png) 仅展示应用内变化，Explorer 菜单由 Shell verb 验证。
 2. **移除“设为默认”入口与三点菜单**
    - 删除 `app_menu`/`default_app` 模块、标题栏按钮、菜单 overlay、相关快捷键/失焦处理；
    - 删除对应 headless 用例，路径栏恢复原宽度；不再显示任何无效的“预设默认”控件。
@@ -34,7 +37,7 @@
 - `cargo fmt --check`、严格 Clippy、release 构建通过；
 - native 141、headless 52、installer 22 回归通过；
 - 安装包右键注册函数用本机 HKCU 临时项验证后清理；
-- 发布包 SHA-256/EXE/安装 smoke 待 CI 完成回填。
+- 发布包 SHA-256/EXE/安装 smoke 已通过；本机已安装 preview.50，HKCU 三项右键注册已生效。
 
 ## 限制
 
