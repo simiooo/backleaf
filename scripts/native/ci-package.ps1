@@ -20,10 +20,22 @@ Copy-Item .local/ci/headless.json "$bundle/headless.json"
 python scripts/native/collect-licenses.py "$bundle/licenses"
 if ($LASTEXITCODE) { throw 'License collection failed' }
 . ./install.ps1
-New-Item -ItemType Directory -Force .local/ci/runtime-download | Out-Null
-$runtime = Add-BackleafRuntime -Work ([IO.Path]::GetFullPath('.local/ci/runtime-download')) -Stage ([IO.Path]::GetFullPath($bundle))
-$runtimeVersion=[Version](($runtime.files | Where-Object name -eq 'vcruntime140.dll').version)
-if(!$env:VCToolsVersion -or $runtimeVersion -lt [Version]($env:VCToolsVersion.TrimEnd('\','/'))) {throw 'App-local runtime is older than the MSVC build toolset'}
+$redist = $env:VCToolsRedistDir
+if (!$redist -or !(Test-Path -LiteralPath $redist)) { throw 'VCToolsRedistDir is unavailable.' }
+$crt = Get-ChildItem -LiteralPath $redist -Recurse -Directory -Filter 'Microsoft.VC*.CRT' -ErrorAction SilentlyContinue |
+    Where-Object { $_.FullName -match '\\x64\\' } | Sort-Object FullName | Select-Object -Last 1
+if (!$crt) { throw 'Microsoft VC x64 runtime redistributable directory is unavailable.' }
+$runtimeFiles = @()
+foreach ($dll in Get-ChildItem -LiteralPath $crt.FullName -Filter '*.dll' | Sort-Object Name) {
+    Copy-Item -LiteralPath $dll.FullName -Destination (Join-Path $bundle $dll.Name)
+    $runtimeFiles += [ordered]@{
+        name = $dll.Name
+        sha256 = (Get-FileHash -LiteralPath (Join-Path $bundle $dll.Name) -Algorithm SHA256).Hash.ToLowerInvariant()
+        version = $dll.VersionInfo.FileVersion
+    }
+}
+if ($runtimeFiles.Count -lt 3) { throw 'Microsoft VC x64 runtime redistributable set is incomplete.' }
+$runtime = [ordered]@{ tag = 'msvc-x64-redist'; files = $runtimeFiles }
 $exeHash = (Get-FileHash "$bundle/Backleaf.exe" -Algorithm SHA256).Hash.ToLowerInvariant()
 $metadata = [ordered]@{version=$version;source_commit=$commit;gpui_revision=(git -C vendor/zed rev-parse HEAD).Trim();built_at_utc=[DateTime]::UtcNow.ToString('o');exe_sha256=$exeHash;archive_library_sha256=(Get-FileHash "$bundle/lib/7z.dll").Hash.ToLowerInvariant();design_sha256=(Get-FileHash design/Backleaf-v46.fig).Hash.ToLowerInvariant();ci_run_url="https://github.com/$env:GITHUB_REPOSITORY/actions/runs/$env:GITHUB_RUN_ID";runtime=$runtime;scope='Native Windows preview with bounded persistent-index maintenance, default-search index acceleration, idle scheduling, on-demand roots and app-local runtime; see README for complete scope and limits';interactive_smoke='not run on hosted CI; local scope is recorded separately'}
 $metadata.headless_test_count=$headless.test_count
