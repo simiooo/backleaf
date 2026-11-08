@@ -1,15 +1,15 @@
 # preview.50 · Explorer 右键集成、隐藏菜单、内容搜索高亮与滚动条
 
-源码：`COMMIT`
+源码：`4f403ddfb6f811521b9dfdb2190f75239c884232`
 候选版本：`0.1.0-preview.50`
 
-- Release：`PENDING`
-- Package CI：`PENDING`
+- Release：[preview.50](https://github.com/simiooo/backleaf/releases/tag/test-v0.1.0-preview.50-4f403ddf)
+- Package CI：[42457387074](https://github.com/simiooo/backleaf/actions/runs/42457387074)，9m58s，全绿
 - 测试：native 141、headless 52、installer 22；fmt、严格 Clippy、release 构建通过。
 - 安装：`irm https://raw.githubusercontent.com/simiooo/backleaf/staging/install.ps1 | iex`
-- ZIP SHA-256：`PENDING`
-- EXE SHA-256：`PENDING`
-- 资产：`build.json`、`SHA256SUMS.txt` 待回填
+- ZIP SHA-256：`c6d167b3e6c920da245c357f6e3d6d10709e44f0081253b2a08512bbc2f2494f`
+- EXE SHA-256：`5e1a3d745f45612e841cc34d0b2e947a862e56e99a5aaf013ac0b90dc0f66cb8`
+- 资产：`build.json` `a6098a8fb95d2707e1b1b3187ef7ddbed78ee127de80194b260e09795f74952e`；`SHA256SUMS.txt` `e4bdd5cfa570bfe6bec1b9eb394f1e5a1b9053bc154e5827a84d841cd27c9e57`
 
 ## 变更
 
@@ -37,7 +37,7 @@
 - `cargo fmt --check`、严格 Clippy、release 构建通过；
 - native 141、headless 52、installer 22 回归通过；
 - 安装包右键注册函数用本机 HKCU 临时项验证后清理；
-- 发布包 SHA-256/EXE/安装 smoke 已通过；本机已安装 preview.50，HKCU 三项右键注册已生效。
+- 发布包 SHA-256/EXE/安装 smoke 已通过；本机已安装 preview.50，HKCU 三项右键注册已生效，并通过 Shell.Application 动词启动新的 Backleaf 窗口。
 
 ## 限制
 
