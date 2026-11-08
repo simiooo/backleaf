@@ -13,13 +13,17 @@ function Get-BackleafRelease {
     $headers = @{ Accept = 'application/vnd.github+json'; 'User-Agent' = 'Backleaf-Installer'; 'X-GitHub-Api-Version' = '2022-11-28' }
     $api = 'https://api.github.com/repos/simiooo/backleaf/releases'
     if ($Tag) {
-        if ($Tag -notmatch '^test-v[0-9]+\.[0-9]+\.[0-9]+-preview\.[0-9]+-[a-f0-9]{8}$') { throw 'Invalid Backleaf release tag.' }
+        if ($Tag -notmatch '^(?:v[0-9]+\.[0-9]+\.[0-9]+|test-v[0-9]+\.[0-9]+\.[0-9]+-preview\.[0-9]+-[a-f0-9]{8})$') { throw 'Invalid Backleaf release tag.' }
         $release = Invoke-RestMethod -Uri "$api/tags/$Tag" -Headers $headers -TimeoutSec 30 -ErrorAction Stop
     } else {
-        # /latest excludes prereleases. Select the newest published Backleaf test package.
+        # Prefer a published stable release. Preview remains the bootstrap fallback.
         $releases = Invoke-RestMethod -Uri "${api}?per_page=100" -Headers $headers -TimeoutSec 30 -ErrorAction Stop
-        $release = @($releases | Where-Object { !$_.draft -and $_.tag_name -match '^test-v[0-9]+\.[0-9]+\.[0-9]+-preview\.[0-9]+-[a-f0-9]{8}$' } |
+        $release = @($releases | Where-Object { !$_.draft -and !$_.prerelease -and $_.tag_name -match '^v[0-9]+\.[0-9]+\.[0-9]+$' } |
             Sort-Object { [DateTimeOffset]$_.published_at } -Descending | Select-Object -First 1)
+        if ($release.Count -eq 0) {
+            $release = @($releases | Where-Object { !$_.draft -and $_.tag_name -match '^test-v[0-9]+\.[0-9]+\.[0-9]+-preview\.[0-9]+-[a-f0-9]{8}$' } |
+                Sort-Object { [DateTimeOffset]$_.published_at } -Descending | Select-Object -First 1)
+        }
         if ($release.Count -ne 1) { throw 'No published Backleaf test package found.' }
         $release = $release[0]
     }
@@ -213,8 +217,15 @@ function Install-Backleaf {
         }
         Write-Host 'Finding Backleaf release...'
         $release = Get-BackleafRelease $Tag
-        if ($release.tag_name -notmatch '^test-v([0-9]+\.[0-9]+\.[0-9]+-preview\.[0-9]+)-([a-f0-9]{8})$') { throw 'Unexpected release tag.' }
-        $version = $Matches[1]; $sourceShort = $Matches[2]
+        $stableSource = $null
+        if ($release.tag_name -match '^test-v([0-9]+\.[0-9]+\.[0-9]+-preview\.[0-9]+)-([a-f0-9]{8})$') {
+            $version = $Matches[1]; $sourceShort = $Matches[2]
+        } elseif ($release.tag_name -match '^v([0-9]+\.[0-9]+\.[0-9]+)$') {
+            $version = $Matches[1]
+            $stableSource = [string]$release.target_commitish
+            if ($stableSource -cnotmatch '^[a-f0-9]{40}$') { throw 'Stable release must target an immutable full source commit.' }
+            $sourceShort = $stableSource.Substring(0,8)
+        } else { throw 'Unexpected release tag.' }
         $architecture = if ($env:PROCESSOR_ARCHITECTURE -eq 'ARM64') { 'arm64' } else { 'x64' }
         $zipName = "Backleaf-$version-$sourceShort-win-$architecture.zip"
         $metadataName = if ($architecture -eq 'arm64') { 'build-arm64.json' } else { 'build.json' }
@@ -228,7 +239,8 @@ function Install-Backleaf {
         }
         $metadata = Get-Content -LiteralPath (Join-Path $work $metadataName) -Raw | ConvertFrom-Json
         if ($metadata.version -ne $version -or $metadata.source_commit -notmatch '^[a-f0-9]{40}$' -or
-            !$metadata.source_commit.StartsWith($sourceShort) -or !$metadata.cli_smoke_passed) { throw 'Package source/version or CI smoke evidence mismatch.' }
+            !$metadata.source_commit.StartsWith($sourceShort) -or ($stableSource -and $metadata.source_commit -cne $stableSource) -or
+            !$metadata.cli_smoke_passed) { throw 'Package source/version or CI smoke evidence mismatch.' }
         $checksum = @((Get-Content -LiteralPath (Join-Path $work $sumsName)) | Where-Object { $_ -cmatch ('^[a-f0-9]{64}  ' + [regex]::Escape($zipName) + '$') })
         if ($checksum.Count -ne 1 -or $checksum[0].Substring(0,64) -ne (Get-FileHash -LiteralPath (Join-Path $work $zipName)).Hash.ToLowerInvariant()) { throw 'Package checksum manifest mismatch.' }
         $stage = Join-Path $work 'package'

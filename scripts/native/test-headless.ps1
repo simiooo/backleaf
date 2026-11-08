@@ -4,6 +4,8 @@ $projectRoot=(Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
 Push-Location $projectRoot
 try {
     $logPath=[IO.Path]::GetFullPath($Output)
+    # A caller may request the JSON report path; preserve a separate raw log.
+    if ([IO.Path]::GetExtension($logPath) -ieq '.json') { $logPath=[IO.Path]::ChangeExtension($logPath,'log') }
     New-Item -ItemType Directory -Force ([IO.Path]::GetDirectoryName($logPath)) | Out-Null
     cargo test --release --locked -p backleaf 'headless_tests::' -- --test-threads=1 *> $logPath
     $resultCode=$LASTEXITCODE

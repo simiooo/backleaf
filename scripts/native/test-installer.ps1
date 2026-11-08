@@ -36,7 +36,7 @@ function New-Fixture([string]$Version = '0.1.0-preview.15', [string]$Content = '
     [IO.File]::WriteAllText((Join-Path $package 'Backleaf.exe'), $Content)
     [IO.File]::WriteAllText((Join-Path $package 'lib/7z.dll'), 'archive library')
     $source = '786c6e53acd66e7e0a139b30aa6b4dc75e464897'
-    $tag = "test-v$Version-786c6e53"
+    $tag = if ($Version -match '-preview\.') { "test-v$Version-786c6e53" } else { "v$Version" }
     $zipName = "Backleaf-$Version-786c6e53-win-x64.zip"
     [IO.Compression.ZipFile]::CreateFromDirectory($package, (Join-Path $dir $zipName))
     @{ version = $Version; source_commit = $source; cli_smoke_passed = $true
@@ -50,7 +50,7 @@ function New-Fixture([string]$Version = '0.1.0-preview.15', [string]$Content = '
             digest = 'sha256:' + (Get-FileHash $file.FullName).Hash.ToLowerInvariant()
             browser_download_url = "https://github.com/simiooo/backleaf/releases/download/$tag/$name" }
     }
-    return [PSCustomObject]@{ dir = $dir; release = [PSCustomObject]@{ tag_name = $tag; draft = $false; published_at = '2026-11-05T06:50:20Z'; assets = @($assets) } }
+    return [PSCustomObject]@{ dir = $dir; release = [PSCustomObject]@{ tag_name = $tag; target_commitish = $source; draft = $false; prerelease = ($Version -match '-preview\.'); published_at = '2026-11-05T06:50:20Z'; assets = @($assets) } }
 }
 
 # Network and one rename fault are substituted. Get-Process exposes a stale record
@@ -59,6 +59,7 @@ function New-Fixture([string]$Version = '0.1.0-preview.15', [string]$Content = '
 function Invoke-RestMethod {
     param($Uri, $Headers, $TimeoutSec, $ErrorAction)
     if ($Uri -like '*/tags/runtime-v2') { return $script:runtimeFixture.release }
+    if ($Uri -like '*/tags/*') { return @($script:releases | Where-Object tag_name -eq ([Uri]$Uri).Segments[-1]) }
     return $script:releases
 }
 function Invoke-BackleafDownload {
@@ -115,6 +116,50 @@ try {
         $script:releases = @($draft, $script:fixture.release)
         Assert-True ((Get-BackleafRelease).tag_name -eq $script:fixture.release.tag_name) 'Wrong release selected.'
         $script:releases = @($script:fixture.release)
+    }
+    Test-Case 'stable release is preferred over newer preview and draft releases' {
+        $stable = [PSCustomObject]@{tag_name='v0.1.0';draft=$false;prerelease=$false;published_at='2026-01-01T00:00:00Z'}
+        $draft = [PSCustomObject]@{tag_name='v9.0.0';draft=$true;prerelease=$false;published_at='2099-01-01T00:00:00Z'}
+        $notStable = [PSCustomObject]@{tag_name='v1.0.0';draft=$false;prerelease=$true;published_at='2099-01-01T00:00:00Z'}
+        $script:releases = @($script:fixture.release,$draft,$notStable,$stable)
+        try { Assert-True ((Get-BackleafRelease).tag_name -eq 'v0.1.0') 'Stable release was not preferred.' }
+        finally { $script:releases = @($script:fixture.release) }
+    }
+    Test-Case 'explicit preview tag remains available when a stable release exists' {
+        $stable = [PSCustomObject]@{tag_name='v0.1.0';draft=$false;prerelease=$false;published_at='2099-01-01T00:00:00Z'}
+        $script:releases = @($stable,$script:fixture.release)
+        try { Assert-True ((Get-BackleafRelease -Tag $script:fixture.release.tag_name).tag_name -eq $script:fixture.release.tag_name) 'Explicit preview tag was ignored.' }
+        finally { $script:releases = @($script:fixture.release) }
+    }
+    Test-Case 'stable tag installs the exact source and records the release version' {
+        $originalFixture=$script:fixture
+        try {
+            $script:fixture=New-Fixture '0.1.0' 'stable binary'
+            $script:releases=@($script:fixture.release)
+            $stableTarget=Join-Path $sandbox 'stable-install'
+            $receipt=Install-Backleaf -Tag 'v0.1.0' -InstallDir $stableTarget -NoShortcut
+            Assert-True ($receipt.version -eq '0.1.0' -and $receipt.tag -eq 'v0.1.0') 'Wrong stable receipt.'
+            Assert-True ($receipt.source_commit -ceq $script:fixture.release.target_commitish) 'Stable source changed.'
+            Assert-True ((Get-Content -LiteralPath (Join-Path $stableTarget 'current/Backleaf.exe') -Raw) -eq 'stable binary') 'Wrong stable executable bytes.'
+        } finally { $script:fixture=$originalFixture; $script:releases=@($script:fixture.release) }
+    }
+    Test-Case 'stable release rejects a mutable branch target before downloading' {
+        $originalFixture=$script:fixture
+        try {
+            $script:fixture=New-Fixture '0.1.0'
+            $script:fixture.release.target_commitish='staging'
+            $script:releases=@($script:fixture.release)
+            Expect-Failure { Install-Backleaf -Tag 'v0.1.0' -InstallDir (Join-Path $sandbox 'mutable-stable') -NoShortcut } 'immutable full source commit'
+        } finally { $script:fixture=$originalFixture; $script:releases=@($script:fixture.release) }
+    }
+    Test-Case 'stable release requires the full commit even when short prefixes match' {
+        $originalFixture=$script:fixture
+        try {
+            $script:fixture=New-Fixture '0.1.0'
+            $script:fixture.release.target_commitish='786c6e53'+('a'*32)
+            $script:releases=@($script:fixture.release)
+            Expect-Failure { Install-Backleaf -Tag 'v0.1.0' -InstallDir (Join-Path $sandbox 'mismatched-stable') -NoShortcut } 'source/version'
+        } finally { $script:fixture=$originalFixture; $script:releases=@($script:fixture.release) }
     }
     Test-Case 'fresh install in a path containing spaces and Unicode' {
         $script:target = Join-Path $env:LOCALAPPDATA ('Programs/' + [char]0x62fe + [char]0x5f84 + ' Backleaf')

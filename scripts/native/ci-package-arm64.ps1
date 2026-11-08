@@ -9,7 +9,8 @@ New-Item -ItemType Directory -Force $bundle | Out-Null
 Copy-Item target/aarch64-pc-windows-msvc/release/backleaf.exe "$bundle/Backleaf.exe"
 New-Item -ItemType Directory -Force "$bundle/lib" | Out-Null
 Copy-Item assets/archive-engine/7z-arm64.dll "$bundle/lib/7z.dll"
-Copy-Item docs/native-preview-readme.txt "$bundle/README.txt"
+$readme = if ($version -match '-preview\.') { 'docs/native-preview-readme.txt' } else { 'docs/release-readme.txt' }
+Copy-Item $readme "$bundle/README.txt"
 Copy-Item LICENSE "$bundle/LICENSE"
 Copy-Item assets/brand/backleaf-logo.png "$bundle/Logo.png"
 Copy-Item design/Backleaf-brand-v3.fig "$bundle/Backleaf-brand-v3.fig"

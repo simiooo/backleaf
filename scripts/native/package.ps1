@@ -21,7 +21,8 @@ New-Item -ItemType Directory -Path (Split-Path -Parent $artifact) -Force | Out-N
 Copy-Item -LiteralPath (Join-Path $projectRoot 'target/release/backleaf.exe') -Destination (Join-Path $bundle 'Backleaf.exe')
 New-Item -ItemType Directory -Path (Join-Path $bundle 'lib') | Out-Null
 Copy-Item -LiteralPath (Join-Path $projectRoot 'assets/archive-engine/7z.dll') -Destination (Join-Path $bundle 'lib/7z.dll')
-Copy-Item -LiteralPath (Join-Path $projectRoot 'docs/native-preview-readme.txt') -Destination (Join-Path $bundle 'README.txt')
+$readme = if ($version -match '-preview\.') { 'docs/native-preview-readme.txt' } else { 'docs/release-readme.txt' }
+Copy-Item -LiteralPath (Join-Path $projectRoot $readme) -Destination (Join-Path $bundle 'README.txt')
 Copy-Item -LiteralPath (Join-Path $projectRoot 'LICENSE') -Destination (Join-Path $bundle 'LICENSE')
 Copy-Item -LiteralPath (Join-Path $projectRoot 'design/Backleaf-v46.fig') -Destination (Join-Path $bundle 'Backleaf-v46.fig')
 Copy-Item -LiteralPath (Join-Path $projectRoot 'assets/brand/backleaf-logo.png') -Destination (Join-Path $bundle 'Logo.png')

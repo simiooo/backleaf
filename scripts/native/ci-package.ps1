@@ -9,7 +9,8 @@ New-Item -ItemType Directory -Force $bundle | Out-Null
 Copy-Item target/release/backleaf.exe "$bundle/Backleaf.exe"
 New-Item -ItemType Directory -Force "$bundle/lib" | Out-Null
 Copy-Item assets/archive-engine/7z.dll "$bundle/lib/7z.dll"
-Copy-Item docs/native-preview-readme.txt "$bundle/README.txt"
+$readme = if ($version -match '-preview\.') { 'docs/native-preview-readme.txt' } else { 'docs/release-readme.txt' }
+Copy-Item $readme "$bundle/README.txt"
 Copy-Item LICENSE "$bundle/LICENSE"
 Copy-Item assets/brand/backleaf-logo.png "$bundle/Logo.png"
 Copy-Item design/Backleaf-brand-v3.fig "$bundle/Backleaf-brand-v3.fig"
@@ -65,4 +66,5 @@ $metadata | ConvertTo-Json -Depth 8 | Set-Content .local/ci/build.json -Encoding
 $sum = (Get-FileHash $zip).Hash.ToLowerInvariant() + '  ' + (Split-Path $zip -Leaf)
 $sum | Set-Content .local/ci/SHA256SUMS.txt -Encoding ascii
 ((Get-FileHash .local/ci/Backleaf-v46.fig).Hash.ToLowerInvariant()+'  Backleaf-v46.fig') | Add-Content .local/ci/SHA256SUMS.txt -Encoding ascii
-@{tag="test-v$version-$short";title="Backleaf $version · 原生测试包"} | ConvertTo-Json | Set-Content .local/ci/release.json -Encoding utf8
+$release = if ($version -match '-preview\.') { @{tag="test-v$version-$short";title="Backleaf $version · 原生测试包"} } else { @{tag="v$version";title="Backleaf $version"} }
+$release | ConvertTo-Json | Set-Content .local/ci/release.json -Encoding utf8

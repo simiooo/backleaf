@@ -1,0 +1,145 @@
+name: Windows Release
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: windows-release-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  package:
+    runs-on: windows-2025
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+          fetch-depth: 1
+      - uses: ilammy/msvc-dev-cmd@v1
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: '1.99.1'
+          components: rustfmt, clippy
+      - uses: Swatinem/rust-cache@v2
+        with:
+          cache-on-failure: true
+      - name: Check and build
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force .local/ci | Out-Null
+          cargo fmt -p backleaf --check *> .local/ci/fmt.log
+          if ($LASTEXITCODE) { Get-Content .local/ci/fmt.log; throw 'Format failed' }
+          cargo clippy --release --locked -p backleaf --all-targets --no-deps -- -D warnings *> .local/ci/clippy.log
+          if ($LASTEXITCODE) { Get-Content .local/ci/clippy.log; throw 'Clippy failed' }
+          cargo test --release --locked -p backleaf -- --skip headless_tests:: *> .local/ci/tests.log
+          if ($LASTEXITCODE) { Get-Content .local/ci/tests.log; throw 'Tests failed' }
+          cargo build --release --locked *> .local/ci/build.log
+          if ($LASTEXITCODE) { Get-Content .local/ci/build.log; throw 'Build failed' }
+      - name: GPUI headless interaction gate
+        shell: pwsh
+        run: ./scripts/native/test-headless.ps1 -Output .local/ci/headless.log
+      - name: Apply vendored startup patches
+        shell: pwsh
+        run: ./scripts/native/apply-vendor-patches.ps1
+      - name: Rebuild release with vendored patch
+        shell: pwsh
+        run: |
+          cargo build --release --locked *> .local/ci/build-optimized.log
+          if ($LASTEXITCODE) { Get-Content .local/ci/build-optimized.log; throw 'Optimized build failed' }
+      - name: Installer regression gate (Windows PowerShell 5.1)
+        shell: powershell
+        run: ./scripts/native/test-installer.ps1 -Output .local/ci/installer-tests-5.json
+      - name: Installer regression gate (PowerShell 7)
+        shell: pwsh
+        run: ./scripts/native/test-installer.ps1 -Output .local/ci/installer-tests-7.json
+      - name: Package and smoke
+        shell: pwsh
+        env:
+          BACKLEAF_VENDOR_PATCH: 'font-update-no-check+gpu-init-async'
+        run: ./scripts/native/ci-package.ps1
+      - name: Offline installed-package smoke (x64)
+        shell: pwsh
+        run: ./scripts/native/test-installer-package.ps1 -Architecture x64
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: windows-build-evidence
+          path: .local/ci
+          retention-days: 30
+  package-arm64:
+    runs-on: windows-11-arm
+    timeout-minutes: 90
+    env:
+      CARGO_BUILD_TARGET: aarch64-pc-windows-msvc
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+          fetch-depth: 1
+      - uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: arm64
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: '1.99.1'
+          targets: aarch64-pc-windows-msvc
+          components: rustfmt, clippy
+      - uses: Swatinem/rust-cache@v2
+        with:
+          cache-on-failure: true
+      - name: Check and build ARM64
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force .local/ci | Out-Null
+          cargo fmt -p backleaf --check *> .local/ci/fmt-arm64.log
+          if ($LASTEXITCODE) { Get-Content .local/ci/fmt-arm64.log; throw 'Format failed' }
+          cargo clippy --release --locked -p backleaf --all-targets --no-deps -- -D warnings *> .local/ci/clippy-arm64.log
+          if ($LASTEXITCODE) { Get-Content .local/ci/clippy-arm64.log; throw 'Clippy failed' }
+          cargo test --release --locked -p backleaf -- --skip headless_tests:: *> .local/ci/tests-arm64.log
+          if ($LASTEXITCODE) { Get-Content .local/ci/tests-arm64.log; throw 'Tests failed' }
+          cargo build --release --locked *> .local/ci/build-arm64.log
+          if ($LASTEXITCODE) { Get-Content .local/ci/build-arm64.log; throw 'ARM64 build failed' }
+      - name: GPUI headless interaction gate (ARM64)
+        shell: pwsh
+        run: ./scripts/native/test-headless.ps1 -Output .local/ci/headless.log
+      - name: Apply vendored startup patches (ARM64)
+        shell: pwsh
+        run: ./scripts/native/apply-vendor-patches.ps1
+      - name: Rebuild ARM64 release with vendored patch
+        shell: pwsh
+        run: |
+          cargo build --release --locked *> .local/ci/build-arm64-optimized.log
+          if ($LASTEXITCODE) { Get-Content .local/ci/build-arm64-optimized.log; throw 'Optimized ARM64 build failed' }
+      - name: Package and smoke ARM64
+        shell: pwsh
+        env:
+          BACKLEAF_VENDOR_PATCH: 'font-update-no-check+gpu-init-async'
+        run: ./scripts/native/ci-package-arm64.ps1
+      - name: Offline installed-package smoke (arm64)
+        shell: pwsh
+        run: ./scripts/native/test-installer-package.ps1 -Architecture arm64
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: windows-arm64-build-evidence
+          path: .local/ci
+          retention-days: 30
+  publish:
+    needs: [package, package-arm64]
+    runs-on: windows-2025
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: windows-build-evidence
+          path: .local/release-x64
+      - uses: actions/download-artifact@v4
+        with:
+          name: windows-arm64-build-evidence
+          path: .local/release-arm64
+      - name: Verify both architectures and publish stable Release
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: ./scripts/native/publish-release.ps1 -ExpectedSource $env:GITHUB_SHA
