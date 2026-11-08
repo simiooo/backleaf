@@ -132,19 +132,6 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: ./scripts/native/publish-arm64.ps1 -ExpectedSource $env:GITHUB_SHA
-      - name: ARM64 installer smoke
+      - name: ARM64 installer offline smoke
         shell: pwsh
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          $metadata = Get-Content .local/ci/build-arm64.json -Raw | ConvertFrom-Json
-          $tag = "test-v$($metadata.version)-$($env:GITHUB_SHA.Substring(0,8))"
-          $target = Join-Path $env:TEMP "backleaf-arm64-install-$env:GITHUB_RUN_ID"
-          if (Test-Path -LiteralPath $target) { Remove-Item -LiteralPath $target -Recurse -Force }
-          ./install.ps1 -Tag $tag -InstallDir $target -NoShortcut
-          $receipt = Get-Content -LiteralPath (Join-Path $target 'current/.backleaf-install.json') -Raw | ConvertFrom-Json
-          if ($receipt.architecture -ne 'arm64' -or $receipt.version -ne $metadata.version) { throw 'ARM64 installer selected the wrong package.' }
-          $session = Join-Path $target 'session.json'
-          $process = Start-Process -FilePath (Join-Path $target 'current/Backleaf.exe') -ArgumentList @('--session-status-file',('"'+$session+'"')) -PassThru -Wait -WindowStyle Hidden
-          if ($process.ExitCode -ne 0 -or !(Test-Path -LiteralPath $session)) { throw 'Installed ARM64 executable CLI smoke failed.' }
-          Remove-Item -LiteralPath $target -Recurse -Force
+        run: ./scripts/native/test-installer-arm64.ps1 -PackageDirectory .local/ci
