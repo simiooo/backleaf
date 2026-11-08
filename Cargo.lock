@@ -226,7 +226,7 @@ dependencies = [
 
 [[package]]
 name = "backleaf"
-version = "0.1.0-preview.46"
+version = "0.1.0-preview.47"
 dependencies = [
  "accesskit",
  "anyhow",

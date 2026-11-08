@@ -1610,6 +1610,16 @@ fn automatic_search_uses_covered_index_and_falls_back_after_removal() {
 }
 
 #[test]
+fn titlebar_overflow_button_toggles_the_app_menu() {
+    let mut h = Harness::new(&["note.txt"], None);
+    assert!(!h.read(|this, _| this.app_menu_open));
+    h.click(960., 24., MouseButton::Left);
+    assert!(h.read(|this, _| this.app_menu_open));
+    h.click(960., 24., MouseButton::Left);
+    assert!(!h.read(|this, _| this.app_menu_open));
+}
+
+#[test]
 fn titlebar_press_dismisses_path_tree_and_search_but_keeps_search_field_presses() {
     let mut h = Harness::new(&["note.txt"], None);
     let view = h.view.clone();
@@ -1630,7 +1640,7 @@ fn titlebar_press_dismisses_path_tree_and_search_but_keeps_search_field_presses(
     assert!(h.read(|this, _| this.search.open));
     h.click(800., 24., MouseButton::Left);
     assert!(h.read(|this, _| this.search.open));
-    h.click(640., 24., MouseButton::Left);
+    h.click(84., 24., MouseButton::Left);
     assert!(!h.read(|this, _| this.search.open));
     assert!(h.grid_focused());
 }

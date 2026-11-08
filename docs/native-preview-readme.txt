@@ -1,9 +1,18 @@
-拾径 / Backleaf 0.1.0-preview.46
+拾径 / Backleaf 0.1.0-preview.47
 
 Windows x64 便携测试版：解压整个ZIP，运行Backleaf.exe。或在PowerShell执行：
 irm https://raw.githubusercontent.com/simiooo/backleaf/staging/install.ps1 | iex
 
-本批次（GPU 并发初始化实验）：
+本批次（标题栏三点菜单与“设为默认”）：
+- 右上角最小化按钮左侧新增三点菜单按钮，位于窗口标题按钮组之前；不占用 Windows 原生 caption 区域，窗口拖动/最小化/最大化/关闭行为不变。
+- 菜单首项为“设为默认”，并按运行形态适配：安装版可点击，打开 Windows“默认应用”设置页（Windows 不允许应用静默改写默认关联）；便携版/开发版显示“不写系统默认项”并禁用该项。
+- 菜单跟随浅色/深色主题，使用 floating surface、边框、阴影与悬停；窗口较窄时宽度收缩，不超出客户区；支持 Escape、点外部关闭、窗口失焦/隐藏自动关闭。
+- 新增 `default_app::classify` 安装形态单元测试与 headless `titlebar_overflow_button_toggles_the_app_menu`；native 136 项、headless 52 项。
+- 菜单目前只有第一项，后续项可继续加；未实现静默注册表改写。
+
+以下保留 preview.46 及更早内容：
+
+preview.46（GPU 并发初始化实验）：
 - 将 DirectX 设备创建移到后台线程，与 Windows 平台/字体/窗口初始化并发；`attach_gpu` 在主线程取回设备后再创建渲染器。真机启动截图确认文字、文件卡片、侧栏和圆角表面正常。
 - 本机 release 对比（同一 binary，通过临时开关串行/并发各 5 次）：平台阶段中位数约 152ms→116ms，窗口构造约 215ms→195ms，首次可交互约 250ms→230ms。
 - 目标 190ms **未达成**：剩余主要成本是窗口创建/DirectX 渲染资源约 80ms、首帧布局/字体 shaping 约 30ms，以及进程加载/外部开销约 70ms，都已无法靠单纯并发字体/GPU 消除。

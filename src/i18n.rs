@@ -395,6 +395,25 @@ const EN: &[(&str, &str)] = &[
         "Content · {} · include subfolders",
     ),
     ("第 {} 行 · {}", "Line {} · {}"),
+    ("更多", "More"),
+    ("应用菜单", "App menu"),
+    ("设为默认", "Set as default"),
+    (
+        "在 Windows 设置中确认默认应用",
+        "Confirm in Windows default apps settings",
+    ),
+    (
+        "便携版不写系统默认项",
+        "Portable builds cannot change system defaults",
+    ),
+    (
+        "开发版不写系统默认项",
+        "Development builds cannot change system defaults",
+    ),
+    (
+        "无法打开 Windows 默认应用设置",
+        "Could not open Windows default apps settings",
+    ),
     // ---- dialogs / drag ----
     ("解压文件", "Extract file"),
     ("归档", "Archive"),

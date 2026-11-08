@@ -696,7 +696,12 @@ impl Backleaf {
         } else {
             72.
         };
-        (f32::from(window.viewport_size().width) - 264. - search - operations).max(80.)
+        (f32::from(window.viewport_size().width)
+            - 264.
+            - (layout::CHROME.caption_width + layout::CHROME.caption_gap)
+            - search
+            - operations)
+            .max(80.)
     }
     pub fn path_control(
         &self,

@@ -171,6 +171,10 @@ impl Backleaf {
     /// press behavior (the search field and the path dropdown toggle) stop
     /// propagation first, so pressing them keeps their existing behavior.
     pub fn dismiss_titlebar_popups(&mut self, window: &mut Window, cx: &mut Context<Self>) {
+        if self.app_menu_open {
+            self.app_menu_open = false;
+            cx.notify();
+        }
         if self.search.open {
             self.close_search_checked(window, cx);
         }
