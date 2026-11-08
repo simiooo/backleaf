@@ -1,8 +1,4 @@
-//! Background/idle policy for the index writer. Heavy directory crawling only runs
-//! at full speed while the system is idle; while the user is active it trickles (and
-//! the writer thread runs in background priority) so index maintenance stays
-//! invisible. Notification batches are still applied every loop regardless of idle
-//! state.
+use std::sync::atomic::{AtomicBool, Ordering};
 use std::time::Duration;
 use windows::Win32::System::Threading::{
     GetCurrentThread, SetThreadPriority, THREAD_MODE_BACKGROUND_BEGIN,
@@ -11,27 +7,57 @@ use windows::Win32::System::Threading::{
 /// System-wide input idle threshold for full-speed crawling.
 pub const IDLE_THRESHOLD: Duration = Duration::from_secs(15);
 
+/// Whether the app currently has a visible, active window. Crawling keeps a low
+/// duty cycle while the user is looking at the app, and runs at full speed only
+/// when the window is in the background/hidden and the system is idle.
+static WINDOW_FOREGROUND: AtomicBool = AtomicBool::new(false);
+
+pub fn set_window_foreground(foreground: bool) {
+    WINDOW_FOREGROUND.store(foreground, Ordering::Relaxed);
+}
+
+fn window_foreground() -> bool {
+    WINDOW_FOREGROUND.load(Ordering::Relaxed)
+}
+
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct CrawlBudget {
     pub max_directories: usize,
     pub window: Duration,
     pub work_sleep: Duration,
+    pub directory_sleep: Duration,
 }
 
-/// Full-speed while idle; a small trickle while the user is active so a large
-/// initial build still eventually finishes and notifications keep flowing.
+/// Full-speed while the system is idle and the window is in the background; a
+/// low foreground-idle duty cycle so a long build cannot fan the CPU while the
+/// user is reading the app; a small trickle while input is active.
 pub fn crawl_budget(idle: Duration) -> CrawlBudget {
+    crawl_budget_for(idle, window_foreground())
+}
+
+fn crawl_budget_for(idle: Duration, foreground: bool) -> CrawlBudget {
     if idle >= IDLE_THRESHOLD {
-        CrawlBudget {
-            max_directories: 32,
-            window: Duration::from_millis(500),
-            work_sleep: Duration::from_millis(1),
+        if foreground {
+            CrawlBudget {
+                max_directories: 8,
+                window: Duration::from_millis(500),
+                work_sleep: Duration::from_millis(1),
+                directory_sleep: Duration::from_millis(12),
+            }
+        } else {
+            CrawlBudget {
+                max_directories: 32,
+                window: Duration::from_millis(500),
+                work_sleep: Duration::from_millis(1),
+                directory_sleep: Duration::ZERO,
+            }
         }
     } else {
         CrawlBudget {
             max_directories: 1,
             window: Duration::from_millis(20),
             work_sleep: Duration::from_millis(80),
+            directory_sleep: Duration::ZERO,
         }
     }
 }
@@ -97,13 +123,24 @@ mod tests {
 
     #[test]
     fn active_system_gets_a_smaller_crawl_budget_than_idle() {
-        let active = crawl_budget(Duration::ZERO);
-        let active_boundary = crawl_budget(IDLE_THRESHOLD - Duration::from_millis(1));
-        let idle = crawl_budget(IDLE_THRESHOLD);
+        let active = crawl_budget_for(Duration::ZERO, false);
+        let active_boundary = crawl_budget_for(IDLE_THRESHOLD - Duration::from_millis(1), false);
+        let idle = crawl_budget_for(IDLE_THRESHOLD, false);
         assert_eq!(active, active_boundary);
         assert!(active.max_directories < idle.max_directories);
         assert!(active.window < idle.window);
         assert!(active.work_sleep > idle.work_sleep);
+        assert_eq!(active.directory_sleep, Duration::ZERO);
+    }
+
+    #[test]
+    fn foreground_idle_crawls_more_slowly_than_background_idle() {
+        let background = crawl_budget_for(IDLE_THRESHOLD, false);
+        let foreground = crawl_budget_for(IDLE_THRESHOLD, true);
+        assert!(foreground.max_directories < background.max_directories);
+        assert!(foreground.directory_sleep > background.directory_sleep);
+        assert_eq!(background.directory_sleep, Duration::ZERO);
+        assert_eq!(foreground.window, background.window);
     }
 
     #[test]

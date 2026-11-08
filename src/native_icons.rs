@@ -75,6 +75,8 @@ struct Entry {
 }
 pub struct Cache {
     shared: Arc<Shared>,
+    tx: async_channel::Sender<crate::model::Event>,
+    started: bool,
     entries: HashMap<PathBuf, Entry>,
     epoch: u64,
     used: u64,
@@ -82,8 +84,23 @@ pub struct Cache {
 }
 impl Cache {
     pub fn new(tx: async_channel::Sender<crate::model::Event>) -> Self {
-        let shared = Arc::new(Shared::default());
-        let worker = shared.clone();
+        Self {
+            shared: Arc::new(Shared::default()),
+            tx,
+            started: false,
+            entries: HashMap::new(),
+            epoch: 0,
+            used: 0,
+            peak: 0,
+        }
+    }
+    fn ensure_worker(&mut self) {
+        if self.started {
+            return;
+        }
+        self.started = true;
+        let worker = self.shared.clone();
+        let tx = self.tx.clone();
         std::thread::Builder::new()
             .name("embedded-application-icons".into())
             .spawn(move || {
@@ -129,13 +146,6 @@ impl Cache {
                 }
             })
             .expect("application icon worker");
-        Self {
-            shared,
-            entries: HashMap::new(),
-            epoch: 0,
-            used: 0,
-            peak: 0,
-        }
     }
     pub fn sync(&mut self, epoch: u64, active: bool, window: &mut Window) {
         let mut state = self.shared.state.lock().unwrap();
@@ -179,6 +189,7 @@ impl Cache {
         self.shared.changed.notify_one();
     }
     pub fn image(&mut self, path: PathBuf) -> Option<ImageSource> {
+        self.ensure_worker();
         self.used += 1;
         if let Some(entry) = self.entries.get_mut(&path) {
             entry.used = self.used;

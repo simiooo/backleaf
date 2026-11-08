@@ -55,6 +55,8 @@ struct Entry {
 }
 pub struct Cache {
     shared: Arc<Shared>,
+    tx: async_channel::Sender<crate::model::Event>,
+    started: bool,
     entries: HashMap<PathBuf, Entry>,
     pending: HashSet<PathBuf>,
     epoch: u64,
@@ -64,11 +66,27 @@ pub struct Cache {
 }
 impl Cache {
     pub fn new(tx: async_channel::Sender<crate::model::Event>) -> Self {
-        let shared = Arc::new(Shared {
-            state: Mutex::new(State::default()),
-            changed: Condvar::new(),
-        });
-        let worker = shared.clone();
+        Self {
+            shared: Arc::new(Shared {
+                state: Mutex::new(State::default()),
+                changed: Condvar::new(),
+            }),
+            tx,
+            started: false,
+            entries: HashMap::new(),
+            pending: HashSet::new(),
+            epoch: u64::MAX,
+            active: false,
+            used: 0,
+            peak: 0,
+        }
+    }
+    fn ensure_workers(&mut self) {
+        if self.started {
+            return;
+        }
+        self.started = true;
+        let worker = self.shared.clone();
         std::thread::Builder::new()
             .name("visible-image-thumbnails".into())
             .spawn(move || {
@@ -110,7 +128,8 @@ impl Cache {
                 }
             })
             .expect("visible image thumbnail worker");
-        let notifier = shared.clone();
+        let notifier = self.shared.clone();
+        let tx = self.tx.clone();
         std::thread::Builder::new()
             .name("visible-image-thumbnail-notifier".into())
             .spawn(move || {
@@ -146,15 +165,6 @@ impl Cache {
                 }
             })
             .expect("visible image thumbnail notifier");
-        Self {
-            shared,
-            entries: HashMap::new(),
-            pending: HashSet::new(),
-            epoch: u64::MAX,
-            active: false,
-            used: 0,
-            peak: 0,
-        }
     }
     /// Drain worker results and bind them to the current directory generation.
     pub fn sync(&mut self, epoch: u64, active: bool, window: &mut Window) {
@@ -204,6 +214,7 @@ impl Cache {
     /// Request a thumbnail for a rendered cell. Returns a ready image or `None`
     /// while the worker is still busy or when the file has no usable preview.
     pub fn image(&mut self, path: PathBuf) -> Option<ImageSource> {
+        self.ensure_workers();
         self.used += 1;
         if let Some(entry) = self.entries.get_mut(&path) {
             entry.used = self.used;

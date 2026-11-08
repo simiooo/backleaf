@@ -133,103 +133,243 @@ pub fn spawn(
 ) {
     let _ = std::thread::Builder::new()
         .name("backleaf-content-search".into())
-        .spawn(move || {
-            let query_lower = query.to_ascii_lowercase();
-            let mut batch = Vec::new();
-            let mut scanned = 0usize;
-            let mut scanned_bytes = 0u64;
-            let mut dirs = 0usize;
-            let mut results = 0usize;
-            let mut truncated = false;
-            let cancel = || latest.load(Ordering::Acquire) != token;
-            let mut stack = vec![root];
-            let mut seen_dirs = std::collections::HashSet::new();
-            'scan: while let Some(directory) = stack.pop() {
-                if cancel() {
-                    return;
-                }
-                if dirs >= MAX_DIRS || scanned >= MAX_FILES || scanned_bytes >= MAX_SCANNED_BYTES {
-                    truncated = true;
-                    break;
-                }
-                dirs += 1;
-                let Ok(read) = std::fs::read_dir(&directory) else {
-                    continue;
-                };
-                let mut entries = read.flatten().collect::<Vec<_>>();
-                entries.sort_by_key(|entry| entry.file_name());
-                for entry in entries {
-                    if cancel() {
-                        return;
-                    }
-                    if results >= limit {
-                        truncated = true;
-                        break 'scan;
-                    }
-                    let Ok(kind) = entry.file_type() else {
-                        continue;
-                    };
-                    if kind.is_symlink() {
-                        continue;
-                    }
-                    let path = entry.path();
-                    if kind.is_dir() {
-                        let canonical = path.canonicalize().unwrap_or_else(|_| path.clone());
-                        if seen_dirs.insert(canonical) {
-                            stack.push(path);
-                        }
-                    } else if kind.is_file() {
-                        if scanned >= MAX_FILES {
-                            truncated = true;
-                            break 'scan;
-                        }
-                        scanned += 1;
-                        let metadata = std::fs::metadata(&path).ok();
-                        if let Some(meta) = &metadata {
-                            scanned_bytes = scanned_bytes.saturating_add(meta.len());
-                        }
-                        let found = metadata
-                            .filter(|meta| meta.len() <= MAX_FILE_BYTES)
-                            .and_then(|meta| {
-                                let len = meta.len();
-                                let modified = meta.modified().ok();
-                                let text = cache.get(&path, len, modified).unwrap_or_else(|| {
-                                    let text = read_text_file(&path, len);
-                                    cache.put(path.clone(), len, modified, text.clone());
-                                    text
-                                });
-                                text.and_then(|text| find_match(&path, &text, &query_lower))
-                            });
-                        if let Some(found) = found {
-                            batch.push(found);
-                            results += 1;
-                            if batch.len() >= BATCH_SIZE
-                                && !send(
-                                    &tx,
-                                    token,
-                                    std::mem::take(&mut batch),
-                                    scanned,
-                                    false,
-                                    false,
-                                    None,
-                                )
-                            {
-                                return;
-                            }
-                        } else if scanned.is_multiple_of(256)
-                            && batch.is_empty()
-                            && !send(&tx, token, Vec::new(), scanned, false, false, None)
-                        {
-                            return;
-                        }
-                    }
-                }
-            }
+        .spawn(move || scan(token, root, query, limit, tx, latest, cache));
+}
+
+/// Directory walking stays ordered; file reads/sniffing run on a small worker
+/// pool so a large tree does not serialize disk reads and decoding behind one
+/// core. Batches are emitted by whichever worker finds them; the coordinator
+/// emits the single done notice after all workers stop.
+fn scan(
+    token: u64,
+    root: PathBuf,
+    query: String,
+    limit: usize,
+    tx: async_channel::Sender<crate::model::Event>,
+    latest: Arc<AtomicU64>,
+    cache: Arc<TextCache>,
+) {
+    use std::sync::{
+        atomic::{AtomicBool, AtomicUsize},
+        mpsc,
+    };
+    let query_lower = Arc::new(query.to_ascii_lowercase());
+    let (work_tx, work_rx) = mpsc::channel::<PathBuf>();
+    let work_rx = Arc::new(Mutex::new(work_rx));
+    let scanned = Arc::new(AtomicUsize::new(0));
+    let scanned_bytes = Arc::new(AtomicU64::new(0));
+    let results = Arc::new(AtomicUsize::new(0));
+    let truncated = Arc::new(AtomicBool::new(false));
+    let workers = std::thread::available_parallelism()
+        .map(|parallelism| parallelism.get().clamp(2, 4))
+        .unwrap_or(2);
+    let mut handles = Vec::with_capacity(workers);
+    for _ in 0..workers {
+        let work_rx = work_rx.clone();
+        let query_lower = query_lower.clone();
+        let tx = tx.clone();
+        let latest = latest.clone();
+        let cache = cache.clone();
+        let scanned = scanned.clone();
+        let scanned_bytes = scanned_bytes.clone();
+        let results = results.clone();
+        let truncated = truncated.clone();
+        handles.push(
+            std::thread::Builder::new()
+                .name("backleaf-content-file".into())
+                .spawn(move || {
+                    worker_loop(
+                        work_rx,
+                        query_lower,
+                        tx,
+                        latest,
+                        token,
+                        limit,
+                        cache,
+                        scanned,
+                        scanned_bytes,
+                        results,
+                        truncated,
+                    );
+                })
+                .expect("content file worker"),
+        );
+    }
+    let cancel = || latest.load(Ordering::Acquire) != token;
+    let mut stack = vec![root];
+    let mut seen_dirs = std::collections::HashSet::new();
+    let mut dirs = 0usize;
+    'walk: while let Some(directory) = stack.pop() {
+        if cancel() {
+            return;
+        }
+        if dirs >= MAX_DIRS
+            || scanned.load(Ordering::Acquire) >= MAX_FILES
+            || scanned_bytes.load(Ordering::Acquire) >= MAX_SCANNED_BYTES
+        {
+            truncated.store(true, Ordering::Release);
+            break;
+        }
+        dirs += 1;
+        let Ok(read) = std::fs::read_dir(&directory) else {
+            continue;
+        };
+        let mut entries = read.flatten().collect::<Vec<_>>();
+        entries.sort_by_key(|entry| entry.file_name());
+        for entry in entries {
             if cancel() {
                 return;
             }
-            let _ = send(&tx, token, batch, scanned, true, truncated, None);
-        });
+            if results.load(Ordering::Acquire) >= limit {
+                truncated.store(true, Ordering::Release);
+                break 'walk;
+            }
+            let Ok(kind) = entry.file_type() else {
+                continue;
+            };
+            if kind.is_symlink() {
+                continue;
+            }
+            let path = entry.path();
+            if kind.is_dir() {
+                let canonical = path.canonicalize().unwrap_or_else(|_| path.clone());
+                if seen_dirs.insert(canonical) {
+                    stack.push(path);
+                }
+            } else if kind.is_file() && scanned.fetch_add(1, Ordering::AcqRel) >= MAX_FILES {
+                truncated.store(true, Ordering::Release);
+                break 'walk;
+            } else if kind.is_file() && work_tx.send(path).is_err() {
+                break 'walk;
+            }
+        }
+    }
+    drop(work_tx);
+    for handle in handles {
+        let _ = handle.join();
+    }
+    if cancel() {
+        return;
+    }
+    let scanned = scanned.load(Ordering::Acquire).min(MAX_FILES);
+    let _ = send(
+        &tx,
+        token,
+        Vec::new(),
+        scanned,
+        true,
+        truncated.load(Ordering::Acquire),
+        None,
+    );
+}
+
+#[expect(
+    clippy::too_many_arguments,
+    reason = "worker shares the frozen search budget explicitly"
+)]
+fn worker_loop(
+    work_rx: Arc<Mutex<std::sync::mpsc::Receiver<PathBuf>>>,
+    query_lower: Arc<String>,
+    tx: async_channel::Sender<crate::model::Event>,
+    latest: Arc<AtomicU64>,
+    token: u64,
+    limit: usize,
+    cache: Arc<TextCache>,
+    scanned: Arc<std::sync::atomic::AtomicUsize>,
+    scanned_bytes: Arc<AtomicU64>,
+    results: Arc<std::sync::atomic::AtomicUsize>,
+    truncated: Arc<std::sync::atomic::AtomicBool>,
+) {
+    let cancel = || latest.load(Ordering::Acquire) != token;
+    let mut batch = Vec::new();
+    let mut processed = 0usize;
+    type FileResult = Option<Found>;
+    loop {
+        let path = {
+            let receiver = work_rx.lock().unwrap();
+            match receiver.recv() {
+                Ok(path) => path,
+                Err(_) => break,
+            }
+        };
+        if cancel() {
+            return;
+        }
+        processed += 1;
+        let found: FileResult = std::fs::metadata(&path)
+            .ok()
+            .filter(|meta| meta.len() <= MAX_FILE_BYTES)
+            .and_then(|meta| {
+                let len = meta.len();
+                let modified = meta.modified().ok();
+                if scanned_bytes
+                    .fetch_add(len, Ordering::AcqRel)
+                    .saturating_add(len)
+                    >= MAX_SCANNED_BYTES
+                {
+                    truncated.store(true, Ordering::Release);
+                }
+                let text = cache.get(&path, len, modified).unwrap_or_else(|| {
+                    let text = read_text_file(&path, len);
+                    cache.put(path.clone(), len, modified, text.clone());
+                    text
+                });
+                text.and_then(|text| find_match(&path, &text, &query_lower))
+            });
+        if let Some(found) = found {
+            if results.fetch_add(1, Ordering::AcqRel) >= limit {
+                truncated.store(true, Ordering::Release);
+                continue;
+            }
+            batch.push(found);
+            if batch.len() >= BATCH_SIZE
+                && !send(
+                    &tx,
+                    token,
+                    std::mem::take(&mut batch),
+                    scanned.load(Ordering::Acquire),
+                    false,
+                    false,
+                    None,
+                )
+            {
+                return;
+            }
+        } else if processed.is_multiple_of(256)
+            && batch.is_empty()
+            && !send(
+                &tx,
+                token,
+                Vec::new(),
+                scanned.load(Ordering::Acquire),
+                false,
+                false,
+                None,
+            )
+        {
+            return;
+        }
+        if results.load(Ordering::Acquire) >= limit {
+            truncated.store(true, Ordering::Release);
+            break;
+        }
+        if scanned_bytes.load(Ordering::Acquire) >= MAX_SCANNED_BYTES {
+            truncated.store(true, Ordering::Release);
+            break;
+        }
+    }
+    if cancel() {
+        return;
+    }
+    let _ = send(
+        &tx,
+        token,
+        batch,
+        scanned.load(Ordering::Acquire),
+        false,
+        false,
+        None,
+    );
 }
 fn send(
     tx: &async_channel::Sender<crate::model::Event>,
@@ -444,8 +584,54 @@ fn highlights(text: &str, query_lower: &str) -> Vec<std::ops::Range<usize>> {
 }
 #[cfg(test)]
 mod tests {
-    use super::{TextCache, decode_text, find_match, read_text_file};
+    use super::{Notice, TextCache, decode_text, find_match, read_text_file, spawn};
     use std::path::Path;
+    use std::sync::Arc;
+    use std::sync::atomic::AtomicU64;
+    #[test]
+    fn parallel_scan_honors_the_result_limit_and_finishes_once() {
+        let fixture = crate::test_support::Fixture::new("content-parallel");
+        let root = fixture.0.join("files");
+        std::fs::create_dir_all(root.join("nested")).unwrap();
+        for index in 0..20 {
+            let directory = if index % 2 == 0 {
+                root.clone()
+            } else {
+                root.join("nested")
+            };
+            std::fs::write(
+                directory.join(format!("note-{index:02}.txt")),
+                format!("needle in file {index}"),
+            )
+            .unwrap();
+        }
+        let (tx, rx) = async_channel::unbounded();
+        spawn(
+            7,
+            root,
+            "needle".into(),
+            7,
+            tx,
+            Arc::new(AtomicU64::new(7)),
+            Arc::new(TextCache::new()),
+        );
+        let mut results = 0usize;
+        let mut done = 0usize;
+        while let Ok(crate::model::Event::ContentSearch(Notice::Batch {
+            done: batch_done,
+            matches,
+            ..
+        })) = rx.recv_blocking()
+        {
+            results += matches.len();
+            if batch_done {
+                done += 1;
+                break;
+            }
+        }
+        assert_eq!(done, 1);
+        assert_eq!(results, 7);
+    }
     #[test]
     fn text_sniffing_rejects_binary_and_accepts_utf8_and_utf16() {
         assert!(decode_text(b"hello\nworld\n").is_some());

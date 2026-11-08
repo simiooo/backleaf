@@ -1063,6 +1063,55 @@ fn next_dir_entry(
     }
     source.next()
 }
+fn artifact_directory(path: &Path) -> bool {
+    let Some(name) = path.file_name().and_then(|name| name.to_str()) else {
+        return false;
+    };
+    let name = name.to_ascii_lowercase();
+    match name.as_str() {
+        ".git" | ".svn" | ".hg" | ".vs" | ".idea" | "__pycache__" | ".pytest_cache" | ".next"
+        | ".nuxt" => true,
+        "target" => path
+            .parent()
+            .is_some_and(|parent| parent.join("Cargo.toml").is_file()),
+        "node_modules" => path.parent().is_some_and(|parent| {
+            parent.join("package.json").is_file()
+                || parent.join("pnpm-lock.yaml").is_file()
+                || parent.join("yarn.lock").is_file()
+        }),
+        ".venv" | "venv" => path.parent().is_some_and(|parent| {
+            parent.join("pyproject.toml").is_file()
+                || parent.join("requirements.txt").is_file()
+                || parent.join("Pipfile").is_file()
+        }),
+        _ => false,
+    }
+}
+
+/// Excluded artifact directories are removed from the index when encountered;
+/// they stay visible in the directory grid but do not contribute search rows.
+fn purge_artifact_subtree(
+    txn: &rusqlite::Transaction<'_>,
+    root: i64,
+    path: &Path,
+) -> anyhow::Result<usize> {
+    let encoded = encode_path(path);
+    let prefix_length = encoded.len() as i64;
+    let removed = txn.execute(
+        "DELETE FROM entries WHERE root=?1 AND substr(path,1,?2)=?3",
+        params![root, prefix_length, encoded],
+    )?;
+    txn.execute(
+        "DELETE FROM frontier WHERE root=?1 AND substr(path,1,?2)=?3",
+        params![root, prefix_length, encoded],
+    )?;
+    txn.execute(
+        "DELETE FROM problems WHERE root=?1 AND substr(path,1,?2)=?3",
+        params![root, prefix_length, encoded],
+    )?;
+    Ok(removed)
+}
+
 fn reconcile(
     db: &mut Connection,
     root: i64,
@@ -1133,6 +1182,9 @@ fn reconcile(
                             enumerate_start,
                         );
                         crate::index::profile::RECONCILED_ENTRIES.fetch_add(1, Ordering::Relaxed);
+                    }
+                    if metadata.directory && artifact_directory(&path) {
+                        continue;
                     }
                     new_entries.push((path, metadata));
                     if new_entries.len() > FAST_PATH_LIMIT {
@@ -1237,6 +1289,16 @@ fn reconcile(
                     captured
                 }
             };
+            if metadata.directory && artifact_directory(&path) {
+                let removed = purge_artifact_subtree(&txn, root, &path)?;
+                if removed > 0 {
+                    txn.execute(
+                        "UPDATE roots SET count=max(0,count-?2) WHERE id=?1",
+                        params![root, removed as i64],
+                    )?;
+                }
+                continue;
+            }
             #[cfg(test)]
             let upsert_start = Instant::now();
             upsert(&txn, root, parent, &path, &metadata, epoch, crawl)?;
@@ -1369,6 +1431,9 @@ impl Service {
                             let next=db.query_row("SELECT root,path,crawl FROM frontier ORDER BY crawl,root,path LIMIT 1",[],|r|Ok((r.get::<_,i64>(0)?,decode_path(&r.get::<_,Vec<u8>>(1)?),r.get::<_,bool>(2)?))).optional()?;
                             let Some((root,path,crawl))=next else{break;};
                             reconcile(&mut db,root,&path,crawl,&directory,&halted,&tx)?;
+                            if !budget.directory_sleep.is_zero() {
+                                std::thread::sleep(budget.directory_sleep);
+                            }
                             last_reconcile=Instant::now();
                             processed+=1;
                             worked=true;
@@ -1445,6 +1510,84 @@ impl Drop for WriterLock {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn artifact_directories_require_their_project_markers() {
+        let f = crate::test_support::Fixture::new("index-artifacts");
+        let rust = f.0.join("rust");
+        std::fs::create_dir_all(rust.join("target")).unwrap();
+        std::fs::write(rust.join("Cargo.toml"), b"[package]").unwrap();
+        assert!(artifact_directory(&rust.join("target")));
+        let plain = f.0.join("plain");
+        std::fs::create_dir_all(plain.join("target")).unwrap();
+        assert!(!artifact_directory(&plain.join("target")));
+        let web = f.0.join("web");
+        std::fs::create_dir_all(web.join("node_modules")).unwrap();
+        std::fs::write(web.join("package.json"), b"{}").unwrap();
+        assert!(artifact_directory(&web.join("node_modules")));
+        assert!(artifact_directory(&f.0.join(".git")));
+        assert!(!artifact_directory(&f.0.join("ordinary")));
+    }
+    #[test]
+    fn index_excludes_generated_artifact_directories() {
+        let f = crate::test_support::Fixture::new("index-artifact-build");
+        let root = f.0.join("tree");
+        std::fs::create_dir_all(root.join("target").join("debug")).unwrap();
+        std::fs::create_dir_all(root.join(".git")).unwrap();
+        std::fs::write(root.join("Cargo.toml"), b"[package]").unwrap();
+        std::fs::write(root.join("visible.txt"), b"data").unwrap();
+        std::fs::write(
+            root.join("target").join("debug").join("hidden.txt"),
+            b"data",
+        )
+        .unwrap();
+        std::fs::write(root.join(".git").join("hidden-git.txt"), b"data").unwrap();
+        let root = root.canonicalize().unwrap();
+        let state = f.0.join("state");
+        let db = build_test_index(&root, &state);
+        assert!(
+            query_batch(&db, "hidden", 0, true, None)
+                .unwrap()
+                .is_empty()
+        );
+        assert_eq!(query_batch(&db, "visible", 0, true, None).unwrap().len(), 1);
+        assert_eq!(
+            db.query_row(
+                "SELECT count(*) FROM entries WHERE name IN ('hidden.txt','hidden-git.txt')",
+                [],
+                |r| r.get::<_, i64>(0)
+            )
+            .unwrap(),
+            0
+        );
+    }
+    #[test]
+    fn purge_artifact_subtree_removes_legacy_descendant_rows() {
+        let f = crate::test_support::Fixture::new("index-artifact-purge");
+        let root = f.0.join("tree");
+        std::fs::create_dir_all(root.join("ordinary")).unwrap();
+        std::fs::write(root.join("ordinary").join("keep.txt"), b"data").unwrap();
+        let root = root.canonicalize().unwrap();
+        let mut db = build_test_index(&root, &f.0.join("state"));
+        let root_id: i64 = db
+            .query_row("SELECT id FROM roots", [], |r| r.get(0))
+            .unwrap();
+        let target = root.join("target");
+        let hidden = target.join("debug").join("hidden.txt");
+        db.execute(
+            "INSERT INTO entries(root,parent,path,name,display,directory,identity,epoch)
+             VALUES(?1,?2,?3,'hidden.txt','hidden.txt',0,x'00',0)",
+            params![root_id, encode_path(&target), encode_path(&hidden)],
+        )
+        .unwrap();
+        let txn = db.transaction().unwrap();
+        assert_eq!(purge_artifact_subtree(&txn, root_id, &target).unwrap(), 1);
+        txn.commit().unwrap();
+        assert_eq!(
+            db.query_row("SELECT count(*) FROM entries", [], |r| r.get::<_, i64>(0))
+                .unwrap(),
+            2
+        );
+    }
     #[test]
     fn chinese_short_trigram_and_incremental_rename_delete_remain_consistent() {
         let f = crate::test_support::Fixture::new("index");

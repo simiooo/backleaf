@@ -203,6 +203,7 @@ impl Backleaf {
             cx,
         );
         navigation.window_active = window.is_window_active() && window.is_visible();
+        crate::idle::set_window_foreground(navigation.window_active);
         if let Some(worker) = &navigation.volume_worker {
             worker.set_active(navigation.window_active);
         }
@@ -372,6 +373,7 @@ impl Backleaf {
         .detach();
         let visibility = cx.observe_window_visibility(window, |this, visibility, window, cx| {
             this.navigation.window_active = visibility.is_visible() && window.is_window_active();
+            crate::idle::set_window_foreground(this.navigation.window_active);
             if let Some(worker) = &this.navigation.volume_worker {
                 worker.set_active(this.navigation.window_active && !this.session_locked);
             }
@@ -455,6 +457,7 @@ impl Backleaf {
         });
         let activated = cx.observe_window_activation(window, |this, window, cx| {
             this.navigation.window_active = window.is_window_active() && window.is_visible();
+            crate::idle::set_window_foreground(this.navigation.window_active);
             if let Some(worker) = &this.navigation.volume_worker {
                 worker.set_active(this.navigation.window_active && !this.session_locked);
             }

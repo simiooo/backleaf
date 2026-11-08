@@ -1,9 +1,19 @@
-拾径 / Backleaf 0.1.0-preview.47
+拾径 / Backleaf 0.1.0-preview.48
 
 Windows x64 便携测试版：解压整个ZIP，运行Backleaf.exe。或在PowerShell执行：
 irm https://raw.githubusercontent.com/simiooo/backleaf/staging/install.ps1 | iex
 
-本批次（标题栏三点菜单与“设为默认”）：
+本批次（性能优化 1–4）：
+- 索引前台限速：窗口可见且系统空闲时，爬取预算降为 8 个目录/批并每目录休眠 12ms；窗口隐藏/后台时恢复 32 目录/批全速，用户有输入时保留原有低速预算。通知批次仍即时处理。
+- 索引排除可再生构建目录：`target`（父目录有 Cargo.toml）、`node_modules`（有 package.json/pnpm-lock/yarn.lock）、`.venv`/`venv`（有 pyproject/requirements/Pipfile）以及 `.git`、`.svn`、`.hg`、`.vs`、`.idea`、`__pycache__`、`.pytest_cache`、`.next`、`.nuxt` 不进入索引；已有旧的子树在扫描到时会清除。目录仍在文件列表中可见。
+- 懒加载后台 worker：原生图标线程、图片缩略图解码与通知线程改为首次真正请求时才创建。空闲线程 55→52、句柄约 1216→1209、工作集约 70.3→67.3MB（安装版同机 2 次）。
+- 内容搜索并行扫描：目录遍历仍单线程有序，文件读取/文本嗅探放到 2–4 个 worker，结果上限仍由原子计数严格限制；新增并行扫描 limit 单元测试。仍无持久内容索引，首次查询仍需读文本。
+- 测试：native 141 项、headless 52 项；fmt、严格 Clippy、release 构建通过。
+- 限制：前台限速的 CPU 降低受索引实际工作阶段影响，未做独立 CPU 基准；构建产物排除只在扫描到该目录时清理旧条目，首次启动可能仍先处理旧 backlog。
+
+以下保留 preview.47 及更早内容：
+
+preview.47（标题栏三点菜单与“设为默认”）：
 - 右上角最小化按钮左侧新增三点菜单按钮，位于窗口标题按钮组之前；不占用 Windows 原生 caption 区域，窗口拖动/最小化/最大化/关闭行为不变。
 - 菜单首项为“设为默认”，并按运行形态适配：安装版可点击，打开 Windows“默认应用”设置页（Windows 不允许应用静默改写默认关联）；便携版/开发版显示“不写系统默认项”并禁用该项。
 - 菜单跟随浅色/深色主题，使用 floating surface、边框、阴影与悬停；窗口较窄时宽度收缩，不超出客户区；支持 Escape、点外部关闭、窗口失焦/隐藏自动关闭。

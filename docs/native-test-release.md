@@ -1,4 +1,8 @@
-Backleaf 0.1.0-preview.47 · Windows x64 测试版
+Backleaf 0.1.0-preview.48 · Windows x64 测试版
+
+性能优化 1–4：索引前台限速（窗口可见且系统空闲时 8 目录/批、每目录 12ms；隐藏/后台恢复 32 目录/批全速，通知仍即时）；排除可再生构建目录（仅在项目标记存在时跳过 target/node_modules/.venv，另含 .git/.svn/.hg/.vs/.idea/__pycache__/.pytest_cache/.next/.nuxt，扫描到旧子树会清除）；原生图标与图片缩略图 worker 改为首次请求才创建（空闲线程 55→52、句柄约 1216→1209、工作集约 70.3→67.3MB）；内容搜索目录遍历单线程、文件读取/嗅探用 2–4 个 worker，结果上限仍严格，新增并行 limit 单元测试。仍无持久内容索引。native 141 项、headless 52 项；fmt、Clippy、release 构建通过。限制：前台限速未做独立 CPU 基准，构建产物旧条目要等扫描到对应目录才清除。
+
+以下保留 preview.47 及更早内容：
 
 标题栏三点菜单与“设为默认”：右上角最小化按钮左侧新增三点菜单按钮，首项“设为默认”。安装版点击后打开 Windows“默认应用”设置页（Windows 不允许应用静默改写默认关联）；便携版/开发版显示“不写系统默认项”并禁用该项，避免误导。菜单跟随明暗主题、floating surface、边框/阴影/悬停，窄窗口自动收缩不越界；支持 Escape、点外部、窗口失焦/隐藏关闭。新增安装形态单元测试与 headless `titlebar_overflow_button_toggles_the_app_menu`；native 136 项、headless 52 项。菜单目前只有这一项，后续可继续加。
 
