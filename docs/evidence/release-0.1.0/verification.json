@@ -1,0 +1,75 @@
+{
+  "published_at": "2026-11-08T14:38:51Z",
+  "passed": true,
+  "release_url": "https://github.com/simiooo/backleaf/releases/tag/v0.1.0",
+  "source_commit": "533cda6d5965c6cf8ef375c9a95f91a33bc0bb39",
+  "version": "0.1.0",
+  "verified_at_utc": "2026-11-08T14:40:20.2882091Z",
+  "packages": [
+    {
+      "session": {
+        "locked": false,
+        "error": null
+      },
+      "headless_count": 52,
+      "exe_sha256": "9ab5483719a7f6f943c873896667734cf9eb73e33c87d0041cd880d43790e0a7",
+      "all_nine_embedded_icons_match": true,
+      "local_cli_smoke_passed": true,
+      "ci_cli_smoke_passed": true,
+      "approved_logo_matches": true,
+      "staging_path": "D:\\work\\backleaf\\.local\\staging\\0.1.0-533cda6d-x64",
+      "deployed_at_utc": "2026-11-08T14:40:15.3685762Z",
+      "approved_brand_master_matches": true,
+      "architecture": "x64"
+    },
+    {
+      "headless_count": 52,
+      "exe_sha256": "edc61c39d6bb4d9dc17bba90eaf465c7c445de01adbba479dcc53a695003adc0",
+      "all_nine_embedded_icons_match": true,
+      "ci_cli_smoke_passed": true,
+      "approved_logo_matches": true,
+      "staging_path": "D:\\work\\backleaf\\.local\\staging\\0.1.0-533cda6d-arm64",
+      "deployed_at_utc": "2026-11-08T14:40:20.1540866Z",
+      "approved_brand_master_matches": true,
+      "architecture": "arm64"
+    }
+  ],
+  "assets": [
+    {
+      "sha256": "636fb7b9a49a6bf8e68988d9213cd5b96e3d3df32f84d7d0038c576ad8cf3093",
+      "name": "Backleaf-0.1.0-533cda6d-win-arm64.zip",
+      "bytes": 17104668
+    },
+    {
+      "sha256": "dbcf0fb69d80a29029d1a9b3688cb395f033734e53fca1f26bf8ae6488faf43b",
+      "name": "Backleaf-0.1.0-533cda6d-win-x64.zip",
+      "bytes": 17338310
+    },
+    {
+      "sha256": "216c6ffd8f632f908406d4765a9be010b59c24e70d59f7b8a63bc1e5055ab179",
+      "name": "Backleaf-v46.fig",
+      "bytes": 1771693
+    },
+    {
+      "sha256": "db09c85cdfc11544929529812b8e8e5a20f140c1d2b70f1ceffbe16313217d98",
+      "name": "build-arm64.json",
+      "bytes": 3154
+    },
+    {
+      "sha256": "78eda79b467f1b4f4b63421fcb093b65f8dff5ea6be8badc6d60ddce1c1ce01d",
+      "name": "build.json",
+      "bytes": 3291
+    },
+    {
+      "sha256": "904118702d02d167a8208541bf4dfcc48f81b13590467329275e587dcd30592c",
+      "name": "SHA256SUMS-arm64.txt",
+      "bytes": 189
+    },
+    {
+      "sha256": "fd3831f656b8135ea3705aa815a69d3f64e03053901475b394f97659555f2051",
+      "name": "SHA256SUMS.txt",
+      "bytes": 187
+    }
+  ],
+  "scope": "Downloaded release assets, server digests, SHA256SUMS, both packaged EXE icon resource groups, logo/brand-master identity, clean-source headless reports, x64 local adjacent-runtime and CLI smoke; ARM64 execution is CI-only."
+}
