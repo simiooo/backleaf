@@ -25,8 +25,19 @@ if (!$redist -or !(Test-Path -LiteralPath $redist)) { throw 'VCToolsRedistDir is
 $crt = Get-ChildItem -LiteralPath $redist -Recurse -Directory -Filter 'Microsoft.VC*.CRT' -ErrorAction SilentlyContinue |
     Where-Object { $_.FullName -match '\\arm64\\' } | Sort-Object FullName | Select-Object -Last 1
 if (!$crt) { throw 'ARM64 Microsoft VC runtime redistributable directory is unavailable.' }
+function Test-Arm64Pe([string]$Path) {
+    $bytes = [byte[]](Get-Content -LiteralPath $Path -AsByteStream -TotalCount 1024)
+    if ($bytes.Length -lt 64 -or $bytes[0] -ne 0x4d -or $bytes[1] -ne 0x5a) { return $false }
+    $pe = [BitConverter]::ToInt32($bytes, 0x3c)
+    if ($pe -lt 0 -or $pe + 6 -ge $bytes.Length) { return $false }
+    return ([BitConverter]::ToUInt16($bytes, $pe + 4) -eq 0xaa64)
+}
 $runtimeFiles = @()
 foreach ($dll in Get-ChildItem -LiteralPath $crt.FullName -Filter '*.dll' | Sort-Object Name) {
+    if (!(Test-Arm64Pe $dll.FullName)) {
+        Write-Warning "Skipping non-ARM64 redistributable: $($dll.Name)"
+        continue
+    }
     Copy-Item -LiteralPath $dll.FullName -Destination (Join-Path $bundle $dll.Name)
     $runtimeFiles += [ordered]@{
         name = $dll.Name
@@ -34,7 +45,7 @@ foreach ($dll in Get-ChildItem -LiteralPath $crt.FullName -Filter '*.dll' | Sort
         version = $dll.VersionInfo.FileVersion
     }
 }
-if ($runtimeFiles.Count -lt 3) { throw 'ARM64 runtime redistributable set is incomplete.' }
+if ($runtimeFiles.Count -lt 2) { throw 'ARM64 runtime redistributable set is incomplete.' }
 $runtime = [ordered]@{ tag = 'msvc-arm64-redist'; files = $runtimeFiles }
 
 $exeHash = (Get-FileHash "$bundle/Backleaf.exe" -Algorithm SHA256).Hash.ToLowerInvariant()
@@ -66,7 +77,7 @@ if (Test-Path -LiteralPath $installed) { Remove-Item -LiteralPath $installed -Re
 Expand-Archive -LiteralPath $zip -DestinationPath $installed
 if ((Get-FileHash "$installed/Backleaf.exe").Hash.ToLowerInvariant() -ne $exeHash) { throw 'ARM64 ZIP executable hash mismatch' }
 if ((Get-FileHash "$installed/lib/7z.dll").Hash.ToLowerInvariant() -ne $metadata.archive_library_sha256) { throw 'ARM64 ZIP archive library hash mismatch' }
-& ./scripts/native/test-runtime.ps1 -InstallDirectory ([IO.Path]::GetFullPath($installed)) | Out-Null
+& ./scripts/native/test-runtime.ps1 -InstallDirectory ([IO.Path]::GetFullPath($installed)) -Architecture arm64 | Out-Null
 $sessionFile = Join-Path (Get-Location) '.local/ci/session-arm64.json'
 $p = Start-Process "$installed/Backleaf.exe" -ArgumentList @('--session-status-file',('"'+$sessionFile+'"')) -PassThru -Wait -WindowStyle Hidden
 if ($p.ExitCode -ne 0 -or !(Test-Path $sessionFile)) { throw 'Packaged ARM64 executable CLI smoke failed' }

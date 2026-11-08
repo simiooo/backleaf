@@ -1,5 +1,5 @@
 [CmdletBinding()]
-param([Parameter(Mandatory)][string]$InstallDirectory)
+param([Parameter(Mandatory)][string]$InstallDirectory, [ValidateSet('x64','arm64')][string]$Architecture = 'x64')
 $ErrorActionPreference = 'Stop'
 if (!('BackleafRuntimeProbe' -as [type])) {
     Add-Type -TypeDefinition @'
@@ -17,7 +17,13 @@ public static class BackleafRuntimeProbe {
 '@
 }
 $root = [IO.Path]::GetFullPath($InstallDirectory)
-$result = foreach ($name in @('vcruntime140.dll','vcruntime140_1.dll','msvcp140.dll')) {
+$required = if ($Architecture -eq 'arm64') {
+    # ARM64 MSVC CRT does not ship vcruntime140_1.dll (that helper is x64-only).
+    @('vcruntime140.dll','msvcp140.dll')
+} else {
+    @('vcruntime140.dll','vcruntime140_1.dll','msvcp140.dll')
+}
+$result = foreach ($name in $required) {
     $path = Join-Path $root $name
     $module = [BackleafRuntimeProbe]::LoadLibraryExW($path, [IntPtr]::Zero, 0x00000100 -bor 0x00000800)
     if ($module -eq [IntPtr]::Zero) { throw "App-local DLL load failed: $name (Win32 $([Runtime.InteropServices.Marshal]::GetLastWin32Error()))" }
