@@ -49,3 +49,5 @@ docs/evidence/sim-954/** -text
 
 # Preserve the preview27 candidate evidence bytes exactly.
 docs/evidence/preview-27/** -text
+
+docs/evidence/preview-52/** -text whitespace=cr-at-eol,-blank-at-eof,-blank-at-eol

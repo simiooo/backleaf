@@ -1,0 +1,54 @@
+{
+  "frames": [
+    {
+      "sha256": "b2895389b7f75c6e0e2e97357bfaf4466b189b643485650dc3b0a52ea7f16d09",
+      "resource_id": 1,
+      "size": 16
+    },
+    {
+      "sha256": "84f63e1910d3d0fd74ebd6314afe891f02cf1d4672723673c58814d0a53923b9",
+      "resource_id": 2,
+      "size": 20
+    },
+    {
+      "sha256": "46779baddfaa54df20cdd80ebc61e1f9af3e96794a7ec66b2c252b67d1cbafcc",
+      "resource_id": 3,
+      "size": 24
+    },
+    {
+      "sha256": "b6a8c6caccb454430e37b7bb06242ca3f87d39dca5a05164f0f41f23e161c7b3",
+      "resource_id": 4,
+      "size": 32
+    },
+    {
+      "sha256": "3aafb035f559444f56152c5399c19da89f37cbcb6c97c6cc7bb2c9f38bc392ab",
+      "resource_id": 5,
+      "size": 40
+    },
+    {
+      "sha256": "28df7787043afccbe4a216f4062cc6f7b4eb0d92fb7f22d07658e795fbfe86fa",
+      "resource_id": 6,
+      "size": 48
+    },
+    {
+      "sha256": "4413b8b0c71c2b49e67eb038c4670e2fa70b61c19fd3593bc18572cf59af5836",
+      "resource_id": 7,
+      "size": 64
+    },
+    {
+      "sha256": "0d7e722a34602c92f7ccf87f57a340a314582d483647d6d4cca5d9fb000dd0ad",
+      "resource_id": 8,
+      "size": 128
+    },
+    {
+      "sha256": "51d7628d7fdb8ea83cb42124b1f65e133e46ff665a43a7d2941433b030b84bae",
+      "resource_id": 9,
+      "size": 256
+    }
+  ],
+  "passed": true,
+  "exe_sha256": "dac923c9dc8695878204659c0fc52b70ea0e19ef39631979931625c9935d50f9",
+  "scope": "Read-only PE resources, no code execution or window automation",
+  "group": 1,
+  "binary": "D:\\work\\backleaf\\.local\\staging\\0.1.0-preview.52-77b73789-arm64\\Backleaf.exe"
+}

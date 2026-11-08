@@ -1,0 +1,77 @@
+{
+  "release_url": "https://github.com/simiooo/backleaf/releases/tag/test-v0.1.0-preview.52-77b73789",
+  "published_at": "2026-11-08T13:31:53Z",
+  "source_commit": "77b737897e395d91cd440e3529ed3addb93f12bf",
+  "assets": [
+    {
+      "sha256": "04adf847de8fb31be873f50da7c2873a458a604a1140ed2ab67e6c64be53d9d6",
+      "name": "Backleaf-0.1.0-preview.52-77b73789-win-arm64.zip",
+      "bytes": 17114064
+    },
+    {
+      "sha256": "378052f48fb0ed1372188d40eae4f6b0a5a72cfdfa17c864d6937038e230758c",
+      "name": "Backleaf-0.1.0-preview.52-77b73789-win-x64.zip",
+      "bytes": 17347441
+    },
+    {
+      "sha256": "216c6ffd8f632f908406d4765a9be010b59c24e70d59f7b8a63bc1e5055ab179",
+      "name": "Backleaf-v46.fig",
+      "bytes": 1771693
+    },
+    {
+      "sha256": "a1d9928a374839f2460706ec0f6c1a8ad33fb384979f8a0a2765b31daea3fc44",
+      "name": "build-arm64.json",
+      "bytes": 3165
+    },
+    {
+      "sha256": "91f9585f287ca10ab83ceaadab7f46f0500d6554130d9ec1f1b55e039c6c716e",
+      "name": "build.json",
+      "bytes": 3302
+    },
+    {
+      "sha256": "241b1471064e9644b964922adaf4d0dba0364369d280dddcc24c76fe67e78f1c",
+      "name": "SHA256SUMS-arm64.txt",
+      "bytes": 200
+    },
+    {
+      "sha256": "6af3f18dcb801850d21d6bc34b438a4dcac5a51e43ce9b08fcb9dce1a6f41259",
+      "name": "SHA256SUMS.txt",
+      "bytes": 198
+    }
+  ],
+  "version": "0.1.0-preview.52",
+  "scope": "Downloaded release assets, server digests, SHA256SUMS, both packaged EXE icon resource groups, logo/brand-master identity, clean-source headless reports, x64 local adjacent-runtime and CLI smoke; ARM64 execution is CI-only.",
+  "packages": [
+    {
+      "ci_cli_smoke_passed": true,
+      "deployed_at_utc": "2026-11-08T13:32:45.9549844Z",
+      "staging_path": "D:\\work\\backleaf\\.local\\staging\\0.1.0-preview.52-77b73789-x64",
+      "headless_count": 52,
+      "exe_sha256": "65776e1579458464757fa33d4e396c64b3a5256641b01900400699c571c25689",
+      "local_cli_smoke_passed": true,
+      "all_nine_embedded_icons_match": true,
+      "approved_brand_master_matches": true,
+      "architecture": "x64",
+      "session": {
+        "locked": false,
+        "error": null
+      },
+      "approved_logo_matches": true
+    },
+    {
+      "headless_count": 52,
+      "exe_sha256": "dac923c9dc8695878204659c0fc52b70ea0e19ef39631979931625c9935d50f9",
+      "ci_cli_smoke_passed": true,
+      "all_nine_embedded_icons_match": true,
+      "deployed_at_utc": "2026-11-08T13:50:26.0837891Z",
+      "architecture": "arm64",
+      "approved_brand_master_matches": true,
+      "approved_logo_matches": true,
+      "staging_path": "D:\\work\\backleaf\\.local\\staging\\0.1.0-preview.52-77b73789-arm64"
+    }
+  ],
+  "passed": true,
+  "verified_at_utc": "2026-11-08T13:50:27.1669454Z",
+  "ci_attempt": 2,
+  "first_attempt": "ARM64: 141 native passed; one long-path properties headless test failed. Full same-source ARM64 rerun passed all 52. Root cause not determined; original test output was overwritten by the JSON report."
+}
