@@ -1,0 +1,54 @@
+{
+  "issue": "SIM-1030",
+  "status": "user_adopted",
+  "source": "../backleaf-logo-v3.png",
+  "sourceSha256": "1c55607c2dd25d6d2069609497e84a002e41eda6d36e582883cd031fcdfaa420",
+  "sourceSize": [
+    1254,
+    1254
+  ],
+  "transparentPixels": 747566,
+  "opaquePixels": 2488,
+  "ico": "../../windows/backleaf-v3.ico",
+  "icoSha256": "582809658790960117176f01c0f84913465410db6af4da183dca3d806bff184b",
+  "frames": [
+    {
+      "size": 16,
+      "sha256": "b2895389b7f75c6e0e2e97357bfaf4466b189b643485650dc3b0a52ea7f16d09"
+    },
+    {
+      "size": 20,
+      "sha256": "84f63e1910d3d0fd74ebd6314afe891f02cf1d4672723673c58814d0a53923b9"
+    },
+    {
+      "size": 24,
+      "sha256": "46779baddfaa54df20cdd80ebc61e1f9af3e96794a7ec66b2c252b67d1cbafcc"
+    },
+    {
+      "size": 32,
+      "sha256": "b6a8c6caccb454430e37b7bb06242ca3f87d39dca5a05164f0f41f23e161c7b3"
+    },
+    {
+      "size": 40,
+      "sha256": "3aafb035f559444f56152c5399c19da89f37cbcb6c97c6cc7bb2c9f38bc392ab"
+    },
+    {
+      "size": 48,
+      "sha256": "28df7787043afccbe4a216f4062cc6f7b4eb0d92fb7f22d07658e795fbfe86fa"
+    },
+    {
+      "size": 64,
+      "sha256": "4413b8b0c71c2b49e67eb038c4670e2fa70b61c19fd3593bc18572cf59af5836"
+    },
+    {
+      "size": 128,
+      "sha256": "0d7e722a34602c92f7ccf87f57a340a314582d483647d6d4cca5d9fb000dd0ad"
+    },
+    {
+      "size": 256,
+      "sha256": "51d7628d7fdb8ea83cb42124b1f65e133e46ff665a43a7d2941433b030b84bae"
+    }
+  ],
+  "validation": "All nine ICO entry offsets, PNG dimensions and transparent corners passed.",
+  "scope": "Full-canvas mechanical resize and PNG-compressed ICO; generated alpha preserved. User-adopted v3 copied to runtime PNG and ICO."
+}

@@ -1,4 +1,10 @@
-Backleaf 0.1.0-preview.51 · Windows x64 / ARM64 测试版
+Backleaf 0.1.0-preview.52 · 圆叶文件夹应用图标
+
+采用用户确认的 v3 应用图标：金黄色文件夹与鼠尾草绿圆叶表情。替换 EXE 图标组 ID 1 的全部 16/20/24/32/40/48/64/128/256px 九档资源，窗口与安装快捷方式继续从 EXE 读取图标。x64、ARM64 包同步更新 Logo.png、Backleaf-brand-v3.fig 和 Logo-provenance.md。三页 OpenPencil 明暗/小尺寸稿独立冷重开 0 像素差。Windows 若暂时保留旧图标，可重启 Backleaf / 重新固定快捷方式；图标缓存由系统维护。
+
+以下保留 preview.51 及更早内容：
+
+preview.51 · Windows x64 / ARM64 测试版
 
 i18n 与 Windows ARM64：新增原生 Windows ARM64 包（ARM64 7z.dll、ARM64 app-local VC runtime），由 windows-11-arm hosted runner 跑 native/headless 套件、打包和 CLI smoke；安装器按进程架构选择 x64 或 ARM64 资产（`build.json`/`SHA256SUMS.txt` 或 `build-arm64.json`/`SHA256SUMS-arm64.txt`），ARM64 校验包内 runtime，不再下载 x64 runtime。资源管理器右键菜单文案按 `BACKLEAF_LANG` → `%LOCALAPPDATA%\Backleaf\language.txt` → Windows UI 语言选择“在 Backleaf 中打开”/“Open in Backleaf”；应用内滚动条无障碍名称改走 i18n。限制：ARM64 仅在 hosted ARM64 runner 验证，未在实体 ARM 设备长时间试用；修改应用语言后需重新运行安装器刷新静态右键文案。native 141 项、headless 52 项、installer 22 项通过；fmt、严格 Clippy、release 构建通过。
 

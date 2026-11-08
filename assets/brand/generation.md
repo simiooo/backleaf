@@ -1,39 +1,24 @@
-# Backleaf Logo v2 · 圆叶
+# Backleaf Logo v3 · 圆叶文件夹
 
-用户要求更卡通、圆润、简单、亲切。保留叶子意象，采用饱满圆叶与两眼一笑，去除尖折角和路径镂空。使用内置 image_gen 生成和精修，保留其原始 RGBA。提示中的纯色要求不等于数值恒定色块保证，生成结果有轻微柔和色调变化。
+2026-11-08，SIM-1030。将现有圆叶表情与 Windows 文件夹意象融合。使用内置 image_gen，以 v2 为参考生成并精修，保留生成原始 RGBA。用户已确认采用 v3，运行资源 backleaf-logo.png 和 ../windows/backleaf.ico 同步更新；应用发布的实际验证另见 docs/evidence/preview-52。
 
-当前运行资产：backleaf-logo.png；生成原件：backleaf-logo-v2.png。旧版保留为backleaf-logo-v1.png及generation-v1.md。OpenPencil独立品牌稿design/Backleaf-brand-v2.fig包含明暗背景与16–256px三页；UI主稿v41/247页不替换。图像为生成位图，设计稿可编辑其位置、尺寸、背景与排版，不冒称可编辑矢量形状。
-
-Windows ICO由scripts/design/export-brand-v2.mjs机械等比缩小、透明PNG封装为九档图标，不重新绘制、修补、去底或改色。资源ID1沿用。
-
-## 初始提示词
-
-Use case: logo-brand. Redesign the attached Backleaf app logo into ONE much friendlier, more cartoon-like, rounded and simple logomark. Input image is only a reference for the leaf identity and calm green family; do not preserve its angular origami geometry. Subject: a plump little leaf character, like a soft mochi-shaped leaf, with one softly rounded leaf tip leaning gently to the upper right, a broad rounded bottom, two tiny well-spaced dark eyes and a small relaxed curved smile. The leaf itself is the whole character: no arms, legs, accessories or separate objects. Aim for a warm, quiet, approachable desktop-app identity, cute but restrained. Extremely simple, bold silhouette, generous internal breathing room; face readable at 24–32px, silhouette readable at 16px. Use flat opaque muted sage-green #7FA98C for the body and deep evergreen #294F43 for the minimal face. Two flat colors only. No visible outline, leaf veins, folds, S-path cutout, pointed corners, sharp notches, small details, cheeks, gradients, textures, gloss, shadows or 3D. Square composition, optically centered, mark occupies about 76 percent of canvas with even safe padding. Genuine transparent background with alpha, no white or black backdrop, no app-tile rectangle, frame, badge, text, labels, watermark, mockups or multiple variations. Deliver one clean finished icon.
-
-## 精修提示词
-
-Refine this exact friendly Backleaf leaf character as a production-ready flat app logo. Keep its rounded plump leaf silhouette, soft upper-right tip, face placement, two eyes, curved smile, proportions and transparent background exactly as they are. Change only the rendering: use perfectly uniform opaque matte sage green #7FA98C inside the leaf body and perfectly uniform dark evergreen #294F43 for both eyes and smile. Absolutely no mottling, grain, texture, gradients, lighting, shading, edge glow or neon-green edge artifacts. Clean vector-like solid fills and crisp smooth antialiased silhouette. Remove every stray pixel outside the shape. Keep the background genuinely transparent. No outline, extra details, text, mockup or background tile. One finished mark on the same square canvas.
-
----
-
-## v1 历史记录（不是当前运行方案）
-
-使用内置 image_gen 生成并精修，PNG 透明背景。构思：以叶片轮廓承载路径留白，深绿主体搭配鼠尾草绿折角。
-
-成品：`backleaf-logo-concept-01.png`
+- 初始生成：backleaf-logo-v3-initial.png。
+- 候选成品：backleaf-logo-v3.png。
+- Windows ICO：../windows/backleaf-v3.ico，16/20/24/32/40/48/64/128/256px 九档。
+- OpenPencil：../../design/Backleaf-brand-v3.fig，明暗背景和九档小尺寸检查。PNG 是生成位图；可编辑范围为摆放、尺寸、背景、排版，不冒称叶子/文件夹曲线是矢量。
+- 导出只作全画布等比缩小和 PNG-compressed ICO 封装，不做去底、补绘或改色；原始生成文件单独保留。不是 Windows 官方图标，也不包含 Windows 商标图形。
 
 ## 初始提示词
 
 Use case: logo-brand.
-Asset type: primary app logomark for 拾径 / Backleaf, a refined Windows desktop file manager.
-Primary request: Design ONE finished, distinctive icon, a compact folded leaf whose open negative-space cut suggests a quiet winding file path and a subtle returning turn. The leaf and the path must feel like one inevitable geometric gesture, not separate symbols placed together. A softly asymmetric silhouette with one intentional fold; clear, confident weight and optically balanced curves. Calm, thoughtful, memorable.
-Style/medium: exceptionally polished flat vector-like brand mark, crisp clean edges, simple solid shapes, restrained editorial design. Strong silhouette that remains legible at 16–32 px. Broad internal negative space, no fine vein details.
-Color palette: deep evergreen #31594D as the main color, a single muted sage #8BA892 fold if needed; maximum two flat colors. Transparent negative space through the path.
-Composition/framing: square canvas, one centered standalone mark, generous even breathing room, mark occupies about 72% of the canvas. True transparent background with alpha. No surrounding app tile, frame, badge or rounded rectangle. No cast shadow.
-Text: none; symbol only, no lettering.
-Avoid: generic stock eco leaf logo, literal manila folder, magnifying glass, arrows pasted on top, multiple leaves, busy origami facets, excessive rounding, gradients, glow, 3D, gloss, textures, mockups, presentation boards, multiple variations, watermark.
+Asset type: ONE finished Windows desktop app icon for Backleaf / 拾径, a friendly file manager.
+Input image: reference for the EXISTING brand character only — a plump sage-green leaf with two round dark-green eyes and a small relaxed smile.
+Primary request: combine the existing friendly leaf character with the instantly recognizable visual language of a Windows folder into ONE coherent, beautifully simple icon. A warm golden-yellow file folder with a rounded top-left folder tab and a clear open-folder lip is the main silhouette; a plump rounded sage-green leaf peeks naturally from inside the folder on its upper-right side, with its two eyes and smile visible. The folder cradles the leaf, the two shapes overlap and read as one compact character/object, not a folder with a tiny unrelated sticker. Keep the folder dominant enough to recognize “file manager” at a glance; keep the leaf substantial enough to recognize Backleaf. Use a restrained front view with just a hint of layered depth from the folder's two panels.
+Style: meticulously polished, simple vector-like graphic with clean smooth antialiased edges; approachable rounded forms and very subtle broad tonal shading for a modern Windows app. Matte surfaces, low visual noise, no texture. Strong silhouette and large coherent color areas; keep the face readable at 32 px and the folder/leaf silhouette readable at 16 px. Leaf tip soft and rounded. Minimal face, no arms or legs.
+Palette: warm golden folder, muted fresh sage-green leaf, deep evergreen eyes and smile. Moderate vividness, clear separation from both light and dark desktops. No heavy outlines.
+Composition: square image, isolated single icon optically centered, complete mark occupies about 82% of width and 78% of height, approximately equal generous safe padding on all sides. Real transparent background alpha, clean alpha edges, no baked checkerboard or white/black matte. Any depth belongs inside the object; no ground shadow.
+No text, lettering, logo words, app tile, rounded-square backdrop, frame, Windows four-pane logo, badges, accessories, papers with text, sparkles, scenery, presentation board, alternate icons or watermark.
 
 ## 精修提示词
 
-Refine this exact Backleaf leaf-and-path logo into a strictly flat, clean graphic. Preserve its overall silhouette, the S-shaped negative-space path and the single small folded corner. Replace ALL shaded, textured, mottled, translucent, photographic or three-dimensional surfaces with perfectly uniform opaque solid color fills: deep evergreen #31594D for the main body, muted sage #8BA892 for the folded corner. Remove the dark circular blemish on the left completely. Every area inside each shape must be a single uniform RGB color. Crisp antialiased edges only. Actual transparent background and transparent path cutout; no black background, no white background. No shadows, no gradients, no grain, no reflections, no glow, no new elements, no text. One finished flat vector-like logomark centered on the square canvas, with the existing generous margins.
-
+Refine this exact Backleaf folder-and-leaf icon for production use. Preserve the complete composition and geometry: yellow open folder with its rounded tab, large friendly sage leaf peeking out, two evergreen dot eyes and curved smile, same placement and proportions. Make only these refinements: simplify the rendering into immaculate smooth vector-like surfaces, a calm golden-yellow folder and muted sage-green leaf, solid opaque interiors with at most one very broad gentle tone change per panel, no grain or mottled lighting. Most importantly regenerate the full silhouette with clean smooth antialiased edges and absolutely ZERO neon yellow/green fringes, stray flecks, isolated pixels, dark/white matte, rough edges, glow, or texture outside the object. Keep the folder lip soft and rounded, the leaf plump, the face readable at small sizes. High-end, quiet, friendly desktop app icon. One complete icon on genuine transparent alpha background, square canvas and equal safe margins. No text, app tile, cast shadow, labels, extra objects, mockup or variants.

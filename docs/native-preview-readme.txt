@@ -1,9 +1,15 @@
-拾径 / Backleaf 0.1.0-preview.51
+拾径 / Backleaf 0.1.0-preview.52
 
 Windows x64 / ARM64 便携测试版：解压对应 ZIP 运行 Backleaf.exe。安装器会按当前 Windows 进程架构选择 x64 或 ARM64 包；也可在 PowerShell 执行：
 irm https://raw.githubusercontent.com/simiooo/backleaf/staging/install.ps1 | iex
 
-本批次（i18n 与 Windows ARM64）：
+本批次（圆叶文件夹应用图标）：
+- 应用 EXE、窗口与安装快捷方式采用用户确认的 v3 图标：黄色文件夹与圆叶表情。
+- Windows ICO 包含 16/20/24/32/40/48/64/128/256px 九档透明资源；x64 与 ARM64 包同步携带 Logo.png、Backleaf-brand-v3.fig 与生成记录。
+
+以下保留 preview.51 及更早内容：
+
+preview.51（i18n 与 Windows ARM64）：
 - 新增原生 Windows ARM64 构建：ARM 包使用 ARM64 7z.dll、ARM64 app-local VC runtime，并在 windows-11-arm hosted runner 上跑完整 native/headless 套件、打包和 CLI smoke。
 - 安装器按架构选择资产：x64 下载 `...-win-x64.zip` + `build.json` + `SHA256SUMS.txt`；ARM64 下载 `...-win-arm64.zip` + `build-arm64.json` + `SHA256SUMS-arm64.txt`，并校验包内 ARM64 runtime，不再下载 x64 runtime。
 - 右键菜单文案按应用语言选择：优先 `BACKLEAF_LANG`，其次 `%LOCALAPPDATA%\Backleaf\language.txt`，再次 Windows UI 语言；中文为“在 Backleaf 中打开”，英文为“Open in Backleaf”。切换应用语言后需重新运行安装器更新该静态 shell 文案。

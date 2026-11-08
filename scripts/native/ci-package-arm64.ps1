@@ -12,7 +12,7 @@ Copy-Item assets/archive-engine/7z-arm64.dll "$bundle/lib/7z.dll"
 Copy-Item docs/native-preview-readme.txt "$bundle/README.txt"
 Copy-Item LICENSE "$bundle/LICENSE"
 Copy-Item assets/brand/backleaf-logo.png "$bundle/Logo.png"
-Copy-Item design/Backleaf-brand-v2.fig "$bundle/Backleaf-brand-v2.fig"
+Copy-Item design/Backleaf-brand-v3.fig "$bundle/Backleaf-brand-v3.fig"
 Copy-Item assets/brand/generation.md "$bundle/Logo-provenance.md"
 Copy-Item design/Backleaf-v46.fig "$bundle/Backleaf-v46.fig"
 Copy-Item design/Backleaf-v46.fig .local/ci/Backleaf-v46.fig
@@ -53,6 +53,9 @@ $metadata = [ordered]@{
     version = $version
     source_commit = $commit
     architecture = 'arm64'
+    application_icon = 'v3'
+    logo_sha256 = (Get-FileHash "$bundle/Logo.png").Hash.ToLowerInvariant()
+    brand_design_sha256 = (Get-FileHash "$bundle/Backleaf-brand-v3.fig").Hash.ToLowerInvariant()
     gpui_revision = (git -C vendor/zed rev-parse HEAD).Trim()
     built_at_utc = [DateTime]::UtcNow.ToString('o')
     exe_sha256 = $exeHash
@@ -77,6 +80,8 @@ if (Test-Path -LiteralPath $installed) { Remove-Item -LiteralPath $installed -Re
 Expand-Archive -LiteralPath $zip -DestinationPath $installed
 if ((Get-FileHash "$installed/Backleaf.exe").Hash.ToLowerInvariant() -ne $exeHash) { throw 'ARM64 ZIP executable hash mismatch' }
 if ((Get-FileHash "$installed/lib/7z.dll").Hash.ToLowerInvariant() -ne $metadata.archive_library_sha256) { throw 'ARM64 ZIP archive library hash mismatch' }
+if ((Get-FileHash "$installed/Logo.png").Hash.ToLowerInvariant() -ne $metadata.logo_sha256) { throw 'ARM64 ZIP logo hash mismatch' }
+if ((Get-FileHash "$installed/Backleaf-brand-v3.fig").Hash.ToLowerInvariant() -ne $metadata.brand_design_sha256) { throw 'ARM64 ZIP brand design hash mismatch' }
 & ./scripts/native/test-runtime.ps1 -InstallDirectory ([IO.Path]::GetFullPath($installed)) -Architecture arm64 | Out-Null
 $sessionFile = Join-Path (Get-Location) '.local/ci/session-arm64.json'
 $p = Start-Process "$installed/Backleaf.exe" -ArgumentList @('--session-status-file',('"'+$sessionFile+'"')) -PassThru -Wait -WindowStyle Hidden

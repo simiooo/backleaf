@@ -1,6 +1,6 @@
 # 拾径 / Backleaf
 
-Windows 原生 GPUI 文件管理器。当前候选版为 0.1.0-preview.51；项目范围跟随 Nuto SIM-919、SIM-934，交付后进入产品验收。
+Windows 原生 GPUI 文件管理器。当前候选版为 0.1.0-preview.52；项目范围跟随 Nuto SIM-919、SIM-934，交付后进入产品验收。本版采用[圆叶文件夹 v3 应用图标](docs/brand-v3.md)。
 
 当前可编辑设计稿：[OpenPencil v48 设计草稿](design/Backleaf-v48.fig)，275页，基于v46保留271页并新增Apple式白/黑内容、蓝文件夹与悬浮identity 4页。版本索引见[设计目录](design/README.md)。设计先于实施；旧版design/Backleaf.fig保留为v6历史基线。
 
@@ -32,7 +32,7 @@ Windows/MSVC/Rust 1.99.1：
 
 存储与选择约定见[设计与实现说明](docs/storage-v41.md)；物理插拔与最终可见窗口回归仍按确切版本单独记录。
 
-应用logo已改为圆叶小表情；[独立品牌稿](design/Backleaf-brand-v2.fig)和[生成/导出说明](docs/brand-v2.md)保留明暗与小尺寸检查，界面主稿为v43。
+应用 logo 采用黄色文件夹与圆叶表情；[独立品牌稿](design/Backleaf-brand-v3.fig)和[生成/导出说明](docs/brand-v3.md)保留明暗与小尺寸检查，界面主稿为 v43。
 
 容量副文案10px，文案与细用量条一体展示；统一B/KB/MB/GB自动单位及整数舍入，见[容量展示](docs/capacity-v42.md)。
 
