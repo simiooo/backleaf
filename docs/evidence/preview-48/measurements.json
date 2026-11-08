@@ -1,0 +1,25 @@
+{
+  "threads": {
+    "old_preview_47_runs": [55, 55],
+    "new_preview_48_runs": [52, 52],
+    "handles_old_runs": [1217, 1215],
+    "handles_new_runs": [1209, 1209],
+    "working_set_mib_old_runs": [70.2, 70.4],
+    "working_set_mib_new_runs": [67.2, 67.4]
+  },
+  "foreground_index_policy": {
+    "background_idle": {"max_directories": 32, "window_ms": 500, "work_sleep_ms": 1, "directory_sleep_ms": 0},
+    "foreground_idle": {"max_directories": 8, "window_ms": 500, "work_sleep_ms": 1, "directory_sleep_ms": 12},
+    "active": {"max_directories": 1, "window_ms": 20, "work_sleep_ms": 80, "directory_sleep_ms": 0}
+  },
+  "artifact_exclusions": {
+    "always": [".git", ".svn", ".hg", ".vs", ".idea", "__pycache__", ".pytest_cache", ".next", ".nuxt"],
+    "target": "Cargo.toml in parent",
+    "node_modules": "package.json or pnpm-lock.yaml or yarn.lock in parent",
+    ".venv_or_venv": "pyproject.toml or requirements.txt or Pipfile in parent"
+  },
+  "content_search_workers": {"minimum": 2, "maximum": 4, "result_cap": 200},
+  "native_tests": 141,
+  "headless_tests": 52,
+  "note": "Thread/handle/working-set samples are two launches of the installed-style package on this machine; no independent foreground-index CPU benchmark was recorded."
+}
