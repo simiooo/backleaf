@@ -57,7 +57,7 @@ jobs:
       - name: Package and smoke
         shell: pwsh
         env:
-          BACKLEAF_VENDOR_PATCH: 'directwrite-font-update-no-check'
+          BACKLEAF_VENDOR_PATCH: 'font-update-no-check+gpu-init-async'
         run: ./scripts/native/ci-package.ps1
       - uses: actions/upload-artifact@v4
         if: always()

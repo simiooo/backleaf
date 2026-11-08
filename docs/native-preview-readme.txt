@@ -1,9 +1,20 @@
-拾径 / Backleaf 0.1.0-preview.45
+拾径 / Backleaf 0.1.0-preview.46
 
 Windows x64 便携测试版：解压整个ZIP，运行Backleaf.exe。或在PowerShell执行：
 irm https://raw.githubusercontent.com/simiooo/backleaf/staging/install.ps1 | iex
 
-本批次（侧栏用户目录名称）：
+本批次（GPU 并发初始化实验）：
+- 将 DirectX 设备创建移到后台线程，与 Windows 平台/字体/窗口初始化并发；`attach_gpu` 在主线程取回设备后再创建渲染器。真机启动截图确认文字、文件卡片、侧栏和圆角表面正常。
+- 本机 release 对比（同一 binary，通过临时开关串行/并发各 5 次）：平台阶段中位数约 152ms→116ms，窗口构造约 215ms→195ms，首次可交互约 250ms→230ms。
+- 目标 190ms **未达成**：剩余主要成本是窗口创建/DirectX 渲染资源约 80ms、首帧布局/字体 shaping 约 30ms，以及进程加载/外部开销约 70ms，都已无法靠单纯并发字体/GPU 消除。
+- 同时保留 preview.44 的字体缓存优化与 `BACKLEAF_STARTUP_REPORT` 阶段追踪；新增 `platform_created` 标记。
+- 构建补丁统一为 `vendor/patches/backleaf-startup.patch`，由 `scripts/native/apply-vendor-patches.ps1` 幂等应用；CI 发布构建应用后重建并记录 `vendor_patch=font-update-no-check+gpu-init-async`。
+- 视觉与交互语义未变；风险点是 GPU 设备线程与窗口创建的并发在老旧驱动上的兼容性，已在真机截图验证，仍需更多机器试用。
+- 测试：fmt、Clippy、135 项 native、51 项 headless、installer、打包 smoke 全部通过。
+
+以下保留 preview.45 及更早内容：
+
+preview.45（侧栏用户目录名称）：
 - 左侧“个人文件夹”入口现在显示当前登录用户家目录的实际文件夹名（例如 `qq651`），不再使用泛化名称；路径、图标、点击行为和索引根不变。
 - 英文/中文界面下都使用系统家目录名称，不做翻译；没有可用文件夹名时仍回退“Home/个人文件夹”。
 - 新增 `profile_title_uses_the_home_folder_name` 单元测试；native 现为 135 项、headless 51 项。

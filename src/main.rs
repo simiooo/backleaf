@@ -2637,22 +2637,23 @@ fn main() {
         startup.push(options);
     }
     crate::startup::mark("window_state");
-    Application::with_platform(Rc::new(
-        gpui_windows::WindowsPlatform::new(false).expect("Windows graphics initialization"),
-    ))
-    .with_assets(paint::Assets)
-    .run(move |cx| {
-        crate::startup::mark("platform_run");
-        input::bind_keys(cx);
-        cx.on_window_closed(|cx, _| {
-            if cx.windows().is_empty() {
-                cx.quit();
+    let platform =
+        gpui_windows::WindowsPlatform::new(false).expect("Windows graphics initialization");
+    crate::startup::mark("platform_created");
+    Application::with_platform(Rc::new(platform))
+        .with_assets(paint::Assets)
+        .run(move |cx| {
+            crate::startup::mark("platform_run");
+            input::bind_keys(cx);
+            cx.on_window_closed(|cx, _| {
+                if cx.windows().is_empty() {
+                    cx.quit();
+                }
+            })
+            .detach();
+            for options in startup {
+                open_backleaf_window(options, cx);
             }
-        })
-        .detach();
-        for options in startup {
-            open_backleaf_window(options, cx);
-        }
-        cx.activate(true);
-    });
+            cx.activate(true);
+        });
 }

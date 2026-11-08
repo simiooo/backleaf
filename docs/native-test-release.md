@@ -1,4 +1,8 @@
-Backleaf 0.1.0-preview.45 · Windows x64 测试版
+Backleaf 0.1.0-preview.46 · Windows x64 测试版
+
+GPU 并发初始化实验：DirectX 设备创建移到后台线程，与 Windows 平台/字体/窗口初始化并发；主线程在 `attach_gpu` 取回设备后继续创建渲染器。真机启动截图确认文字、文件卡片、侧栏与圆角表面正常。同一 binary 串行/并发各 5 次对比：平台阶段中位数约 152ms→116ms，窗口构造约 215ms→195ms，首次可交互约 250ms→230ms。目标 190ms 未达成；剩余成本为窗口/渲染资源约 80ms、首帧布局/字体 shaping 约 30ms、进程加载约 70ms。构建补丁统一为 `vendor/patches/backleaf-startup.patch`（字体缓存检查 + GPU 并发），由 apply-vendor-patches.ps1 幂等应用，CI 记录 `vendor_patch=font-update-no-check+gpu-init-async`。视觉/交互语义未变；需注意老旧 GPU 驱动上的并发兼容性。fmt、Clippy、135 项 native、51 项 headless 全部通过。
+
+以下保留 preview.45 及更早内容：
 
 侧栏用户目录名称：左侧原“个人文件夹”入口现在显示当前登录用户家目录的实际文件夹名（例如 `qq651`），路径、图标、点击行为和索引根不变；中英文界面都使用系统名称，没有可用名称时回退 Home/个人文件夹。新增 `profile_title_uses_the_home_folder_name` 单元测试；native 现为 135 项、headless 51 项。fmt、Clippy、release 构建全部通过。
 
