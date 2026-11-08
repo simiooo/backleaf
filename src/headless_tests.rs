@@ -1194,6 +1194,55 @@ fn language_shortcut_switches_chinese_and_english() {
 }
 
 #[test]
+fn content_results_scrollbar_tracks_overflow_and_pages_the_list() {
+    let mut h = Harness::new(&["note.txt"], None);
+    let view = h.view.clone();
+    h.cx.update_window(h.window.into(), |_, _, cx| {
+        view.update(cx, |this, cx| {
+            this.search.open = true;
+            this.search.content_mode = true;
+            this.search.content_results = (0..200)
+                .map(|index| crate::content_search::Found {
+                    path: this.path.join(format!("note-{index}.txt")),
+                    name: format!("note-{index}.txt"),
+                    line: 1,
+                    snippet: "line with needle".into(),
+                    highlights: std::iter::once(10..16).collect(),
+                    matches: 1,
+                })
+                .collect();
+            cx.notify();
+        })
+    })
+    .unwrap();
+    h.frame();
+    let geometry =
+        h.cx.update_window(h.window.into(), |_, window, cx| {
+            view.read_with(cx, |this, _| {
+                this.scroll_geometry(crate::app_scroll::Kind::Content, window)
+            })
+        })
+        .unwrap()
+        .expect("content scrollbar for overflowing results");
+    assert!(geometry.maximum > 0. && geometry.thumb < geometry.viewport as f32);
+    let x = 1120.
+        - crate::layout::SURFACE.margin_x
+        - crate::layout::SCROLL.rail_inset
+        - crate::layout::SCROLL.rail_width / 2.;
+    let y = crate::layout::CHROME.bar_height + crate::layout::SURFACE.margin_y + 78. + 200.;
+    h.click(x, y, MouseButton::Left);
+    h.frame();
+    assert!(
+        h.cx.update_window(h.window.into(), |_, window, cx| {
+            view.read_with(cx, |this, _| {
+                this.scroll_geometry(crate::app_scroll::Kind::Content, window)
+                    .is_some_and(|g| g.offset > 0.)
+            })
+        })
+        .unwrap()
+    );
+}
+#[test]
 fn content_search_finds_text_with_context_and_highlights() {
     let mut h = Harness::new(&["note.txt"], None);
     h.key("ctrl-f");
@@ -1607,16 +1656,6 @@ fn automatic_search_uses_covered_index_and_falls_back_after_removal() {
     h.wait("fallback live result", |this, _| {
         this.search.done && this.search.rows.len() == 1 && !this.search.worker.used_index()
     });
-}
-
-#[test]
-fn titlebar_overflow_button_toggles_the_app_menu() {
-    let mut h = Harness::new(&["note.txt"], None);
-    assert!(!h.read(|this, _| this.app_menu_open));
-    h.click(960., 24., MouseButton::Left);
-    assert!(h.read(|this, _| this.app_menu_open));
-    h.click(960., 24., MouseButton::Left);
-    assert!(!h.read(|this, _| this.app_menu_open));
 }
 
 #[test]

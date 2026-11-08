@@ -171,10 +171,6 @@ impl Backleaf {
     /// press behavior (the search field and the path dropdown toggle) stop
     /// propagation first, so pressing them keeps their existing behavior.
     pub fn dismiss_titlebar_popups(&mut self, window: &mut Window, cx: &mut Context<Self>) {
-        if self.app_menu_open {
-            self.app_menu_open = false;
-            cx.notify();
-        }
         if self.search.open {
             self.close_search_checked(window, cx);
         }
@@ -964,6 +960,7 @@ impl Backleaf {
                                                     colors.color(ColorRole::MatchSurface),
                                                 ),
                                                 color: Some(colors.color(ColorRole::MatchContent)),
+                                                font_weight: Some(FontWeight::SEMIBOLD),
                                                 ..Default::default()
                                             };
                                             let styled = StyledText::new(SharedString::from(
@@ -1091,6 +1088,7 @@ impl Backleaf {
                 )
                 .into_any_element()
         };
+        let scrollbar = self.scrollbar(app_scroll::Kind::Content, window, cx);
         div()
             .absolute()
             .top(px(layout::CHROME.bar_height))
@@ -1155,6 +1153,7 @@ impl Backleaf {
                     )
                     .child(div().flex_1().min_h_0().child(list)),
             )
+            .when_some(scrollbar, |d, bar| d.child(bar))
             .into_any_element()
     }
     pub fn search_overlay(&mut self, window: &Window, cx: &mut Context<Self>) -> AnyElement {

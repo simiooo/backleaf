@@ -1,9 +1,18 @@
-拾径 / Backleaf 0.1.0-preview.48
+拾径 / Backleaf 0.1.0-preview.49
 
 Windows x64 便携测试版：解压整个ZIP，运行Backleaf.exe。或在PowerShell执行：
 irm https://raw.githubusercontent.com/simiooo/backleaf/staging/install.ps1 | iex
 
-本批次（性能优化 1–4）：
+本批次（资源管理器集成与内容搜索修复）：
+- 移除标题栏三点菜单及“设为默认”入口；不再把 Backleaf 伪装成系统默认文件管理器（Windows 没有受支持的默认文件管理器 API）。
+- 安装包注册资源管理器右键“在 Backleaf 中打开”：文件夹、文件夹空白处（`%V`）和驱动器三个位置，写入 HKCU Classes，可随安装升级覆盖；便携版不注册。
+- 内容搜索高亮修复：卡片现在从匹配行开始展示，不再让前一行/长行换行把匹配挤出可视区；高亮匹配同时加粗。中文关键词新增单元测试。
+- 内容搜索结果增加可见滚动条，可点击轨道翻页和拖动滑块；滚动条复用文件列表的几何/交互/键盘与无障碍行为。
+- 测试：native 141 项、headless 52 项（新增内容滚动条交互回归）、installer 22 项通过；fmt、严格 Clippy、release 构建通过。
+
+以下保留 preview.48 及更早内容：
+
+preview.48（性能优化 1–4）：
 - 索引前台限速：窗口可见且系统空闲时，爬取预算降为 8 个目录/批并每目录休眠 12ms；窗口隐藏/后台时恢复 32 目录/批全速，用户有输入时保留原有低速预算。通知批次仍即时处理。
 - 索引排除可再生构建目录：`target`（父目录有 Cargo.toml）、`node_modules`（有 package.json/pnpm-lock/yarn.lock）、`.venv`/`venv`（有 pyproject/requirements/Pipfile）以及 `.git`、`.svn`、`.hg`、`.vs`、`.idea`、`__pycache__`、`.pytest_cache`、`.next`、`.nuxt` 不进入索引；已有旧的子树在扫描到时会清除。目录仍在文件列表中可见。
 - 懒加载后台 worker：原生图标线程、图片缩略图解码与通知线程改为首次真正请求时才创建。空闲线程 55→52、句柄约 1216→1209、工作集约 70.3→67.3MB（安装版同机 2 次）。

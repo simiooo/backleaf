@@ -500,26 +500,20 @@ fn find_match(path: &Path, text: &str, query_lower: &str) -> Option<Found> {
         }
     }
     let (line_index, byte_index) = first?;
-    let previous = line_index
-        .checked_sub(1)
-        .and_then(|index| lines.get(index))
-        .map(|line| truncate_line(line, CONTEXT_CHARS));
     let current = window_around(lines[line_index], byte_index, query_lower.len());
     let next = lines
         .get(line_index + 1)
         .map(|line| truncate_line(line, CONTEXT_CHARS));
-    let mut snippet = String::new();
-    for line in previous
-        .iter()
-        .chain(std::iter::once(&current))
-        .chain(next.iter())
-    {
-        if !snippet.is_empty() {
-            snippet.push('\n');
-        }
-        snippet.push_str(line);
+    let mut snippet = current;
+    if let Some(next) = next {
+        snippet.push('\n');
+        snippet.push_str(&next);
     }
     let highlights = highlights(&snippet, query_lower);
+    debug_assert!(
+        !highlights.is_empty(),
+        "a content match must remain highlightable in its own snippet"
+    );
     Some(Found {
         path: path.to_path_buf(),
         name: path
@@ -642,16 +636,29 @@ mod tests {
         assert!(decode_text(b"\x01\x02\x03\x04\x05").is_none());
     }
     #[test]
-    fn match_snippet_keeps_context_and_highlight_ranges() {
+    fn match_snippet_starts_at_the_matching_line_and_keeps_highlight_ranges() {
         let text = "alpha\nbeta unique Gamma\ndelta\n";
         let found = find_match(Path::new("notes.txt"), text, "unique").unwrap();
         assert_eq!(found.name, "notes.txt");
         assert_eq!(found.line, 2);
         assert_eq!(found.matches, 1);
-        assert!(found.snippet.contains("unique"));
-        assert_eq!(&found.snippet[found.highlights[0].clone()], "unique");
-        assert!(found.snippet.contains("beta"));
+        assert!(found.snippet.starts_with("beta unique Gamma"));
         assert!(found.snippet.contains("delta"));
+        assert_eq!(&found.snippet[found.highlights[0].clone()], "unique");
+    }
+    #[test]
+    fn chinese_query_and_long_line_keep_a_visible_highlight() {
+        let text = "header\n本行包含 测试 关键词，后面还有很长的内容用来验证截断。\nfooter";
+        let found = find_match(Path::new("notes.txt"), text, "测试").unwrap();
+        assert_eq!(found.matches, 1);
+        assert!(!found.highlights.is_empty());
+        assert_eq!(&found.snippet[found.highlights[0].clone()], "测试");
+        assert!(found.snippet.contains("测试"));
+        let long = format!("prefix{}测试 suffix", "很长的内容".repeat(200));
+        let found = find_match(Path::new("long.json"), &long, "测试").unwrap();
+        assert!(!found.highlights.is_empty());
+        assert!(found.snippet.contains("测试"));
+        assert_eq!(&found.snippet[found.highlights[0].clone()], "测试");
     }
     #[test]
     fn text_cache_reuses_unchanged_files_and_invalidates_length_changes() {

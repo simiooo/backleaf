@@ -1,7 +1,6 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 mod app_archive;
 mod app_drag;
-mod app_menu;
 mod app_navigation;
 mod app_ole;
 mod app_operations;
@@ -13,7 +12,6 @@ mod app_views;
 mod app_watch;
 mod capacity_input;
 mod content_search;
-mod default_app;
 mod directory_snapshot;
 mod drag;
 mod file_geometry;
@@ -139,8 +137,6 @@ struct Backleaf {
     open_pending: bool,
     error: Option<String>,
     panel: bool,
-    app_menu_open: bool,
-    app_menu_was_open: bool,
     task: Entity<TaskPanel>,
     flow_cache: SharedFlowCache,
     clock_pending: bool,
@@ -378,7 +374,6 @@ impl Backleaf {
                 worker.set_active(this.navigation.window_active && !this.session_locked);
             }
             if !visibility.is_visible() {
-                this.app_menu_open = false;
                 this.finish_marquee(cx);
                 this.pressed_id = None;
                 this.hovered_id = None;
@@ -462,7 +457,6 @@ impl Backleaf {
                 worker.set_active(this.navigation.window_active && !this.session_locked);
             }
             if !window.is_window_active() {
-                this.app_menu_open = false;
                 this.navigation.menu_focus_transfer =
                     this.files.menu.is_some() || this.navigation.menu.is_some();
                 this.reset_typeahead();
@@ -586,8 +580,6 @@ impl Backleaf {
             open_pending: false,
             error: ole_error,
             panel,
-            app_menu_open: false,
-            app_menu_was_open: false,
             task,
             flow_cache,
             clock_pending: false,
@@ -1329,12 +1321,6 @@ impl Backleaf {
             return;
         }
 
-        if event.keystroke.key == "escape" && self.app_menu_open {
-            self.app_menu_open = false;
-            cx.stop_propagation();
-            cx.notify();
-            return;
-        }
         if event.keystroke.key == "escape" && self.navigation.drag.is_some() {
             self.navigation.drag = None;
             self.navigation.suppress_click = true;
@@ -1886,7 +1872,6 @@ impl Backleaf {
                     .flex_none()
                     .items_center()
                     .gap(px(layout::CHROME.caption_gap))
-                    .child(self.app_menu_button(cx))
                     .children(
                         [
                             ("min", "最小化", WindowControlArea::Min),
@@ -2419,9 +2404,6 @@ impl Render for Backleaf {
             })
             .when(self.search.open, |d| {
                 d.child(self.search_overlay(window, cx))
-            })
-            .when(self.app_menu_open, |d| {
-                d.child(self.app_menu_overlay(window, cx))
             })
             .child(self.view_popovers(cx))
             .child(self.archive_popup(cx))

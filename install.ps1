@@ -134,6 +134,24 @@ function Expand-BackleafPackage {
     [IO.Compression.ZipFile]::ExtractToDirectory($Archive, $Destination)
 }
 
+function Register-BackleafContextMenu {
+    param([string]$Executable)
+    # HKCU shell verbs need no elevation and are easy to overwrite on upgrade.
+    $items = @(
+        @{ Key = 'Software\Classes\Directory\shell\Backleaf'; Command = ('"' + $Executable + '" "%1"') },
+        @{ Key = 'Software\Classes\Drive\shell\Backleaf'; Command = ('"' + $Executable + '" "%1"') },
+        @{ Key = 'Software\Classes\Directory\Background\shell\Backleaf'; Command = ('"' + $Executable + '" "%V"') }
+    )
+    foreach ($item in $items) {
+        $key = 'HKCU:\' + $item.Key
+        New-Item -Path $key -Force | Out-Null
+        Set-ItemProperty -LiteralPath $key -Name '(default)' -Value '在 Backleaf 中打开'
+        Set-ItemProperty -LiteralPath $key -Name 'Icon' -Value $Executable
+        New-Item -Path ($key + '\command') -Force | Out-Null
+        Set-ItemProperty -LiteralPath ($key + '\command') -Name '(default)' -Value $item.Command
+    }
+}
+
 function Install-Backleaf {
     [CmdletBinding()]
     param([string]$Tag, [string]$InstallDir,
@@ -224,6 +242,11 @@ function Install-Backleaf {
                     $shortcut.Save()
                 }
             } catch { Write-Warning "Installed successfully; shortcut could not be created: $($_.Exception.Message)" }
+        }
+        $defaultRoot = [IO.Path]::GetFullPath((Join-Path $env:LOCALAPPDATA 'Programs\Backleaf')).TrimEnd('\')
+        if ($root -eq $defaultRoot) {
+            try { Register-BackleafContextMenu (Join-Path $current 'Backleaf.exe') }
+            catch { Write-Warning "Installed successfully; Explorer context menu could not be registered: $($_.Exception.Message)" }
         }
         Write-Host "Installed Backleaf $version to $current"
         if ($Launch) { Start-Process -FilePath (Join-Path $current 'Backleaf.exe') }
