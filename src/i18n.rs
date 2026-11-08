@@ -414,6 +414,9 @@ const EN: &[(&str, &str)] = &[
         "无法打开 Windows 默认应用设置",
         "Could not open Windows default apps settings",
     ),
+    ("文件滚动条", "File scrollbar"),
+    ("侧栏滚动条", "Sidebar scrollbar"),
+    ("内容搜索结果滚动条", "Content results scrollbar"),
     // ---- dialogs / drag ----
     ("解压文件", "Extract file"),
     ("归档", "Archive"),

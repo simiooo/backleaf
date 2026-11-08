@@ -1,6 +1,10 @@
-Backleaf 0.1.0-preview.50 · Windows x64 测试版
+Backleaf 0.1.0-preview.51 · Windows x64 / ARM64 测试版
 
-资源管理器集成与内容搜索修复：移除标题栏三点菜单与“设为默认”入口（Windows 没有受支持的默认文件管理器 API，不再做无效设置入口）；安装包在 HKCU Classes 注册“在 Backleaf 中打开”文件夹/文件夹空白处/驱动器右键项，安装升级时覆盖、便携版不注册。内容搜索卡片改为从匹配行开始展示，避免长行/前一行换行把匹配挤出可视区，匹配同时加粗，并新增中文关键词单元测试；结果列表增加可见滚动条，支持拖动与点击轨道翻页，复用文件列表滚动条交互。native 141 项、headless 52 项（新增内容滚动条交互回归）、installer 22 项通过；fmt、严格 Clippy、release 构建通过。
+i18n 与 Windows ARM64：新增原生 Windows ARM64 包（ARM64 7z.dll、ARM64 app-local VC runtime），由 windows-11-arm hosted runner 跑 native/headless 套件、打包和 CLI smoke；安装器按进程架构选择 x64 或 ARM64 资产（`build.json`/`SHA256SUMS.txt` 或 `build-arm64.json`/`SHA256SUMS-arm64.txt`），ARM64 校验包内 runtime，不再下载 x64 runtime。资源管理器右键菜单文案按 `BACKLEAF_LANG` → `%LOCALAPPDATA%\Backleaf\language.txt` → Windows UI 语言选择“在 Backleaf 中打开”/“Open in Backleaf”；应用内滚动条无障碍名称改走 i18n。限制：ARM64 仅在 hosted ARM64 runner 验证，未在实体 ARM 设备长时间试用；修改应用语言后需重新运行安装器刷新静态右键文案。native 141 项、headless 52 项、installer 22 项通过；fmt、严格 Clippy、release 构建通过。
+
+以下保留 preview.50 及更早内容：
+
+preview.50（资源管理器集成与内容搜索修复）：移除标题栏三点菜单与“设为默认”入口（Windows 没有受支持的默认文件管理器 API，不再做无效设置入口）；安装包在 HKCU Classes 注册“在 Backleaf 中打开”文件夹/文件夹空白处/驱动器右键项，安装升级时覆盖、便携版不注册。内容搜索卡片改为从匹配行开始展示，避免长行/前一行换行把匹配挤出可视区，匹配同时加粗，并新增中文关键词单元测试；结果列表增加可见滚动条，支持拖动与点击轨道翻页，复用文件列表滚动条交互。native 141 项、headless 52 项（新增内容滚动条交互回归）、installer 22 项通过；fmt、严格 Clippy、release 构建通过。
 
 以下保留 preview.48 及更早内容：
 

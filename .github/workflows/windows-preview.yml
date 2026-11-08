@@ -71,3 +71,75 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           ./scripts/native/publish-preview.ps1 -ExpectedSource $env:GITHUB_SHA
+  package-arm64:
+    needs: package
+    runs-on: windows-11-arm
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+          fetch-depth: 1
+      - uses: ilammy/msvc-dev-cmd@v1
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: '1.99.1'
+          components: rustfmt, clippy
+      - uses: Swatinem/rust-cache@v2
+        with:
+          cache-on-failure: true
+      - name: Check and build ARM64
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force .local/ci | Out-Null
+          cargo fmt -p backleaf --check *> .local/ci/fmt-arm64.log
+          if ($LASTEXITCODE) { Get-Content .local/ci/fmt-arm64.log; throw 'Format failed' }
+          cargo clippy --release --locked -p backleaf --all-targets --no-deps -- -D warnings *> .local/ci/clippy-arm64.log
+          if ($LASTEXITCODE) { Get-Content .local/ci/clippy-arm64.log; throw 'Clippy failed' }
+          cargo test --release --locked -p backleaf -- --skip headless_tests:: *> .local/ci/tests-arm64.log
+          if ($LASTEXITCODE) { Get-Content .local/ci/tests-arm64.log; throw 'Tests failed' }
+          cargo build --release --locked *> .local/ci/build-arm64.log
+          if ($LASTEXITCODE) { Get-Content .local/ci/build-arm64.log; throw 'ARM64 build failed' }
+      - name: GPUI headless interaction gate (ARM64)
+        shell: pwsh
+        run: ./scripts/native/test-headless.ps1 -Output .local/ci/headless.json
+      - name: Apply vendored startup patches (ARM64)
+        shell: pwsh
+        run: ./scripts/native/apply-vendor-patches.ps1
+      - name: Rebuild ARM64 release with vendored patch
+        shell: pwsh
+        run: |
+          cargo build --release --locked *> .local/ci/build-arm64-optimized.log
+          if ($LASTEXITCODE) { Get-Content .local/ci/build-arm64-optimized.log; throw 'Optimized ARM64 build failed' }
+      - name: Package and smoke ARM64
+        shell: pwsh
+        env:
+          BACKLEAF_VENDOR_PATCH: 'font-update-no-check+gpu-init-async'
+        run: ./scripts/native/ci-package-arm64.ps1
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: windows-arm64-build-evidence
+          path: .local/ci
+          retention-days: 30
+      - name: Publish ARM64 assets
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: ./scripts/native/publish-arm64.ps1 -ExpectedSource $env:GITHUB_SHA
+      - name: ARM64 installer smoke
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $metadata = Get-Content .local/ci/build-arm64.json -Raw | ConvertFrom-Json
+          $tag = "test-v$($metadata.version)-$($env:GITHUB_SHA.Substring(0,8))"
+          $target = Join-Path $env:TEMP "backleaf-arm64-install-$env:GITHUB_RUN_ID"
+          if (Test-Path -LiteralPath $target) { Remove-Item -LiteralPath $target -Recurse -Force }
+          ./install.ps1 -Tag $tag -InstallDir $target -NoShortcut
+          $receipt = Get-Content -LiteralPath (Join-Path $target 'current/.backleaf-install.json') -Raw | ConvertFrom-Json
+          if ($receipt.architecture -ne 'arm64' -or $receipt.version -ne $metadata.version) { throw 'ARM64 installer selected the wrong package.' }
+          $session = Join-Path $target 'session.json'
+          $process = Start-Process -FilePath (Join-Path $target 'current/Backleaf.exe') -ArgumentList @('--session-status-file',('"'+$session+'"')) -PassThru -Wait -WindowStyle Hidden
+          if ($process.ExitCode -ne 0 -or !(Test-Path -LiteralPath $session)) { throw 'Installed ARM64 executable CLI smoke failed.' }
+          Remove-Item -LiteralPath $target -Recurse -Force

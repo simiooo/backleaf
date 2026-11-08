@@ -134,8 +134,24 @@ function Expand-BackleafPackage {
     [IO.Compression.ZipFile]::ExtractToDirectory($Archive, $Destination)
 }
 
+function Get-BackleafContextLabel {
+    $language = $env:BACKLEAF_LANG
+    if ([string]::IsNullOrWhiteSpace($language)) {
+        $data = Join-Path $env:LOCALAPPDATA 'Backleaf'
+        $languageFile = Join-Path $data 'language.txt'
+        if (Test-Path -LiteralPath $languageFile) {
+            try { $language = (Get-Content -LiteralPath $languageFile -Raw).Trim() } catch { $language = $null }
+        }
+    }
+    if ([string]::IsNullOrWhiteSpace($language)) {
+        $language = [Globalization.CultureInfo]::CurrentUICulture.TwoLetterISOLanguageName
+    }
+    if ($language -match '^(en|english)') { 'Open in Backleaf' } else { '在 Backleaf 中打开' }
+}
+
 function Register-BackleafContextMenu {
     param([string]$Executable)
+    $label = Get-BackleafContextLabel
     # HKCU shell verbs need no elevation and are easy to overwrite on upgrade.
     $items = @(
         @{ Key = 'Software\Classes\Directory\shell\Backleaf'; Command = ('"' + $Executable + '" --path "%1"') },
@@ -145,7 +161,7 @@ function Register-BackleafContextMenu {
     foreach ($item in $items) {
         $key = 'HKCU:\' + $item.Key
         New-Item -Path $key -Force | Out-Null
-        Set-ItemProperty -LiteralPath $key -Name '(default)' -Value '在 Backleaf 中打开'
+        Set-ItemProperty -LiteralPath $key -Name '(default)' -Value $label
         Set-ItemProperty -LiteralPath $key -Name 'Icon' -Value $Executable
         New-Item -Path ($key + '\command') -Force | Out-Null
         Set-ItemProperty -LiteralPath ($key + '\command') -Name '(default)' -Value $item.Command
@@ -199,17 +215,21 @@ function Install-Backleaf {
         $release = Get-BackleafRelease $Tag
         if ($release.tag_name -notmatch '^test-v([0-9]+\.[0-9]+\.[0-9]+-preview\.[0-9]+)-([a-f0-9]{8})$') { throw 'Unexpected release tag.' }
         $version = $Matches[1]; $sourceShort = $Matches[2]
-        $zipName = "Backleaf-$version-$sourceShort-win-x64.zip"
+        $architecture = if ($env:PROCESSOR_ARCHITECTURE -eq 'ARM64') { 'arm64' } else { 'x64' }
+        $zipName = "Backleaf-$version-$sourceShort-win-$architecture.zip"
+        $metadataName = if ($architecture -eq 'arm64') { 'build-arm64.json' } else { 'build.json' }
+        $sumsName = if ($architecture -eq 'arm64') { 'SHA256SUMS-arm64.txt' } else { 'SHA256SUMS.txt' }
         New-Item -ItemType Directory -Path $work | Out-Null
-        foreach ($name in @($zipName, 'build.json', 'SHA256SUMS.txt')) {
+        $assetPrefix = if ($architecture -eq 'arm64') { 'ARM64 ' } else { '' }
+        foreach ($name in @($zipName, $metadataName, $sumsName)) {
             $asset = @($release.assets | Where-Object { $_.name -ceq $name -and $_.state -eq 'uploaded' })
-            if ($asset.Count -ne 1) { throw "Release is missing a unique asset: $name" }
+            if ($asset.Count -ne 1) { throw "Release is missing a unique ${assetPrefix}asset: $name" }
             Save-BackleafAsset $asset[0] (Join-Path $work $name)
         }
-        $metadata = Get-Content -LiteralPath (Join-Path $work 'build.json') -Raw | ConvertFrom-Json
+        $metadata = Get-Content -LiteralPath (Join-Path $work $metadataName) -Raw | ConvertFrom-Json
         if ($metadata.version -ne $version -or $metadata.source_commit -notmatch '^[a-f0-9]{40}$' -or
             !$metadata.source_commit.StartsWith($sourceShort) -or !$metadata.cli_smoke_passed) { throw 'Package source/version or CI smoke evidence mismatch.' }
-        $checksum = @((Get-Content -LiteralPath (Join-Path $work 'SHA256SUMS.txt')) | Where-Object { $_ -cmatch ('^[a-f0-9]{64}  ' + [regex]::Escape($zipName) + '$') })
+        $checksum = @((Get-Content -LiteralPath (Join-Path $work $sumsName)) | Where-Object { $_ -cmatch ('^[a-f0-9]{64}  ' + [regex]::Escape($zipName) + '$') })
         if ($checksum.Count -ne 1 -or $checksum[0].Substring(0,64) -ne (Get-FileHash -LiteralPath (Join-Path $work $zipName)).Hash.ToLowerInvariant()) { throw 'Package checksum manifest mismatch.' }
         $stage = Join-Path $work 'package'
         Expand-BackleafPackage (Join-Path $work $zipName) $stage
@@ -217,8 +237,17 @@ function Install-Backleaf {
             $path = Join-Path $stage $pair[0]
             if ($pair[1] -notmatch '^[a-f0-9]{64}$' -or !(Test-Path -LiteralPath $path) -or (Get-FileHash -LiteralPath $path).Hash.ToLowerInvariant() -ne $pair[1]) { throw 'Installed executable or archive library integrity mismatch.' }
         }
-        $runtime = Add-BackleafRuntime $work $stage
-        $receipt = [ordered]@{ application = 'Backleaf'; version = $version; tag = $release.tag_name; source_commit = $metadata.source_commit; installed_at_utc = [DateTime]::UtcNow.ToString('o'); exe_sha256 = $metadata.exe_sha256; runtime = $runtime }
+        if ($architecture -eq 'arm64') {
+            $runtime = $metadata.runtime
+            if (!$runtime -or @($runtime.files).Count -lt 3) { throw 'ARM64 package is missing app-local runtime metadata.' }
+            foreach ($file in $runtime.files) {
+                $path = Join-Path $stage $file.name
+                if (!(Test-Path -LiteralPath $path) -or (Get-FileHash -LiteralPath $path).Hash.ToLowerInvariant() -ne $file.sha256) { throw "ARM64 app-local runtime is missing or changed: $($file.name)" }
+            }
+        } else {
+            $runtime = Add-BackleafRuntime $work $stage
+        }
+        $receipt = [ordered]@{ application = 'Backleaf'; version = $version; tag = $release.tag_name; source_commit = $metadata.source_commit; architecture = $architecture; installed_at_utc = [DateTime]::UtcNow.ToString('o'); exe_sha256 = $metadata.exe_sha256; runtime = $runtime }
         $receipt | ConvertTo-Json -Depth 7 | Set-Content -LiteralPath (Join-Path $stage '.backleaf-install.json') -Encoding UTF8
         # Same-volume renames. If promotion fails, restore the previous working install.
         if (Test-Path -LiteralPath $current) { Move-Item -LiteralPath $current -Destination $backup }

@@ -441,9 +441,13 @@ fn create_plan(
     drop(spill);
     Ok(plan)
 }
+#[cfg(target_arch = "aarch64")]
+const ARCHIVE_ENGINE: &[u8] = include_bytes!("../../assets/archive-engine/7z-arm64.dll");
+#[cfg(not(target_arch = "aarch64"))]
+const ARCHIVE_ENGINE: &[u8] = include_bytes!("../../assets/archive-engine/7z.dll");
 fn engine(directory: &Path) -> anyhow::Result<(PathBuf, PathBuf, File, File)> {
     let executable = include_bytes!(concat!(env!("OUT_DIR"), "/BackleafArchive.exe"));
-    let library = include_bytes!("../../assets/archive-engine/7z.dll");
+    let library = ARCHIVE_ENGINE;
     let mut hash = Sha256::new();
     hash.update(executable);
     hash.update(library);
@@ -452,7 +456,7 @@ fn engine(directory: &Path) -> anyhow::Result<(PathBuf, PathBuf, File, File)> {
     std::fs::create_dir_all(&root)?;
     let helper = root.join("BackleafArchive.exe");
     let dll = root.join("7z.dll");
-    for (path, content) in [(&helper, executable.as_slice()), (&dll, library.as_slice())] {
+    for (path, content) in [(&helper, executable.as_slice()), (&dll, library)] {
         match File::create_new(path) {
             Ok(mut f) => {
                 f.write_all(content)?;

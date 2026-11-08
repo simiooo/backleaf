@@ -226,9 +226,9 @@ impl Backleaf {
             .rounded(px(6.))
             .role(Role::ScrollBar)
             .aria_label(match kind {
-                Kind::Files => "文件滚动条",
-                Kind::Sidebar => "侧栏滚动条",
-                Kind::Content => "内容搜索结果滚动条",
+                Kind::Files => crate::i18n::tr("文件滚动条"),
+                Kind::Sidebar => crate::i18n::tr("侧栏滚动条"),
+                Kind::Content => crate::i18n::tr("内容搜索结果滚动条"),
             })
             .aria_orientation(accesskit::Orientation::Vertical)
             .aria_min_numeric_value(0.)

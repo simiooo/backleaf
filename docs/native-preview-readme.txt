@@ -1,9 +1,18 @@
-拾径 / Backleaf 0.1.0-preview.50
+拾径 / Backleaf 0.1.0-preview.51
 
-Windows x64 便携测试版：解压整个ZIP，运行Backleaf.exe。或在PowerShell执行：
+Windows x64 / ARM64 便携测试版：解压对应 ZIP 运行 Backleaf.exe。安装器会按当前 Windows 进程架构选择 x64 或 ARM64 包；也可在 PowerShell 执行：
 irm https://raw.githubusercontent.com/simiooo/backleaf/staging/install.ps1 | iex
 
-本批次（资源管理器集成与内容搜索修复）：
+本批次（i18n 与 Windows ARM64）：
+- 新增原生 Windows ARM64 构建：ARM 包使用 ARM64 7z.dll、ARM64 app-local VC runtime，并在 windows-11-arm hosted runner 上跑完整 native/headless 套件、打包和 CLI smoke。
+- 安装器按架构选择资产：x64 下载 `...-win-x64.zip` + `build.json` + `SHA256SUMS.txt`；ARM64 下载 `...-win-arm64.zip` + `build-arm64.json` + `SHA256SUMS-arm64.txt`，并校验包内 ARM64 runtime，不再下载 x64 runtime。
+- 右键菜单文案按应用语言选择：优先 `BACKLEAF_LANG`，其次 `%LOCALAPPDATA%\Backleaf\language.txt`，再次 Windows UI 语言；中文为“在 Backleaf 中打开”，英文为“Open in Backleaf”。切换应用语言后需重新运行安装器更新该静态 shell 文案。
+- 内容搜索结果滚动条的无障碍名称（文件滚动条/侧栏滚动条/内容搜索结果滚动条）改为走应用 i18n，不再硬编码中文。
+- 说明：ARM64 页由 hosted ARM64 runner 构建与 smoke，未在实体 ARM 设备上长时间试用；归档引擎已换为原生 ARM64，格式支持与 x64 相同。
+
+以下保留 preview.50 及更早内容：
+
+preview.50（资源管理器集成与内容搜索修复）：
 - 移除标题栏三点菜单及“设为默认”入口；不再把 Backleaf 伪装成系统默认文件管理器（Windows 没有受支持的默认文件管理器 API）。
 - 安装包注册资源管理器右键“在 Backleaf 中打开”：文件夹、文件夹空白处（`%V`）和驱动器三个位置，写入 HKCU Classes，可随安装升级覆盖；便携版不注册。
 - 内容搜索高亮修复：卡片现在从匹配行开始展示，不再让前一行/长行换行把匹配挤出可视区；高亮匹配同时加粗。中文关键词新增单元测试。
