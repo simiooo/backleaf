@@ -6,7 +6,7 @@ $headless = Get-Content .local/ci/headless.json -Raw | ConvertFrom-Json
 if (!$headless.passed -or $headless.workspace_commit -ne $commit -or $headless.workspace_dirty) {throw 'Clean-source headless interaction gate missing'}
 $bundle = '.local/ci/Backleaf-arm64'
 New-Item -ItemType Directory -Force $bundle | Out-Null
-Copy-Item target/release/backleaf.exe "$bundle/Backleaf.exe"
+Copy-Item target/aarch64-pc-windows-msvc/release/backleaf.exe "$bundle/Backleaf.exe"
 New-Item -ItemType Directory -Force "$bundle/lib" | Out-Null
 Copy-Item assets/archive-engine/7z-arm64.dll "$bundle/lib/7z.dll"
 Copy-Item docs/native-preview-readme.txt "$bundle/README.txt"

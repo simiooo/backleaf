@@ -1,25 +1,31 @@
-﻿name: ARM64 headless debug
+name: ARM64 headless debug
 on:
   workflow_dispatch:
 jobs:
   debug:
     runs-on: windows-11-arm
     timeout-minutes: 30
+    env:
+      CARGO_BUILD_TARGET: aarch64-pc-windows-msvc
     steps:
       - uses: actions/checkout@v4
         with:
           submodules: true
           fetch-depth: 1
       - uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: arm64
       - uses: dtolnay/rust-toolchain@master
         with:
           toolchain: '1.99.1'
+          targets: aarch64-pc-windows-msvc
       - uses: Swatinem/rust-cache@v2
         with:
           cache-on-failure: true
       - name: Run failing properties tests
         shell: pwsh
         run: |
+          New-Item -ItemType Directory -Force .local | Out-Null
           cargo test --release --locked -p backleaf 'headless_tests::file_properties_open_separately_keep_geometry_and_preserve_full_long_path' -- --test-threads=1 --nocapture *> .local\debug-properties.log
           $code=$LASTEXITCODE
           Get-Content .local\debug-properties.log
