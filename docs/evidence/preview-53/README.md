@@ -37,3 +37,7 @@
 | 设计稿 Backleaf-v46.fig | `216c6ffd8f632f908406d4765a9be010b59c24e70d59f7b8a63bc1e5055ab179` |
 
 构建记录：[x64](build.json)、[ARM64](build-arm64.json)。SHA 清单：[x64](SHA256SUMS.txt)、[ARM64](SHA256SUMS-arm64.txt)。干净源无头报告节选：[headless.json](headless.json)。
+
+## 发布后安装器热修
+
+发布后 GitHub Releases 下载直链对部分小资产（`build.json`、`SHA256SUMS*.txt`）间歇返回 504，而 ZIP 与 API 资产端点正常。`582c353` 在安装器中加入 API 资产端点回退，离线安装器回归增加到每 PowerShell 版本 28 项；[Installer CI 42572540036](https://github.com/simiooo/backleaf/actions/runs/42572540036) 与[无头 CI 42572540168](https://github.com/simiooo/backleaf/actions/runs/42572540168) 通过。用公网一行命令把 preview.53 安装到隔离目录时，直链 `build.json` 504 后自动回退 API 成功，安装后的 EXE SHA-256 `1219dabb…` 与发布构建记录一致；应用发布字节未改变。
