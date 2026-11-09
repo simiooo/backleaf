@@ -57,6 +57,15 @@ pub enum Event {
         closed: bool,
         result: Result<(), String>,
     },
+    /// The administrator handoff request was written and UAC was invoked (or
+    /// refused). The request file is consumed by the elevated process.
+    ElevationLaunched(Result<(), String>),
+    /// Carried selection ids resolved in the freshly enumerated elevated window.
+    ElevationSelection {
+        generation: u64,
+        ids: Vec<usize>,
+        scroll_row: u64,
+    },
     ShellMenuClosed(Result<(), String>),
     ShellRows(crate::shell_menu::Notice),
     ArchivePrepared {
@@ -101,6 +110,7 @@ pub enum Event {
         count: usize,
         done: bool,
         error: Option<String>,
+        denied: bool,
     },
     Page {
         generation: u64,
@@ -171,6 +181,30 @@ impl Source {
             Self::Fixture { count } | Self::Directory { count, .. } => *count,
         }
     }
+    /// Hand the current snapshot location and selection mask to the launch
+    /// thread without querying SQLite on the UI thread.
+    pub fn selection_handoff(
+        &self,
+        mask: &crate::selection::SelectionMask,
+        count: usize,
+    ) -> Option<crate::elevation::SelectionHandoff> {
+        let Self::Directory { snapshot, .. } = self else {
+            return None;
+        };
+        Some(crate::elevation::SelectionHandoff {
+            database: snapshot.database.clone(),
+            parent: snapshot.parent.get()?.clone(),
+            mask: mask.clone(),
+            count,
+        })
+    }
+    /// Read-only snapshot database used to resolve carried selection names.
+    pub fn snapshot_database(&self) -> Option<PathBuf> {
+        match self {
+            Self::Directory { snapshot, .. } => Some(snapshot.database.clone()),
+            Self::Fixture { .. } => None,
+        }
+    }
     pub fn directory(path: PathBuf, generation: u64, tx: async_channel::Sender<Event>) -> Self {
         let pending = Arc::new(Mutex::new(Pending::default()));
         let stop = Arc::new(AtomicBool::new(false));
@@ -220,14 +254,17 @@ impl Source {
                                         insert.execute(params![count as i64, short_name(&name.to_string_lossy(), 256), encode_name(&name), directory, entry.bytes.map(|n|n as i64), name.to_string_lossy().to_lowercase(),entry.identity.as_slice()])?;
                                         count += 1;
                                     },
-                                    Some(Err(error)) => { let _ = tx.send_blocking(Event::Count { generation, count, done: false, error: Some(error.to_string()) }); },
+                                    Some(Err(error)) => {
+                                        let denied = crate::elevation::io_access_denied(&error);
+                                        let _ = tx.send_blocking(Event::Count { generation, count, done: false, error: Some(error.to_string()), denied });
+                                    },
                                     None => { done = true; break; }
                                 }
                             }
                         }
                         batch.commit()?;
                         if done || count == 512 || last_notice.elapsed().as_millis() >= 80 {
-                            if tx.send_blocking(Event::Count { generation, count, done, error: None }).is_err() { break; }
+                            if tx.send_blocking(Event::Count { generation, count, done, error: None, denied: false }).is_err() { break; }
                             last_notice = std::time::Instant::now();
                         }
                     }
@@ -288,7 +325,10 @@ impl Source {
                 }
                 Ok(())
             })();
-            if let Err(error) = result { let _ = tx.send_blocking(Event::Count { generation, count: 0, done: true, error: Some(error.to_string()) }); }
+            if let Err(error) = result {
+                let denied = crate::elevation::error_access_denied(&error);
+                let _ = tx.send_blocking(Event::Count { generation, count: 0, done: true, error: Some(error.to_string()), denied });
+            }
             // The snapshot lease, including any command readers, controls removal after SQLite closes.
         }).expect("directory worker");
         Self::Directory {
@@ -454,7 +494,7 @@ pub fn fixture_detail(id: usize) -> Detail {
     }
 }
 #[cfg(windows)]
-fn encode_name(name: &std::ffi::OsStr) -> Vec<u8> {
+pub(crate) fn encode_name(name: &std::ffi::OsStr) -> Vec<u8> {
     use std::os::windows::ffi::OsStrExt;
     name.encode_wide().flat_map(u16::to_le_bytes).collect()
 }
@@ -607,6 +647,7 @@ mod tests {
                     count: 1600,
                     done: true,
                     error: None,
+                    denied: false,
                 } => break,
                 Event::Count { error: Some(e), .. } => panic!("{e}"),
                 _ => {}

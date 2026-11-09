@@ -43,7 +43,7 @@ pub struct Reader {
 impl Reader {
     pub fn new(path: &Path) -> io::Result<Self> {
         let parent = crate::operations::windows::identity::capture(path)
-            .map_err(|e| io::Error::other(e.to_string()))?;
+            .map_err(crate::elevation::io_from_windows)?;
         if parent.identity.wide_id {
             let raw = path
                 .as_os_str()
@@ -106,7 +106,7 @@ impl Reader {
                 *done = true;
                 return Ok(());
             }
-            return Err(io::Error::other(error.to_string()));
+            return Err(crate::elevation::io_from_windows(error));
         }
         let limit = buffer.len() * 8;
         let mut offset = 0usize;
@@ -181,7 +181,7 @@ impl Iterator for Reader {
                 let metadata = crate::operations::windows::identity::capture(
                     &self.parent.join(entry.file_name()),
                 )
-                .map_err(|e| io::Error::other(e.to_string()))?;
+                .map_err(crate::elevation::io_from_windows)?;
                 Ok(Entry {
                     name: entry.file_name(),
                     directory: metadata.directory,

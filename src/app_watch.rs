@@ -204,10 +204,15 @@ impl Backleaf {
         count: usize,
         done: bool,
         error: Option<String>,
+        denied: bool,
         cx: &mut Context<Self>,
     ) {
         if let Some(error) = error {
-            self.refresh_failed(error, cx);
+            if denied {
+                self.refresh_denied(error, cx);
+            } else {
+                self.refresh_failed(error, cx);
+            }
             return;
         }
         if let Some(Refresh {
@@ -226,6 +231,29 @@ impl Backleaf {
         cx.notify();
     }
     pub fn refresh_failed(&mut self, error: String, cx: &mut Context<Self>) {
+        self.abandon_refresh();
+        self.navigation_error(format!("刷新失败：{error}"), cx);
+    }
+    /// A refresh can be refused after the folder was already reachable (ACL or
+    /// share changes). Keep the old rows and offer the administrator handoff
+    /// instead of only flashing a toast.
+    pub fn refresh_denied(&mut self, error: String, cx: &mut Context<Self>) {
+        self.abandon_refresh();
+        if self.elevation.elevated {
+            // The elevated token is already the strongest offer; surface why it
+            // still failed instead of silently leaving the old rows.
+            self.navigation_error(format!("刷新失败：{error}"), cx);
+        } else {
+            self.elevation_prompt(self.path.clone(), cx);
+            if self.elevation.prompt.is_none() {
+                // The prompt is suppressed (another handoff is pending, a close
+                // guard is up, or this is a fixture window); keep the failure
+                // visible instead of dropping it.
+                self.navigation_error(format!("刷新失败：{error}"), cx);
+            }
+        }
+    }
+    fn abandon_refresh(&mut self) {
         let epoch = self
             .watch
             .pending
@@ -235,7 +263,6 @@ impl Backleaf {
         self.watch.dirty = false;
         self.watch.immediate = false;
         self.watch.locate = None;
-        self.navigation_error(format!("刷新失败：{error}"), cx);
     }
 }
 pub struct Refresh {

@@ -48,6 +48,8 @@ impl Harness {
             index_roots: Some(vec![]),
             restored: None,
             restore_error: None,
+            elevate_request: None,
+            elevation_restore: None,
         };
         let mut cx = HeadlessAppContext::with_asset_source(
             Arc::new(NoopTextSystem),
@@ -1061,6 +1063,7 @@ fn refresh_failure_keeps_old_rows_and_late_results_cannot_replace_navigation() {
                 count: 999,
                 done: true,
                 error: None,
+                denied: false,
             },
             cx,
         )
@@ -2043,4 +2046,522 @@ fn properties_scrollbar_tracks_short_window_overflow_and_hides_when_it_fits() {
             .unwrap()
     );
     h.key_in(properties.into(), "escape");
+}
+
+// ---- administrator handoff: prompt, one-shot request, elevated window ----
+
+impl Harness {
+    fn open_second_window(&mut self, options: Options) -> WindowHandle<Backleaf> {
+        let owner: AnyWindowHandle = self.window.into();
+        self.cx.update(|cx| open_backleaf_window(options, cx));
+        self.frame();
+        self.cx
+            .update(|cx| cx.windows())
+            .into_iter()
+            .filter(|handle| *handle != owner)
+            .find_map(|handle| handle.downcast::<Backleaf>())
+            .expect("second Backleaf window")
+    }
+    fn read_second<R>(
+        &self,
+        handle: WindowHandle<Backleaf>,
+        read: impl FnOnce(&Backleaf, &App) -> R,
+    ) -> R {
+        handle
+            .read_with(&self.cx, read)
+            .expect("second Backleaf window alive")
+    }
+    fn wait_second(
+        &mut self,
+        handle: WindowHandle<Backleaf>,
+        what: &str,
+        condition: impl Fn(&Backleaf, &App) -> bool,
+    ) {
+        let deadline = Instant::now() + Duration::from_secs(20);
+        loop {
+            self.frame();
+            if self.read_second(handle, |view, app| condition(view, app)) {
+                return;
+            }
+            self.cx.advance_clock(Duration::from_millis(10));
+            assert!(Instant::now() < deadline, "timed out waiting for {what}");
+            std::thread::sleep(Duration::from_millis(3));
+        }
+    }
+    /// Deliver the worker event the directory snapshot produces for
+    /// ERROR_ACCESS_DENIED without weakening any real ACL.
+    fn denied_directory_load(&mut self, error: &str) {
+        let generation = self.read(|this, _| this.generation);
+        self.view.update(&mut self.cx, |this, cx| {
+            this.receive(
+                Event::Count {
+                    generation,
+                    count: 0,
+                    done: true,
+                    error: Some(error.to_owned()),
+                    denied: true,
+                },
+                cx,
+            )
+        });
+    }
+}
+
+fn windows_command_line_arguments(arguments: &str) -> Vec<String> {
+    use windows::Win32::{
+        Foundation::{HLOCAL, LocalFree},
+        UI::Shell::CommandLineToArgvW,
+    };
+    use windows::core::PCWSTR;
+    let command_line: Vec<u16> = format!("backleaf.exe {arguments}")
+        .encode_utf16()
+        .chain(Some(0))
+        .collect();
+    unsafe {
+        let mut count = 0i32;
+        let argv = CommandLineToArgvW(PCWSTR(command_line.as_ptr()), &mut count);
+        assert!(!argv.is_null(), "CommandLineToArgvW failed");
+        let mut parsed = Vec::with_capacity(count as usize);
+        for index in 0..count {
+            let argument = *argv.add(index as usize);
+            parsed.push(argument.to_string().expect("argument is utf-16"));
+        }
+        let _ = LocalFree(Some(HLOCAL(argv.cast())));
+        parsed
+    }
+}
+
+#[test]
+fn headless_elevation_prompt_is_narrowed_to_access_denied_and_cancel_keeps_window() {
+    crate::i18n::set(crate::i18n::Language::Zh);
+    let mut h = Harness::new(&["alpha.txt", "beta.txt"], None);
+    let (path, count, cache_len) =
+        h.read(|this, _| (this.path.clone(), this.source.count(), this.cache.len()));
+    let elevation_dir = h.fixture.0.join("state").join("elevation");
+    // A sharing violation or any other I/O failure is not a privilege denial,
+    // even when its localized text mentions access.
+    h.view.update(&mut h.cx, |this, cx| {
+        this.receive(
+            Event::Count {
+                generation: this.generation,
+                count: 0,
+                done: true,
+                error: Some("拒绝访问：另一个程序正在使用此文件".into()),
+                denied: false,
+            },
+            cx,
+        )
+    });
+    h.read(|this, _| {
+        assert!(this.elevation.prompt.is_none());
+        assert_eq!(
+            this.error.as_deref(),
+            Some("拒绝访问：另一个程序正在使用此文件")
+        );
+        assert_eq!(this.path, path);
+        assert_eq!(this.source.count(), count);
+    });
+    assert!(!elevation_dir.exists());
+    // ERROR_ACCESS_DENIED raises the modal and keeps the old list untouched.
+    h.denied_directory_load("拒绝访问");
+    h.frame();
+    h.read(|this, _| {
+        let prompt = this
+            .elevation
+            .prompt
+            .as_ref()
+            .expect("administrator prompt");
+        assert_eq!(prompt.path, path);
+        assert_eq!(this.error.as_deref(), Some("此位置需要管理员权限"));
+        assert_eq!(this.source.count(), count);
+        assert_eq!(this.cache.len(), cache_len);
+        assert!(!this.elevation.pending);
+    });
+    let painted =
+        h.cx.update_window(h.window.into(), |_, window, _| {
+            let scale = window.scale_factor();
+            window.painted_quads().iter().any(|quad| {
+                (quad.bounds.size.width.0 / scale - 480.).abs() < 1.
+                    && quad.bounds.size.height.0 / scale > 100.
+            })
+        })
+        .unwrap();
+    assert!(painted, "administrator modal surface must be painted");
+    // Escape dismisses the prompt, keeps the status reason and writes nothing.
+    h.key("escape");
+    h.read(|this, _| {
+        assert!(this.elevation.prompt.is_none());
+        assert_eq!(this.error.as_deref(), Some("此位置需要管理员权限"));
+        assert_eq!(this.path, path);
+        assert_eq!(this.source.count(), count);
+    });
+    assert!(!elevation_dir.exists());
+    // English copy rendered by this path is exact, not a silent fallback.
+    crate::i18n::set(crate::i18n::Language::En);
+    h.denied_directory_load("Access is denied.");
+    h.read(|this, _| {
+        assert!(
+            this.elevation.prompt.is_some(),
+            "the English prompt is modal as well"
+        );
+        assert_eq!(
+            this.error.as_deref(),
+            Some("This location requires administrator permission")
+        );
+    });
+    assert_eq!(crate::i18n::tr("取消"), "Cancel");
+    assert_eq!(
+        crate::i18n::tr("需要管理员权限"),
+        "Administrator permission required"
+    );
+    assert_eq!(
+        crate::i18n::tr("以管理员身份重新打开"),
+        "Reopen as administrator"
+    );
+    assert_eq!(
+        crate::i18n::tr(
+            "此位置需要管理员权限才能访问。Windows 会请求你的同意，并在新窗口中以管理员身份打开同一位置。"
+        ),
+        "This location requires administrator permission. Windows will ask for your consent and reopen the same location in an elevated window."
+    );
+    // A cancelled or failed UAC launch keeps the prompt for a retry. The cancel
+    // reason is shown through the transient navigation toast, while the status
+    // line keeps the permission reason.
+    h.view.update(&mut h.cx, |this, cx| {
+        this.accept_elevation_launch(Err(crate::i18n::tr_owned("已取消管理员权限请求")), cx)
+    });
+    h.read(|this, _| {
+        assert!(this.elevation.prompt.is_some());
+        assert!(!this.elevation.pending);
+        assert_eq!(
+            this.error.as_deref(),
+            Some("This location requires administrator permission")
+        );
+    });
+    h.key("escape");
+    h.read(|this, _| {
+        assert!(this.elevation.prompt.is_none());
+        assert_eq!(
+            this.error.as_deref(),
+            Some("This location requires administrator permission")
+        );
+    });
+    // An elevated window that is refused again must show the real error, not
+    // leave the list blank behind a prompt that cannot acquire more access.
+    h.view.update(&mut h.cx, |this, cx| {
+        this.elevation.elevated = true;
+        this.elevation.banner = true;
+        cx.notify();
+    });
+    h.frame();
+    h.denied_directory_load("拒绝访问（管理员令牌仍被拒绝）");
+    h.read(|this, _| {
+        assert!(this.elevation.prompt.is_none());
+        assert_eq!(
+            this.error.as_deref(),
+            Some("拒绝访问（管理员令牌仍被拒绝）")
+        );
+    });
+    h.view
+        .update(&mut h.cx, |this, cx| this.dismiss_elevation_banner(cx));
+    h.read(|this, _| assert!(!this.elevation.banner));
+    crate::i18n::set(crate::i18n::Language::Zh);
+    assert!(
+        !elevation_dir.exists(),
+        "no handoff may be written without explicit confirmation"
+    );
+}
+
+#[test]
+fn headless_elevation_confirm_writes_lossless_one_shot_handoff_without_uac() {
+    crate::i18n::set(crate::i18n::Language::Zh);
+    let mut h = Harness::new(&["first.txt", "second.txt"], None);
+    let path = h.read(|this, _| this.path.clone());
+    let selected = h.read(|this, _| {
+        let item = this.cache.values().max_by_key(|item| item.id).unwrap();
+        (item.id, item.name.clone())
+    });
+    h.view.update(&mut h.cx, |this, cx| {
+        this.selection.select(selected.0, false, false);
+        this.keyboard_focus = true;
+        cx.notify();
+    });
+    let selection_before = h.read(|this, _| this.selection.count());
+    let (window_width, window_height) =
+        h.cx.update_window(h.window.into(), |_, window, _| {
+            let bounds = window.bounds();
+            (f32::from(bounds.size.width), f32::from(bounds.size.height))
+        })
+        .unwrap();
+    h.denied_directory_load("拒绝访问");
+    h.key("enter");
+    h.wait("elevation confirmation", |this, _| {
+        this.elevation.prompt.is_none()
+            && !this.elevation.pending
+            && this.error.as_deref() == Some("已打开管理员窗口")
+    });
+    let directory = h.fixture.0.join("state").join("elevation");
+    let requests = std::fs::read_dir(&directory)
+        .unwrap()
+        .map(|entry| entry.unwrap().path())
+        .filter(|path| {
+            path.extension()
+                .is_some_and(|extension| extension == "json")
+        })
+        .collect::<Vec<_>>();
+    assert_eq!(requests.len(), 1, "exactly one one-shot handoff request");
+    let request = crate::elevation::read_request(&requests[0]).expect("valid handoff request");
+    assert_eq!(request.version, crate::elevation::REQUEST_VERSION);
+    assert_eq!(request.state.version, 1);
+    assert_eq!(
+        request.state.path,
+        crate::file_view::WinPath::new(&path),
+        "the handoff keeps the exact UTF-16 path spelling"
+    );
+    assert_eq!(request.state.search, None);
+    assert_eq!(request.selection.len(), 1);
+    assert_eq!(
+        request.selection[0].path(),
+        path.canonicalize().unwrap().join(&selected.1),
+        "captured selection keeps the snapshot's canonical parent and exact name"
+    );
+    assert!((request.state.bounds[2] - window_width).abs() < 1.);
+    assert!((request.state.bounds[3] - window_height).abs() < 1.);
+    // The original normal window is unchanged and keeps its rows and selection.
+    h.read(|this, _| {
+        assert_eq!(this.path, path);
+        assert_eq!(this.selection.count(), selection_before);
+        assert!(this.elevation.prompt.is_none());
+        assert_eq!(this.error.as_deref(), Some("已打开管理员窗口"));
+    });
+    // cfg(test) never calls ShellExecuteExW("runas"): the request file is still
+    // there for this test to read instead of being consumed by an elevated process.
+    assert!(crate::elevation::launch_elevated(&requests[0], &h.fixture.0.join("state")).is_ok());
+    assert!(
+        requests[0].is_file(),
+        "test builds must not consume the request through a real UAC launch"
+    );
+    std::fs::remove_file(&requests[0]).unwrap();
+}
+
+#[test]
+fn headless_elevated_window_restores_handoff_path_geometry_and_selection() {
+    crate::i18n::set(crate::i18n::Language::Zh);
+    let names = (0..120)
+        .map(|index| format!("file_{index:03}.txt"))
+        .collect::<Vec<_>>();
+    let borrowed = names.iter().map(String::as_str).collect::<Vec<_>>();
+    let mut h = Harness::new(&borrowed, None);
+    let (path, count) = h.read(|this, _| (this.path.clone(), this.source.count()));
+    assert_eq!(count, 120);
+    let selected = h.read(|this, _| {
+        this.cache
+            .values()
+            .max_by_key(|item| item.id)
+            .map(|item| item.name.clone())
+            .unwrap()
+    });
+    let mut definition = crate::file_view::FileView::new(&path);
+    definition.query = "file_0".into();
+    let state = crate::window_state::State {
+        version: 1,
+        path: crate::file_view::WinPath::new(&path),
+        search: Some(crate::window_state::SearchState {
+            definition,
+            saved: None,
+        }),
+        bounds: [40., 50., 880., 620.],
+        maximized: false,
+    };
+    let request = crate::elevation::Request::new(
+        state.clone(),
+        vec![crate::file_view::WinPath::new(&path.join(&selected))],
+        0,
+    );
+    let handoff_dir = h.fixture.0.join("elevated-state");
+    let request_path = crate::elevation::write_request(&handoff_dir, &request).unwrap();
+    let request = crate::elevation::read_request(&request_path).unwrap();
+    std::fs::remove_file(&request_path).unwrap();
+    // The elevated startup path in `main` turns the request into these options.
+    let mut options = h.read(|this, _| this.options.clone());
+    options.path = Some(request.state.path.path());
+    options.width = request.state.bounds[2].max(560.);
+    options.height = request.state.bounds[3].max(440.);
+    options.state_dir = handoff_dir;
+    options.restored = Some(crate::window_state::Restored {
+        id: format!("elevation-verify-{}", std::process::id()),
+        revision: 0,
+        state: request.state.clone(),
+    });
+    options.elevation_restore = Some(request.restore());
+    let elevated = h.open_second_window(options);
+    h.wait_second(elevated, "elevated window enumeration", |view, _| {
+        view.source.count() == 120 && view.source.finished() && !view.cache.is_empty()
+    });
+    h.wait_second(elevated, "restored search intent", |view, _| {
+        view.search.open && view.search.query == "file_0"
+    });
+    h.wait_second(elevated, "restored selection and scroll", |view, _| {
+        view.selection.count() == 1
+            && view.selection.focus.is_some_and(|id| {
+                view.cache
+                    .get(&id)
+                    .is_some_and(|item| item.name == selected)
+            })
+            && -f32::from(view.scroll.0.borrow().base_handle.offset().y) > 0.
+    });
+    h.read_second(elevated, |view, _app| {
+        assert_eq!(view.path, path);
+        assert!(view.search.open, "handoff search definition reopens");
+        assert_eq!(view.search.query, "file_0");
+        assert!(view.restore.restored);
+        let handoff_state = view.restore.last.as_ref().expect("handoff state");
+        assert_eq!(handoff_state.path, state.path);
+        assert_eq!(handoff_state.bounds, [40., 50., 880., 620.]);
+        assert!(!handoff_state.maximized);
+    });
+    let bounds =
+        h.cx.update_window(elevated.into(), |_, window, _| {
+            let bounds = window.bounds();
+            (
+                f32::from(bounds.origin.x),
+                f32::from(bounds.origin.y),
+                f32::from(bounds.size.width),
+                f32::from(bounds.size.height),
+            )
+        })
+        .unwrap();
+    assert!(
+        (bounds.0 - 40.).abs() < 0.01
+            && (bounds.1 - 50.).abs() < 0.01
+            && (bounds.2 - 880.).abs() < 0.01
+            && (bounds.3 - 620.).abs() < 0.01,
+        "elevated window restores the handoff geometry, got {bounds:?}"
+    );
+    // The normal window that asked for elevation is untouched.
+    h.read(|this, _| {
+        assert_eq!(this.path, path);
+        assert_eq!(this.source.count(), 120);
+        assert!(this.elevation.restore.is_none());
+        assert!(this.elevation.prompt.is_none());
+    });
+}
+
+#[test]
+fn headless_elevation_handoff_validation_and_windows_argument_quoting() {
+    use crate::{elevation, file_view::WinPath, window_state::State};
+    use std::os::windows::ffi::OsStrExt;
+
+    crate::i18n::set(crate::i18n::Language::Zh);
+    let fixture = test_support::Fixture::new("elevation-handoff");
+    // Unpaired UTF-16 surrogates are valid NTFS path units; the handoff must not
+    // replace them with U+FFFD on the way through JSON.
+    let units = [0x4E2D_u16, 0x6587, 0xD800, 0x0061, 0x0042, 0x5C_u16];
+    let state = State {
+        version: 1,
+        path: WinPath(units.to_vec()),
+        search: None,
+        bounds: [10., 20., 900., 600.],
+        maximized: false,
+    };
+    let request = elevation::Request::new(state, Vec::new(), 3);
+    request
+        .validate()
+        .expect("lossless surrogate path is a valid handoff path");
+    let path = elevation::write_request(&fixture.0, &request).unwrap();
+    let decoded = elevation::read_request(&path).unwrap();
+    assert_eq!(
+        decoded.state.path.0, units,
+        "JSON keeps every UTF-16 code unit"
+    );
+    assert_eq!(
+        decoded
+            .state
+            .path
+            .path()
+            .as_os_str()
+            .encode_wide()
+            .collect::<Vec<_>>(),
+        units
+    );
+    assert_eq!(decoded.scroll_row, 3);
+    // Malformed, unreadable and out-of-schema requests are rejected.
+    let malformed = fixture.0.join("malformed.json");
+    std::fs::write(&malformed, b"{not a request").unwrap();
+    assert_eq!(
+        elevation::read_request(&malformed).unwrap_err(),
+        "无法读取管理员请求"
+    );
+    assert_eq!(
+        elevation::read_request(&fixture.0.join("missing.json")).unwrap_err(),
+        "无法读取管理员请求"
+    );
+    let mut bad = decoded.clone();
+    bad.state.bounds = [0., 0., f32::NAN, 1.];
+    assert_eq!(bad.validate().unwrap_err(), "无法读取管理员请求");
+    bad.state.bounds = [0., 0., 1., 1.];
+    bad.state.path = WinPath(Vec::new());
+    assert!(bad.validate().is_err());
+    bad.state.path = WinPath(vec![0x43, 0]);
+    assert!(bad.validate().is_err());
+    bad.state.path = WinPath(vec![0x43]);
+    bad.version = elevation::REQUEST_VERSION + 1;
+    assert_eq!(bad.validate().unwrap_err(), "管理员请求版本不兼容");
+    bad.version = elevation::REQUEST_VERSION;
+    bad.state.version = 2;
+    assert_eq!(bad.validate().unwrap_err(), "管理员请求版本不兼容");
+    bad.state.version = 1;
+    bad.selection =
+        vec![WinPath(vec![0x41, 0x2E, 0x74, 0x78, 0x74]); elevation::MAX_RESTORED_SELECTION + 1];
+    assert!(bad.validate().is_err());
+    bad.selection = vec![WinPath(vec![0x41, 0])];
+    assert!(bad.validate().is_err());
+    // Quoting is verified with the real Windows command-line parser, the same
+    // one ShellExecuteEx applies before the elevated process sees its argv.
+    let state_dir = fixture.0.join("state dir with spaces");
+    let request_path = state_dir.join("request-1.json");
+    let arguments = elevation::request_arguments(&request_path, &state_dir);
+    assert_eq!(
+        windows_command_line_arguments(&arguments),
+        vec![
+            "backleaf.exe".to_owned(),
+            "--elevate-request".to_owned(),
+            request_path.to_string_lossy().into_owned(),
+            "--state-dir".to_owned(),
+            state_dir.to_string_lossy().into_owned(),
+        ]
+    );
+    let trailing = elevation::request_arguments(
+        std::path::Path::new(r"C:\state dir\request.json"),
+        std::path::Path::new(r"C:\state dir\"),
+    );
+    let parsed = windows_command_line_arguments(&trailing);
+    assert_eq!(parsed[2], r"C:\state dir\request.json");
+    assert_eq!(
+        parsed[4], r"C:\state dir\",
+        "a state directory ending in a backslash survives quoting"
+    );
+    // Test builds must return before ShellExecuteExW and keep the request.
+    assert!(elevation::launch_elevated(&path, &fixture.0).is_ok());
+    assert!(
+        path.is_file(),
+        "cfg(test) launch must not consume the request"
+    );
+    // Sharing violations, privilege errors and plain error text are classified
+    // as narrowly as the elevated retry requires.
+    assert!(!elevation::io_access_denied(
+        &std::io::Error::from_raw_os_error(32)
+    ));
+    assert!(elevation::io_access_denied(
+        &std::io::Error::from_raw_os_error(5)
+    ));
+    assert!(!elevation::hresult_access_denied(0x8007_0020u32 as i32));
+    assert!(!elevation::hresult_access_denied(0x8007_0033u32 as i32));
+    assert!(!elevation::error_access_denied(&anyhow::Error::new(
+        std::io::Error::from_raw_os_error(32)
+    )));
+    assert!(elevation::error_access_denied(&anyhow::Error::new(
+        std::io::Error::from_raw_os_error(5)
+    )));
+    std::fs::remove_file(&path).unwrap();
 }

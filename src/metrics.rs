@@ -23,6 +23,10 @@ pub struct Options {
     pub index_roots: Option<Vec<PathBuf>>,
     pub restored: Option<crate::window_state::Restored>,
     pub restore_error: Option<String>,
+    /// One-shot handoff consumed by the elevated process started through UAC.
+    pub elevate_request: Option<PathBuf>,
+    /// Window selection/scroll intent carried by an elevation request.
+    pub elevation_restore: Option<crate::elevation::RestoreState>,
 }
 impl Options {
     pub fn parse() -> Self {
@@ -31,6 +35,8 @@ impl Options {
             index_roots: None,
             restored: None,
             restore_error: None,
+            elevate_request: None,
+            elevation_restore: None,
             path: None,
             output: None,
             seconds: 12,
@@ -61,6 +67,9 @@ impl Options {
                     .push(args.next().expect("index root").into()),
                 "--no-index" => result.index_roots = Some(Vec::new()),
                 "--path" => result.path = Some(args.next().expect("path").into()),
+                "--elevate-request" => {
+                    result.elevate_request = Some(args.next().expect("elevation request").into())
+                }
                 "--state-dir" => result.state_dir = args.next().expect("state directory").into(),
                 "--bench-output" => result.output = Some(args.next().expect("output").into()),
                 "--seconds" => result.seconds = args.next().unwrap().parse().unwrap(),

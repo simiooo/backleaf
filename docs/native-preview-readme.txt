@@ -1,3 +1,15 @@
+拾径 / Backleaf 0.1.0-preview.53
+
+Windows x64 / ARM64 便携测试版：解压对应 ZIP 运行 Backleaf.exe。安装器会按当前 Windows 进程架构选择 x64 或 ARM64 包；也可在 PowerShell 执行：
+irm https://raw.githubusercontent.com/simiooo/backleaf/staging/install.ps1 | iex
+
+本批次（受保护位置提权重开）：
+- 进入受保护文件夹（如 C:\System Volume Information、C:\Windows\System32\config、其他用户目录）遇到权限拒绝时，显示“需要管理员权限”；确认后通过 UAC 打开同路径的管理员窗口并自动重试，原窗口保留。
+- 管理员窗口恢复相同路径与窗口几何（可用时含选区与滚动行）；权限持续到该窗口关闭，关闭后普通窗口仍无管理员权限。
+- 限制：真实 UAC 同意/取消需在桌面实机确认；当前只覆盖目录枚举/刷新入口，文件操作批量失败与“交给系统打开”仍按原错误展示。
+
+以下保留 preview.52 及更早内容：
+
 拾径 / Backleaf 0.1.0-preview.52
 
 Windows x64 / ARM64 便携测试版：解压对应 ZIP 运行 Backleaf.exe。安装器会按当前 Windows 进程架构选择 x64 或 ARM64 包；也可在 PowerShell 执行：

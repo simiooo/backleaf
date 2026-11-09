@@ -1,3 +1,9 @@
+Backleaf 0.1.0-preview.53 · 受保护位置提权重开
+
+Windows 目录枚举遇到 `ERROR_ACCESS_DENIED`（如 `C:\System Volume Information`、`C:\Windows\System32\config`、其他用户目录）时不再静默留下空白文件区：界面显示“需要管理员权限”模态，列出目标路径并提供“以管理员身份重新打开”/“取消”。确认后生成一次性 handoff JSON，通过 `ShellExecuteExW("runas")` 启动同一程序的管理员窗口，在相同路径与窗口几何（可用时含选区与滚动行）恢复并自动重试枚举；原普通窗口保留并显示“已打开管理员窗口”。管理员窗口顶部有可关闭提示条，权限持续到该窗口关闭——Windows 提权是每进程令牌，无法追加给已运行进程，也没有 TTL，本版不常驻隐藏提权代理。UAC 取消时原提示保留可重试；管理员令牌仍被显式 ACL 拒绝时显示真实错误而不循环弹窗。检测只针对目录枚举/刷新被拒，共享冲突等错误不会误弹；文件操作结果面板的批量失败与“交给系统打开”仍按原错误展示。限制：真实 UAC 同意/取消及管理员令牌下的实际受保护目录枚举需实机人工验证（CI 不模拟 UAC）；选区恢复上限 4096 项。native 145 项、headless 56 项、installer 22 项通过；fmt、严格 Clippy、release 构建、真实 exe handoff 直启冒烟通过。
+
+以下保留 preview.52 及更早内容：
+
 Backleaf 0.1.0-preview.52 · 圆叶文件夹应用图标
 
 采用用户确认的 v3 应用图标：金黄色文件夹与鼠尾草绿圆叶表情。替换 EXE 图标组 ID 1 的全部 16/20/24/32/40/48/64/128/256px 九档资源，窗口与安装快捷方式继续从 EXE 读取图标。x64、ARM64 包同步更新 Logo.png、Backleaf-brand-v3.fig 和 Logo-provenance.md。三页 OpenPencil 明暗/小尺寸稿独立冷重开 0 像素差。Windows 若暂时保留旧图标，可重启 Backleaf / 重新固定快捷方式；图标缓存由系统维护。

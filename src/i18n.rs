@@ -479,6 +479,47 @@ const EN: &[(&str, &str)] = &[
     ),
     ("无法加载此位置", "Cannot load this location"),
     ("无法读取此位置", "Cannot read this location"),
+    // ---- elevation / administrator handoff ----
+    ("需要管理员权限", "Administrator permission required"),
+    (
+        "此位置需要管理员权限",
+        "This location requires administrator permission",
+    ),
+    (
+        "此位置需要管理员权限才能访问。Windows 会请求你的同意，并在新窗口中以管理员身份打开同一位置。",
+        "This location requires administrator permission. Windows will ask for your consent and reopen the same location in an elevated window.",
+    ),
+    ("以管理员身份重新打开", "Reopen as administrator"),
+    (
+        "正在请求管理员权限…",
+        "Requesting administrator permission…",
+    ),
+    ("正在打开管理员窗口…", "Opening the elevated window…"),
+    ("已打开管理员窗口", "Elevated window opened"),
+    (
+        "无法打开管理员窗口：{}",
+        "Cannot open the elevated window: {}",
+    ),
+    (
+        "已取消管理员权限请求",
+        "Administrator permission request cancelled",
+    ),
+    ("管理员权限已开启", "Administrator permission enabled"),
+    (
+        "此窗口以管理员身份运行；关闭窗口后管理员权限结束。",
+        "This window runs as administrator; the permission ends when the window closes.",
+    ),
+    ("关闭管理员提示", "Dismiss administrator notice"),
+    ("管理员对话框", "Administrator dialog"),
+    ("取消", "Cancel"),
+    (
+        "无法读取管理员请求",
+        "Cannot read the administrator request",
+    ),
+    (
+        "管理员请求版本不兼容",
+        "The administrator request version is not supported",
+    ),
 ];
 #[cfg(test)]
 mod tests {

@@ -1,6 +1,7 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 mod app_archive;
 mod app_drag;
+mod app_elevation;
 mod app_navigation;
 mod app_ole;
 mod app_operations;
@@ -14,6 +15,7 @@ mod capacity_input;
 mod content_search;
 mod directory_snapshot;
 mod drag;
+mod elevation;
 mod file_geometry;
 mod file_icons;
 mod file_view;
@@ -97,6 +99,7 @@ struct Backleaf {
     views: app_views::ViewsUi,
     archive: app_archive::ArchiveUi,
     restore: app_restore::RestoreUi,
+    elevation: app_elevation::ElevationUi,
     index: Option<index::Service>,
     index_status: index::Status,
     native_owner_handle: usize,
@@ -298,6 +301,7 @@ impl Backleaf {
             failed: false,
             initial_error: options.restore_error.take(),
         };
+        let elevation = app_elevation::ElevationUi::new(options.elevation_restore.take());
         let quit = cx.on_app_quit(|this, cx| {
             let (sender, receiver) = async_channel::bounded(1);
             if let Some(store) = &this.restore.store
@@ -539,6 +543,7 @@ impl Backleaf {
             views: app_views::ViewsUi::default(),
             archive: app_archive::ArchiveUi::default(),
             restore,
+            elevation,
             search,
             navigation,
             files: app_operations::FileOperations::new(hub),
@@ -629,13 +634,14 @@ impl Backleaf {
                 count,
                 done,
                 error,
+                denied,
             } if self
                 .watch
                 .pending
                 .as_ref()
                 .is_some_and(|p| p.generation == generation) =>
             {
-                self.refresh_count(count, done, error, cx);
+                self.refresh_count(count, done, error, denied, cx);
             }
             Event::Refreshed { generation, result }
                 if self
@@ -713,6 +719,12 @@ impl Backleaf {
                 closed,
                 result,
             } => self.save_state_result(revision, closed, result, cx),
+            Event::ElevationLaunched(result) => self.accept_elevation_launch(result, cx),
+            Event::ElevationSelection {
+                generation,
+                ids,
+                scroll_row,
+            } => self.accept_elevation_selection(generation, ids, scroll_row, cx),
             Event::ArchivePrepared { token, result } => self.accept_archive(token, result, cx),
             Event::QuickAccess(notice) => self.accept_quick_access(notice, cx),
             Event::DragTarget {
@@ -791,6 +803,7 @@ impl Backleaf {
                 count,
                 done,
                 error,
+                denied,
             } if generation == self.generation => {
                 if let Source::Directory {
                     count: current,
@@ -802,10 +815,20 @@ impl Backleaf {
                     *finished = done;
                 }
                 if error.is_some() {
-                    self.restore.failed = self.restore.restored;
-                    self.error = error;
+                    if denied && !self.elevation.elevated {
+                        // The list cannot be read with this token. Keep the
+                        // failure visible via the administrator handoff prompt.
+                        self.restore.failed = false;
+                        self.elevation_prompt(self.path.clone(), cx);
+                    } else {
+                        // An elevated token already ran into an explicit deny:
+                        // no further UAC can help, show the real error.
+                        self.restore.failed = self.restore.restored;
+                        self.error = error;
+                    }
                 } else if done {
                     self.restore.failed = false;
+                    self.elevation_begin_restore();
                 }
                 cx.notify();
             }
@@ -1276,6 +1299,9 @@ impl Backleaf {
         }
         if self.ole.as_ref().is_some_and(|site| site.busy()) {
             cx.stop_propagation();
+            return;
+        }
+        if self.elevation_key(event, window, cx) {
             return;
         }
         if self.restore.closing.is_some() {
@@ -2408,6 +2434,7 @@ impl Render for Backleaf {
             .child(self.view_popovers(cx))
             .child(self.archive_popup(cx))
             .child(self.restore_failure(cx))
+            .child(self.elevation_overlay(window, cx))
             .child(
                 canvas(
                     |_, _, _| (),
@@ -2613,11 +2640,44 @@ fn main() {
             .expect("session status file");
         return;
     }
-    let options = Options::parse();
+    let mut options = Options::parse();
     crate::startup::mark("options");
     i18n::init_with_dir(&options.state_dir);
     let mut startup = Vec::new();
-    if options.fixture.is_none() && options.path.is_none() && options.output.is_none() {
+    if let Some(request_path) = options.elevate_request.take() {
+        // Started through UAC by another Backleaf window: open the same
+        // location and window intent, retrying the access that was denied.
+        let parsed = elevation::read_request(&request_path);
+        let _ = std::fs::remove_file(&request_path);
+        match parsed {
+            Ok(request) => {
+                let restore = request.restore();
+                let mut current = options.clone();
+                current.path = Some(request.state.path.path());
+                current.width = request.state.bounds[2].max(560.);
+                current.height = request.state.bounds[3].max(440.);
+                current.elevation_restore = Some(restore);
+                current.restored = Some(window_state::Restored {
+                    id: format!(
+                        "{}-{}",
+                        window_state::instance(),
+                        std::time::SystemTime::now()
+                            .duration_since(std::time::UNIX_EPOCH)
+                            .unwrap_or_default()
+                            .as_nanos()
+                    ),
+                    revision: 0,
+                    state: request.state,
+                });
+                startup.push(current);
+            }
+            Err(error) => {
+                let mut current = options.clone();
+                current.restore_error = Some(error);
+                startup.push(current);
+            }
+        }
+    } else if options.fixture.is_none() && options.path.is_none() && options.output.is_none() {
         match window_state::load(&options.state_dir) {
             Ok(saved) => {
                 for state in saved {
