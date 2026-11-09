@@ -9,6 +9,18 @@ use std::{
     time::{Duration, Instant},
 };
 
+/// Bounded notification reconnects: a directory that can be listed but whose
+/// change notifications cannot be opened must not be retried forever. After
+/// this many consecutive failures (2 s apart) the monitor reconciles once and
+/// exits; the window either starts a fresh monitor after its refresh or
+/// suspends watching when the refresh fails.
+const MAX_NOTIFICATION_OPEN_FAILURES: u32 = 15;
+const NOTIFICATION_RETRY_INTERVAL: Duration = Duration::from_secs(2);
+const IDENTITY_RECONCILE_INTERVAL: Duration = Duration::from_secs(2);
+const DIRTY_COALESCE: Duration = Duration::from_millis(350);
+const DIRTY_MAX_WAIT: Duration = Duration::from_secs(2);
+const WAIT_SLICE: Duration = Duration::from_millis(100);
+
 pub struct Monitor {
     stop: Arc<AtomicBool>,
     epoch: Arc<AtomicU64>,
@@ -64,23 +76,40 @@ impl Monitor {
                 let mut last = first;
                 let mut check = first;
                 let mut retry = first - Duration::from_secs(3);
+                let mut open_failures = 0u32;
                 let mut parent = crate::operations::windows::identity::capture(&path)
                     .ok()
                     .map(|m| m.identity);
                 while !halted.load(Ordering::Acquire) && !tx.is_closed() {
-                    if handle.is_none() && retry.elapsed() >= Duration::from_secs(2) {
+                    if handle.is_none() && retry.elapsed() >= NOTIFICATION_RETRY_INTERVAL {
                         retry = Instant::now();
-                        handle = unsafe {
+                        match unsafe {
                             FindFirstChangeNotificationW(PCWSTR(raw.as_ptr()), false, filter)
+                        } {
+                            Ok(value) => {
+                                handle = Some(Notification(value));
+                                open_failures = 0;
+                            }
+                            Err(_) => {
+                                open_failures += 1;
+                                if open_failures >= MAX_NOTIFICATION_OPEN_FAILURES {
+                                    // Reconciliation happens through one explicit refresh;
+                                    // do not keep a background thread retrying a broken
+                                    // notification channel indefinitely.
+                                    let _ = tx.try_send(Event::DirectoryDirty {
+                                        generation,
+                                        epoch: revision.fetch_add(1, Ordering::AcqRel) + 1,
+                                    });
+                                    return;
+                                }
+                            }
                         }
-                        .ok()
-                        .map(Notification);
                     }
                     let signaled = handle
                         .as_ref()
                         .is_some_and(|h| unsafe { WaitForSingleObject(h.0, 100) == WAIT_OBJECT_0 });
                     if handle.is_none() {
-                        std::thread::sleep(Duration::from_millis(100));
+                        std::thread::sleep(WAIT_SLICE);
                     }
                     let mut changed = signaled;
                     if signaled
@@ -89,10 +118,11 @@ impl Monitor {
                             .is_some_and(|h| unsafe { FindNextChangeNotification(h.0) }.is_err())
                     {
                         handle = None;
+                        changed = true;
                     }
                     // The notification object follows an opened directory, not its pathname.
                     // Re-check path identity and reconcile remote/unsupported notifications periodically.
-                    if check.elapsed() >= Duration::from_secs(2) {
+                    if check.elapsed() >= IDENTITY_RECONCILE_INTERVAL {
                         check = Instant::now();
                         let now = crate::operations::windows::identity::capture(&path)
                             .ok()
@@ -102,7 +132,9 @@ impl Monitor {
                             handle = None;
                             changed = true;
                         }
-                        if handle.is_none() || remote_path(&path) {
+                        // UNC notifications are unreliable; deliberate low-frequency
+                        // polling is the only fallback and is bounded by navigation.
+                        if remote_path(&path) {
                             changed = true;
                         }
                     }
@@ -115,8 +147,7 @@ impl Monitor {
                         last = Instant::now();
                     }
                     if dirty
-                        && (last.elapsed() >= Duration::from_millis(350)
-                            || first.elapsed() >= Duration::from_secs(2))
+                        && (last.elapsed() >= DIRTY_COALESCE || first.elapsed() >= DIRTY_MAX_WAIT)
                         && tx
                             .try_send(Event::DirectoryDirty {
                                 generation,
