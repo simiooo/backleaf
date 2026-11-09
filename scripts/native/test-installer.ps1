@@ -12,6 +12,8 @@ $script:ghost = $false
 $script:inspectGuard = $false
 $script:guardObserved = $false
 $script:downloadFailure = $false
+$script:edgeFailure = $false
+$script:assetIdMap = @{}
 $originalPath = $env:PATH
 $originalTls = [Net.ServicePointManager]::SecurityProtocol
 
@@ -46,8 +48,11 @@ function New-Fixture([string]$Version = '0.1.0-preview.15', [string]$Content = '
     ((Get-FileHash (Join-Path $dir $zipName)).Hash.ToLowerInvariant() + '  ' + $zipName) | Set-Content (Join-Path $dir 'SHA256SUMS.txt') -Encoding ASCII
     $assets = foreach ($name in @($zipName, 'build.json', 'SHA256SUMS.txt')) {
         $file = Get-Item (Join-Path $dir $name)
+        $script:nextAssetId = 700000 + $script:assetIdMap.Count + 1
+        $script:assetIdMap[[string]$script:nextAssetId] = $name
         [PSCustomObject]@{ name = $name; state = 'uploaded'; size = $file.Length
             digest = 'sha256:' + (Get-FileHash $file.FullName).Hash.ToLowerInvariant()
+            url = "https://api.github.com/repos/simiooo/backleaf/releases/assets/$($script:nextAssetId)"
             browser_download_url = "https://github.com/simiooo/backleaf/releases/download/$tag/$name" }
     }
     return [PSCustomObject]@{ dir = $dir; release = [PSCustomObject]@{ tag_name = $tag; target_commitish = $source; draft = $false; prerelease = ($Version -match '-preview\.'); published_at = '2026-11-05T06:50:20Z'; assets = @($assets) } }
@@ -65,6 +70,8 @@ function Invoke-RestMethod {
 function Invoke-BackleafDownload {
     param($Uri, $Destination)
     if ($script:downloadFailure) { throw 'Simulated download failure.' }
+    $requestUri = [Uri]$Uri
+    if ($script:edgeFailure -and $requestUri.Host -eq 'github.com') { throw 'Simulated GitHub edge 504.' }
     if ($script:inspectGuard) {
         $script:inspectGuard = $false
         $reader = $null
@@ -76,7 +83,9 @@ function Invoke-BackleafDownload {
     }
     $base = $script:fixture.dir
     if ($Uri -like '*/runtime-v2/*') { $base = $script:runtimeFixture.dir }
-    Copy-Item -LiteralPath (Join-Path $base ([Uri]$Uri).Segments[-1]) -Destination $Destination
+    $leaf = $requestUri.Segments[-1]
+    if ($requestUri.Host -eq 'api.github.com') { $leaf = $script:assetIdMap[$leaf] }
+    Copy-Item -LiteralPath (Join-Path $base $leaf) -Destination $Destination
 }
 function Get-Process {
     param($Name, $ErrorAction)
@@ -222,6 +231,13 @@ try {
         Assert-True ((Get-Content (Join-Path $script:target 'current/Backleaf.exe') -Raw) -eq 'second binary') 'Previous installation lost.'
         $reader = [IO.File]::Open((Join-Path $script:target 'current/Backleaf.exe'), 'Open', 'ReadWrite', 'None')
         $reader.Dispose()
+    }
+    Test-Case 'GitHub edge 5xx falls back to the API asset endpoint' {
+        $asset = $script:fixture.release.assets[0]
+        $destination = Join-Path $sandbox 'fallback-package.zip'
+        $script:edgeFailure = $true
+        try { Save-BackleafAsset $asset $destination } finally { $script:edgeFailure = $false }
+        Assert-True ((Get-Item -LiteralPath $destination).Length -eq $asset.size) 'API fallback did not restore the asset.'
     }
     Test-Case 'asset digest mismatch is rejected before replacing current' {
         $asset = $script:fixture.release.assets[0]; $old = $asset.digest

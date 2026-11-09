@@ -37,7 +37,16 @@ function Save-BackleafAsset {
     $uri = [Uri]$Asset.browser_download_url
     if ($uri.Scheme -ne 'https' -or $uri.Host -ne 'github.com' -or !$uri.AbsolutePath.StartsWith('/simiooo/backleaf/releases/download/')) { throw 'Unexpected release download URL.' }
     Write-Host "Downloading $($Asset.name)..."
-    Invoke-BackleafDownload $uri.AbsoluteUri $Destination
+    try {
+        Invoke-BackleafDownload $uri.AbsoluteUri $Destination
+    } catch {
+        # GitHub's release download edge can return transient 5xx for an
+        # individual asset while the API asset endpoint serves the same bytes.
+        $apiUrl = [string]$Asset.url
+        if ($apiUrl -notmatch '^https://api\.github\.com/repos/simiooo/backleaf/releases/assets/[0-9]+$') { throw }
+        Write-Host "Direct download failed; retrying $($Asset.name) through the GitHub API..."
+        Invoke-BackleafDownload $apiUrl $Destination
+    }
     if ((Get-Item -LiteralPath $Destination).Length -ne $Asset.size -or
         ('sha256:' + (Get-FileHash -LiteralPath $Destination -Algorithm SHA256).Hash.ToLowerInvariant()) -ne $Asset.digest) {
         throw "Release asset integrity check failed: $($Asset.name)"
@@ -48,11 +57,17 @@ function Invoke-BackleafDownload {
     param([string]$Uri, [string]$Destination)
     # Windows' bundled curl has bounded redirects/timeouts across both PowerShell versions.
     $curl = Get-Command curl.exe -CommandType Application -ErrorAction SilentlyContinue | Select-Object -First 1
+    $apiEndpoint = ([Uri]$Uri).Host -eq 'api.github.com'
     if ($curl) {
-        & $curl.Source --fail --location --silent --show-error --proto '=https' --proto-redir '=https' --retry 3 --retry-delay 2 --retry-all-errors --connect-timeout 15 --max-time 900 --speed-limit 1024 --speed-time 30 --max-filesize 268435456 --output $Destination -- $Uri
+        $arguments = @('--fail', '--location', '--silent', '--show-error', '--proto', '=https', '--proto-redir', '=https', '--retry', '3', '--retry-delay', '2', '--retry-all-errors', '--connect-timeout', '15', '--max-time', '900', '--speed-limit', '1024', '--speed-time', '30', '--max-filesize', '268435456')
+        if ($apiEndpoint) { $arguments += @('--header', 'Accept: application/octet-stream') }
+        $arguments += @('--output', $Destination, '--', $Uri)
+        & $curl.Source @arguments
         if ($LASTEXITCODE -ne 0) { throw "Release download failed (curl exit $LASTEXITCODE). Retry the install command." }
     } else {
-        Invoke-WebRequest -Uri $Uri -UseBasicParsing -OutFile $Destination -TimeoutSec 60 -ErrorAction Stop
+        $request = @{ Uri = $Uri; UseBasicParsing = $true; OutFile = $Destination; TimeoutSec = 60; ErrorAction = 'Stop' }
+        if ($apiEndpoint) { $request.Headers = @{ Accept = 'application/octet-stream' } }
+        Invoke-WebRequest @request
     }
 }
 

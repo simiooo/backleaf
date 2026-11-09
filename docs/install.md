@@ -24,8 +24,8 @@ irm https://raw.githubusercontent.com/simiooo/backleaf/staging/install.ps1 | iex
 
 `-NoShortcut` 跳过所有快捷方式。`-Tag` 选择精确发布 tag，也可用于回退版本或指定预览版（如 `test-v0.1.0-preview.52-77b73789`）；省略时优先按发布时间选择正式版。正式标签须指向完整、不可变的 40 位源码提交，并与构建记录逐字匹配。此入口从 staging 获取安装脚本，实际应用来自 GitHub 已发布资产，不从源码编译。网络不可用或 GitHub API 超限时，修复网络或等待额度恢复后重试，不会改动已安装应用。
 
-下载先核验 GitHub Releases API 的 SHA256 digest 和大小，再核对 SHA256SUMS、CI 版本/源码记录及包内 EXE、7z.dll 哈希。解压前拒绝目录逃逸、绝对路径、NTFS流、重复/设备名称和链接，限制条目数、下载及展开大小。校验全部通过后在同卷替换应用目录；替换失败恢复原版本。非本安装器管理的 current 目录不会覆盖，路径中的 junction/symlink 会被拒绝。哈希证明下载与发布内容一致。
+下载先核验 GitHub Releases API 的 SHA256 digest 和大小，再核对 SHA256SUMS、CI 版本/源码记录及包内 EXE、7z.dll 哈希。GitHub 直链对单个资产返回 5xx 时，安装器自动改用 API 资产端点重试同一字节。解压前拒绝目录逃逸、绝对路径、NTFS流、重复/设备名称和链接，限制条目数、下载及展开大小。校验全部通过后在同卷替换应用目录；替换失败恢复原版本。非本安装器管理的 current 目录不会覆盖，路径中的 junction/symlink 会被拒绝。哈希证明下载与发布内容一致。
 
-CI 在 Windows PowerShell 5.1 和 PowerShell 7 分别执行27项真实文件系统离线故障回归（含正式版优先、显式预览标签、正式版安装和完整源码提交约束），以及匿名下载已发布包、安装、运行 EXE 无窗口诊断和哈希核验。离线测试替换网络和一次目录提升故障；用隔离副本运行真正的Windows可执行映像验证占用拒绝与同名其他目录进程不误拦截，并验证下载期间拒绝新读取、成功/失败释放锁和回滚。零线程未知路径记录保留为误拦截复现输入，生产安装器不再枚举进程名。没有将这些检查称为 GUI 验收。
+CI 在 Windows PowerShell 5.1 和 PowerShell 7 分别执行28项真实文件系统离线故障回归（含正式版优先、显式预览标签、正式版安装、完整源码提交约束与 GitHub 直链失败回退 API 端点），以及匿名下载已发布包、安装、运行 EXE 无窗口诊断和哈希核验。离线测试替换网络和一次目录提升故障；用隔离副本运行真正的Windows可执行映像验证占用拒绝与同名其他目录进程不误拦截，并验证下载期间拒绝新读取、成功/失败释放锁和回滚。零线程未知路径记录保留为误拦截复现输入，生产安装器不再枚举进程名。没有将这些检查称为 GUI 验收。
 
 API 选择与校验依据：[GitHub Releases REST API](https://docs.github.com/en/rest/releases/releases)。`/latest`不包含 prerelease，因此安装器查询已发布列表。
