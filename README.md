@@ -1,28 +1,28 @@
-# 拾径 / Backleaf
+﻿# 鎷惧緞 / Backleaf
 
-Windows 原生 GPUI 文件管理器。当前正式版为 0.1.0；项目范围跟随 Nuto SIM-919、SIM-934。本版采用[圆叶文件夹 v3 应用图标](docs/brand-v3.md)。
+Windows 鍘熺敓 GPUI 鏂囦欢绠＄悊鍣ㄣ€傚綋鍓嶆寮忕増涓?0.1.0锛涢」鐩寖鍥磋窡闅?Nuto SIM-919銆丼IM-934銆傛湰鐗堥噰鐢╗鍦嗗彾鏂囦欢澶?v3 搴旂敤鍥炬爣](docs/brand-v3.md)銆?
 
-[正式 Release](https://github.com/simiooo/backleaf/releases/tag/v0.1.0)提供 x64 / ARM64。[版本说明](docs/release-v0.1.0.md)、[正式版交付证据](docs/evidence/release-0.1.0/README.md)；[preview.52 历史证据](docs/evidence/preview-52/README.md)、[preview.53 证据](docs/evidence/preview-53/README.md)、[preview.54 证据](docs/evidence/preview-54/README.md)、[preview.55 证据](docs/evidence/preview-55/README.md)。
+[姝ｅ紡 Release](https://github.com/simiooo/backleaf/releases/tag/v0.1.0)鎻愪緵 x64 / ARM64銆俒鐗堟湰璇存槑](docs/release-v0.1.0.md)銆乕姝ｅ紡鐗堜氦浠樿瘉鎹甝(docs/evidence/release-0.1.0/README.md)锛沎preview.52 鍘嗗彶璇佹嵁](docs/evidence/preview-52/README.md)銆乕preview.53 璇佹嵁](docs/evidence/preview-53/README.md)銆乕preview.54 璇佹嵁](docs/evidence/preview-54/README.md)銆乕preview.55 璇佹嵁](docs/evidence/preview-55/README.md)銆?
 
-当前可编辑设计稿：[OpenPencil v48 设计草稿](design/Backleaf-v48.fig)，275页，基于v46保留271页并新增Apple式白/黑内容、蓝文件夹与悬浮identity 4页。版本索引见[设计目录](design/README.md)。设计先于实施；旧版design/Backleaf.fig保留为v6历史基线。
+褰撳墠鍙紪杈戣璁＄锛歔OpenPencil v48 璁捐鑽夌](design/Backleaf-v48.fig)锛?75椤碉紝鍩轰簬v46淇濈暀271椤靛苟鏂板Apple寮忕櫧/榛戝唴瀹广€佽摑鏂囦欢澶逛笌鎮诞identity 4椤点€傜増鏈储寮曡[璁捐鐩綍](design/README.md)銆傝璁″厛浜庡疄鏂斤紱鏃х増design/Backleaf.fig淇濈暀涓簐6鍘嗗彶鍩虹嚎銆?
 
-已实施原生虚拟文件网格、长文本、统一快捷访问与FileView、搜索和本地元数据索引、文件操作及进度、归档、目录变更监听、路径/查询恢复与独立窗口。本版在后台准备文件变化快照，原位更新并保留滚动及身份可验证的选择；搜索自动刷新也保留旧结果直到新页就绪。独立菜单与相邻运行库沿用preview16。本版补齐分区容量与使用率、PnP介质通知、非递归选中文件大小和重复字母循环定位。本版新增确认失败项重试（只重放已确认失败的顶层项，成功、未确认、取消及部分完成目录不重放），并完成 Explorer 文件剪贴板互操作实机验证。本版修复删除/移动后刷新空档造成的整行空白，以及刷新期间外部拖放被误判为不可放置的问题，应用内操作完成即刷新。本版进一步让拖放/粘贴后的刷新不再等待防抖或窗口激活，目录刷新期间 Ctrl+V 直接粘贴，并把左侧当前项改为低强调中性状态。本版修复点击顶栏时无法收起路径下拉与搜索弹层的问题，并让搜索框和路径下拉按钮保留各自的点击行为。本版让默认搜索在已索引目录内自动使用持久索引，覆盖不足或索引不可用时自动回退实时扫描，不改变结果语义；见[搜索自动使用索引](docs/search-auto-index.md)。本版重构持久索引维护路径（批量目录枚举、keyed 目录 diff、批事务与改名配对），加入空闲调度、按需自动根与 LRU，并让 2 字符查询使用 2-gram 倒排；见[索引维护](docs/index-maintenance.md)。本版修复空查询仍保留搜索浮层的问题：空输入只保留输入框，清除已输入的查询会退出搜索并恢复文件区焦点。本版同时调快框选边缘自动滚动，使其更接近资源管理器的跟手速度；路径面包屑改为按实际可用宽度动态展开，不再过早显示省略号。本版还确保高级搜索/筛选项不会在空查询时启动整树扫描；已完成且不可重试的文件操作结果不再常驻顶部任务入口和底部结果面板。本版为图片文件在可视区内按需解码缩略图，替换文件图标并按比例居中填满单元格且不溢出；修复选中底板未包住缩略图导致的视觉溢出，并合并解码通知以减少重复重渲染。最小化/失焦/重新聚焦不再因记账刷新清空缩略图缓存；只有文件监听内容变化才重新解码。高级搜索容量字段支持 10MB/500KB/1.5GB 等宽容单位输入，非法值会在对应输入框红框并在下方显示错误。Shell 异步次级菜单为空时显示“没有可用的菜单项”空状态，不再出现空白半截面板。本版新增“内容”搜索模式：递归检查文本文件内容，用响应式小卡片展示上下文并高亮匹配，不再只搜文件名。本版增加中文/English 界面：按系统语言自动选择，Ctrl+Shift+L 切换并记住；主界面、菜单、搜索/内容搜索、筛选、文件操作、详情、侧栏与常见错误已翻译，少量未覆盖内部错误回退中文。内容搜索结果浮层现与文件列表表面完全同尺寸覆盖（保留底层状态）；匹配使用独立暖色高亮，并新增内容文本缓存与二进制前缀嗅探优化重复查询。本版冷启动移除了 DirectWrite 字体缓存的同步更新检查，加入可选的启动阶段追踪；本机首次可交互渲染中位数约 403ms→231ms。侧栏“个人文件夹”现显示当前登录用户家目录的实际文件夹名（如 qq651）。本版把 GPU 设备创建移到后台与平台初始化并发，平台/GPU 阶段约缩短 20–35ms；首次可交互仍约 230ms，190ms 目标尚未达到。本版移除三点菜单与“设为默认”入口，不再尝试把 Backleaf 设为系统默认文件管理器；安装包改为在资源管理器文件夹/驱动器右键注册“在 Backleaf 中打开”。本版同时提供 Windows ARM64 构建与安装包：安装器按进程架构选择 x64 或 ARM64，ARM 包使用原生 7z.dll 与 app-local ARM64 VC runtime；右键菜单文案按应用语言/系统语言选择中英文。本版修复内容搜索高亮：匹配行置于卡片顶部并加粗，避免长行/前一行换行把匹配挤出可视区；内容搜索结果增加与文件列表一致的可见、可拖动滚动条。索引前台限速/构建产物排除、图标与缩略图 worker 懒加载、内容搜索并行扫描继续保留（空闲线程 55→52、工作集约 70.3→67.3MB）。本版新增受保护位置提权检测：目录枚举被拒时提示管理员权限并可打开同路径的管理员窗口自动重试，原窗口保留；管理员窗口关闭后权限结束，见[提权重开](docs/elevation.md)。任务栏按钮右键新增跳转列表：固定入口、保存视图、常用文件夹、分区快速入口与“打开新窗口”任务，见[任务栏跳转列表](docs/jump-list.md)。实测范围和限制见[测试版说明](docs/native-test-release.md)。
+宸插疄鏂藉師鐢熻櫄鎷熸枃浠剁綉鏍笺€侀暱鏂囨湰銆佺粺涓€蹇嵎璁块棶涓嶧ileView銆佹悳绱㈠拰鏈湴鍏冩暟鎹储寮曘€佹枃浠舵搷浣滃強杩涘害銆佸綊妗ｃ€佺洰褰曞彉鏇寸洃鍚€佽矾寰?鏌ヨ鎭㈠涓庣嫭绔嬬獥鍙ｃ€傛湰鐗堝湪鍚庡彴鍑嗗鏂囦欢鍙樺寲蹇収锛屽師浣嶆洿鏂板苟淇濈暀婊氬姩鍙婅韩浠藉彲楠岃瘉鐨勯€夋嫨锛涙悳绱㈣嚜鍔ㄥ埛鏂颁篃淇濈暀鏃х粨鏋滅洿鍒版柊椤靛氨缁€傜嫭绔嬭彍鍗曚笌鐩搁偦杩愯搴撴部鐢╬review16銆傛湰鐗堣ˉ榻愬垎鍖哄閲忎笌浣跨敤鐜囥€丳nP浠嬭川閫氱煡銆侀潪閫掑綊閫変腑鏂囦欢澶у皬鍜岄噸澶嶅瓧姣嶅惊鐜畾浣嶃€傛湰鐗堟柊澧炵‘璁ゅけ璐ラ」閲嶈瘯锛堝彧閲嶆斁宸茬‘璁ゅけ璐ョ殑椤跺眰椤癸紝鎴愬姛銆佹湭纭銆佸彇娑堝強閮ㄥ垎瀹屾垚鐩綍涓嶉噸鏀撅級锛屽苟瀹屾垚 Explorer 鏂囦欢鍓创鏉夸簰鎿嶄綔瀹炴満楠岃瘉銆傛湰鐗堜慨澶嶅垹闄?绉诲姩鍚庡埛鏂扮┖妗ｉ€犳垚鐨勬暣琛岀┖鐧斤紝浠ュ強鍒锋柊鏈熼棿澶栭儴鎷栨斁琚鍒や负涓嶅彲鏀剧疆鐨勯棶棰橈紝搴旂敤鍐呮搷浣滃畬鎴愬嵆鍒锋柊銆傛湰鐗堣繘涓€姝ヨ鎷栨斁/绮樿创鍚庣殑鍒锋柊涓嶅啀绛夊緟闃叉姈鎴栫獥鍙ｆ縺娲伙紝鐩綍鍒锋柊鏈熼棿 Ctrl+V 鐩存帴绮樿创锛屽苟鎶婂乏渚у綋鍓嶉」鏀逛负浣庡己璋冧腑鎬х姸鎬併€傛湰鐗堜慨澶嶇偣鍑婚《鏍忔椂鏃犳硶鏀惰捣璺緞涓嬫媺涓庢悳绱㈠脊灞傜殑闂锛屽苟璁╂悳绱㈡鍜岃矾寰勪笅鎷夋寜閽繚鐣欏悇鑷殑鐐瑰嚮琛屼负銆傛湰鐗堣榛樿鎼滅储鍦ㄥ凡绱㈠紩鐩綍鍐呰嚜鍔ㄤ娇鐢ㄦ寔涔呯储寮曪紝瑕嗙洊涓嶈冻鎴栫储寮曚笉鍙敤鏃惰嚜鍔ㄥ洖閫€瀹炴椂鎵弿锛屼笉鏀瑰彉缁撴灉璇箟锛涜[鎼滅储鑷姩浣跨敤绱㈠紩](docs/search-auto-index.md)銆傛湰鐗堥噸鏋勬寔涔呯储寮曠淮鎶よ矾寰勶紙鎵归噺鐩綍鏋氫妇銆乲eyed 鐩綍 diff銆佹壒浜嬪姟涓庢敼鍚嶉厤瀵癸級锛屽姞鍏ョ┖闂茶皟搴︺€佹寜闇€鑷姩鏍逛笌 LRU锛屽苟璁?2 瀛楃鏌ヨ浣跨敤 2-gram 鍊掓帓锛涜[绱㈠紩缁存姢](docs/index-maintenance.md)銆傛湰鐗堜慨澶嶇┖鏌ヨ浠嶄繚鐣欐悳绱㈡诞灞傜殑闂锛氱┖杈撳叆鍙繚鐣欒緭鍏ユ锛屾竻闄ゅ凡杈撳叆鐨勬煡璇細閫€鍑烘悳绱㈠苟鎭㈠鏂囦欢鍖虹劍鐐广€傛湰鐗堝悓鏃惰皟蹇閫夎竟缂樿嚜鍔ㄦ粴鍔紝浣垮叾鏇存帴杩戣祫婧愮鐞嗗櫒鐨勮窡鎵嬮€熷害锛涜矾寰勯潰鍖呭睉鏀逛负鎸夊疄闄呭彲鐢ㄥ搴﹀姩鎬佸睍寮€锛屼笉鍐嶈繃鏃╂樉绀虹渷鐣ュ彿銆傛湰鐗堣繕纭繚楂樼骇鎼滅储/绛涢€夐」涓嶄細鍦ㄧ┖鏌ヨ鏃跺惎鍔ㄦ暣鏍戞壂鎻忥紱宸插畬鎴愪笖涓嶅彲閲嶈瘯鐨勬枃浠舵搷浣滅粨鏋滀笉鍐嶅父椹婚《閮ㄤ换鍔″叆鍙ｅ拰搴曢儴缁撴灉闈㈡澘銆傛湰鐗堜负鍥剧墖鏂囦欢鍦ㄥ彲瑙嗗尯鍐呮寜闇€瑙ｇ爜缂╃暐鍥撅紝鏇挎崲鏂囦欢鍥炬爣骞舵寜姣斾緥灞呬腑濉弧鍗曞厓鏍间笖涓嶆孩鍑猴紱淇閫変腑搴曟澘鏈寘浣忕缉鐣ュ浘瀵艰嚧鐨勮瑙夋孩鍑猴紝骞跺悎骞惰В鐮侀€氱煡浠ュ噺灏戦噸澶嶉噸娓叉煋銆傛渶灏忓寲/澶辩劍/閲嶆柊鑱氱劍涓嶅啀鍥犺璐﹀埛鏂版竻绌虹缉鐣ュ浘缂撳瓨锛涘彧鏈夋枃浠剁洃鍚唴瀹瑰彉鍖栨墠閲嶆柊瑙ｇ爜銆傞珮绾ф悳绱㈠閲忓瓧娈垫敮鎸?10MB/500KB/1.5GB 绛夊瀹瑰崟浣嶈緭鍏ワ紝闈炴硶鍊间細鍦ㄥ搴旇緭鍏ユ绾㈡骞跺湪涓嬫柟鏄剧ず閿欒銆係hell 寮傛娆＄骇鑿滃崟涓虹┖鏃舵樉绀衡€滄病鏈夊彲鐢ㄧ殑鑿滃崟椤光€濈┖鐘舵€侊紝涓嶅啀鍑虹幇绌虹櫧鍗婃埅闈㈡澘銆傛湰鐗堟柊澧炩€滃唴瀹光€濇悳绱㈡ā寮忥細閫掑綊妫€鏌ユ枃鏈枃浠跺唴瀹癸紝鐢ㄥ搷搴斿紡灏忓崱鐗囧睍绀轰笂涓嬫枃骞堕珮浜尮閰嶏紝涓嶅啀鍙悳鏂囦欢鍚嶃€傛湰鐗堝鍔犱腑鏂?English 鐣岄潰锛氭寜绯荤粺璇█鑷姩閫夋嫨锛孋trl+Shift+L 鍒囨崲骞惰浣忥紱涓荤晫闈€佽彍鍗曘€佹悳绱?鍐呭鎼滅储銆佺瓫閫夈€佹枃浠舵搷浣溿€佽鎯呫€佷晶鏍忎笌甯歌閿欒宸茬炕璇戯紝灏戦噺鏈鐩栧唴閮ㄩ敊璇洖閫€涓枃銆傚唴瀹规悳绱㈢粨鏋滄诞灞傜幇涓庢枃浠跺垪琛ㄨ〃闈㈠畬鍏ㄥ悓灏哄瑕嗙洊锛堜繚鐣欏簳灞傜姸鎬侊級锛涘尮閰嶄娇鐢ㄧ嫭绔嬫殩鑹查珮浜紝骞舵柊澧炲唴瀹规枃鏈紦瀛樹笌浜岃繘鍒跺墠缂€鍡呮帰浼樺寲閲嶅鏌ヨ銆傛湰鐗堝喎鍚姩绉婚櫎浜?DirectWrite 瀛椾綋缂撳瓨鐨勫悓姝ユ洿鏂版鏌ワ紝鍔犲叆鍙€夌殑鍚姩闃舵杩借釜锛涙湰鏈洪娆″彲浜や簰娓叉煋涓綅鏁扮害 403ms鈫?31ms銆備晶鏍忊€滀釜浜烘枃浠跺す鈥濈幇鏄剧ず褰撳墠鐧诲綍鐢ㄦ埛瀹剁洰褰曠殑瀹為檯鏂囦欢澶瑰悕锛堝 qq651锛夈€傛湰鐗堟妸 GPU 璁惧鍒涘缓绉诲埌鍚庡彴涓庡钩鍙板垵濮嬪寲骞跺彂锛屽钩鍙?GPU 闃舵绾︾缉鐭?20鈥?5ms锛涢娆″彲浜や簰浠嶇害 230ms锛?90ms 鐩爣灏氭湭杈惧埌銆傛湰鐗堢Щ闄や笁鐐硅彍鍗曚笌鈥滆涓洪粯璁も€濆叆鍙ｏ紝涓嶅啀灏濊瘯鎶?Backleaf 璁句负绯荤粺榛樿鏂囦欢绠＄悊鍣紱瀹夎鍖呮敼涓哄湪璧勬簮绠＄悊鍣ㄦ枃浠跺す/椹卞姩鍣ㄥ彸閿敞鍐屸€滃湪 Backleaf 涓墦寮€鈥濄€傛湰鐗堝悓鏃舵彁渚?Windows ARM64 鏋勫缓涓庡畨瑁呭寘锛氬畨瑁呭櫒鎸夎繘绋嬫灦鏋勯€夋嫨 x64 鎴?ARM64锛孉RM 鍖呬娇鐢ㄥ師鐢?7z.dll 涓?app-local ARM64 VC runtime锛涘彸閿彍鍗曟枃妗堟寜搴旂敤璇█/绯荤粺璇█閫夋嫨涓嫳鏂囥€傛湰鐗堜慨澶嶅唴瀹规悳绱㈤珮浜細鍖归厤琛岀疆浜庡崱鐗囬《閮ㄥ苟鍔犵矖锛岄伩鍏嶉暱琛?鍓嶄竴琛屾崲琛屾妸鍖归厤鎸ゅ嚭鍙鍖猴紱鍐呭鎼滅储缁撴灉澧炲姞涓庢枃浠跺垪琛ㄤ竴鑷寸殑鍙銆佸彲鎷栧姩婊氬姩鏉°€傜储寮曞墠鍙伴檺閫?鏋勫缓浜х墿鎺掗櫎銆佸浘鏍囦笌缂╃暐鍥?worker 鎳掑姞杞姐€佸唴瀹规悳绱㈠苟琛屾壂鎻忕户缁繚鐣欙紙绌洪棽绾跨▼ 55鈫?2銆佸伐浣滈泦绾?70.3鈫?7.3MB锛夈€傛湰鐗堟柊澧炲彈淇濇姢浣嶇疆鎻愭潈妫€娴嬶細鐩綍鏋氫妇琚嫆鏃舵彁绀虹鐞嗗憳鏉冮檺骞跺彲鎵撳紑鍚岃矾寰勭殑绠＄悊鍛樼獥鍙ｈ嚜鍔ㄩ噸璇曪紝鍘熺獥鍙ｄ繚鐣欙紱绠＄悊鍛樼獥鍙ｅ叧闂悗鏉冮檺缁撴潫锛岃[鎻愭潈閲嶅紑](docs/elevation.md)銆備换鍔℃爮鎸夐挳鍙抽敭鏂板璺宠浆鍒楄〃锛氬浐瀹氬叆鍙ｃ€佷繚瀛樿鍥俱€佸父鐢ㄦ枃浠跺す銆佸垎鍖哄揩閫熷叆鍙ｄ笌鈥滄墦寮€鏂扮獥鍙ｂ€濅换鍔★紝瑙乕浠诲姟鏍忚烦杞垪琛╙(docs/jump-list.md)銆傚疄娴嬭寖鍥村拰闄愬埗瑙乕娴嬭瘯鐗堣鏄嶿(docs/native-test-release.md)銆?
 
-Windows PowerShell 5.1 / PowerShell 7，一行安装最新正式版，无需管理员权限：
+Windows PowerShell 5.1 / PowerShell 7锛屼竴琛屽畨瑁呮渶鏂版寮忕増锛屾棤闇€绠＄悊鍛樻潈闄愶細
 
 ```powershell
 irm https://raw.githubusercontent.com/simiooo/backleaf/staging/install.ps1 | iex
 ```
 
-卸载使用仓库脚本（默认保留用户数据，`-RemoveUserData` 一并删除），见[卸载说明](docs/install.md#卸载)：
+鍗歌浇浣跨敤浠撳簱鑴氭湰锛堥粯璁や繚鐣欑敤鎴锋暟鎹紝`-RemoveUserData` 涓€骞跺垹闄わ級锛岃[鍗歌浇璇存槑](docs/install.md#鍗歌浇)锛?
 
 ```powershell
 irm https://raw.githubusercontent.com/simiooo/backleaf/staging/uninstall.ps1 | iex
 ```
 
-从开始菜单打开 Backleaf。重复运行同一命令即可升级，升级前请关闭 Backleaf。安装目录为`%LOCALAPPDATA%\Programs\Backleaf\current`，用户数据仍保存在`%LOCALAPPDATA%\Backleaf`。脚本自动补齐应用目录内的VC++运行库，校验 GitHub 资产 SHA256、包内 EXE/归档库及版本来源，失败不替换已安装版本。无需配置环境变量；不修改全局PATH。[安装参数与验证](docs/install.md)。
+浠庡紑濮嬭彍鍗曟墦寮€ Backleaf銆傞噸澶嶈繍琛屽悓涓€鍛戒护鍗冲彲鍗囩骇锛屽崌绾у墠璇峰叧闂?Backleaf銆傚畨瑁呯洰褰曚负`%LOCALAPPDATA%\Programs\Backleaf\current`锛岀敤鎴锋暟鎹粛淇濆瓨鍦╜%LOCALAPPDATA%\Backleaf`銆傝剼鏈嚜鍔ㄨˉ榻愬簲鐢ㄧ洰褰曞唴鐨刅C++杩愯搴擄紝鏍￠獙 GitHub 璧勪骇 SHA256銆佸寘鍐?EXE/褰掓。搴撳強鐗堟湰鏉ユ簮锛屽け璐ヤ笉鏇挎崲宸插畨瑁呯増鏈€傛棤闇€閰嶇疆鐜鍙橀噺锛涗笉淇敼鍏ㄥ眬PATH銆俒瀹夎鍙傛暟涓庨獙璇乚(docs/install.md)銆?
 
-Windows/MSVC/Rust 1.99.1：
+Windows/MSVC/Rust 1.99.1锛?
 
 ```powershell
 ./scripts/native/bootstrap.ps1
@@ -30,24 +30,25 @@ Windows/MSVC/Rust 1.99.1：
 ./target/release/backleaf.exe
 ```
 
-`--path <directory>`打开真实目录；`--new-window`跳过窗口恢复并打开主文件夹的新窗口；`--view <id>`打开侧栏保存的视图；`--fixture 1000000 --flow 8`使用明确标记的生成元数据渲染场景。测试包需完整解压ZIP，保留lib和许可证目录。
+`--path <directory>`鎵撳紑鐪熷疄鐩綍锛沗--new-window`璺宠繃绐楀彛鎭㈠骞舵墦寮€涓绘枃浠跺す鐨勬柊绐楀彛锛沗--view <id>`鎵撳紑渚ф爮淇濆瓨鐨勮鍥撅紱`--fixture 1000000 --flow 8`浣跨敤鏄庣‘鏍囪鐨勭敓鎴愬厓鏁版嵁娓叉煋鍦烘櫙銆傛祴璇曞寘闇€瀹屾暣瑙ｅ帇ZIP锛屼繚鐣檒ib鍜岃鍙瘉鐩綍銆?
 
-完整检查已包含无头门禁；只运行交互回归可用`./scripts/native/test-headless.ps1`。它覆盖52项GPUI事件、焦点、错误提示、菜单家族稳定性、真实文件/搜索结果、原位刷新与框选滚动，输出日志和JSON；PR及staging/main相关推送自动执行，测试包发布也必须通过。另有真实隐藏Win32菜单样式/父窗边界测试；系统原生集成与GPU验证范围见[回归分层](docs/native-resume-checklist.md)。源码构建发布包前请先运行`./scripts/native/apply-vendor-patches.ps1`（发布 workflow 自动执行）；它只应用 DirectWrite 启动字体缓存补丁，并在包内记录 patch 标识。
+瀹屾暣妫€鏌ュ凡鍖呭惈鏃犲ご闂ㄧ锛涘彧杩愯浜や簰鍥炲綊鍙敤`./scripts/native/test-headless.ps1`銆傚畠瑕嗙洊52椤笹PUI浜嬩欢銆佺劍鐐广€侀敊璇彁绀恒€佽彍鍗曞鏃忕ǔ瀹氭€с€佺湡瀹炴枃浠?鎼滅储缁撴灉銆佸師浣嶅埛鏂颁笌妗嗛€夋粴鍔紝杈撳嚭鏃ュ織鍜孞SON锛汸R鍙妔taging/main鐩稿叧鎺ㄩ€佽嚜鍔ㄦ墽琛岋紝娴嬭瘯鍖呭彂甯冧篃蹇呴』閫氳繃銆傚彟鏈夌湡瀹為殣钘廤in32鑿滃崟鏍峰紡/鐖剁獥杈圭晫娴嬭瘯锛涚郴缁熷師鐢熼泦鎴愪笌GPU楠岃瘉鑼冨洿瑙乕鍥炲綊鍒嗗眰](docs/native-resume-checklist.md)銆傛簮鐮佹瀯寤哄彂甯冨寘鍓嶈鍏堣繍琛宍./scripts/native/apply-vendor-patches.ps1`锛堝彂甯?workflow 鑷姩鎵ц锛夛紱瀹冨彧搴旂敤 DirectWrite 鍚姩瀛椾綋缂撳瓨琛ヤ竵锛屽苟鍦ㄥ寘鍐呰褰?patch 鏍囪瘑銆?
 
-[preview.51 证据](docs/evidence/preview-51)、[preview.50 证据](docs/evidence/preview-50)、[Windows ARM64 说明](docs/windows-arm64.md)、[preview.48 证据](docs/evidence/preview-48)、[preview.47 证据](docs/evidence/preview-47)、[preview.46 证据](docs/evidence/preview-46)、[preview.45 证据](docs/evidence/preview-45)、[preview.44 证据](docs/evidence/preview-44)、[preview.43 证据](docs/evidence/preview-43)、[preview.42 证据](docs/evidence/preview-42)、[preview.41 证据](docs/evidence/preview-41)、[preview.40 证据](docs/evidence/preview-40)、[preview.39 证据](docs/evidence/preview-39)、[preview.38 证据](docs/evidence/preview-38)、[preview.37 证据](docs/evidence/preview-37)、[preview.36 证据](docs/evidence/preview-36)、[preview.35 证据](docs/evidence/preview-35)、[preview.34 证据](docs/evidence/preview-34)、[preview.33 证据](docs/evidence/preview-33)、[preview.32 证据](docs/evidence/preview-32)、[preview.31 证据](docs/evidence/preview-31)、[preview.30 证据](docs/evidence/preview-30)、[preview.29 证据](docs/evidence/preview-29)、[preview.28 证据](docs/evidence/preview-28)、[preview.27 证据](docs/evidence/preview-27)、[本版证据](docs/evidence/root-case)、[搜索缓存证据](docs/evidence/search-cache-v43)、[第三方命令证据](docs/evidence/shell-commands)、[设计约束](docs/design-contract.md)、[研究](docs/research.md)、[交付记录](docs/delivery.md)。
+[preview.51 璇佹嵁](docs/evidence/preview-51)銆乕preview.50 璇佹嵁](docs/evidence/preview-50)銆乕Windows ARM64 璇存槑](docs/windows-arm64.md)銆乕preview.48 璇佹嵁](docs/evidence/preview-48)銆乕preview.47 璇佹嵁](docs/evidence/preview-47)銆乕preview.46 璇佹嵁](docs/evidence/preview-46)銆乕preview.45 璇佹嵁](docs/evidence/preview-45)銆乕preview.44 璇佹嵁](docs/evidence/preview-44)銆乕preview.43 璇佹嵁](docs/evidence/preview-43)銆乕preview.42 璇佹嵁](docs/evidence/preview-42)銆乕preview.41 璇佹嵁](docs/evidence/preview-41)銆乕preview.40 璇佹嵁](docs/evidence/preview-40)銆乕preview.39 璇佹嵁](docs/evidence/preview-39)銆乕preview.38 璇佹嵁](docs/evidence/preview-38)銆乕preview.37 璇佹嵁](docs/evidence/preview-37)銆乕preview.36 璇佹嵁](docs/evidence/preview-36)銆乕preview.35 璇佹嵁](docs/evidence/preview-35)銆乕preview.34 璇佹嵁](docs/evidence/preview-34)銆乕preview.33 璇佹嵁](docs/evidence/preview-33)銆乕preview.32 璇佹嵁](docs/evidence/preview-32)銆乕preview.31 璇佹嵁](docs/evidence/preview-31)銆乕preview.30 璇佹嵁](docs/evidence/preview-30)銆乕preview.29 璇佹嵁](docs/evidence/preview-29)銆乕preview.28 璇佹嵁](docs/evidence/preview-28)銆乕preview.27 璇佹嵁](docs/evidence/preview-27)銆乕鏈増璇佹嵁](docs/evidence/root-case)銆乕鎼滅储缂撳瓨璇佹嵁](docs/evidence/search-cache-v43)銆乕绗笁鏂瑰懡浠よ瘉鎹甝(docs/evidence/shell-commands)銆乕璁捐绾︽潫](docs/design-contract.md)銆乕鐮旂┒](docs/research.md)銆乕浜や粯璁板綍](docs/delivery.md)銆?
 
-文件区变更刷新保留现有画面、滚动与身份可验证的选择，新快照及可见页就绪后原位提交；失败保留旧画面。见[刷新约定](docs/grid-refresh-v40.md)。
+鏂囦欢鍖哄彉鏇村埛鏂颁繚鐣欑幇鏈夌敾闈€佹粴鍔ㄤ笌韬唤鍙獙璇佺殑閫夋嫨锛屾柊蹇収鍙婂彲瑙侀〉灏辩华鍚庡師浣嶆彁浜わ紱澶辫触淇濈暀鏃х敾闈€傝[鍒锋柊绾﹀畾](docs/grid-refresh-v40.md)銆?
 
-受保护位置的提权检测与管理员窗口见[提权重开](docs/elevation.md)。
+鍙椾繚鎶や綅缃殑鎻愭潈妫€娴嬩笌绠＄悊鍛樼獥鍙ｈ[鎻愭潈閲嶅紑](docs/elevation.md)銆?
 
-存储与选择约定见[设计与实现说明](docs/storage-v41.md)；物理插拔与最终可见窗口回归仍按确切版本单独记录。
+瀛樺偍涓庨€夋嫨绾﹀畾瑙乕璁捐涓庡疄鐜拌鏄嶿(docs/storage-v41.md)锛涚墿鐞嗘彃鎷斾笌鏈€缁堝彲瑙佺獥鍙ｅ洖褰掍粛鎸夌‘鍒囩増鏈崟鐙褰曘€?
 
-应用 logo 采用黄色文件夹与圆叶表情；[独立品牌稿](design/Backleaf-brand-v3.fig)和[生成/导出说明](docs/brand-v3.md)保留明暗与小尺寸检查，界面主稿为 v43。
+搴旂敤 logo 閲囩敤榛勮壊鏂囦欢澶逛笌鍦嗗彾琛ㄦ儏锛沎鐙珛鍝佺墝绋縘(design/Backleaf-brand-v3.fig)鍜孾鐢熸垚/瀵煎嚭璇存槑](docs/brand-v3.md)淇濈暀鏄庢殫涓庡皬灏哄妫€鏌ワ紝鐣岄潰涓荤涓?v43銆?
 
-容量副文案10px，文案与细用量条一体展示；统一B/KB/MB/GB自动单位及整数舍入，见[容量展示](docs/capacity-v42.md)。
+瀹归噺鍓枃妗?0px锛屾枃妗堜笌缁嗙敤閲忔潯涓€浣撳睍绀猴紱缁熶竴B/KB/MB/GB鑷姩鍗曚綅鍙婃暣鏁拌垗鍏ワ紝瑙乕瀹归噺灞曠ず](docs/capacity-v42.md)銆?
 
-搜索结果按完整查询条件缓存在有界磁盘LRU中；普通路径按递归通知失效，索引搜索按变更ID更新，见[缓存与边界](docs/search-cache-v43.md)。
+鎼滅储缁撴灉鎸夊畬鏁存煡璇㈡潯浠剁紦瀛樺湪鏈夌晫纾佺洏LRU涓紱鏅€氳矾寰勬寜閫掑綊閫氱煡澶辨晥锛岀储寮曟悳绱㈡寜鍙樻洿ID鏇存柊锛岃[缂撳瓨涓庤竟鐣宂(docs/search-cache-v43.md)銆?
 
-默认搜索的索引可用性判定、范围查询与静默回退见[搜索自动使用索引](docs/search-auto-index.md)。
+榛樿鎼滅储鐨勭储寮曞彲鐢ㄦ€у垽瀹氥€佽寖鍥存煡璇笌闈欓粯鍥為€€瑙乕鎼滅储鑷姩浣跨敤绱㈠紩](docs/search-auto-index.md)銆?
 
-索引维护的构建/重扫/增量成本、profile 与优化顺序见[索引维护](docs/index-maintenance.md)。
+绱㈠紩缁存姢鐨勬瀯寤?閲嶆壂/澧為噺鎴愭湰銆乸rofile 涓庝紭鍖栭『搴忚[绱㈠紩缁存姢](docs/index-maintenance.md)銆?
+
