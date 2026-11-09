@@ -1,0 +1,238 @@
+{
+  "passed": true,
+  "exit_code": 0,
+  "test_count": 56,
+  "cases": [
+    {
+      "name": "headless_tests::additive_marquee_escape_restores_original_selection",
+      "passed": true
+    },
+    {
+      "name": "headless_tests::advanced_filter_capacity_errors_are_field_scoped_and_units_parse",
+      "passed": true
+    },
+    {
+      "name": "headless_tests::advanced_filters_require_nonempty_query",
+      "passed": true
+    },
+    {
+      "name": "headless_tests::async_shell_discovery_and_large_submenu_never_resize_or_move_the_root",
+      "passed": true
+    },
+    {
+      "name": "headless_tests::automatic_search_refresh_keeps_rows_until_the_new_page_is_ready",
+      "passed": true
+    },
+    {
+      "name": "headless_tests::automatic_search_uses_covered_index_and_falls_back_after_removal",
+      "passed": true
+    },
+    {
+      "name": "headless_tests::closing_owner_removes_independent_popup_without_reading_owner_entity",
+      "passed": true
+    },
+    {
+      "name": "headless_tests::content_results_scrollbar_tracks_overflow_and_pages_the_list",
+      "passed": true
+    },
+    {
+      "name": "headless_tests::content_search_finds_text_with_context_and_highlights",
+      "passed": true
+    },
+    {
+      "name": "headless_tests::directory_refresh_never_clears_the_grid_and_remaps_selection_by_identity",
+      "passed": true
+    },
+    {
+      "name": "headless_tests::directory_refresh_preserves_scroll_handle_and_visible_anchor",
+      "passed": true
+    },
+    {
+      "name": "headless_tests::dynamic_child_waits_for_rows_and_keeps_both_ancestors_stable",
+      "passed": true
+    },
+    {
+      "name": "headless_tests::empty_async_shell_submenu_keeps_a_readable_empty_row",
+      "passed": true
+    },
+    {
+      "name": "headless_tests::empty_search_query_does_not_keep_search_surface_open",
+      "passed": true
+    },
+    {
+      "name": "headless_tests::file_properties_open_separately_keep_geometry_and_preserve_full_long_path",
+      "passed": true
+    },
+    {
+      "name": "headless_tests::finished_non_retryable_operations_hide_badge_and_panel",
+      "passed": true
+    },
+    {
+      "name": "headless_tests::folder_properties_count_nested_files_without_resizing_or_duplicating_windows",
+      "passed": true
+    },
+    {
+      "name": "headless_tests::headless_elevated_window_restores_handoff_path_geometry_and_selection",
+      "passed": true
+    },
+    {
+      "name": "headless_tests::headless_elevation_confirm_writes_lossless_one_shot_handoff_without_uac",
+      "passed": true
+    },
+    {
+      "name": "headless_tests::headless_elevation_handoff_validation_and_windows_argument_quoting",
+      "passed": true
+    },
+    {
+      "name": "headless_tests::headless_elevation_prompt_is_narrowed_to_access_denied_and_cancel_keeps_window",
+      "passed": true
+    },
+    {
+      "name": "headless_tests::headless_platform_is_windowless",
+      "passed": true
+    },
+    {
+      "name": "headless_tests::image_preview_cache_survives_unchanged_directory_refresh",
+      "passed": true
+    },
+    {
+      "name": "headless_tests::independent_menu_escape_restores_grid_focus_and_selection",
+      "passed": true
+    },
+    {
+      "name": "headless_tests::independent_menu_owner_activation_dismisses_popup_and_restores_focus",
+      "passed": true
+    },
+    {
+      "name": "headless_tests::independent_menu_rename_returns_action_to_owner_and_focuses_editor",
+      "passed": true
+    },
+    {
+      "name": "headless_tests::indexed_root_case_rename_rebuilds_without_duplicates_and_keeps_nonrecursive_updates",
+      "passed": true
+    },
+    {
+      "name": "headless_tests::indexed_search_cache_reuse_incremental_refresh_and_replaced_visible_identity",
+      "passed": true
+    },
+    {
+      "name": "headless_tests::language_shortcut_switches_chinese_and_english",
+      "passed": true
+    },
+    {
+      "name": "headless_tests::late_directory_notification_during_new_folder_locate_preserves_rename_intent",
+      "passed": true
+    },
+    {
+      "name": "headless_tests::late_dynamic_rows_do_not_revive_closed_columns_or_the_menu_family",
+      "passed": true
+    },
+    {
+      "name": "headless_tests::marquee_edge_scroll_release_commits_contiguous_selection_and_stops",
+      "passed": true
+    },
+    {
+      "name": "headless_tests::menu_family_focus_and_bottom_flip_keep_ancestors_stable",
+      "passed": true
+    },
+    {
+      "name": "headless_tests::new_folder_completion_refreshes_in_place_and_enters_rename",
+      "passed": true
+    },
+    {
+      "name": "headless_tests::new_folder_in_equivalent_display_path_uses_snapshot_destination_identity",
+      "passed": true
+    },
+    {
+      "name": "headless_tests::path_blur_error_restores_draft_then_navigates_on_correction",
+      "passed": true
+    },
+    {
+      "name": "headless_tests::pending_letter_activation_finishes_before_directory_refresh_commits",
+      "passed": true
+    },
+    {
+      "name": "headless_tests::properties_refresh_rechecks_identity_and_close_cancels_the_reader",
+      "passed": true
+    },
+    {
+      "name": "headless_tests::properties_scrollbar_tracks_short_window_overflow_and_hides_when_it_fits",
+      "passed": true
+    },
+    {
+      "name": "headless_tests::refresh_failure_keeps_old_rows_and_late_results_cannot_replace_navigation",
+      "passed": true
+    },
+    {
+      "name": "headless_tests::rename_blur_commits_real_file_and_preserves_bytes",
+      "passed": true
+    },
+    {
+      "name": "headless_tests::rename_blur_then_other_file_context_menu_completes_both_actions",
+      "passed": true
+    },
+    {
+      "name": "headless_tests::rename_case_only_remains_supported_and_preserves_content",
+      "passed": true
+    },
+    {
+      "name": "headless_tests::rename_escape_cancels_without_filesystem_change",
+      "passed": true
+    },
+    {
+      "name": "headless_tests::rename_existing_destination_reports_error_without_overwrite",
+      "passed": true
+    },
+    {
+      "name": "headless_tests::rename_invalid_blur_preserves_draft_and_refocuses",
+      "passed": true
+    },
+    {
+      "name": "headless_tests::repeated_letters_cycle_and_wrap_without_intercepting_text_inputs",
+      "passed": true
+    },
+    {
+      "name": "headless_tests::right_click_new_folder_keeps_filename_focused_and_blur_saves_it",
+      "passed": true
+    },
+    {
+      "name": "headless_tests::search_debounce_executes_latest_query_after_250ms",
+      "passed": true
+    },
+    {
+      "name": "headless_tests::search_unicode_input_submit_and_escape_use_real_input_routing",
+      "passed": true
+    },
+    {
+      "name": "headless_tests::selected_bytes_include_empty_files_and_never_recurse_into_folders",
+      "passed": true
+    },
+    {
+      "name": "headless_tests::short_successful_operations_do_not_open_or_leave_a_task_panel",
+      "passed": true
+    },
+    {
+      "name": "headless_tests::slow_operations_reveal_once_without_reopening_after_escape",
+      "passed": true
+    },
+    {
+      "name": "headless_tests::titlebar_press_dismisses_path_tree_and_search_but_keeps_search_field_presses",
+      "passed": true
+    },
+    {
+      "name": "headless_tests::visible_image_cells_decode_thumbnails_lazily",
+      "passed": true
+    },
+    {
+      "name": "headless_tests::volume_capacity_updates_keep_sidebar_geometry_and_ignore_stale_or_removed_rows",
+      "passed": true
+    }
+  ],
+  "missing_required": [],
+  "workspace_commit": "971fc48cff9818bb64da8cb3f0e07fcdd704f60d",
+  "workspace_dirty": false,
+  "gpui_revision": "d36a70661471ec64dce230798121d554930d5c60",
+  "recorded_at_utc": "2026-11-09T05:49:47.2891544Z",
+  "log_sha256": "2883ce93fa2e88d4c3eae9aae199b5bc63dc16df1dbba8b0b671dcb845b926a4",
+  "scope": "Production Backleaf view, GPUI TestPlatform/HeadlessAppContext, native event dispatch, real isolated file workers and painted toast geometry. No HWND, desktop input, GPU pixels, screen-reader adapter or native IME/OLE gestures."
+}

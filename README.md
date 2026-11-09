@@ -2,7 +2,7 @@
 
 Windows 原生 GPUI 文件管理器。当前正式版为 0.1.0；项目范围跟随 Nuto SIM-919、SIM-934。本版采用[圆叶文件夹 v3 应用图标](docs/brand-v3.md)。
 
-[正式 Release](https://github.com/simiooo/backleaf/releases/tag/v0.1.0)提供 x64 / ARM64。[版本说明](docs/release-v0.1.0.md)、[正式版交付证据](docs/evidence/release-0.1.0/README.md)；[preview.52 历史证据](docs/evidence/preview-52/README.md)。
+[正式 Release](https://github.com/simiooo/backleaf/releases/tag/v0.1.0)提供 x64 / ARM64。[版本说明](docs/release-v0.1.0.md)、[正式版交付证据](docs/evidence/release-0.1.0/README.md)；[preview.52 历史证据](docs/evidence/preview-52/README.md)、[preview.53 证据](docs/evidence/preview-53/README.md)。
 
 当前可编辑设计稿：[OpenPencil v48 设计草稿](design/Backleaf-v48.fig)，275页，基于v46保留271页并新增Apple式白/黑内容、蓝文件夹与悬浮identity 4页。版本索引见[设计目录](design/README.md)。设计先于实施；旧版design/Backleaf.fig保留为v6历史基线。
 

@@ -1,0 +1,72 @@
+{
+  "version": "0.1.0-preview.53",
+  "source_commit": "971fc48cff9818bb64da8cb3f0e07fcdd704f60d",
+  "architecture": "arm64",
+  "application_icon": "v3",
+  "logo_sha256": "1c55607c2dd25d6d2069609497e84a002e41eda6d36e582883cd031fcdfaa420",
+  "brand_design_sha256": "1ea20cd98d446f8a38b676d11637bf81de19a0029f093bddd6ecba64214fb3bb",
+  "gpui_revision": "d36a70661471ec64dce230798121d554930d5c60",
+  "built_at_utc": "2026-11-09T06:02:09.0252611Z",
+  "exe_sha256": "c92c6973f5681b73f817c2b6d3b76b34b83b1f7242dd34cec07b0a3ce25c7d11",
+  "archive_library_sha256": "311d0a45182401e10c71a12b33a5c4a7171f6a8c1d67eeec9ef5dc2a5c962fe8",
+  "design_sha256": "216c6ffd8f632f908406d4765a9be010b59c24e70d59f7b8a63bc1e5055ab179",
+  "ci_run_url": "https://github.com/simiooo/backleaf/actions/runs/42568755703",
+  "runtime": {
+    "tag": "msvc-arm64-redist",
+    "files": [
+      {
+        "name": "concrt140.dll",
+        "sha256": "db629745c1769e5749c8dfb71ecd2127dc480bafc48af8e6362950fd97ebc7d7",
+        "version": "14.51.36247.0"
+      },
+      {
+        "name": "msvcp140_1.dll",
+        "sha256": "d2c56f5e62d1c2c6c01e0b5d0d9b3f9ecc36254fd04d20efbf92d6fbf58dc1a7",
+        "version": "14.51.36247.0"
+      },
+      {
+        "name": "msvcp140_2.dll",
+        "sha256": "b5114e89cb1e4a5a5896134df077c76be86152468089d1841b94d6d9d14b0cba",
+        "version": "14.51.36247.0"
+      },
+      {
+        "name": "msvcp140_atomic_wait.dll",
+        "sha256": "24c6002bfe8cc4ec63c11b28556d2309137bcf177806ad02310360ef7f9765de",
+        "version": "14.51.36247.0"
+      },
+      {
+        "name": "msvcp140_codecvt_ids.dll",
+        "sha256": "c7c8aca0c753c3162bc51c0cf40b9707226233687b2e37a5ca8ef7416fe6271f",
+        "version": "14.51.36247.0"
+      },
+      {
+        "name": "msvcp140.dll",
+        "sha256": "e29ecda6c1652134b43ad4d344d593bc76016edf123e5e304b875ce1cb35eece",
+        "version": "14.51.36247.0"
+      },
+      {
+        "name": "vccorlib140.dll",
+        "sha256": "a623cf966a2b2d31f7cfb0a2f79bece1e06caa690a731e884ece453038334b7e",
+        "version": "14.51.36247.0"
+      },
+      {
+        "name": "vcruntime140_threads.dll",
+        "sha256": "69911e051ef5bdbab893ebbe6342fd4ef24d218a36ea88a9265c8543e74ecbdb",
+        "version": "14.51.36247.0"
+      },
+      {
+        "name": "vcruntime140.dll",
+        "sha256": "9086e4c22149bc16bdeee1b37451db00fa0a9bce38d00e6baad127ec567c369f",
+        "version": "14.51.36247.0"
+      }
+    ]
+  },
+  "scope": "Native Windows ARM64 preview with bounded persistent-index maintenance, default-search index acceleration, idle scheduling, on-demand roots and app-local ARM64 runtime; see README for complete scope and limits",
+  "interactive_smoke": "not run on hosted CI; packaged ARM64 CLI smoke is recorded",
+  "headless_test_count": 56,
+  "msvc_tools_version": "14.51.36231",
+  "headless_log_sha256": "c12933878bfd286253a34614359dddffd94c52e5de73b6dbc8d051f8a8573581",
+  "headless_report_sha256": "30ba81eeb610318cd66da18c79e11af5998437b9cf4ebc3fc188005cbc44d3fc",
+  "vendor_patch": "font-update-no-check+gpu-init-async",
+  "cli_smoke_passed": true
+}
