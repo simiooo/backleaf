@@ -120,6 +120,24 @@ try {
     $script:target = Join-Path $env:LOCALAPPDATA 'Programs/Backleaf'
     $script:fixture = New-Fixture
     $script:releases = @($script:fixture.release)
+    Test-Case 'native x64 process installs the x64 package' {
+        Assert-True ((Resolve-BackleafArchitecture $null 'AMD64' 9 'X64' 'Intel64 Family 6' 'AMD64') -eq 'x64') 'x64 architecture was not detected.'
+    }
+    Test-Case 'native ARM64 process installs the ARM64 package' {
+        Assert-True ((Resolve-BackleafArchitecture $null 'ARM64' 12 'Arm64' 'ARMv8 64-bit' 'ARM64') -eq 'arm64') 'ARM64 architecture was not detected.'
+    }
+    Test-Case '32-bit PowerShell on ARM64 installs the ARM64 package' {
+        Assert-True ((Resolve-BackleafArchitecture 'ARM64' $null $null $null '' 'x86') -eq 'arm64') 'WOW64 ARM64 architecture was not detected.'
+    }
+    Test-Case 'x64-emulated PowerShell on ARM64 installs the ARM64 package' {
+        Assert-True ((Resolve-BackleafArchitecture $null 'ARM64' 12 'X64' 'ARMv8 64-bit' 'AMD64') -eq 'arm64') 'Emulated x64 process on ARM64 was not detected as ARM64.'
+    }
+    Test-Case '32-bit PowerShell on x64 installs the x64 package' {
+        Assert-True ((Resolve-BackleafArchitecture 'AMD64' $null $null $null '' 'x86') -eq 'x64') 'WOW64 x64 architecture was not detected.'
+    }
+    Test-Case 'unknown architecture falls back to the x64 package' {
+        Assert-True ((Resolve-BackleafArchitecture $null $null $null $null '' 'AMD64') -eq 'x64') 'Unknown architecture fallback changed.'
+    }
     Test-Case 'latest prerelease is selected and drafts are ignored' {
         $draft = [PSCustomObject]@{ tag_name = 'test-v0.1.0-preview.99-aaaaaaaa'; draft = $true; published_at = '2099-01-01T00:00:00Z' }
         $script:releases = @($draft, $script:fixture.release)

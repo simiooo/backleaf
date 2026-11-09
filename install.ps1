@@ -187,6 +187,43 @@ function Register-BackleafContextMenu {
     }
 }
 
+function Get-BackleafArchitecture {
+    # Prefer the native OS architecture over the architecture of this PowerShell
+    # process: x64-emulated or 32-bit shells on Windows on ARM must still install
+    # the native ARM64 package.
+    $wow = $env:PROCESSOR_ARCHITEW6432
+    $machine = $null
+    try {
+        $machine = (Get-ItemProperty -LiteralPath 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment' -Name PROCESSOR_ARCHITECTURE -ErrorAction Stop).PROCESSOR_ARCHITECTURE
+    } catch { }
+    $cim = $null
+    try { $cim = [int](Get-CimInstance Win32_Processor -ErrorAction Stop | Select-Object -First 1).Architecture } catch { }
+    $os = $null
+    try { $os = [System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture.ToString() } catch { }
+    return Resolve-BackleafArchitecture $wow $machine $cim $os $env:PROCESSOR_IDENTIFIER $env:PROCESSOR_ARCHITECTURE
+}
+
+function Resolve-BackleafArchitecture {
+    param([string]$Wow64, [string]$Machine, $Cim, [string]$Os, [string]$Identifier, [string]$Processor)
+    # A 32-bit process exposes the native 64-bit architecture only through WOW64.
+    if ($Wow64 -eq 'ARM64') { return 'arm64' }
+    if ($Wow64 -eq 'AMD64' -or $Wow64 -eq 'IA64') { return 'x64' }
+    # The machine-wide environment records the OS architecture even when an
+    # x64-emulated process reports AMD64 for itself.
+    if ($Machine -eq 'ARM64') { return 'arm64' }
+    if ($Machine -eq 'AMD64' -or $Machine -eq 'IA64') { return 'x64' }
+    # Win32_Processor.Architecture: 12 = ARM64, 9 = x64, 6 = ia64.
+    if ($Cim -eq 12) { return 'arm64' }
+    if ($Cim -eq 9 -or $Cim -eq 6) { return 'x64' }
+    if ($Os -eq 'Arm64') { return 'arm64' }
+    if ($Os -eq 'X64') { return 'x64' }
+    if ($Identifier -match 'ARM') { return 'arm64' }
+    if ($Processor -eq 'ARM64') { return 'arm64' }
+    if ($Processor -eq 'AMD64' -or $Processor -eq 'IA64') { return 'x64' }
+    # 64-bit Windows is required above; keep the historical x64 package default.
+    return 'x64'
+}
+
 function Install-Backleaf {
     [CmdletBinding()]
     param([string]$Tag, [string]$InstallDir,
@@ -241,7 +278,8 @@ function Install-Backleaf {
             if ($stableSource -cnotmatch '^[a-f0-9]{40}$') { throw 'Stable release must target an immutable full source commit.' }
             $sourceShort = $stableSource.Substring(0,8)
         } else { throw 'Unexpected release tag.' }
-        $architecture = if ($env:PROCESSOR_ARCHITECTURE -eq 'ARM64') { 'arm64' } else { 'x64' }
+        $architecture = Get-BackleafArchitecture
+        if ($architecture -eq 'arm64') { Write-Host 'Detected ARM64 Windows; installing the native ARM64 package.' }
         $zipName = "Backleaf-$version-$sourceShort-win-$architecture.zip"
         $metadataName = if ($architecture -eq 'arm64') { 'build-arm64.json' } else { 'build.json' }
         $sumsName = if ($architecture -eq 'arm64') { 'SHA256SUMS-arm64.txt' } else { 'SHA256SUMS.txt' }

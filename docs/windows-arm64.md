@@ -3,7 +3,7 @@
 Backleaf 从 `0.1.0-preview.51` 起提供 Windows ARM64 测试包。
 
 - 下载：GitHub Release 中 `Backleaf-<version>-<sha>-win-arm64.zip`，解压运行 `Backleaf.exe`。
-- 安装：同一行安装器会根据进程架构选择 ARM64 资产：
+- 安装：同一行安装器按**原生系统架构**选择资产：x64 Windows 安装 x64 包；ARM64 Windows 安装 ARM64 包，即使当前 PowerShell 是 x64 模拟或 32 位进程（检测 WOW64、机器级 `PROCESSOR_ARCHITECTURE`、`Win32_Processor`、`RuntimeInformation.OSArchitecture` 与进程架构等信号）：
 
   ```powershell
   irm https://raw.githubusercontent.com/simiooo/backleaf/staging/install.ps1 | iex
