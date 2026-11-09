@@ -1,3 +1,16 @@
+拾径 / Backleaf 0.1.0-preview.55
+
+Windows x64 / ARM64 便携测试版：解压对应 ZIP 运行 Backleaf.exe。安装器会按当前 Windows 进程架构选择 x64 或 ARM64 包；也可在 PowerShell 执行：
+irm https://raw.githubusercontent.com/simiooo/backleaf/staging/install.ps1 | iex
+
+本批次（权限重开修复与卸载脚本）：
+- 修复“以管理员身份重新打开”启动管理员进程时的文件名错误；权限提示、右键“以管理员身份打开”现在可用。
+- 访问被拒/不可用目录加载失败后停止后台自动刷新与监听，不再每 2 秒重试；仅用户提示确认、右键或手动刷新时重试一次。
+- 新增 uninstall.ps1：默认保留用户数据，-RemoveUserData 一并删除；需先关闭 Backleaf，只清理本安装的快捷方式、Explorer 右键项和安装目录。
+- 限制：真实 UAC 交互、任务栏菜单点击仍需实机确认；不写“应用和功能”卸载注册表项。
+
+以下保留 preview.54 及更早内容：
+
 拾径 / Backleaf 0.1.0-preview.54
 
 Windows x64 / ARM64 便携测试版：解压对应 ZIP 运行 Backleaf.exe。安装器会按当前 Windows 进程架构选择 x64 或 ARM64 包；也可在 PowerShell 执行：

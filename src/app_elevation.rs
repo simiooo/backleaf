@@ -62,18 +62,39 @@ impl Backleaf {
     /// Capture the window intent and start the UAC handoff off the UI thread;
     /// the UAC prompt blocks until the user answers.
     pub fn elevation_confirm(&mut self, window: &mut Window, cx: &mut Context<Self>) {
-        if self.elevation.pending {
-            return;
-        }
-        let Some(prompt) = self.elevation.prompt.as_ref() else {
+        let Some(target) = self
+            .elevation
+            .prompt
+            .as_ref()
+            .map(|prompt| prompt.path.clone())
+        else {
             return;
         };
-        let target = prompt.path.clone();
+        self.elevation_start(target, window, cx);
+    }
+    /// Open a folder in a new elevated window. Shared by the permission prompt
+    /// and the explicit right-click "以管理员身份打开" command.
+    pub fn elevation_start(
+        &mut self,
+        target: PathBuf,
+        window: &mut Window,
+        cx: &mut Context<Self>,
+    ) {
+        if self.elevation.elevated {
+            self.navigation_error(crate::i18n::tr_owned("此窗口已是管理员权限"), cx);
+            return;
+        }
+        if self.elevation.pending || self.options.fixture.is_some() {
+            return;
+        }
+        let from_menu = self.elevation.prompt.is_none();
+        if from_menu {
+            self.error = Some(crate::i18n::tr_owned("正在请求管理员权限…"));
+        }
         let same_directory = self.path == target;
         let mut state = self.capture_window_state(window, cx);
         state.path = WinPath::new(&target);
-        // The failed access happened before the list loaded; a search surface
-        // cannot be retried by reopening the physical folder.
+        // A failed or replaced listing cannot be retried by reopening a search.
         state.search = None;
         let handoff = same_directory
             .then(|| {
@@ -115,6 +136,34 @@ impl Backleaf {
         }
         cx.notify();
     }
+    /// Right-click command: open the focused folder / current folder elevated.
+    pub fn elevation_open_selected(&mut self, window: &mut Window, cx: &mut Context<Self>) {
+        if self.elevation.elevated {
+            self.navigation_error(crate::i18n::tr_owned("此窗口已是管理员权限"), cx);
+            return;
+        }
+        let target = if self.selection.count() == 0 {
+            self.path.clone()
+        } else if self.selection.count() == 1 {
+            let Some(id) = self
+                .selection
+                .focus
+                .filter(|id| self.selection.contains(*id))
+            else {
+                return;
+            };
+            match self.cache.get(&id) {
+                Some(item) if item.directory => self.path.join(item.name.clone()),
+                _ => {
+                    self.navigation_error(crate::i18n::tr_owned("请选择一个文件夹"), cx);
+                    return;
+                }
+            }
+        } else {
+            return;
+        };
+        self.elevation_start(target, window, cx);
+    }
     fn elevation_scroll_row(&self) -> u64 {
         let offset = -f32::from(self.scroll.0.borrow().base_handle.offset().y) as f64;
         let local = (offset.max(0.) / f64::from(layout::row_step())).floor() as u64;
@@ -128,6 +177,10 @@ impl Backleaf {
                 self.error = Some(crate::i18n::tr_owned("已打开管理员窗口"));
             }
             Err(error) => {
+                if self.elevation.prompt.is_none() {
+                    // Menu-initiated attempt has no modal to explain the failure.
+                    self.error = None;
+                }
                 // Keep the prompt so the user can retry after cancelling UAC.
                 self.navigation_error(error, cx);
             }

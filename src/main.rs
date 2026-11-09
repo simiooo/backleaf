@@ -822,6 +822,11 @@ impl Backleaf {
                     *finished = done;
                 }
                 if error.is_some() {
+                    if done {
+                        // Denied/offline roots cannot be watched: stop the
+                        // background dirty/refresh loop until an explicit retry.
+                        self.suspend_watch();
+                    }
                     if denied && !self.elevation.elevated {
                         // The list cannot be read with this token. Keep the
                         // failure visible via the administrator handoff prompt.

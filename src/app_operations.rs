@@ -458,6 +458,10 @@ impl Backleaf {
                 self.refresh_directory(None, false, cx);
                 Ok(None)
             }
+            Command::OpenElevated => {
+                self.elevation_open_selected(window, cx);
+                Ok(None)
+            }
             Command::Open | Command::Details | Command::Rename => {
                 if count != 1 {
                     return Ok(None);

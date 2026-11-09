@@ -26,6 +26,7 @@ pub enum Command {
     RenameQuickView,
     MoveQuickUp,
     MoveQuickDown,
+    OpenElevated,
 }
 impl Command {
     fn label(self, folder: bool) -> &'static str {
@@ -55,6 +56,7 @@ impl Command {
             Self::RenameQuickView => crate::i18n::tr("重命名视图"),
             Self::MoveQuickUp => crate::i18n::tr("上移"),
             Self::MoveQuickDown => crate::i18n::tr("下移"),
+            Self::OpenElevated => crate::i18n::tr("以管理员身份打开"),
         }
     }
     fn shortcut(self) -> &'static str {
@@ -71,7 +73,10 @@ impl Command {
             Self::Refresh => "F5",
             Self::EditPath => "Ctrl+L",
             Self::Compress | Self::Extract | Self::Extension(_, _) => "",
-            Self::PinQuickAccess | Self::RemoveQuickAccess | Self::RenameQuickView => "",
+            Self::PinQuickAccess
+            | Self::RemoveQuickAccess
+            | Self::RenameQuickView
+            | Self::OpenElevated => "",
             Self::MoveQuickUp => "Alt+↑",
             Self::MoveQuickDown => "Alt+↓",
         }
@@ -177,7 +182,14 @@ impl FileMenu {
     ) -> Self {
         use Command::*;
         let mut commands = if selected == 0 {
-            vec![Some(NewFolder), Some(Paste), None, Some(Refresh)]
+            vec![
+                Some(NewFolder),
+                Some(Paste),
+                None,
+                Some(Refresh),
+                None,
+                Some(OpenElevated),
+            ]
         } else if selected > 1 {
             vec![
                 Some(Copy),
@@ -201,7 +213,8 @@ impl FileMenu {
                 Some(Details),
             ];
             if folder {
-                v.push(Some(PinQuickAccess))
+                v.push(Some(PinQuickAccess));
+                v.push(Some(OpenElevated));
             }
             v
         };

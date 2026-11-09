@@ -2184,6 +2184,13 @@ fn headless_elevation_prompt_is_narrowed_to_access_denied_and_cancel_keeps_windo
         assert_eq!(prompt.path, path);
         assert_eq!(this.error.as_deref(), Some("此位置需要管理员权限"));
         assert_eq!(this.source.count(), count);
+        // A denied location must not be watched/refreshed in the background.
+        assert!(
+            this.watch.monitor.is_none(),
+            "denied watcher was not suspended"
+        );
+        assert!(!this.watch.dirty);
+        assert!(this.watch.pending.is_none());
         assert_eq!(this.cache.len(), cache_len);
         assert!(!this.elevation.pending);
     });

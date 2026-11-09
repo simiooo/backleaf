@@ -9,6 +9,8 @@
 use crate::{file_view::WinPath, selection::SelectionMask, window_state::State};
 use serde::{Deserialize, Serialize};
 use std::{
+    ffi::OsStr,
+    os::windows::ffi::OsStrExt,
     path::{Path, PathBuf},
     time::{SystemTime, UNIX_EPOCH},
 };
@@ -257,7 +259,6 @@ pub fn launch_elevated(request_file: &Path, state_dir: &Path) -> Result<(), Stri
     }
     #[cfg(not(test))]
     {
-        use std::os::windows::ffi::OsStrExt;
         use windows::{
             Win32::{
                 Foundation::{CloseHandle, ERROR_CANCELLED},
@@ -271,8 +272,8 @@ pub fn launch_elevated(request_file: &Path, state_dir: &Path) -> Result<(), Stri
         let executable = std::env::current_exe()
             .map_err(|error| crate::trf!("无法打开管理员窗口：{}", error))?;
         let arguments = request_arguments(request_file, &absolute(state_dir));
-        let executable_wide = executable.as_os_str().encode_wide().collect::<Vec<_>>();
-        let arguments_wide = arguments.encode_utf16().collect::<Vec<_>>();
+        let executable_wide = nul_terminated(executable.as_os_str());
+        let arguments_wide = nul_terminated_str(&arguments);
         let mut info = SHELLEXECUTEINFOW {
             cbSize: std::mem::size_of::<SHELLEXECUTEINFOW>() as u32,
             fMask: SEE_MASK_NOCLOSEPROCESS,
@@ -298,6 +299,14 @@ pub fn launch_elevated(request_file: &Path, state_dir: &Path) -> Result<(), Stri
             }
         }
     }
+}
+/// `ShellExecuteExW` reads NUL-terminated PCWSTRs; the request arguments and the
+/// executable path must never borrow an unterminated buffer.
+fn nul_terminated(value: &OsStr) -> Vec<u16> {
+    value.encode_wide().chain(Some(0)).collect()
+}
+fn nul_terminated_str(value: &str) -> Vec<u16> {
+    value.encode_utf16().chain(Some(0)).collect()
 }
 /// Resolve selected snapshot ids to lossless absolute paths on a worker thread.
 /// A selection larger than [`MAX_RESTORED_SELECTION`] is deliberately dropped.
@@ -389,6 +398,21 @@ mod tests {
             bounds: [10., 20., 900., 600.],
             maximized: false,
         }
+    }
+    #[test]
+    fn launch_arguments_are_nul_terminated_for_shell_execute() {
+        let path = nul_terminated(std::ffi::OsStr::new(r"C:\Program Files\Backleaf.exe"));
+        assert_eq!(path.last(), Some(&0));
+        assert_eq!(
+            String::from_utf16_lossy(&path[..path.len() - 1]),
+            r"C:\Program Files\Backleaf.exe"
+        );
+        let arguments = nul_terminated_str(r#"--elevate-request "C:\state\request.json""#);
+        assert_eq!(arguments.last(), Some(&0));
+        assert!(
+            String::from_utf16_lossy(&arguments[..arguments.len() - 1])
+                .starts_with("--elevate-request ")
+        );
     }
     #[test]
     fn access_denied_is_narrower_than_any_io_error() {

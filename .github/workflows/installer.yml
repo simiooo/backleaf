@@ -2,9 +2,9 @@ name: PowerShell installer
 on:
   push:
     branches: [staging, main, 'test/**']
-    paths: [install.ps1, 'scripts/native/test-installer*.ps1', scripts/native/test-runtime.ps1, .github/workflows/installer.yml]
+    paths: [install.ps1, uninstall.ps1, 'scripts/native/test-installer*.ps1', scripts/native/test-uninstall.ps1, scripts/native/test-runtime.ps1, .github/workflows/installer.yml]
   pull_request:
-    paths: [install.ps1, 'scripts/native/test-installer*.ps1', scripts/native/test-runtime.ps1, .github/workflows/installer.yml]
+    paths: [install.ps1, uninstall.ps1, 'scripts/native/test-installer*.ps1', scripts/native/test-uninstall.ps1, scripts/native/test-runtime.ps1, .github/workflows/installer.yml]
   workflow_dispatch:
 permissions:
   contents: read
@@ -26,11 +26,19 @@ jobs:
       - name: Anonymous installation (PowerShell 7)
         shell: pwsh
         run: ./scripts/native/test-installer-online.ps1 -Output .local/installer-online-7.json
+      - name: Uninstaller offline regressions (Windows PowerShell 5.1)
+        shell: powershell
+        run: ./scripts/native/test-uninstall.ps1 -Output .local/uninstall-tests-5.json
+      - name: Uninstaller offline regressions (PowerShell 7)
+        shell: pwsh
+        run: ./scripts/native/test-uninstall.ps1 -Output .local/uninstall-tests-7.json
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: installer-evidence
-          path: .local/installer-*.json
+          path: |
+            .local/installer-*.json
+            .local/uninstall-*.json
           include-hidden-files: true
           if-no-files-found: error
           retention-days: 30

@@ -197,6 +197,12 @@ const EN: &[(&str, &str)] = &[
     ("分区", "Drives"),
     ("打开新窗口", "Open new window"),
     ("无法打开保存的视图", "Cannot open the saved view"),
+    ("以管理员身份打开", "Open as administrator"),
+    (
+        "此窗口已是管理员权限",
+        "This window already runs as administrator",
+    ),
+    ("请选择一个文件夹", "Select one folder"),
     ("最近", "Recent"),
     // ---- search / views ----
     ("筛选", "Filters"),

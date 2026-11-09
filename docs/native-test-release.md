@@ -1,3 +1,9 @@
+Backleaf 0.1.0-preview.55 · 权限重开修复与卸载脚本
+
+修复管理员重开：启动 elevated 进程时 exe 路径与参数没有 NUL 结尾，`ShellExecuteExW` 会把后续内存当作文件名，Windows 报“找不到文件 Backleaf.exe…”。现在权限提示中的“以管理员身份重新打开”可正常弹出 UAC 并打开管理员窗口。访问被拒或不可用的目录在加载失败后会挂起目录监听与自动刷新，不再每 2 秒后台重试；只有用户确认权限提示、使用右键“以管理员身份打开”或手动刷新时才重试一次，成功刷新后恢复监听。右键菜单新增“以管理员身份打开”（选中单个文件夹时打开该文件夹；空白处打开当前位置），无需先触发一次失败。仓库新增 `uninstall.ps1` 卸载脚本与 6 项离线卸载回归：默认保留 `%LOCALAPPDATA%\Backleaf` 用户数据，`-RemoveUserData` 一并删除；要求先关闭 Backleaf，只清理目标指向当前安装 EXE 的开始菜单/桌面/任务栏固定项与 HKCU Explorer 右键项，以及安装目录中的安装器文件；非安装器管理的目录、含 junction/symlink 的路径和盘根会被拒绝。安装器 CI 同时执行 34 项安装回归与 6 项卸载回归（Windows PowerShell 5.1 与 PowerShell 7 各一遍）。native 149 项、headless 56 项通过；fmt、严格 Clippy、release 构建通过。真实 UAC 同意/取消与任务栏菜单点击仍需实机验收。
+
+以下保留 preview.54 及更早内容：
+
 Backleaf 0.1.0-preview.54 · 任务栏跳转列表
 
 Windows 任务栏按钮右键新增跳转列表，布局参考资源管理器但不记录最近访问：固定（侧栏用户固定的文件夹，按侧栏顺序）、视图（保存的视图）、常用（当前用户家目录与桌面/下载/文档/图片/音乐/视频）、分区（当前挂载的逻辑磁盘），以及任务“打开新窗口”（主文件夹的新窗口）。每个条目通过 `Backleaf.exe` 的 `--path` / `--view` / `--new-window` 打开独立的新窗口，不打开资源管理器。进程、跳转列表与快捷方式使用固定 AppUserModelID `Simiooo.Backleaf`；启动时把已有开始菜单/任务栏固定快捷方式补上该 ID，使已固定的任务栏按钮与运行进程合并且出现列表。侧栏变化、磁盘变化与语言切换会在后台重建列表；用户从系统菜单移除的条目按启动参数过滤。限制：不接管资源管理器或默认文件管理器；无最近访问与自定义命名分组；真实任务栏菜单需实机人工验收（CI 不模拟任务栏 UI）。native 148 项、headless 56 项、installer 27 项（Windows PowerShell 5.1 与 PowerShell 7 各 27 项）通过；fmt、严格 Clippy、release 构建、真实 exe 跳转列表写入与 AUMID 快捷方式验证通过。

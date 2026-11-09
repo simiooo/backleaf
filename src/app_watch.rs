@@ -183,6 +183,14 @@ impl Backleaf {
         self.pressed_id = None;
         self.detail_token += 1;
         self.detail_pending = false;
+        // A previously suspended watcher (denied/offline location) comes back
+        // only after an explicit retry actually succeeded.
+        if self.watch.monitor.is_none() && self.options.fixture.is_none() {
+            let monitor =
+                watcher::Monitor::new(self.path.clone(), self.generation, self.tx.clone());
+            self.watch.applied = monitor.epoch();
+            self.watch.monitor = Some(monitor);
+        }
         self.set_scroll_offset(
             app_scroll::Kind::Files,
             (ready.top / self.columns.max(1)) as f64 * f64::from(layout::row_step()) + fraction,
@@ -231,14 +239,31 @@ impl Backleaf {
         cx.notify();
     }
     pub fn refresh_failed(&mut self, error: String, cx: &mut Context<Self>) {
-        self.abandon_refresh();
+        self.suspend_watch();
         self.navigation_error(format!("刷新失败：{error}"), cx);
+    }
+    /// A failed directory load cannot be watched: `FindFirstChangeNotificationW`
+    /// keeps failing and the periodic identity probe marks the dir dirty, which
+    /// would refresh a denied/unavailable directory forever in the background.
+    /// Suspend automatic refresh until the user explicitly retries.
+    pub fn suspend_watch(&mut self) {
+        let epoch = self
+            .watch
+            .pending
+            .take()
+            .map_or(self.watch.applied, |p| p.epoch);
+        self.watch.applied = epoch;
+        self.watch.monitor = None;
+        self.watch.retry = None;
+        self.watch.dirty = false;
+        self.watch.immediate = false;
+        self.watch.locate = None;
     }
     /// A refresh can be refused after the folder was already reachable (ACL or
     /// share changes). Keep the old rows and offer the administrator handoff
     /// instead of only flashing a toast.
     pub fn refresh_denied(&mut self, error: String, cx: &mut Context<Self>) {
-        self.abandon_refresh();
+        self.suspend_watch();
         if self.elevation.elevated {
             // The elevated token is already the strongest offer; surface why it
             // still failed instead of silently leaving the old rows.
@@ -252,17 +277,6 @@ impl Backleaf {
                 self.navigation_error(format!("刷新失败：{error}"), cx);
             }
         }
-    }
-    fn abandon_refresh(&mut self) {
-        let epoch = self
-            .watch
-            .pending
-            .take()
-            .map_or(self.watch.applied, |p| p.epoch);
-        self.watch.applied = epoch;
-        self.watch.dirty = false;
-        self.watch.immediate = false;
-        self.watch.locate = None;
     }
 }
 pub struct Refresh {

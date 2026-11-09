@@ -14,7 +14,7 @@ irm https://raw.githubusercontent.com/simiooo/backleaf/staging/install.ps1 | iex
 
 升级保护直接打开并锁定当前安装的Backleaf.exe：取得写访问但不写入任何字节，拒绝新的读取/旧程序启动，同时允许安装器进行目录重命名和失败回滚；成功、失败后都释放锁。运行中的可执行映像无法取得该锁，因此仍会要求先关闭应用。其他目录的同名进程，以及退出后残留且路径不可读的进程记录，不再单独阻止升级；安装器不会强制结束任何进程。权限或其他文件错误会显示无法取得升级锁及具体原因。
 
-安装器同时下载已发布的runtime-v2支持包，将微软原版x64 VC++运行库放在应用目录；不要求用户另装运行库，不写系统目录、不注册机器级组件，也不要求Rust、Visual Studio或GitHub CLI。CI核验微软签名与架构，安装时核验发布资产与每个DLL摘要，通知和来源清单放在licenses/MSVC-runtime。支持包独立于应用ZIP发布，应用编译版本不变；后续工具链升级时须同步更新经过验证的运行库版本。依据：[微软app-local部署](https://learn.microsoft.com/cpp/windows/redistributing-visual-cpp-files)。
+安装器同时下载已发布的runtime-v2支持包，将微软原版x64 VC++运行库放在应用目录；ARM64包校验并保留包内ARM64 runtime。不要求用户另装运行库，不写系统目录、不注册机器级组件，也不要求Rust、Visual Studio或GitHub CLI。CI核验微软签名与架构，安装时核验发布资产与每个DLL摘要，通知和来源清单放在licenses/MSVC-runtime。支持包独立于应用ZIP发布，应用编译版本不变；后续工具链升级时须同步更新经过验证的运行库版本。依据：[微软app-local部署](https://learn.microsoft.com/cpp/windows/redistributing-visual-cpp-files)。
 
 环境配置使用当前Windows账户已有的LOCALAPPDATA；缺失时明确报错，不把程序装到猜测的目录。USERPROFILE及TEMP/TMP由应用读取Windows现有值，安装器不改写。无需API密钥或手动设置环境变量。安装器不修改用户/系统PATH，因此终端中暂不注册backleaf命令；从开始菜单或安装目录启动。安装过程临时启用TLS1.2并在成功/失败后恢复调用会话原设置，不修改全局执行策略。下载采用现有网络代理配置，不替用户创建代理或凭据。
 
@@ -28,6 +28,24 @@ irm https://raw.githubusercontent.com/simiooo/backleaf/staging/install.ps1 | iex
 
 下载先核验 GitHub Releases API 的 SHA256 digest 和大小，再核对 SHA256SUMS、CI 版本/源码记录及包内 EXE、7z.dll 哈希。GitHub 直链对单个资产返回 5xx 时，安装器自动改用 API 资产端点重试同一字节。解压前拒绝目录逃逸、绝对路径、NTFS流、重复/设备名称和链接，限制条目数、下载及展开大小。校验全部通过后在同卷替换应用目录；替换失败恢复原版本。非本安装器管理的 current 目录不会覆盖，路径中的 junction/symlink 会被拒绝。哈希证明下载与发布内容一致。
 
-CI 在 Windows PowerShell 5.1 和 PowerShell 7 分别执行34项真实文件系统离线故障回归（含正式版优先、显式预览标签、正式版安装、完整源码提交约束、GitHub 直链失败回退 API 端点，以及原生 x64/ARM64、x64 模拟、32 位 WOW64 与未知架构的架构检测），以及匿名下载已发布包、安装、运行 EXE 无窗口诊断和哈希核验。离线测试替换网络和一次目录提升故障；用隔离副本运行真正的Windows可执行映像验证占用拒绝与同名其他目录进程不误拦截，并验证下载期间拒绝新读取、成功/失败释放锁和回滚。零线程未知路径记录保留为误拦截复现输入，生产安装器不再枚举进程名。没有将这些检查称为 GUI 验收。
+CI 在 Windows PowerShell 5.1 和 PowerShell 7 分别执行34项真实文件系统离线故障回归（含正式版优先、显式预览标签、正式版安装、完整源码提交约束、GitHub 直链失败回退 API 端点，以及原生 x64/ARM64、x64 模拟、32 位 WOW64 与未知架构的架构检测），以及6项卸载回归（拒绝非安装器目录、关闭应用检查、目标匹配的开始菜单/桌面/任务栏固定项清理、Explorer 右键项清理、用户数据默认保留与 -RemoveUserData 删除、路径重叠与盘根拒绝），并执行匿名下载已发布包、安装、运行 EXE 无窗口诊断和哈希核验。离线测试替换网络和一次目录提升故障；用隔离副本运行真正的Windows可执行映像验证占用拒绝与同名其他目录进程不误拦截，并验证下载期间拒绝新读取、成功/失败释放锁和回滚。零线程未知路径记录保留为误拦截复现输入，生产安装器不再枚举进程名。没有将这些检查称为 GUI 验收。
+
+## 卸载
+
+仓库提供独立的 `uninstall.ps1`（不需要管理员权限）：
+
+```powershell
+irm https://raw.githubusercontent.com/simiooo/backleaf/staging/uninstall.ps1 | iex
+```
+
+默认保留用户数据。需要同时删除 `%LOCALAPPDATA%\Backleaf`（任务历史、索引、窗口状态、语言设置等）时：
+
+```powershell
+& ([scriptblock]::Create((irm https://raw.githubusercontent.com/simiooo/backleaf/staging/uninstall.ps1))) -RemoveUserData
+```
+
+指定非默认安装目录时加 `-InstallDir 'D:\Apps\Backleaf'`。卸载前关闭 Backleaf：脚本会像升级保护一样检查安装的 EXE 是否被占用，拒绝在运行中删除。脚本先校验安装 receipt（不是安装器管理的目录一律拒绝），然后只删除**目标指向该安装 EXE** 的开始菜单/桌面快捷方式、请求 Explorer 取消对应任务栏固定项（残留文件再删除）、只删除命令指向该 EXE 的 HKCU Explorer 右键项，最后删除 `current` 和安装器临时目录；安装目录里非安装器文件会保留并警告。若目标路径含 junction/symlink 会拒绝递归删除。
+
+当前不写系统“应用和功能”卸载注册表项（设置中不显示卸载按钮），也不接管 Win+E/默认文件管理器；卸载请使用上面的脚本或手动删除安装目录与快捷方式。
 
 API 选择与校验依据：[GitHub Releases REST API](https://docs.github.com/en/rest/releases/releases)。`/latest`不包含 prerelease，因此安装器查询已发布列表。
