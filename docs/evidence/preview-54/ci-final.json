@@ -1,0 +1,18 @@
+﻿{
+    "run_id":  42579633503,
+    "url":  "https://github.com/simiooo/backleaf/actions/runs/42579633503",
+    "head_branch":  "staging",
+    "head_sha":  "8f05397129aabf361930f0b5cdd6445951793405",
+    "created_at":  "2026-11-09T07:29:11Z",
+    "updated_at":  "2026-11-09T07:48:30Z",
+    "jobs":  [
+                 {
+                     "name":  "package",
+                     "conclusion":  "success"
+                 },
+                 {
+                     "name":  "package-arm64",
+                     "conclusion":  "success"
+                 }
+             ]
+}
