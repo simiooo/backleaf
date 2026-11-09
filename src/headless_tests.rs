@@ -69,6 +69,14 @@ impl Harness {
             view,
             fixture,
         };
+        // Hosted Windows runners execute this process as an elevated
+        // administrator. The interaction suite describes the normal-user
+        // window, so pin the token state production computes from the real
+        // process; tests that exercise the elevated state set it explicitly.
+        h.view.update(&mut h.cx, |this, _| {
+            this.elevation.elevated = false;
+            this.elevation.banner = false;
+        });
         h.cx.update_window(window.into(), |_, window, cx| {
             window.activate_window();
             let focus = h.view.read(cx).focus.clone();
