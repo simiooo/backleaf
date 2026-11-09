@@ -129,55 +129,39 @@ impl Backleaf {
         }
         cx.notify();
     }
-    pub fn restore_failure(&self, cx: &mut Context<Self>) -> AnyElement {
+    pub fn restore_failure(&self, _cx: &mut Context<Self>) -> AnyElement {
         if !self.restore.failed {
             return div().into_any_element();
         }
+        // The unavailable-location message belongs to the empty content area:
+        // centered as a block, left-aligned internally, with no card surface
+        // and no interactive controls.
+        let error = self.error.clone();
         div()
             .absolute()
-            .left(px(self.sidebar_width() + 24.))
-            .top(px(layout::CHROME.bar_height + 32.))
-            .max_w(px(480.))
-            .px(px(12.))
-            .py(px(16.))
-            .rounded(px(12.))
-            .bg(self.colors.color(ColorRole::Floating))
-            .shadow(self.colors.control_shadows(false))
-            .occlude()
+            .left(px(self.sidebar_width()))
+            .right(px(0.))
+            .top(px(layout::CHROME.bar_height))
+            .bottom(px(0.))
             .flex()
-            .flex_col()
-            .gap(px(8.))
-            .child(crate::i18n::tr("此位置暂时不可用"))
-            .child(
-                div()
-                    .id("restore-path")
-                    .truncate()
-                    .tooltip(tooltip(navigation::display_path(&self.path), self.colors))
-                    .child(navigation::display_path(&self.path)),
-            )
+            .items_center()
+            .justify_center()
             .child(
                 div()
                     .flex()
-                    .items_center()
+                    .flex_col()
+                    .items_start()
                     .gap(px(8.))
-                    .child(self.button(
-                        "refresh",
-                        crate::i18n::tr("重试"),
-                        cx.listener(|this, _, _, cx| {
-                            this.restore.failed = false;
-                            this.navigate(this.path.clone(), false, cx);
-                        }),
-                    ))
-                    .child(self.button(
-                        "home",
-                        crate::i18n::tr("主文件夹"),
-                        cx.listener(|this, _, _, cx| {
-                            if let Some(home) = this.navigation.common.first() {
-                                this.restore.failed = false;
-                                this.request_location(home.path.clone(), cx);
-                            }
-                        }),
-                    )),
+                    .max_w(px(480.))
+                    .px(px(24.))
+                    .child(crate::i18n::tr("此位置暂时不可用"))
+                    .child(div().truncate().child(navigation::display_path(&self.path)))
+                    .when_some(error, |d, error| d.child(div().child(error)))
+                    .when(self.elevation.elevated, |d| {
+                        d.child(crate::i18n::tr(
+                            "管理员权限仍被拒绝；该位置可能需要系统级权限或获取所有权",
+                        ))
+                    }),
             )
             .into_any_element()
     }

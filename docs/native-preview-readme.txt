@@ -1,3 +1,9 @@
+拾径 / Backleaf 0.1.0-preview.56
+
+权限失败空状态改为内容区居中纯文本；管理员窗口顶栏改为盾牌图标 + tooltip。
+
+以下保留 preview.55 及更早内容：
+
 拾径 / Backleaf 0.1.0-preview.55
 
 Windows x64 / ARM64 便携测试版：解压对应 ZIP 运行 Backleaf.exe。安装器会按当前 Windows 进程架构选择 x64 或 ARM64 包；也可在 PowerShell 执行：

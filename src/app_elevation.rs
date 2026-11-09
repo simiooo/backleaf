@@ -262,6 +262,7 @@ impl Backleaf {
         }
         cx.notify();
     }
+    #[cfg(test)]
     pub fn dismiss_elevation_banner(&mut self, cx: &mut Context<Self>) {
         self.elevation.banner = false;
         cx.notify();
@@ -271,7 +272,7 @@ impl Backleaf {
             return self.elevation_modal(prompt, window, cx);
         }
         if self.elevation.banner {
-            return self.elevation_banner(cx);
+            return self.elevation_banner();
         }
         div().into_any_element()
     }
@@ -401,60 +402,30 @@ impl Backleaf {
             )
             .into_any_element()
     }
-    fn elevation_banner(&self, cx: &mut Context<Self>) -> AnyElement {
+    fn elevation_banner(&self) -> AnyElement {
         let colors = self.colors;
+        // Compact status marker in the title bar: a shield with a tooltip
+        // explains the elevated token; no dismiss button or alert surface.
         div()
             .absolute()
-            .right(px(16.))
-            .top(px(layout::CHROME.bar_height + 8.))
-            .max_w(px(440.))
+            .right(px(150.))
+            .top(px(4.))
             .flex()
             .items_center()
-            .gap(px(10.))
-            .px(px(12.))
-            .py(px(8.))
-            .rounded(px(10.))
-            .bg(colors.color(ColorRole::Floating))
-            .border_1()
-            .border_color(colors.color(ColorRole::Border))
-            .shadow(colors.control_shadows(false))
-            .occlude()
-            .id("elevation-banner")
-            .role(Role::Alert)
+            .justify_center()
+            .w(px(28.))
+            .h(px(28.))
+            .id("elevation-shield")
+            .role(Role::Status)
             .aria_label(crate::i18n::tr("管理员权限已开启"))
-            .child(
-                div()
-                    .font_weight(FontWeight::SEMIBOLD)
-                    .text_size(px(12.))
-                    .child(crate::i18n::tr("管理员权限已开启")),
-            )
-            .child(
-                div()
-                    .flex_1()
-                    .min_w_0()
-                    .text_size(px(11.))
-                    .text_color(colors.color(ColorRole::Secondary))
-                    .child(crate::i18n::tr(
-                        "此窗口以管理员身份运行；关闭窗口后管理员权限结束。",
-                    )),
-            )
-            .child(
-                div()
-                    .id("elevation-banner-close")
-                    .h(px(24.))
-                    .w(px(24.))
-                    .flex()
-                    .items_center()
-                    .justify_center()
-                    .rounded(px(6.))
-                    .role(Role::Button)
-                    .aria_label(crate::i18n::tr("关闭管理员提示"))
-                    .focusable()
-                    .tab_stop(true)
-                    .hover(move |d| d.bg(colors.color(ColorRole::Hover)))
-                    .on_click(cx.listener(|this, _, _, cx| this.dismiss_elevation_banner(cx)))
-                    .child(icon("close", colors)),
-            )
+            .tooltip(tooltip(
+                crate::i18n::tr(
+                    "管理员权限已开启：此窗口以管理员身份运行；关闭窗口后管理员权限结束。",
+                )
+                .to_string(),
+                colors,
+            ))
+            .child(div().text_size(px(15.)).child("🛡"))
             .into_any_element()
     }
 }

@@ -2242,7 +2242,12 @@ impl Render for Backleaf {
                 )
             }
         } else if let Some(error) = &self.error {
-            error.clone()
+            if self.restore.failed {
+                // The unavailable-location block owns the error copy.
+                crate::trf!("{} 项", number(count))
+            } else {
+                error.clone()
+            }
         } else if self.selection.count() > 0 {
             format!(
                 "已选 {} 项{}",

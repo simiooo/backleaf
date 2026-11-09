@@ -1,3 +1,9 @@
+Backleaf 0.1.0-preview.56 · 管理员界面整理
+
+管理员空状态重做：受保护位置加载失败时，错误与路径直接在内容容器中央展示（块居中、内部左对齐），不再使用浮动卡片、阴影、边框或按钮，底部状态栏不再重复漂浮错误文案；管理员窗口右上角改为顶栏盾牌图标 + tooltip，不再显示整条提示条。管理员窗口仍无法读取 C:\\System Volume Information：该目录 ACL 默认不授予 Administrators 组，Windows 资源管理器同样拒绝，提权窗口会显示真实错误与说明，不会循环重试。native 205 项（149 native + 56 headless）通过；fmt、严格 Clippy、release 构建通过。真实 UAC 交互仍需实机验收。
+
+以下保留 preview.55 及更早内容：
+
 Backleaf 0.1.0-preview.55 · 权限重开修复与卸载脚本
 
 修复管理员重开：启动 elevated 进程时 exe 路径与参数没有 NUL 结尾，`ShellExecuteExW` 会把后续内存当作文件名，Windows 报“找不到文件 Backleaf.exe…”。现在权限提示中的“以管理员身份重新打开”可正常弹出 UAC 并打开管理员窗口。访问被拒或不可用的目录在加载失败后会挂起目录监听与自动刷新，不再每 2 秒后台重试；只有用户确认权限提示、使用右键“以管理员身份打开”或手动刷新时才重试一次，成功刷新后恢复监听。右键菜单新增“以管理员身份打开”（选中单个文件夹时打开该文件夹；空白处打开当前位置），无需先触发一次失败。仓库新增 `uninstall.ps1` 卸载脚本与 6 项离线卸载回归：默认保留 `%LOCALAPPDATA%\Backleaf` 用户数据，`-RemoveUserData` 一并删除；要求先关闭 Backleaf，只清理目标指向当前安装 EXE 的开始菜单/桌面/任务栏固定项与 HKCU Explorer 右键项，以及安装目录中的安装器文件；非安装器管理的目录、含 junction/symlink 的路径和盘根会被拒绝。安装器 CI 同时执行 34 项安装回归与 6 项卸载回归（Windows PowerShell 5.1 与 PowerShell 7 各一遍）。native 149 项、headless 56 项通过；fmt、严格 Clippy、release 构建通过。真实 UAC 同意/取消与任务栏菜单点击仍需实机验收。
