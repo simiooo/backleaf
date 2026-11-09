@@ -290,7 +290,11 @@ impl Backleaf {
                         .map_or(0, |w| w.epoch()) =>
             {
                 match result {
-                    Ok(rows) => self.navigation.volumes = rows,
+                    Ok(rows) => {
+                        self.navigation.volumes = rows;
+                        // Drive additions/removals change the jump-list "分区" items.
+                        crate::jump_list::request_update(self.options.state_dir.clone());
+                    }
                     Err(error) => self.navigation_error(error, cx),
                 }
             }

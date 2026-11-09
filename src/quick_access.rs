@@ -3,10 +3,10 @@ use crate::{
     file_view::{FileView, WinPath},
     model::Event,
 };
-use rusqlite::{Connection, params};
+use rusqlite::{Connection, OpenFlags, params};
 use serde::{Deserialize, Serialize};
 use std::{
-    path::PathBuf,
+    path::{Path, PathBuf},
     sync::mpsc::{self, SyncSender, TrySendError},
     time::{Duration, SystemTime, UNIX_EPOCH},
 };
@@ -174,8 +174,104 @@ fn open(directory: &std::path::Path) -> anyhow::Result<Connection> {
     std::fs::create_dir_all(directory)?;
     let db = Connection::open(directory.join("quick-access.sqlite"))?;
     db.busy_timeout(Duration::from_secs(2))?;
-    db.execute_batch("PRAGMA journal_mode=WAL; PRAGMA synchronous=FULL; CREATE TABLE IF NOT EXISTS meta(key TEXT PRIMARY KEY,value INTEGER NOT NULL); INSERT OR IGNORE INTO meta VALUES('revision',0); CREATE TABLE IF NOT EXISTS entries(id TEXT PRIMARY KEY,title TEXT NOT NULL,payload TEXT NOT NULL,revision INTEGER NOT NULL,position INTEGER NOT NULL);")?;
+    db.execute_batch("PRAGMA journal_mode=WAL;PRAGMA synchronous=FULL;CREATE TABLE IF NOT EXISTS meta(key TEXT PRIMARY KEY,value INTEGER NOT NULL); INSERT OR IGNORE INTO meta VALUES('revision',0); CREATE TABLE IF NOT EXISTS entries(id TEXT PRIMARY KEY,title TEXT NOT NULL,payload TEXT NOT NULL,revision INTEGER NOT NULL,position INTEGER NOT NULL);")?;
     Ok(db)
+}
+/// Read-only snapshot for non-UI consumers (taskbar jump list, `--view`
+/// startup). WAL readers do not block the UI store writer.
+pub fn read_entries(directory: &Path) -> Vec<Entry> {
+    let debug = std::env::var_os("BACKLEAF_JUMP_LIST_DUMP").is_some();
+    let connection = match read_connection(directory) {
+        Ok(connection) => connection,
+        Err(error) => {
+            if debug {
+                eprintln!("quick-access open: {error}");
+            }
+            return Vec::new();
+        }
+    };
+    let mut query = match connection
+        .prepare("SELECT id,title,payload,revision FROM entries ORDER BY position,id LIMIT 513")
+    {
+        Ok(query) => query,
+        Err(error) => {
+            if debug {
+                eprintln!("quick-access query: {error}");
+            }
+            return Vec::new();
+        }
+    };
+    let rows = query.query_map([], |row| {
+        Ok((
+            row.get::<_, String>(0)?,
+            row.get::<_, String>(1)?,
+            row.get::<_, String>(2)?,
+            crate::operations::ledger::read_u64(row, 3)?,
+        ))
+    });
+    let Ok(rows) = rows else {
+        return Vec::new();
+    };
+    let mut entries = Vec::new();
+    for row in rows {
+        match row {
+            Ok((id, title, payload, revision)) => match serde_json::from_str(&payload) {
+                Ok(destination) => entries.push(Entry {
+                    id,
+                    title,
+                    destination,
+                    revision,
+                }),
+                Err(error) => {
+                    if debug {
+                        eprintln!("quick-access payload {id}: {error}");
+                    }
+                }
+            },
+            Err(error) => {
+                if debug {
+                    eprintln!("quick-access row: {error}");
+                }
+            }
+        }
+    }
+    entries.truncate(512);
+    entries
+}
+/// Read one saved entry by id; used by jump-list view links.
+pub fn read_entry(directory: &Path, id: &str) -> Option<Entry> {
+    let connection = read_connection(directory).ok()?;
+    connection
+        .query_row(
+            "SELECT id,title,payload,revision FROM entries WHERE id=?1",
+            [id],
+            |row| {
+                Ok((
+                    row.get::<_, String>(0)?,
+                    row.get::<_, String>(1)?,
+                    row.get::<_, String>(2)?,
+                    crate::operations::ledger::read_u64(row, 3)?,
+                ))
+            },
+        )
+        .ok()
+        .and_then(|(id, title, payload, revision)| {
+            let destination = serde_json::from_str(&payload).ok()?;
+            Some(Entry {
+                id,
+                title,
+                destination,
+                revision,
+            })
+        })
+}
+fn read_connection(directory: &Path) -> rusqlite::Result<Connection> {
+    let connection = Connection::open_with_flags(
+        directory.join("quick-access.sqlite"),
+        OpenFlags::SQLITE_OPEN_READ_ONLY,
+    )?;
+    let _ = connection.busy_timeout(Duration::from_secs(2));
+    Ok(connection)
 }
 fn load(db: &Connection) -> anyhow::Result<Vec<Entry>> {
     let mut q =

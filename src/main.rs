@@ -28,6 +28,7 @@ mod index;
 mod index_bulk;
 mod index_watch;
 mod input;
+mod jump_list;
 mod layout;
 mod locations;
 #[cfg(test)]
@@ -726,7 +727,13 @@ impl Backleaf {
                 scroll_row,
             } => self.accept_elevation_selection(generation, ids, scroll_row, cx),
             Event::ArchivePrepared { token, result } => self.accept_archive(token, result, cx),
-            Event::QuickAccess(notice) => self.accept_quick_access(notice, cx),
+            Event::QuickAccess(notice) => {
+                let revision_changed = matches!(notice, crate::quick_access::Notice::Loaded { .. });
+                self.accept_quick_access(notice, cx);
+                if revision_changed {
+                    jump_list::request_update(self.options.state_dir.clone());
+                }
+            }
             Event::DragTarget {
                 generation,
                 token,
@@ -1294,6 +1301,7 @@ impl Backleaf {
         {
             crate::i18n::toggle();
             crate::i18n::save(&self.options.state_dir);
+            jump_list::request_update(self.options.state_dir.clone());
             cx.notify();
             return;
         }
@@ -2632,6 +2640,7 @@ fn open_backleaf_window(options: Options, cx: &mut App) {
 }
 fn main() {
     crate::startup::arm();
+    jump_list::set_app_id();
     let arguments: Vec<_> = std::env::args_os().collect();
     if arguments.len() == 3 && arguments[1] == "--session-status-file" {
         let result = session::locked();
@@ -2640,9 +2649,11 @@ fn main() {
             .expect("session status file");
         return;
     }
+    jump_list::prepare();
     let mut options = Options::parse();
     crate::startup::mark("options");
     i18n::init_with_dir(&options.state_dir);
+    jump_list::request_update(options.state_dir.clone());
     let mut startup = Vec::new();
     if let Some(request_path) = options.elevate_request.take() {
         // Started through UAC by another Backleaf window: open the same
@@ -2677,6 +2688,36 @@ fn main() {
                 startup.push(current);
             }
         }
+    } else if let Some(view) = options.view.clone() {
+        // Jump-list saved view: reopen the sidebar view as a fresh search window.
+        let mut current = options.clone();
+        match jump_list::saved_view_state(&current.state_dir, &view, current.width, current.height)
+        {
+            Ok(state) => {
+                current.path = Some(state.path.path());
+                current.restored = Some(window_state::Restored {
+                    id: format!(
+                        "{}-{}",
+                        window_state::instance(),
+                        std::time::SystemTime::now()
+                            .duration_since(std::time::UNIX_EPOCH)
+                            .unwrap_or_default()
+                            .as_nanos()
+                    ),
+                    revision: 0,
+                    state,
+                });
+                startup.push(current);
+            }
+            Err(error) => {
+                current.restore_error = Some(error);
+                startup.push(current);
+            }
+        }
+    } else if options.new_window {
+        // Jump-list task or explicit CLI: bypass window restore and open one
+        // fresh window at the home folder.
+        startup.push(options.clone());
     } else if options.fixture.is_none() && options.path.is_none() && options.output.is_none() {
         match window_state::load(&options.state_dir) {
             Ok(saved) => {

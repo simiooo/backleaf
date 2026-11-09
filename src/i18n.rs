@@ -192,6 +192,11 @@ const EN: &[(&str, &str)] = &[
     ("此电脑", "This PC"),
     ("快速访问", "Quick access"),
     ("固定", "Pinned"),
+    ("视图", "Views"),
+    ("常用", "Common"),
+    ("分区", "Drives"),
+    ("打开新窗口", "Open new window"),
+    ("无法打开保存的视图", "Cannot open the saved view"),
     ("最近", "Recent"),
     // ---- search / views ----
     ("筛选", "Filters"),

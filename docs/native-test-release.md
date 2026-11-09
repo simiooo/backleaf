@@ -1,3 +1,9 @@
+Backleaf 0.1.0-preview.54 · 任务栏跳转列表
+
+Windows 任务栏按钮右键新增跳转列表，布局参考资源管理器但不记录最近访问：固定（侧栏用户固定的文件夹，按侧栏顺序）、视图（保存的视图）、常用（当前用户家目录与桌面/下载/文档/图片/音乐/视频）、分区（当前挂载的逻辑磁盘），以及任务“打开新窗口”（主文件夹的新窗口）。每个条目通过 `Backleaf.exe` 的 `--path` / `--view` / `--new-window` 打开独立的新窗口，不打开资源管理器。进程、跳转列表与快捷方式使用固定 AppUserModelID `Simiooo.Backleaf`；启动时把已有开始菜单/任务栏固定快捷方式补上该 ID，使已固定的任务栏按钮与运行进程合并且出现列表。侧栏变化、磁盘变化与语言切换会在后台重建列表；用户从系统菜单移除的条目按启动参数过滤。限制：不接管资源管理器或默认文件管理器；无最近访问与自定义命名分组；真实任务栏菜单需实机人工验收（CI 不模拟任务栏 UI）。native 148 项、headless 56 项、installer 27 项（Windows PowerShell 5.1 与 PowerShell 7 各 27 项）通过；fmt、严格 Clippy、release 构建、真实 exe 跳转列表写入与 AUMID 快捷方式验证通过。
+
+以下保留 preview.53 及更早内容：
+
 Backleaf 0.1.0-preview.53 · 受保护位置提权重开
 
 Windows 目录枚举遇到 `ERROR_ACCESS_DENIED`（如 `C:\System Volume Information`、`C:\Windows\System32\config`、其他用户目录）时不再静默留下空白文件区：界面显示“需要管理员权限”模态，列出目标路径并提供“以管理员身份重新打开”/“取消”。确认后生成一次性 handoff JSON，通过 `ShellExecuteExW("runas")` 启动同一程序的管理员窗口，在相同路径与窗口几何（可用时含选区与滚动行）恢复并自动重试枚举；原普通窗口保留并显示“已打开管理员窗口”。管理员窗口顶部有可关闭提示条，权限持续到该窗口关闭——Windows 提权是每进程令牌，无法追加给已运行进程，也没有 TTL，本版不常驻隐藏提权代理。UAC 取消时原提示保留可重试；管理员令牌仍被显式 ACL 拒绝时显示真实错误而不循环弹窗。检测只针对目录枚举/刷新被拒，共享冲突等错误不会误弹；文件操作结果面板的批量失败与“交给系统打开”仍按原错误展示。限制：真实 UAC 同意/取消及管理员令牌下的实际受保护目录枚举需实机人工验证（CI 不模拟 UAC）；选区恢复上限 4096 项。native 145 项、headless 56 项、installer 27 项（Windows PowerShell 5.1 与 PowerShell 7 各 27 项）通过；fmt、严格 Clippy、release 构建、真实 exe handoff 直启冒烟通过。

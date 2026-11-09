@@ -1,3 +1,15 @@
+拾径 / Backleaf 0.1.0-preview.54
+
+Windows x64 / ARM64 便携测试版：解压对应 ZIP 运行 Backleaf.exe。安装器会按当前 Windows 进程架构选择 x64 或 ARM64 包；也可在 PowerShell 执行：
+irm https://raw.githubusercontent.com/simiooo/backleaf/staging/install.ps1 | iex
+
+本批次（任务栏跳转列表）：
+- 任务栏按钮右键新增跳转列表：固定入口、保存视图、常用文件夹、分区快速入口，以及“打开新窗口”任务；不记录最近访问。
+- 每个条目都打开新的 Backleaf 窗口；进程/列表/快捷方式使用固定 AppUserModelID，升级后首次启动会修复已固定任务的快捷方式。
+- 限制：不接管资源管理器；无自定义命名分组；真实任务栏菜单需实机确认。
+
+以下保留 preview.53 及更早内容：
+
 拾径 / Backleaf 0.1.0-preview.53
 
 Windows x64 / ARM64 便携测试版：解压对应 ZIP 运行 Backleaf.exe。安装器会按当前 Windows 进程架构选择 x64 或 ARM64 包；也可在 PowerShell 执行：

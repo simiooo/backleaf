@@ -50,6 +50,8 @@ impl Harness {
             restore_error: None,
             elevate_request: None,
             elevation_restore: None,
+            new_window: false,
+            view: None,
         };
         let mut cx = HeadlessAppContext::with_asset_source(
             Arc::new(NoopTextSystem),

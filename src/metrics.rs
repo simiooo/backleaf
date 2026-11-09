@@ -27,6 +27,10 @@ pub struct Options {
     pub elevate_request: Option<PathBuf>,
     /// Window selection/scroll intent carried by an elevation request.
     pub elevation_restore: Option<crate::elevation::RestoreState>,
+    /// Taskbar jump-list task: open one fresh window at the home folder.
+    pub new_window: bool,
+    /// Taskbar jump-list entry: open one saved sidebar view by id.
+    pub view: Option<String>,
 }
 impl Options {
     pub fn parse() -> Self {
@@ -37,6 +41,8 @@ impl Options {
             restore_error: None,
             elevate_request: None,
             elevation_restore: None,
+            new_window: false,
+            view: None,
             path: None,
             output: None,
             seconds: 12,
@@ -67,6 +73,8 @@ impl Options {
                     .push(args.next().expect("index root").into()),
                 "--no-index" => result.index_roots = Some(Vec::new()),
                 "--path" => result.path = Some(args.next().expect("path").into()),
+                "--new-window" => result.new_window = true,
+                "--view" => result.view = Some(args.next().expect("view id")),
                 "--elevate-request" => {
                     result.elevate_request = Some(args.next().expect("elevation request").into())
                 }
