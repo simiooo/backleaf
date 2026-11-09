@@ -1,3 +1,9 @@
+Backleaf 0.1.0-preview.57 · 顶栏盾牌布局修复
+
+管理员窗口的盾牌状态图标改为标题栏 flex 布局中的固定槽位（在搜索按钮左侧、窗口控制按钮之前），不再使用绝对定位，因此不与搜索图标或最小化/最大化/关闭按钮重叠；tooltip 与无障碍标签保留。native 205 项通过，fmt、严格 Clippy、release 构建通过。
+
+以下保留 preview.56 及更早内容：
+
 Backleaf 0.1.0-preview.56 · 管理员界面整理
 
 管理员空状态重做：受保护位置加载失败时，错误与路径直接在内容容器中央展示（块居中、内部左对齐），不再使用浮动卡片、阴影、边框或按钮，底部状态栏不再重复漂浮错误文案；管理员窗口右上角改为顶栏盾牌图标 + tooltip，不再显示整条提示条。管理员窗口仍无法读取 C:\\System Volume Information：该目录 ACL 默认不授予 Administrators 组，Windows 资源管理器同样拒绝，提权窗口会显示真实错误与说明，不会循环重试。native 205 项（149 native + 56 headless）通过；fmt、严格 Clippy、release 构建通过。真实 UAC 交互仍需实机验收。

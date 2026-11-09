@@ -1899,6 +1899,7 @@ impl Backleaf {
                     .h_full()
                     .window_control_area(WindowControlArea::Drag),
             )
+            .when(self.elevation.banner, |d| d.child(self.elevation_shield()))
             .when(!self.visible_operations().is_empty(), |d| {
                 d.child(self.operation_entry(cx))
             })

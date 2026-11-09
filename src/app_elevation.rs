@@ -272,7 +272,7 @@ impl Backleaf {
             return self.elevation_modal(prompt, window, cx);
         }
         if self.elevation.banner {
-            return self.elevation_banner();
+            return div().into_any_element();
         }
         div().into_any_element()
     }
@@ -402,14 +402,12 @@ impl Backleaf {
             )
             .into_any_element()
     }
-    fn elevation_banner(&self) -> AnyElement {
+    pub fn elevation_shield(&self) -> AnyElement {
         let colors = self.colors;
-        // Compact status marker in the title bar: a shield with a tooltip
-        // explains the elevated token; no dismiss button or alert surface.
+        // Title-bar slot: a shield with a tooltip explains the elevated token;
+        // the flex parent keeps it from overlapping search/window controls.
         div()
-            .absolute()
-            .right(px(150.))
-            .top(px(4.))
+            .flex_none()
             .flex()
             .items_center()
             .justify_center()
