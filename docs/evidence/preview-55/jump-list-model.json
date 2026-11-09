@@ -1,0 +1,69 @@
+{
+  "pinned": [],
+  "views": [
+    {
+      "title": "测试视图",
+      "target": {
+        "View": "view-test"
+      }
+    }
+  ],
+  "common": [
+    {
+      "title": "qq651",
+      "target": {
+        "Path": "C:\\Users\\qq651"
+      }
+    },
+    {
+      "title": "桌面",
+      "target": {
+        "Path": "C:\\Users\\qq651\\Desktop"
+      }
+    },
+    {
+      "title": "下载",
+      "target": {
+        "Path": "C:\\Users\\qq651\\Downloads"
+      }
+    },
+    {
+      "title": "文档",
+      "target": {
+        "Path": "C:\\Users\\qq651\\Documents"
+      }
+    },
+    {
+      "title": "图片",
+      "target": {
+        "Path": "C:\\Users\\qq651\\Pictures"
+      }
+    },
+    {
+      "title": "音乐",
+      "target": {
+        "Path": "C:\\Users\\qq651\\Music"
+      }
+    },
+    {
+      "title": "视频",
+      "target": {
+        "Path": "C:\\Users\\qq651\\Videos"
+      }
+    }
+  ],
+  "volumes": [
+    {
+      "title": "本地磁盘 (C:)",
+      "target": {
+        "Path": "C:\\"
+      }
+    },
+    {
+      "title": "本地磁盘 (D:)",
+      "target": {
+        "Path": "D:\\"
+      }
+    }
+  ]
+}

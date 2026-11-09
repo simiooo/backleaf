@@ -1,0 +1,31 @@
+{
+  "passed": true,
+  "test_count": 6,
+  "cases": [
+    {
+      "name": "unmanaged directories are refused and left untouched",
+      "passed": true
+    },
+    {
+      "name": "owned shortcuts and menu entries are removed while user data, unrelated files and unowned shortcuts stay",
+      "passed": true
+    },
+    {
+      "name": "RemoveUserData deletes the user data directory",
+      "passed": true
+    },
+    {
+      "name": "a running executable blocks uninstall without deleting anything",
+      "passed": true
+    },
+    {
+      "name": "install and user-data directories may not overlap",
+      "passed": true
+    },
+    {
+      "name": "a drive root install directory is refused",
+      "passed": true
+    }
+  ],
+  "reported_at_utc": "2026-11-09T08:29:15.6768155Z"
+}

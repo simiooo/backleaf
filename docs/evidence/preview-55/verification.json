@@ -1,0 +1,103 @@
+﻿{
+    "tag":  "test-v0.1.0-preview.55-f893b2ac",
+    "version":  "0.1.0-preview.55",
+    "source_commit":  "f893b2ace65555e33d2dc0049bff783a97ae2f9c",
+    "release_url":  "https://github.com/simiooo/backleaf/releases/tag/test-v0.1.0-preview.55-f893b2ac",
+    "release_published_at":  "2026-11-09T08:38:58Z",
+    "is_prerelease":  true,
+    "is_draft":  false,
+    "release_title":  "Backleaf 0.1.0-preview.55 · 原生测试包",
+    "workflow":  {
+                     "run_id":  42586191583,
+                     "url":  "https://github.com/simiooo/backleaf/actions/runs/42586191583",
+                     "created_at":  "2026-11-09T08:28:25Z",
+                     "updated_at":  "2026-11-09T08:48:08Z",
+                     "jobs":  [
+                                  {
+                                      "name":  "package",
+                                      "conclusion":  "success"
+                                  },
+                                  {
+                                      "name":  "package-arm64",
+                                      "conclusion":  "success"
+                                  }
+                              ]
+                 },
+    "push_headless":  {
+                          "run_id":  42586159526,
+                          "url":  "https://github.com/simiooo/backleaf/actions/runs/42586159526",
+                          "conclusion":  "success"
+                      },
+    "design":  {
+                   "name":  "Backleaf-v46.fig",
+                   "sha256":  "216c6ffd8f632f908406d4765a9be010b59c24e70d59f7b8a63bc1e5055ab179"
+               },
+    "architectures":  {
+                          "x64":  {
+                                      "zip":  {
+                                                  "name":  "Backleaf-0.1.0-preview.55-f893b2ac-win-x64.zip",
+                                                  "sha256":  "77911bba04bd00c69a299d3e8e828e6ce08011d0594e80041c3efcff6e6d767c"
+                                              },
+                                      "exe_sha256":  "1797fd5cdb27614d9c490515e9e9175e491b9b5878c66b1488fb2c5ac042e66a",
+                                      "headless_test_count":  56,
+                                      "headless_report_sha256":  "67c987d545b8e4be26c36ed650438dc98a5b11d760a39bf4eca1a92c52325436",
+                                      "build":  {
+                                                    "name":  "build.json",
+                                                    "sha256":  "80ee55eadcfeb36d7a818a290dfe23fcd317714b06aa3959c6f71826fb40401f"
+                                                },
+                                      "cli_session":  {
+                                                          "locked":  false,
+                                                          "error":  null
+                                                      }
+                                  },
+                          "arm64":  {
+                                        "zip":  {
+                                                    "name":  "Backleaf-0.1.0-preview.55-f893b2ac-win-arm64.zip",
+                                                    "sha256":  "47ca29690af50b5e6295f9c8d98e591bd2f17319fcb1b24456f3a882d5ad7e01"
+                                                },
+                                        "exe_sha256":  "9edfebc8dceea11645c9bc92a6a3d964bd32eada3f6c92035429e1ca78bf374e",
+                                        "headless_test_count":  56,
+                                        "headless_report_sha256":  "57f17d077aa1b8bdf8721e1cb3290ce242cf48ff68e684b1f2a65cd3c680bae1",
+                                        "build":  {
+                                                      "name":  "build-arm64.json",
+                                                      "sha256":  "173e082dedc9229c051d4b096ef9d7151a66726dab0359d86909e988d0feefa6"
+                                                  },
+                                        "cli_session":  {
+                                                            "locked":  false,
+                                                            "error":  null
+                                                        }
+                                    }
+                      },
+    "jump_list":  {
+                      "pinned":  1,
+                      "views":  1,
+                      "common":  7,
+                      "drives":  2,
+                      "custom_destinations":  "6550dbba810ef510.customDestinations-ms",
+                      "custom_destinations_written_at":  "2026-11-09T17:03:42.1998291+08:00",
+                      "shortcut_aumid":  [
+                                             "C:\\Users\\qq651\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Backleaf.lnk",
+                                             "C:\\Users\\qq651\\AppData\\Roaming\\Microsoft\\Internet Explorer\\Quick Launch\\User Pinned\\TaskBar\\Backleaf.lnk"
+                                         ]
+                  },
+    "checks":  [
+                   "release test-v0.1.0-preview.55-f893b2ac is a published prerelease at f893b2ace65555e33d2dc0049bff783a97ae2f9c (2026-11-09T08:38:58Z)",
+                   "x64 Backleaf-0.1.0-preview.55-f893b2ac-win-x64.zip SHA256=77911bba04bd00c69a299d3e8e828e6ce08011d0594e80041c3efcff6e6d767c (manifest, CI artifact and GitHub digest agree)",
+                   "x64 Backleaf-v46.fig SHA256=216c6ffd8f632f908406d4765a9be010b59c24e70d59f7b8a63bc1e5055ab179 (manifest, CI artifact and GitHub digest agree)",
+                   "x64 packaged EXE SHA256=1797fd5cdb27614d9c490515e9e9175e491b9b5878c66b1488fb2c5ac042e66a matches build record; headless=56 passed on clean source; local CLI smoke locked=False exit=0",
+                   "arm64 Backleaf-v46.fig SHA256=216c6ffd8f632f908406d4765a9be010b59c24e70d59f7b8a63bc1e5055ab179 (manifest, CI artifact and GitHub digest agree)",
+                   "arm64 Backleaf-0.1.0-preview.55-f893b2ac-win-arm64.zip SHA256=47ca29690af50b5e6295f9c8d98e591bd2f17319fcb1b24456f3a882d5ad7e01 (manifest, CI artifact and GitHub digest agree)",
+                   "arm64 packaged EXE SHA256=9edfebc8dceea11645c9bc92a6a3d964bd32eada3f6c92035429e1ca78bf374e matches build record; headless=56 passed on clean source; hosted-runner CLI smoke locked=False",
+                   "x64 packaged jump list: model pinned=1 views=1 common=7 drives=2; CustomDestinations rebuilt at 2026-11-09T17:03:42.1998291+08:00; titles 固定/视图/常用/分区/打开新窗口 present; shortcut AppUserModelID present in 2 existing shortcut(s); --new-window and --view startup smoke exit 0",
+                   "windows-preview workflow run 42586191583 completed with package and package-arm64 success at f893b2ace65555e33d2dc0049bff783a97ae2f9c",
+                   "push GPUI headless CI run 42586159526 completed successfully at f893b2ace65555e33d2dc0049bff783a97ae2f9c"
+               ],
+    "verified_at_utc":  "2026-11-09T09:03:54.1100372Z",
+    "limitations":  [
+                        "The real taskbar right-click menu was verified through the written CustomDestinations file, item titles, launch arguments and shortcut AppUserModelID; opening and clicking it with the mouse is a manual desktop acceptance item.",
+                        "The jump list has no recent/frequent tracking and no user-defined named categories by design; caps are 10 pinned, 10 views, 8 common and 8 drives.",
+                        "Real UAC consent/cancel and enumerating an actual protected folder with the elevated token remain manual desktop acceptance items; CI does not simulate the secure desktop.",
+                        "The release is a prerelease test package; the installer still prefers the stable v0.1.0 release unless -Tag selects this preview.",
+                        "ARM64 binaries were built and smoked on the windows-11-arm hosted runner, not on physical ARM hardware for a long session."
+                    ]
+}

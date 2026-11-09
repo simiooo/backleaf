@@ -1,0 +1,145 @@
+{
+  "passed": true,
+  "powershell": "7.6.9",
+  "installer_sha256": "4e1e5c2fadeb284640cdaadb7cc4540870289e2a6e5f6614c4e9198d009e14b9",
+  "test_count": 34,
+  "tests": [
+    {
+      "name": "native x64 process installs the x64 package",
+      "passed": true
+    },
+    {
+      "name": "native ARM64 process installs the ARM64 package",
+      "passed": true
+    },
+    {
+      "name": "32-bit PowerShell on ARM64 installs the ARM64 package",
+      "passed": true
+    },
+    {
+      "name": "x64-emulated PowerShell on ARM64 installs the ARM64 package",
+      "passed": true
+    },
+    {
+      "name": "32-bit PowerShell on x64 installs the x64 package",
+      "passed": true
+    },
+    {
+      "name": "unknown architecture falls back to the x64 package",
+      "passed": true
+    },
+    {
+      "name": "latest prerelease is selected and drafts are ignored",
+      "passed": true
+    },
+    {
+      "name": "stable release is preferred over newer preview and draft releases",
+      "passed": true
+    },
+    {
+      "name": "explicit preview tag remains available when a stable release exists",
+      "passed": true
+    },
+    {
+      "name": "stable tag installs the exact source and records the release version",
+      "passed": true
+    },
+    {
+      "name": "stable release rejects a mutable branch target before downloading",
+      "passed": true
+    },
+    {
+      "name": "stable release requires the full commit even when short prefixes match",
+      "passed": true
+    },
+    {
+      "name": "fresh install in a path containing spaces and Unicode",
+      "passed": true
+    },
+    {
+      "name": "upgrade and repeat install preserve user data and unrelated root files",
+      "passed": true
+    },
+    {
+      "name": "running application blocks upgrade without termination",
+      "passed": true
+    },
+    {
+      "name": "unreadable zero-thread process record does not block an unused installed executable",
+      "passed": true
+    },
+    {
+      "name": "upgrade guard denies new image readers throughout download and permits promotion",
+      "passed": true
+    },
+    {
+      "name": "failed download leaves the previous installation intact",
+      "passed": true
+    },
+    {
+      "name": "GitHub edge 5xx falls back to the API asset endpoint",
+      "passed": true
+    },
+    {
+      "name": "asset digest mismatch is rejected before replacing current",
+      "passed": true
+    },
+    {
+      "name": "failed directory promotion restores the previous installation",
+      "passed": true
+    },
+    {
+      "name": "missing release assets are rejected",
+      "passed": true
+    },
+    {
+      "name": "metadata source/version mismatch is rejected even with valid asset digests",
+      "passed": true
+    },
+    {
+      "name": "inner executable mismatch is rejected even with valid ZIP and manifest digests",
+      "passed": true
+    },
+    {
+      "name": "unmanaged application directory is never overwritten",
+      "passed": true
+    },
+    {
+      "name": "concurrent installation is refused",
+      "passed": true
+    },
+    {
+      "name": "root escape, user data target and unsafe cleanup are refused",
+      "passed": true
+    },
+    {
+      "name": "ZIP traversal, absolute paths, ADS and duplicate names are rejected",
+      "passed": true
+    },
+    {
+      "name": "junction installation paths are rejected",
+      "passed": true
+    },
+    {
+      "name": "temporary installation trees are removed after success and failure",
+      "passed": true
+    },
+    {
+      "name": "runtime is installed app-local with license and receipt",
+      "passed": true
+    },
+    {
+      "name": "runtime download corruption prevents application replacement",
+      "passed": true
+    },
+    {
+      "name": "missing LOCALAPPDATA is reported without changing environment",
+      "passed": true
+    },
+    {
+      "name": "installer preserves PATH and restores TLS configuration after success and errors",
+      "passed": true
+    }
+  ],
+  "completed_at_utc": "2026-11-09T08:29:06.7583235Z"
+}
