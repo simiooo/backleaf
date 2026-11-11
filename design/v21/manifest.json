@@ -1,0 +1,61 @@
+{
+  "version": "v21-path-navigation-and-volumes",
+  "retainedPages": 143,
+  "pages": [
+    {
+      "key": "144-ancestor-context",
+      "name": "144 · v21 ancestor-context",
+      "nodes": 119,
+      "state": "ancestor"
+    },
+    {
+      "key": "145-current-context",
+      "name": "145 · v21 current-context",
+      "nodes": 119,
+      "state": "current"
+    },
+    {
+      "key": "146-edit-address",
+      "name": "146 · v21 edit-address",
+      "nodes": 106,
+      "state": "edit"
+    },
+    {
+      "key": "147-blur-submit",
+      "name": "147 · v21 blur-submit",
+      "nodes": 106,
+      "state": "pending"
+    },
+    {
+      "key": "148-error-preserves-draft",
+      "name": "148 · v21 error-preserves-draft",
+      "nodes": 108,
+      "state": "error"
+    },
+    {
+      "key": "149-volumes",
+      "name": "149 · v21 volumes",
+      "nodes": 114,
+      "state": "volumes"
+    },
+    {
+      "key": "150-narrow",
+      "name": "150 · v21 narrow",
+      "nodes": 111,
+      "state": "narrow"
+    },
+    {
+      "key": "151-dark",
+      "name": "151 · v21 dark",
+      "nodes": 119,
+      "state": "dark"
+    },
+    {
+      "key": "152-drive-disconnected",
+      "name": "152 · v21 drive-disconnected",
+      "nodes": 116,
+      "state": "disconnected"
+    }
+  ],
+  "source": "scripts/design/chrome-v21.mjs"
+}
